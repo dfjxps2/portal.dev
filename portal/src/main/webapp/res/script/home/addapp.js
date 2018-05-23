@@ -2,7 +2,11 @@ function addend(){
 	$(".cell .cell-ctx.selected").on("click", function(){
 		$(this).toggleClass("selected");
 	});
-	$.post('doadd?id=' + ids.join(','), function(){
+	$.post('doadd?id=' + ids.join(','), function(d){
+		if(d && d.code === 0){
+			alert(d.msg);
+			return;
+		}
 		location.href = 'main';
 	});
 

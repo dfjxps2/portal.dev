@@ -281,12 +281,12 @@ function setForm(obj) {
     }
     for (var name in obj) {
         //var val = obj[name] || '';
-        var val = (obj[name] == null || obj[name] == '') ? '' : obj[name];
+        var val = obj[name] === null ? '' : obj[name];
         var nodes = document.getElementsByName(name);
         if (nodes == null || nodes.length == 0) {
             _selector = $("#" + name);
         } else {  
-            _selector = $(nodes[0]);
+            _selector = $(nodes);
         }
         if (_selector == null || _selector.length == 0)
             continue;

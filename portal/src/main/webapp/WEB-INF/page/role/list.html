@@ -3,25 +3,6 @@
   <head>
     <title>auth</title>
       <#include "/WEB-INF/include/reslist.html" />
-      <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-      <script src="${G.host}/res/plugin/jQuery/jquery-1.11.3.min.js" type="text/javascript"></script>
-	  <!--Bootstrap -->
-	  <link href="${G.host}/res/plugin/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-	  <script src="${G.host}/res/plugin/bootstrap/js/bootstrap.min.js"></script>
-      <link href="${G.host}/res/plugin/bootstrap-table/bootstrap-table.css" rel="stylesheet">
-	  <!-- Loading Flat UI -->
-	  <link href="${G.host}/res/fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-	  <link href="${G.host}/res/css/animate.min.css" rel="stylesheet">
-	   <link href="${G.host}/res/css/styleIter.css" rel="stylesheet">
-	  <script src="${G.host}/res/plugin/bootstrap-table/bootstrap-table.js"></script>
-	  <script src="${G.host}/res/plugin/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
-	  <script src="${G.host}/res/js/core/base.js"></script>
-	  <script src="${G.host}/res/js/core/sysbaseList.js"></script>
-	  <link href="${G.host}/res/css/hk0405.css" rel="stylesheet">
-      <link href="${G.host}/res/layer/skin/default/layer.css" rel="stylesheet">
-      <link href="${G.host}/res/layer/skin/moon/style.css" rel="stylesheet">
-      <script src="${G.host}/res/layer/layer.js"></script>
-
       <style>
 		  .bs-bars{width:100%}
 		  /*.pagination-info {
@@ -98,13 +79,6 @@
        var pageFlag=0;
 
        var RFlag=$.request.queryString["RFlag"];
-       //回车查询
-       document.onkeydown=function(event){
-           var e = event || window.event || arguments.callee.caller.arguments[0];
-           if(e && e.keyCode==13){ // enter 键
-               search();
-           }
-       };
        //列表初始化
      function  config(){
 //         quick.serverUrl = "${G.serverUrl}";
@@ -347,7 +321,7 @@
        }
 
        //查询
-       function search(){
+       function query(){
            pageNum=1;
            pageSize=15;
            _gridPool['tb_role'].refresh();
@@ -372,7 +346,7 @@
                               <div class="form-group" style="width:159px;">
                                   <input type="text" class="form-control form-control-green" name="role_name" id="role_name" placeholder="名称">
                               </div>
-                              <button type="button" class="btn btn-primary" onclick="search()"> 查询</button>
+                              <button type="button" class="btn btn-primary" onclick="query()"> 查询</button>
                               <div class="form-group" style="width:100px;float:right;">
                                   <button type="button" class="btn btn-primary" onclick="location.href='addRole';"> 新增角色</button>
                               </div>

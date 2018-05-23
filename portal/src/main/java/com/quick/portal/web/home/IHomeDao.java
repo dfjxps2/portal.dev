@@ -78,4 +78,10 @@ public interface IHomeDao<ApplicationDO> extends ISysBaseDao<ApplicationDO> {
     int addApp(Map<String, Object> m);
 
     Map<String,Object> queryAppConfig(Map<String, Object> m);
+    /**
+     * 查询用户桌面
+     * @param m
+     * @return
+     */
+    List<Map<String, Object>> queryDashboard(Map<String, Object> m);
 }

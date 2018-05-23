@@ -58,7 +58,7 @@
 		)
 	</insert>
 	<select id="queryAppConfig" parameterType="map" resultType="map">
-		select ifnull(max(d.dashboard_id),0) dashboard_id,ifnull(max(convert(d.param_value, SIGNED)),1) param_value
+		select ifnull(max(d.dashboard_id),0) dashboard_id,ifnull(max(convert(d.param_value, SIGNED)),0)+1 param_value
 		from dashboard_app_config d
         left join user_dashboard u on d.dashboard_id=u.dashboard_id where u.user_id=#{user_id} and d.param_id=1
 	</select>
@@ -86,5 +86,7 @@
 		AND U.ROLEID  = R.ROLEID
 		<if test="LOGINNAME != null"> <![CDATA[ and LOGINNAME = #{LOGINNAME} ]]> </if>
 	</select>
-
+	<select id="queryDashboard" parameterType="map" resultType="map">
+		select * from user_dashboard where user_id=#{user_id}
+	</select>
 </mapper>

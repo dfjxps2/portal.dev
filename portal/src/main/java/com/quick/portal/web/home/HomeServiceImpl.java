@@ -118,21 +118,23 @@ public class HomeServiceImpl extends SysBaseService<ApplicationDO> implements IH
     @Override
     public Map<String, Object> queryAppConfig(Map<String, Object> m) {
         Map<String, Object> md = dao.queryAppConfig(m);
-        //如果没有用户桌面，就添加一个
-        Boolean isadd = false;
+
+        //读取参数
+        Boolean noadd = false;
         if(md == null){
-            isadd = true;
             md = new HashMap<>();
-            md.put("dashboard_id", 0);
             md.put("param_value", 1);
+            noadd = true;
         }else{
             String val = md.get("dashboard_id").toString();
             if("0".equals(val))
-                isadd = true;
+                noadd = true;
         }
-        if(isadd){
-            dao.addApp(m);
-            md.put("dashboard_id", m.get("dashboard_id"));
+        if(noadd){
+            List<Map<String, Object>> dlist = dao.queryDashboard(m);
+            if(dlist == null || dlist.size()==0)
+                return null;
+            md.put("dashboard_id", dlist.get(0).get("dashboard_id"));
         }
         return md;
     }

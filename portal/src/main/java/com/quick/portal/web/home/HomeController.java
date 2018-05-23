@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.json.Json;
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -76,6 +77,7 @@ public class HomeController extends SysWebController {
         //获取用户应用列表,如果没有，从menu_privilege表读取对应角色默认应用列表
         List<Map<String, Object>> apps = getUserApp();
         if(apps == null || apps.size() == 0){
+            //如果没有用户桌面，就添加一个
             homeService.addDashboard(parm);
             apps = getUserApp();
         }
@@ -119,11 +121,13 @@ public class HomeController extends SysWebController {
     @ResponseBody
     public Object doadd(String id){
         if(id == null || id.equals(""))
-            return "0";
+            return ActionMsg.setError("请选择要添加的应用");
         String[] ids = id.split(",");
         Map<String, Object> p = new HashMap<>();
         p.put("user_id", loginer.getUser_id());
         Map<String, Object> u = homeService.queryAppConfig(p);
+        if(u == null)
+            return ActionMsg.setError("读取用户桌面出错，请刷新页面");
         String dashboard_id = val(u, "dashboard_id");
         String sno = val(u, "param_value");
         Integer param_value = sno.length() == 0 ? 1 : Integer.valueOf(sno);
