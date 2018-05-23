@@ -3712,7 +3712,7 @@ nav.page-tabs .page-tabs-content {
 .roll-right.J_tabExit {
     background: #fff;
     height: 40px;
-    width: 75px;
+    width: 60px;
     outline: none;
 }
 
@@ -3721,7 +3721,7 @@ nav.page-tabs .page-tabs-content {
 }
 
 #content-main {
-    height: calc(100% - 140px);
+    height: calc(100% - 110px);
     overflow: hidden;
 }
 

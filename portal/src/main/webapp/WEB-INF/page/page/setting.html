@@ -16,15 +16,16 @@
     function getMetric(){
     	$.ajax({
             url:"http://portal-server:8082/services/reMeaSys",
-            //data:{key:"APIkey",info:"你好"},
             type:'get',
             success:function(res){
             	addInfo(res); 
             }
         });
     }
+    var metric_id= [];
     function loadBindMetric(){
         var metric_name= $.request.queryString["rmt"];
+        metric_id= JSON.parse(localStorage.metricInfo);
         if(metric_name && metric_name != 'undefined'){
             $("#bdvalue").text(metric_name);
         }
@@ -53,7 +54,6 @@
     	if ($(this).val()=='all') {
     		$(id).val('table');
     		$(id).attr("title","指标维度为全部，只能以表格形式展示！").tooltip('fixTitle');
-    		//$(element).attr('title',"XXXXXX2").tooltip('fixTitle');
     		$(id).attr("disabled","disabled"); 	
 		}else if ($(this).val()=='1') {
     		$(id).val('1');
@@ -66,13 +66,126 @@
     });
  })
  
+  function addInput(id,measure_id,measure_name,i,type,state){
+	 var str =  '';
+	 if (state==1) {
+		 str = str + '<input class = "tit" type="checkbox" checked="checked" id = "'+id+'_input'+i+'" name="measure_id" value="'+measure_id+'" style="margin-right:16px;">';
+	}else {
+		str = str + '<input class = "tit" type="checkbox" id = "'+id+'_input'+i+'" name="measure_id" value="'+measure_id+'" style="margin-right:16px;">';
+	}
+	 str = str +  '<input type="hidden" id="hid'+id+'_input'+i+'" value = "'+type+'" name="" />'+
+      '<input type="hidden" id="name_'+id+'_input'+i+'" value="'+measure_name+'" />';
+      return str;
+ }
+ 
+ var weiList = [{name:"对象",value:"obj"},{name:"时间",value:"time"},{name:"全部",value:"all"}];
+ function addWei(id,i,data,state){
+	 var str =  '<select name="menu_state" class="input-group form-control form-control-green select_change chose_wei  wei'+id+'_input'+i+' tooltip-test" data-toggle="tooltip" title="请选指标维度！" id="wei'+id+'_input'+i+'" style="width:70%;margin-left:0px">'+
+		'<option class = "opt1" value="1" name = "chart'+id+'_input'+i+'">请选指标维度</option>';
+		for (var k = 0; k < weiList.length; k++) {
+			if (state==1&&data==weiList[k].value) {
+				str = str+'<option class = "opt1" value="'+weiList[k].value+'" selected name = "chart'+id+'_input'+i+'">'+weiList[k].name+'</option>';
+			}else{
+				str = str+'<option class = "opt1" value="'+weiList[k].value+'" name = "chart'+id+'_input'+i+'">'+weiList[k].name+'</option>';
+			}
+		}
+		str = str+'</select>';
+      return str;
+ }
+ var chartList = [{name:"柱状图",value:"bar"},{name:"折线图",value:"line"},{name:"饼图",value:"pie"},
+                  {name:"环形图",value:"ringPie"},{name:"玫瑰图",value:"rose"},{name:"环形玫瑰图",value:"ringRose"},
+                  {name:"表格",value:"table"}];
+ function addChar(id,i,data,state,chart){
+	 var disabled = '';
+	 if (chart==1||chart=='table') {
+		 disabled = 'disabled="disabled"';
+	}
+	 var str =  '<select name="menu_state" '+disabled+' class="input-group form-control form-control-green select_change chose_chart char'+id+'_input'+i+' tooltip-test" data-toggle="tooltip" title="请选择指标展示方式！" id = "chart'+id+'_input'+i+'" style="width:80%;margin-left: 0px">'+
+		'<option value="1">请选择展示方式</option>';
+		for (var j = 0; j < chartList.length; j++) {
+			if (state==1&&data==chartList[j].value) {
+				str = str+'<option class = "cha1" selected value="'+chartList[j].value+'">'+chartList[j].name+'</option>';
+			}else{
+				str = str+'<option class = "cha1" value="'+chartList[j].value+'">'+chartList[j].name+'</option>';
+			}
+		}
+		str = str+'</select>';
+      return str;
+ }
+ 
+ 
+ function addNumber(a,id,i,data,state){
+	 if (state==1) {
+		a = data
+	}
+	 var str =  '<input type="number" min = "1" max = "50" value = "'+a+'" class = "numb'+id+'_input'+i+' tooltip-test" data-toggle="tooltip" title="请设置指标的显示次序！" style="padding: 0px;width:70px;text-align:center;" data-options="min:1,precision:0" class="form-control required" />';
+      return str;
+ }
     
     function addTable(data,id,type){
     	var color = ['#FF0000','#FF4500','#FF8C00','#FFD700','#FFFF00','#7CFC00','#228B22','#00FA9A','#00FFFF','#00BFFF','#0000FF','#9370DB','#800080'];
     	var q='';
     	for (var i = 0; i < data.length; i++) {
     		var a = i+1;
-    		q= q+'<div class="col-sm-12 form_ipt_botm" style = "margin-bottom:14px">'+
+    		if (metric_id.length>0) {
+    			var state = 0;
+    			var dime = '';
+    			var cha = '';
+    			var chas = 1;
+    			var numb = a;
+    			for (var k = 0; k < metric_id.length; k++) {
+    				if (metric_id[k].metric_id==data[i].measure_id) {
+    					state = 1;
+    					dime =metric_id[k].dimension;
+    					cha = metric_id[k].charts;
+    					chas = metric_id[k].charts;
+    					numb = metric_id[k].numb;
+					}
+    			}
+    			q= q+'<div class="col-sm-12 form_ipt_botm" style = "margin-bottom:14px">'+
+			       '<div class="col-xs-3">'+
+			    		'<div class="col-xs-3 lable_top" style= "z-index:5;">'+
+			    		addInput(id,data[i].measure_id,data[i].measure_name,i,type,state)+
+			    		'</div>'+
+			    		'<a><label for="'+id+'_input'+i+'" id = "'+id+'_input'+i+'" class="col-xs-9 lable_top tooltip-test" data-toggle="tooltip" title="请选点击选中指标！" style="text-align:left;">'+data[i].measure_name+'</label></a>'+
+			    	'</div>'+
+			    	'<div class="col-xs-3" style="margin-top: 2px;">'+
+			    		/* '<div style="width: 80px;padding-bottom: 6px;margin-top: -8px;margin-left: 10px"></div>'+ */
+			    		addWei(id,i,dime,state)+
+			    	'</div>'+
+			    	'<div class="col-xs-3">'+
+			    	addChar(id,i,cha,state,chas)+
+			    	'</div>'+
+			    	'<div class="col-xs-3">'+
+			    	addNumber(a,id,i,numb,state)+
+					'</div>'+
+			    	'</div>';
+			}else{
+				q= q+'<div class="col-sm-12 form_ipt_botm" style = "margin-bottom:14px">'+
+			       '<div class="col-xs-3">'+
+			    		'<div class="col-xs-3 lable_top" style= "z-index:5;">'+
+			    		addInput(id,data[i].measure_id,data[i].measure_name,i,type,0)+
+			    		'</div>'+
+			    		'<a><label for="'+id+'_input'+i+'" id = "'+id+'_input'+i+'" class="col-xs-9 lable_top tooltip-test" data-toggle="tooltip" title="请选点击选中指标！" style="text-align:left;">'+data[i].measure_name+'</label></a>'+
+			    	'</div>'+
+			    	'<div class="col-xs-3" style="margin-top: 2px;">'+
+			    		/* '<div style="width: 80px;padding-bottom: 6px;margin-top: -8px;margin-left: 10px"></div>'+ */
+			    		addWei(id,i,'',0)+
+			    	'</div>'+
+			    	'<div class="col-xs-3">'+
+			    	addChar(id,i,'',0,1)+
+			    	'</div>'+
+			    	'<div class="col-xs-3">'+
+			    	addNumber(a,id,i,'',0)+
+					'</div>'+
+			    	'</div>';
+				}
+			}
+    	return q;
+    }
+    
+    /* else {
+	q= q+'<div class="col-sm-12 form_ipt_botm" style = "margin-bottom:14px">'+
        '<div class="col-xs-3">'+
     		'<div class="col-xs-3 lable_top" style= "z-index:5;">'+
     			  '<input class = "tit" type="checkbox" id = "'+id+'_input'+i+'" name="measure_id" value="'+data[i].measure_id+'" style="margin-right:16px;">'+
@@ -107,23 +220,31 @@
 		'</div>'+
     	
     	'</div>';
-		}
-    	return q;
-    }
-     
+} */
    // var title = ['经济','工业','农业','教育','投资'];
     function addInfo(data){
     var tbody=window.document.getElementById("accordion");
     var str = '';
    for (var i = 0; i <data.length; i++) {
-	   if (i<1) {
+	   var ins = '';
+	   if (metric_id.length>0) {
+		   for (var j = 0; j < metric_id.length; j++) {
+			 if (data[i].category_id==metric_id[j].category_id) {
+				 ins = 'in'; 
+			}  
+		   }
+	   }else{
+		   if (i<1) {
+			   ins = 'in'; 
+		   } 
+	   }
 		   str = str+'<div class="panel panel-default">'+
 			'<a data-toggle="collapse" data-parent="#accordion"  href="#collapse'+i+'">'+
 				'<div class="panel-heading" style="background-color: #f5f5f5;">'+
 					'<h4 class="panel-title">'+data[i].category_name+'</h4>'+
 				'</div>'+
 					'</a>'+
-				'<div id="collapse'+i+'" class="panel-collapse collapse in">'+
+				'<div id="collapse'+i+'" class="panel-collapse collapse '+ins+'">'+
 					'<div class="panel-body">'+
 						 '<div class="col-sm-12 form_ipt_botm" style="margin-bottom: -40px;">'+
 						 	'<div class="col-sm-12 form_ipt_botm" id = "ind'+i+'">'+
@@ -133,24 +254,6 @@
 					'</div>'+
 				'</div>'+
 			'</div>';
-	}else{
-	   str = str+'<div class="panel panel-default">'+
-	'<a data-toggle="collapse" data-parent="#accordion"  href="#collapse'+i+'">'+
-		'<div class="panel-heading" style="background-color: #f5f5f5;">'+
-			'<h4 class="panel-title">'+data[i].category_name+'</h4>'+
-		'</div>'+
-			'</a>'+
-		'<div id="collapse'+i+'" class="panel-collapse collapse">'+
-			'<div class="panel-body">'+
-				 '<div class="col-sm-12 form_ipt_botm" style="margin-bottom: -10px;">'+
-				 	'<div class="col-sm-12 form_ipt_botm">'+
-					addTable(data[i].measures,'ind'+i,data[i].category_id)+
-					 '</div>'+
-				 '</div>'+
-			'</div>'+
-		'</div>'+
-	'</div>';
-	}
 	}
    tbody.innerHTML = str;
    con();
@@ -163,7 +266,6 @@
 	}
     
     function con(){
-   	 $(".chose_chart").attr("disabled","disabled");
    	 $("[data-toggle='tooltip']").tooltip();
    	 $(".tit").click(function () {
    	    	var id1 = "#"+$(this).attr('id');

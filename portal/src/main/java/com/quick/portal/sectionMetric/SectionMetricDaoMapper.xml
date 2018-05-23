@@ -52,7 +52,7 @@
     
 	<!-- 删除 -->
 	<delete id="delete" parameterType="String">
-		delete from section_metric where sec_metric_id = #{sec_metric_id}
+		delete from section_metric where section_id = #{section_id}
 	</delete>
     
     <!--查询-->
@@ -74,5 +74,10 @@
 		</where> -->
 	</select>
 	
-    
+     <!-- 查询总记录数 -->
+	<select id="getId" parameterType="map" resultType="map">
+		select sec_metric_id from section_metric
+		where 1=1
+	       and section_id = #{section_id}
+	</select> 
 </mapper>

@@ -127,6 +127,8 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
     public String selectMetricJson(Integer page_id) {
         List<Map<String,Object>> metriclst = dao.selectPageMetric(page_id);
         List<Map<String,Object>> mconfiglst = dao.selectPageMetricConfig(page_id);
+        if(metriclst == null || metriclst.size() == 0 || mconfiglst == null || mconfiglst.size() == 0)
+            return "[]";
         String json = "[";
         int i, l = metriclst.size() - 1;
         for(i = 0; i < l; i++){

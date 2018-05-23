@@ -147,6 +147,14 @@ public class PageServiceImpl extends SysBaseService<PageDO> implements IPageServ
             String section_na = intval(secmap, i, "no", "1").toString();
             int section_id = sdo.getSection_id();
             List<Map<String, Object>> metric = JsonUtil.fromJson(metric_json, List.class, Map.class);
+            //删除原来的配置信息
+            List<Map<String, Object>> sec_id = sectionMetricDao.getId(section_id);
+            if (sec_id.size()>0) {
+                for (int k = 0; k < sec_id.size(); k++) {
+    				metricConfigDao.delete(String.valueOf(sec_id.get(k).get("sec_metric_id")));
+    			}
+		}
+            sectionMetricDao.delete(String.valueOf(section_id));
             MetricConfigDO con = null;
             for (int j = 0; j < metric.size(); j++) {
             	SectionMetricDO sectionMetricDO = new SectionMetricDO();

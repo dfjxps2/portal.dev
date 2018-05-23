@@ -62,7 +62,12 @@
     
 	<!-- 删除 -->
 	<delete id="delete" parameterType="String">
-		delete from page where page_id = #{page_id}
+        delete from section where section_id in (select section_id from page_section where page_id = #{page_id});
+		delete from page where page_id = #{page_id};
+		delete from page_section where page_id = #{page_id};
+		delete from sec_metric_config where sec_metric_id in (select sec_metric_id from section_metric where section_id = #{page_id});
+		delete from section_metric where page_id = #{page_id};
+
 	</delete>
     
     <!--查询-->

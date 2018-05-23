@@ -34,7 +34,7 @@
                         &nbsp;&nbsp;<button type="button" class="btn btn-primary" onclick="cancel();">返回列表</button>
                     </div>
                     <div style="float:right;">
-                        <button id="btnview" style="display: none;" class="btn btn-primary" onclick="preview();">预览</button>
+                        <button class="btn btn-primary" onclick="preview();">预览</button>
                         <button class="btn btn-primary" data-bind="click: add_new_widget">添加栏目</button>&nbsp;&nbsp;
                     </div>
                     <div style="clear:both;"></div>
@@ -43,6 +43,7 @@
             </div>
         </div>
 		<div class="col-sm-4">
+            <form id="form" name="form" method="post" action="${G.serverUrl}/save" class="wizard-big addForm" enctype="multipart/form-data" accept="image/jpg, image/png">
 			<div class="ibox tabs-container">
                 <ul class="nav nav-tabs" style="margin-top:0px">
                     <li><a data-toggle="tab" href="#tab-1" aria-expanded="true">布局选择</a></li>
@@ -51,59 +52,57 @@
                 <div class="tab-content ibox-content ibox-content-ad">
                     <div id="tab-1" class="tab-pane">
                         <ul id="tmpl">
-
                         </ul>
                     </div>
                     <div id="tab-2" class="tab-pane active">
-                        <form id="form" name="form" method="post" action="${G.serverUrl}/save" class="wizard-big addForm" enctype="multipart/form-data" accept="image/jpg, image/png">
-                            <div class="row">
-                                <div class="col-sm-12 form_ipt_botm">
-                                    <div class="form-group">
-                                        <label class="col-xs-4 lable_top"><span class="span_require">*</span>名称</label>
-                                        <div class="col-xs-8"><input type="text" id="page_name" name="page_name" class="form-control required" /></div>
-                                    </div>
+                        <div class="row">
+                            <div class="col-sm-12 form_ipt_botm">
+                                <div class="form-group">
+                                    <label class="col-xs-4 lable_top"><span class="span_require">*</span>名称</label>
+                                    <div class="col-xs-8"><input type="text" id="page_name" name="page_name" class="form-control required" /></div>
                                 </div>
-                                <div class="col-sm-12 form_ipt_botm">
-                                    <div class="form-group">
-                                        <label class="col-xs-4 lable_top"><span></span>创建人</label>
-                                        <div class="col-xs-8"><input type="text" id="user_NAME" readOnly="readOnly" class="form-control"/></div>
-                                    </div>
+                            </div>
+                            <div class="col-sm-12 form_ipt_botm">
+                                <div class="form-group">
+                                    <label class="col-xs-4 lable_top"><span></span>创建人</label>
+                                    <div class="col-xs-8"><input type="text" id="user_NAME" readOnly="readOnly" class="form-control"/></div>
                                 </div>
-                                <div class="col-sm-12 form_ipt_botm">
-                                    <div class="form-group">
-                                        <label class="col-xs-4 lable_top"><span></span>创建时间</label>
-                                        <div class="col-xs-8"><input id="cre_time" name="cre_time" type="text" class="form-control"  readonly="readOnly">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-12 form_ipt_botm">
-                                    <div class="form-group">
-                                        <label class="col-xs-4 lable_top"><span></span>更新时间</label>
-                                        <div class="col-xs-8"><input id="upd_time" name="upd_time" type="text" class="form-control"  readonly="readOnly">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-12 ediefield">
-                                    <div class="form-group">
-                                        <label class="col-xs-4 lable_top"></label>
-                                        <div class="col-xs-8">
-                                            <input type="hidden" id="page_id" name="page_id" />
-                                            <input type="hidden" id="template_id" name="template_id" />
-                                            <input type="hidden" id="user_id" name="user_id" />
-                                            <input type="hidden" id="section_json" name="section_json" />
-                                            <input type="hidden" id="metric_json" name="metric_json" />
-                                            <input type="hidden" id="metric_json_1" name="metric_json_1" />
-                                            <input type="hidden" id="app_id" name="app_id" />
-                                            <input id="submit-form" type="button" class="btn btn-primary" value="保存" onclick="return thingOver();">
-                                        </div>
+                            </div>
+                            <div class="col-sm-12 form_ipt_botm">
+                                <div class="form-group">
+                                    <label class="col-xs-4 lable_top"><span></span>创建时间</label>
+                                    <div class="col-xs-8"><input id="cre_time" name="cre_time" type="text" class="form-control"  readonly="readOnly">
                                     </div>
                                 </div>
                             </div>
-                        </form>
+                            <div class="col-sm-12 form_ipt_botm">
+                                <div class="form-group">
+                                    <label class="col-xs-4 lable_top"><span></span>更新时间</label>
+                                    <div class="col-xs-8"><input id="upd_time" name="upd_time" type="text" class="form-control"  readonly="readOnly">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12 ediefield">
+                                <div class="form-group">
+                                    <label class="col-xs-4 lable_top"></label>
+                                    <div class="col-xs-8">
+                                        <input type="hidden" id="page_id" name="page_id" />
+                                        <input type="hidden" id="template_id" name="template_id" />
+                                        <input type="hidden" id="user_id" name="user_id" />
+                                        <input type="hidden" id="section_json" name="section_json" />
+                                        <input type="hidden" id="metric_json" name="metric_json" />
+                                        <input type="hidden" id="metric_json_1" name="metric_json_1" />
+                                        <input type="hidden" id="app_id" name="app_id" />
+                                        <input id="submit-form" type="button" class="btn btn-primary" value="保存" onclick="return thingOver();">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 			</div>
+            </form>
 		</div>
 
 	</div>
@@ -135,7 +134,6 @@
         var rid= $.request.queryString["app_id"];
         $("#app_id").val(rid);
         if(sysid){
-            $("#btnview").show();
             $.post(quick.serverUrl + '/getObj?page_id=' + sysid + "&i=" + Math.random(), function(data){
                 setForm(data);
 				if(mode == "browse"){
@@ -199,8 +197,8 @@
         return true;
     }
 	function cancel(){
-		var url = quick.listUrl + urlDel(location.search, 'mode','page_id') + '&RFlag=1';
-		window.location.href = url;
+		//var url = quick.listUrl + urlDel(location.search, 'mode','page_id') + '&RFlag=1';
+		window.location.href = '${G.host}/application/bizlist';
 	}
     function choseTmpl(o,id,url){
         $("#tmpl>li>a>img").removeClass("tmpl-active");
@@ -320,19 +318,38 @@
         return dd;
     }
     
+    
+    function remove(data,dx){ 
+        if(isNaN(dx)||dx>data.length){return false;} 
+        for(var i=0,n=0;i<data.length;i++) 
+        { 
+          if(data[i]!=data[dx]) 
+          { 
+          	data[n++]=data[i] 
+          } 
+        } 
+        data.length-=1 
+        return data;
+      } 
     var metricInfo = [];
     function showsetting(o){
+    	var ls = find_sec_metric(metricInfo,o.dataset.no);
+   		 localStorage.metricInfo =JSON.stringify(ls);
     	settingbox('section_NAME', '${G.serverUrl}/setting?rid=' + o.dataset.id + "&rmt=" + o.dataset.metric,null, function(ar){
     		if(ar == null || ar.length == 0)
                 return ;
     		for(var i = 0; i < ar.length; i++)
     			ar[i]["section_id"] = o.dataset.no;
             var rem = [];
-            for (var j = 0; j < metricInfo.length; j++) {
-                if (o.dataset.no==metricInfo[j].section_id) {
-                    metricInfo.splice(j);
-                }
-            }
+            for (var k = 0; k < ar.length; k++) {
+				if (metricInfo.length>0) {
+					for (var j = 0; j < metricInfo.length; j++) {
+						if (ar[k].section_id==metricInfo[j].section_id) {
+							remove(metricInfo,j);
+						}
+					}
+				}
+			}
             var metric_name = [];
             for (var n = 0; n < ar.length; n++) {
                 metricInfo.push(ar[n]);
@@ -366,10 +383,11 @@
         return null;
     }
     function find_sec_metric(ls,sid){
+        var arr = [];
         for(var i = 0; i <ls.length; i++)
             if(ls[i].section_id ==sid)
-                return ls[i];
-        return null;
+                arr.push(ls[i]);
+        return arr;
     }
     function preview(){
         var id =$.request.queryString["page_id"];
@@ -382,12 +400,13 @@
         if(_metric == null || _metric.length == 0)
             return;
         for(var i = 0; i < _layout.length; i++){
-            var m = find_sec_metric(_metric, _layout[i].id);
-            if(m){
+            var ls = find_sec_metric(_metric, _layout[i].id);
+            if(ls){
+                var ss = array_join(ls,',', 'measure_name');
                 if(!_layout[i].metric)
-                    _layout[i].metric = m.measure_name;
+                    _layout[i].metric = ss;
                 else
-                    _layout[i].metric = "," + m.measure_name;
+                    _layout[i].metric += "," + ss;
             }
         }
         for(var j = 0; j < _metric.length; j++){
@@ -440,6 +459,12 @@
         var o = $.extend(d, opt);
         layer.open(o);
     }
-
+    function array_join(ar, sp, name){
+        var s = '';
+        for(var i = 0; i < ar.length; i++){
+            s += sp + ar[i][name];
+        }
+        return s.substr(1);
+    }
 </script>
 </html>
