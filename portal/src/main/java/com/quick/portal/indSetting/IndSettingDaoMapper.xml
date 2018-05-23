@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quick.portal.indSetting.IndSettingDao">
+    
+    <!-- 新增app_class -->
+	<insert id="insert" parameterType="com.quick.portal.indSetting.IndSettingDO">
+		insert into role_metric_privilege (
+    		  privi_id,
+    		  role_id,
+    		  metric_id
+		)values(
+			 #{privi_id},
+			 #{role_id},
+			 #{metric_id}
+			)
+	</insert>
+		
+	<!-- 修改app_class -->
+	<update id="update" parameterType="com.quick.portal.indSetting.IndSettingDO">
+		update role_metric_privilege 
+		   set privi_id=#{privi_id}
+			  ,role_id=#{role_id}
+		 where metric_id = #{metric_id}
+	</update>
+    
+	<!-- 删除 -->
+	<delete id="delete" parameterType="String">
+		delete from role_metric_privilege where metric_id = #{metric_id}
+	</delete>
+    
+    <!--查询-->
+	<select id="select" parameterType="map" resultType="map">
+		select * from role_metric_privilege
+	</select>
+	
+	<!-- 查询总记录数 -->
+	<select id="count" parameterType="map" resultType="int">
+		select count(*) from app_class
+	</select>
+	
+    
+</mapper>

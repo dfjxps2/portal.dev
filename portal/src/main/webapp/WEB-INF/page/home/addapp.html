@@ -1,0 +1,85 @@
+﻿<html>
+<head>
+<meta charset="UTF-8">
+<link href="${G.host}/res/css/bootstrap.min.css" rel="stylesheet">
+<style>
+ body{background-color: rgba(247, 247, 247, 1);font:12px/150% Arial,Verdana,"宋体";}
+ 
+.tip { margin:auto;height:40px;line-height:40px;width:100%;font-size:18px;font-weight:600;text-align:center;}
+.apps{border:1px solid #2ca4c0;border-radius:5px;background-color:#fff;margin:0 20px 20px 20px;box-shadow: #666 0px 0px 10px;display:flex;}
+.title{float:left;width:25%;color:#2ca4c0;font-size:24px;text-align:center;margin:auto;}
+.value{float:left;width:75%;}
+.footer{padding-right:40px;position:fixed;bottom:0px;width:100%;}
+.box {}
+.left{float:left;}
+.right{float:right;}
+.clear{clear:both;}
+.hide{display:none;}
+.show{display:block;}
+.cell{float:left;text-align:center;}
+.cell img{width:66px;height:66px;}
+.cell-ttl{font-size:12px;font-weight:400;height:20px;line-height:20px;}
+
+.box h3{color:#2ca4c0;border-bottom:1px solid #2ca4c0;font-weight:900;padding-bottom:5px;}
+.ss12{width:120px;height:100px;}
+.ss11{width:100px; height:120px;}
+.ss24{width:250px; height:360px;}
+.sortable { list-style-type: none; margin: 0; padding: 0; }
+
+.cell-ctx{ position: relative;  margin: 10px; cursor:pointer; }
+.cell-ctx:before {
+  content: "\2714";
+  display: block;
+  position: absolute;
+  margin: auto;
+  top: 0; left: 0; bottom: 0; right: 0;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  background:  #00c09e;
+  border-radius: 50px;
+  color: #fff;
+  text-align: center;
+  font-size: 16px;
+  z-index: 10;
+  opacity: 0;
+  transition:         0.3s linear;
+  -o-transition:      0.3s linear;
+  -ms-transition:     0.3s linear;
+  -moz-transition:    0.3s linear;
+  -webkit-transition: 0.3s linear;
+  -o-user-select:      none;
+  -moz-user-select:    none;
+  -webkit-user-select: none;
+  cursor: pointer;
+}
+.cell-ctx.selected:before {
+  opacity: 1;
+}
+
+.cell-ctx.selected img {
+  box-shadow: 0 0 0 4px #00c09e;border-radius:5px;
+}
+</style>
+</head>
+<body>
+    <div class="tip">请选择要添加的应用</div>
+	<div id="list">
+	</div>
+</body>
+</html>
+<script src="${G.host}/res/plugin/jQuery/jquery-1.11.3.min.js" type="text/javascript"></script>
+<script src="${G.host}/res/js/jquery-ui.min.js" type="text/javascript"></script>
+<script src="${G.host}/res/script/home/addapp.js" type="text/javascript"></script>
+<script>
+var ids = [];
+var _host = '${G.host}';
+var apps = ${apps};
+$(function() {
+	addlist('#list',apps);
+	$(".cell .cell-ctx").on("click", function(){
+		$(this).toggleClass("selected");
+		ids.push(this.id.substring(1));
+	});
+});
+</script>

@@ -1,0 +1,257 @@
+ul,li{
+    list-style: none;
+    -webkit-padding-start: 0;
+}
+.file {
+    position: relative;
+    display: inline-block;
+    background: #fff;
+    border: 1px solid rgba(201, 201, 201, 1);
+    padding: 4px;
+    overflow: hidden;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 0px;
+    color: #333;
+    font-size: 13px;
+    padding-left: 8px;
+    z-index: 1;
+}
+a{
+    color: #2e2e2e;
+}
+a:hover{
+    color: #2e2e2e;
+    text-decoration: none;
+}
+input[type=file]:focus{
+    outline: none;
+}
+.ipt_box{
+    z-index: 2;
+}
+.li_bom{
+    margin-bottom: 20px;
+}
+.uploadFile_n{
+    display: none;
+}
+.uploadFile_b{
+    display: inline-block;
+}
+.ibox{
+    padding: 70px 70px 30px 70px;
+    margin-bottom: 0;
+}
+
+.ibox-contents{
+    padding: 0;
+    border-width: 0;
+}
+.li_download{
+    background:url("../images/icon-Download.png") no-repeat;
+    padding-left: 30px;
+    margin-bottom: 20px;
+
+}
+.li_download a{
+    font: normal 14px "Microsoft YaHei";
+    line-height: 18px;
+    vertical-align: top;
+    color: #4778c7;
+}
+.li_limit{
+    font: normal 12px "Microsoft YaHei";
+    color: #888888;
+}
+.li_error{
+    font: normal 12px "Microsoft YaHei";
+    color: #ff0000;
+    vertical-align: top;
+    height:45px;
+    line-height: 45px;
+    margin: 0;
+}
+.li_file{
+    heihgt:35px;
+}
+.li_check{
+    font:normal 12px "Tahoma" ;
+}
+
+.bom25{
+    margin-bottom: 25px;
+}
+.bom60{
+     margin-bottom: 60px;
+ }
+.bom100{
+    margin-bottom: 100px;
+}
+.bom110{
+    margin-bottom: 110px;
+}
+.bom120{
+    margin-bottom: 120px;
+}
+ul{
+    margin-bottom: 0;
+}
+table.tab_system{
+    width:250px;
+
+}
+table.tab_system tr{
+    height:50px;
+}
+table.tab_system td{
+    line-height: 50px;
+    border:1px solid #cccccc;
+    color:#353535;
+}
+.sys_title{
+    background-color: #f7f7f7;
+    padding-left: 20px;
+    font:normal 14px "Microsoft YaHei";
+}
+.sys_name{
+    font:normal 12px "Microsoft YaHei" ;
+   text-align: center;
+}
+.uploader{
+    position:relative;
+    display:inline-block;
+    overflow:hidden;
+    cursor:default;
+    padding:0;
+    width:340px;
+    height:35px;
+
+}
+
+.filename{
+    float:left;
+    display:inline-block;
+    outline:0 none;
+    height:35px;
+    width:250px;
+    margin:0;
+    padding:8px 10px;
+    overflow:hidden;
+    cursor:default;
+    border:1px solid #cccccc;
+    border-right:0px;
+    font:normal 12px "Microsoft YaHei";
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    background:#f5f5f5;
+
+
+
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+    box-sizing:border-box;
+}
+
+.button_normal{
+    background-color: #fff;
+    color:#353535;
+    float:left;
+    height:35px;
+    width:90px;
+    display:inline-block;
+    outline:0 none;
+    margin:0;
+    cursor:pointer;
+    border:1px solid #cccccc;
+    font:normal 12px "Microsoft YaHei";
+}
+.button_press
+{
+    background-color: #fff;
+    color:#4778c7;
+    float:left;
+    height:35px;
+    width:90px;
+    display:inline-block;
+    outline:0 none;
+    margin:0;
+    cursor:pointer;
+    border:1px solid #4778c7;
+    font:normal 12px "Microsoft YaHei";
+}
+.button_disabled{
+    background-color: #f2f2f2;
+    color:#353535;
+    float:left;
+    height:35px;
+    width:90px;
+    display:inline-block;
+    outline:0 none;
+    margin:0;
+    cursor:pointer;
+    border:1px solid #cccccc;
+    font:normal 12px "Microsoft YaHei";
+}
+
+
+.uploader input[type=file]{
+    width:90px;
+   position:absolute;
+    top:0; right:0; bottom:0;
+    border:0;
+    padding:0; margin:0;
+    height:35px;
+    cursor:pointer;
+    filter:alpha(opacity=0);
+    -moz-opacity:0;
+    -khtml-opacity: 0;
+    opacity:0;
+}
+
+.btn-primary {
+    background-color: #6dabff;
+    border-color: #358bff;
+    color: #FFF;
+    width: 90px;
+    padding: 0;
+    height: 35px;
+    font:normal 12px "Microsoft YaHei";
+}
+
+.btn-primary-sm {
+    background-color: #6dabff;
+    border-color: #358bff;
+    color: #FFF;
+    width: 55px;
+    padding: 0;
+    height: 35px;
+    font:normal 12px "Microsoft YaHei";
+}
+
+.btn-primary.active.focus, .btn-primary.active:focus, .btn-primary.active:hover, .btn-primary:active.focus, .btn-primary:active:focus, .btn-primary:active:hover, .open>.dropdown-toggle.btn-primary.focus, .open>.dropdown-toggle.btn-primary:focus, .open>.dropdown-toggle.btn-primary:hover {
+    background-color: #6dabff;
+    border-color: #358bff;
+    color: #FFF;
+    outline: none;
+    font:normal 12px "Microsoft YaHei";
+}
+
+.btn-primary.active,.btn-primary:active,.btn-primary:focus,.btn-primary:hover,.open .dropdown-toggle.btn-primary {
+    background-color: #6dabff;
+    border-color: #358bff;
+    color: #FFF;
+    outline: none;
+    font:normal 12px "Microsoft YaHei";
+}
+
+.btn-primary.active,.btn-primary:active,.open .dropdown-toggle.btn-primary {
+    background-image: none
+}
+
+.btn-primary.active[disabled],.btn-primary.disabled,.btn-primary.disabled.active,.btn-primary.disabled:active,.btn-primary.disabled:focus,.btn-primary.disabled:hover,.btn-primary[disabled],.btn-primary[disabled]:active,.btn-primary[disabled]:focus,.btn-primary[disabled]:hover,fieldset[disabled] .btn-primary,fieldset[disabled] .btn-primary.active,fieldset[disabled] .btn-primary:active,fieldset[disabled] .btn-primary:focus,fieldset[disabled] .btn-primary:hover {
+    background-color: #f2f2f2;
+    border-color: #e2e2e2;
+    color: #353535;
+    font:normal 12px "Microsoft YaHei";
+}

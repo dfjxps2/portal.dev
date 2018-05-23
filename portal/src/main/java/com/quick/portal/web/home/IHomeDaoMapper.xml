@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quick.portal.web.home.IHomeDao">
+    <!--查询用户所有应用-->
+	<select id="queryUserApp" parameterType="map" resultType="map">
+		select a.app_id,a.app_name,a.app_url,a.app_preview_url,m.menu_id,m.menu_icon_url,d.param_value app_sort,d.dashboard_id,d.config_id
+		from dashboard_app_config d
+		left join user_dashboard u on u.dashboard_id=d.dashboard_id
+		left join sys_menu m on d.app_id=m.app_id and m.menu_state=1
+		left join application a on a.app_id=d.app_id and a.app_state=1
+		where u.user_id=#{user_id} and d.param_id=1 and d.param_value !='0'
+		<if test="app_name != null and app_name != '' and app_name != 'null'"><![CDATA[
+	       and instr(a.app_name,#{app_name})>0
+	    ]]></if>
+		order by convert(d.param_value, SIGNED)
+	</select>
+
+	<!--添加角色默认应用至用户配置-->
+	<insert id="addDashboard" parameterType="map">
+		insert into user_dashboard
+		    (user_id, dashboard_title, dashboard_idx)values(${user_id}, '首页', 1)
+		<selectKey resultType="int" order="AFTER" keyProperty="dashboard_id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+	<insert id="addDashboard_Apps" parameterType="map">
+		insert into dashboard_app_config
+		    (dashboard_id, app_id, param_id, param_value, cre_time)
+		    (select ${dashboard_id}, m.app_id, 1, p.show_order, now() from menu_privilege p
+		     left join sys_menu m on p.menu_id=m.menu_id
+		     where p.role_id=#{role_id} and p.show_on_init=1 and m.app_id is not null)
+	</insert>
+	<select id="countDashboard" parameterType="map" resultType="int">
+		select count(*) from user_dashboard
+		where user_id=#{user_id}
+	</select>
+	<!--更新应用排序 -->
+	<update id="updateAppSort" parameterType="map">
+		update dashboard_app_config set param_value=#{app_sort} where dashboard_id=#{dashboard_id} and app_id=#{app_id} and param_id=1
+	</update>
+	<!--删除用户应用 -->
+	<delete id="deleteApp" parameterType="String">
+		delete from dashboard_app_config where config_id = #{config_id}
+	</delete>
+	<insert id="addApp" parameterType="map">
+		insert into dashboard_app_config (
+		dashboard_id,
+		app_id,
+		param_id,
+		param_value,
+		cre_time
+		)values(
+		#{dashboard_id},
+		#{app_id},
+		#{param_id},
+		#{param_value},
+		now()
+		)
+	</insert>
+	<select id="queryAppConfig" parameterType="map" resultType="map">
+		select ifnull(max(d.dashboard_id),0) dashboard_id,ifnull(max(convert(d.param_value, SIGNED)),1) param_value
+		from dashboard_app_config d
+        left join user_dashboard u on d.dashboard_id=u.dashboard_id where u.user_id=#{user_id} and d.param_id=1
+	</select>
+	<!-- 查询所有应用 -->
+	<select id="queryApp" parameterType="map" resultType="map">
+		select c.app_class_name, m.menu_id, m.menu_icon_url,a.* from application a
+		  left join app_class_rela r on a.app_id=r.app_id
+		  left join app_class c on r.app_class_id=c.app_class_id
+		  left join sys_menu m on a.app_id=m.app_id
+		  where a.app_state=1 and a.app_id not in (
+				  select a1.app_id from dashboard_app_config a1
+					left join user_dashboard a2 on a1.dashboard_id=a2.dashboard_id
+				  where a2.user_id=#{user_id}
+		  )
+	</select>
+
+	<!-- 查询登录用户 -->
+	<select id="queryLoginer" parameterType="map" resultType="map">
+		select  u.*,r.roleid
+		from sys_user u
+		user_role_rela r
+		WHERE
+		1=1
+		AND U.DEPID = D.DEPID
+		AND U.ROLEID  = R.ROLEID
+		<if test="LOGINNAME != null"> <![CDATA[ and LOGINNAME = #{LOGINNAME} ]]> </if>
+	</select>
+
+</mapper>

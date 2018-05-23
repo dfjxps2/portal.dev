@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quick.portal.userRole.RoleDao">
+	
+    <!--查询条件-->
+	<sql id="where">
+		1=1
+		<if test="role_id != null and role_id != '' and role_id != 'null'"><![CDATA[
+	       and role_id like  '%${role_id}%'
+	    ]]></if>
+		<if test="role_name != null and role_name != '' and role_name != 'null'"><![CDATA[
+	       and role_name like '%${role_name}%'
+	    ]]></if>
+		<if test="cre_time != null and cre_time != '' and cre_time != 'null'"><![CDATA[
+	       and cre_time >= #{cre_time}
+	    ]]></if>
+        <if test="_sql_where != null and _sql_where != ''"> <![CDATA[
+            and ${_sql_where}
+        ]]> </if>
+
+	</sql>
+    
+    <!-- 新增  -->
+	<insert id="insert" parameterType="com.quick.portal.userRole.Role">
+		insert into user_role (
+    		  role_name,
+    		  role_state,
+    		  cre_time,
+    		  upd_time
+		)values(
+			 #{role_name},
+			 #{role_state},
+			 now(),
+			 now()
+			)
+	</insert>
+		
+	<!-- 修改 -->
+	<update id="update" parameterType="com.quick.portal.userRole.Role">
+		update user_role
+		   set role_name=#{role_name}
+			  ,role_state=#{role_state}
+			  ,upd_time = now()
+		 where role_id = #{role_id}
+	</update>
+    
+	<!-- 删除 -->
+	<delete id="delete" parameterType="String">
+		delete from user_role where role_id=#{role_id};
+		delete from user_role_rela where role_id=#{role_id};
+		delete from menu_privilege where role_id=#{role_id};
+	</delete>
+    
+    <!--查询-->
+	<select id="select" parameterType="map" resultType="map">
+		select *
+		<if test="IDSROLESORTBYIDSUSR != null and IDSROLESORTBYIDSUSR != '' and IDSROLESORTBYIDSUSR != 'null'"><![CDATA[
+		 ,(case WHEN IDS_ROLEID IN(SELECT ROLEID from ids_rolerelation WHERE ACCOUNTID=#{IDSROLESORTBYIDSUSR}) THEN 1 ELSE 2 END) as sort
+		 ]]></if>
+		from user_role
+		<where>
+			<include refid="where" />
+		</where>
+        <if test="_sql_order != null and _sql_order != ''">
+            order by ${_sql_order}
+        </if>
+	</select>
+	
+	<!-- 查询总记录数 -->
+	<select id="count" parameterType="map" resultType="int">
+		select count(*) from user_role
+		<where>
+			<include refid="where" />
+		</where>
+	</select>
+
+	<!--获取ids全部的集成系统 ORDER BY ids_sysaddtime DESC-->
+	<select id="getAllInteSystem" parameterType="map" resultType="map">
+		select *
+		<if test="SORT != null and SORT != '' and SORT != 'null'"><![CDATA[
+		 ,(case WHEN ID IN(SELECT IDS_SYSID from  ids_rolesysrelation WHERE ids_roleid=#{SORT}) THEN 1 ELSE 2 END) as selected
+		 ]]></if>
+		<if test="SORT2 != null and SORT2 != '' and SORT2 != 'null'"><![CDATA[
+		 ,(case WHEN ID IN(SELECT IDS_SYSID from  ids_roleauthsys WHERE ids_roleid=#{SORT2}) THEN 1 ELSE 2 END) as selected
+		 ]]></if>
+		<if test="SORTBYIDSUSR != null and SORTBYIDSUSR != '' and SORTBYIDSUSR != 'null'"><![CDATA[
+		 ,(case WHEN ID IN(SELECT IDS_SYSID  FROM ids_sysaccount where IDS_ACCOUNTID=#{SORTBYIDSUSR}) THEN 1 ELSE 2 END) as selected
+		 ]]></if>
+		from ids_system
+		<where>
+			1=1
+			<if test="IDS_ROLEID != null and IDS_ROLEID != '' and IDS_ROLEID != 'null'"><![CDATA[
+	        and ID IN( SELECT IDS_SYSID from ids_roleauthsys WHERE IDS_ROLEID=#{IDS_ROLEID} )
+
+	     ]]></if>
+			<if test="ALL_IDS_ROLEID != null and ALL_IDS_ROLEID != '' and ALL_IDS_ROLEID != 'null'"><![CDATA[
+	        and( ID IN( SELECT IDS_SYSID from ids_roleauthsys WHERE IDS_ROLEID=#{ALL_IDS_ROLEID} )
+	           or ID IN( SELECT IDS_SYSID from ids_rolesysrelation WHERE IDS_ROLEID=#{ALL_IDS_ROLEID} )
+	        )
+
+	     ]]></if>
+			<if test="IDS_USERID != null and IDS_USERID != '' and IDS_USERID != 'null'"><![CDATA[
+	        and ID  in ( SELECT IDS_SYSID from ids_sysaccount where IDS_ACCOUNTID=#{IDS_USERID})
+	     ]]></if>
+		    <if test="IDS_SYSAUTHTYPE != null and IDS_SYSAUTHTYPE != '' and IDS_SYSAUTHTYPE != 'null'"><![CDATA[
+	        and IDS_SYSAUTHTYPE  = #{IDS_SYSAUTHTYPE}
+	     ]]></if>
+			<if test="ROELBYUSRID != null and ROELBYUSRID != '' and ROELBYUSRID != 'null'"><![CDATA[
+			and
+			(
+			ID in  ( SELECT IDS_SYSID from ids_rolesysrelation where IDS_ROLEID IN( SELECT ROLEID from ids_rolerelation WHERE ACCOUNTID=#{ROELBYUSRID} ))
+			or ID in  ( SELECT IDS_SYSID from ids_roleauthsys where IDS_ROLEID IN( SELECT ROLEID from ids_rolerelation WHERE ACCOUNTID=#{ROELBYUSRID} ))
+			)
+		]]></if>
+			<if test="SORT != null and SORT != '' and SORT != 'null'"><![CDATA[
+          ORDER BY selected
+		]]></if>
+			<if test="SORTBYIDSUSR != null and SORTBYIDSUSR != '' and SORTBYIDSUSR != 'null'"><![CDATA[
+          ORDER BY selected
+		]]></if>
+			<if test="SORT2 != null and SORT2 != '' and SORT2 != 'null'"><![CDATA[
+          ORDER BY selected
+		]]></if>
+		</where>
+	</select>
+
+	<!--获取ids集成系统全部的角色-->
+	<select id="getAllInteSystemRole" parameterType="map" resultType="map">
+		select a.*,b.IDS_SYSNAME as IDS_SYSNAME
+		<if test="SYSORLESORT != null and SYSORLESORT != '' and SYSORLESORT != 'null'"><![CDATA[
+		 ,(case WHEN a.ID IN(SELECT IDS_SYSROLEID from ids_rolesysrelation  WHERE ids_roleid=#{SYSORLESORT}) THEN 1 ELSE 2 END) as sort
+		 ]]></if>
+		from ids_sysrole a LEFT JOIN  ids_system b on a.IDS_SYSID=b.ID
+		<where>
+			1=1
+		 <if test="IDS_SYSROLEID != null and IDS_SYSROLEID != '' and IDS_SYSROLEID != 'null'"><![CDATA[
+	        and a.ids_sysroleid = #{ids_sysroleid}
+	     ]]></if>
+			<if test="ID != null and ID != '' and ID != 'null'"><![CDATA[
+	        and a.ID = #{ID}
+	     ]]></if>
+		<if test="IDS_ROLEID != null and IDS_ROLEID != '' and IDS_ROLEID != 'null'"><![CDATA[
+	        and a.ID IN (SELECT IDS_SYSROLEID FROM ids_rolesysrelation WHERE  IDS_ROLEID = #{IDS_ROLEID})
+	     ]]></if>
+			<if test="IDS_SYSID != null and IDS_SYSID != '' and IDS_SYSID != 'null'"><![CDATA[
+	        and a.IDS_SYSID =#{IDS_SYSID}
+	     ]]></if>
+			<if test="SYSORLESORT != null and SYSORLESORT != '' and SYSORLESORT != 'null'"><![CDATA[
+          ORDER BY sort
+		]]></if>
+		</where>
+	</select>
+
+
+	<!--//新增 ids角色授权-->
+	<insert id="setIdsRoleAuthorize" parameterType="map">
+		insert into ids_rolesysrelation (
+			ID,
+			IDS_ROLEID,
+			IDS_SYSROLEID,
+			IDS_SYSID
+			)values(
+			#{ID},
+			#{IDS_ROLEID},
+			#{IDS_SYSROLEID},
+			#{IDS_SYSID}
+			)
+	</insert>
+
+	<!--//新增 ids角色授权 ids_roleauthsys-->
+	<insert id="setIdsRoleauthsys" parameterType="map">
+		insert into ids_roleauthsys (
+		ID,
+		IDS_ROLEID,
+		IDS_SYSID
+		)values(
+		#{ID},
+		#{IDS_ROLEID},
+		#{IDS_SYSID}
+		)
+	</insert>
+	<!--删除 ids角色授权 的集成系统关系列表 ids_roleauthsys -->
+	<delete id="delIdsRoleauthsys" parameterType="map">
+		DELETE  FROM ids_roleauthsys WHERE IDS_ROLEID =#{IDS_ROLEID}
+	</delete>
+
+
+	<!--//获取 ids角色授权列表信息-->
+	<select id="getIdsRoleAuthorizeList" parameterType="map" resultType="map">
+		SELECT * from ids_rolesysrelation a
+		LEFT JOIN (SELECT ID ,IDS_SYSROLENAME,IDS_SYSROLECODE from ids_sysrole) b on a.IDS_SYSROLEID=b.ID
+		LEFT JOIN (SELECT IDS_SYSNAME,ID  from ids_system) c on a.IDS_SYSID=c.ID
+
+		<where>
+			1=1
+			<if test="IDS_ROLEID != null and IDS_ROLEID != '' and IDS_ROLEID != 'null'"><![CDATA[
+	        and a.ids_roleid = #{IDS_ROLEID}
+	     ]]></if>
+			<if test="IDS_SYSROLEID != null and IDS_SYSROLEID != '' and IDS_SYSROLEID != 'null'"><![CDATA[
+	        and a.ids_sysroleid = #{IDS_SYSROLEID}
+	     ]]></if>
+			<if test="IDS_SYSID != null and IDS_SYSID != '' and IDS_SYSID != 'null'"><![CDATA[
+	        and a.ids_sysid = #{IDS_SYSID}
+	     ]]></if>
+
+		</where>
+	</select>
+
+	<!--//角色授权  获取集成列表 2017/5/16-->
+	<select id="getIdsRoleauthsysList" parameterType="map" resultType="map">
+		SELECT * from ids_roleauthsys a
+		<where>
+			1=1
+			<if test="IDS_ROLEID != null and IDS_ROLEID != '' and IDS_ROLEID != 'null'"><![CDATA[
+	        and a.ids_roleid = #{IDS_ROLEID}
+	     ]]></if>
+
+		</where>
+	</select>
+
+	<!--//删除 ids角色授权  IDS_SYSROLEID IN  (SELECT IDS_SYSROLEID from ids_sysrole a where a.ids_sysid=#{IDS_SYSID})
+		  and IDS_ROLEID = #{IDS_ROLEID}-->
+	<delete id="delIdsRoleAuthorize" parameterType="map">
+			DELETE  FROM ids_rolesysrelation WHERE IDS_ROLEID=#{IDS_ROLEID}
+	</delete>
+
+	<sql id="idsUerWhere">
+		1=1
+		<if test="IDS_ROLEID != null and IDS_ROLEID != '' and IDS_ROLEID != 'null'"><![CDATA[
+	        and ID IN (SELECT ACCOUNTID from ids_rolerelation WHERE ROLEID=#{IDS_ROLEID})
+	     ]]></if>
+		<if test="IDS_USER != null and IDS_USER != '' and IDS_USER != 'null'"><![CDATA[
+	        and IDS_USER LIKE '%${IDS_USER}%'
+	     ]]></if>
+		<if test="IDS_USERNAME != null and IDS_USERNAME != '' and IDS_USERNAME != 'null'"><![CDATA[
+	        and ID IN (SELECT ACCOUNTID FROM ids_usrdetail WHERE IDS_USRNAME LIKE '%${IDS_USERNAME}%'
+	     ]]></if>
+		<if test="IDS_ACOUNT_USERNAME != null and IDS_ACOUNT_USERNAME != '' and IDS_ACOUNT_USERNAME != 'null'"><![CDATA[
+	        and (ID IN (SELECT ACCOUNTID FROM ids_usrdetail WHERE IDS_USRNAME LIKE '%${IDS_ACOUNT_USERNAME}%') or IDS_USER LIKE '%${IDS_ACOUNT_USERNAME}%')
+	     ]]></if>
+	</sql>
+
+	<!--//获取该ids角色的 ids用户信息 '%${IDS_ACOUNT_USERNAME}%'-->
+    <select id="getIdsUserListOne" parameterType="map" resultType="map">
+        SELECT a.*,
+        (SELECT IDS_USRNAME FROM ids_usrdetail WHERE ACCOUNTID=a.ID) as IDS_USRNAME
+        from ids_account a
+        ORDER BY a.IDS_ACCOUNTDATE DESC
+        limit #{pageB},#{pageS}
+    </select>
+
+	<select id="getIdsUserList" parameterType="map" resultType="map">
+        select t.* from (
+        SELECT a.ID,a.IDS_USER,aa.IDS_USRNAME,a.IDS_ACCOUNTDATE from ids_account a LEFT JOIN ids_usrdetail aa ON aa.ACCOUNTID=a.ID
+        <where>
+			1=1
+            <if test="IDS_ROLEID != null and IDS_ROLEID != '' and IDS_ROLEID != 'null'"><![CDATA[
+	                   and a.ID IN (SELECT ACCOUNTID from ids_rolerelation WHERE ROLEID=#{IDS_ROLEID})
+	              ]]></if>
+            <if test="IDS_USER != null and IDS_USER != '' and IDS_USER != 'null'"><![CDATA[
+					and a.IDS_USER LIKE '%${IDS_USER}%'
+				  ]]></if>
+            <if test="IDS_ACOUNT_USERNAME != null and IDS_ACOUNT_USERNAME != '' and IDS_ACOUNT_USERNAME != 'null'"><![CDATA[
+					and(INSTR(a.IDS_USER,#{IDS_ACOUNT_USERNAME})>0 OR INSTR(aa.IDS_USRNAME,#{IDS_ACOUNT_USERNAME} )>0)
+				  ]]></if>
+        </where>
+
+        ) t order by t.IDS_ACCOUNTDATE desc limit #{pageB},#{pageS}
+
+	</select>
+
+	<!-- 查询总记录数
+	select count(*) from ids_account s
+        <where>
+            <include refid="idsUerWhere" />
+        </where>
+	 LEFT JOIN (SELECT IDS_USRNAME,ACCOUNTID FROM ids_usrdetail ) b ON s.ID=b.ACCOUNTID
+	-->
+	<select id="idsCount" parameterType="map" resultType="int">
+        select count(*) from ids_account s
+        <where>
+            <include refid="idsUerWhere" />
+        </where>
+    </select>
+	<!--//获取 ids角色与ids用户关系-->
+	<select id="getIdsRoleAndUserRelationList" parameterType="map" resultType="map">
+		select * from ids_rolerelation
+		<where>
+			1=1
+			<if test="IDS_ROLEID != null and IDS_ROLEID != '' and IDS_ROLEID != 'null'"><![CDATA[
+	        and ROLEID=#{IDS_ROLEID}
+	     ]]></if>
+			<if test="IDS_USERID != null and IDS_USERID != '' and IDS_USERID != 'null'"><![CDATA[
+	        and ACCOUNTID=#{IDS_USERID}
+	     ]]></if>
+		</where>
+	</select>
+	<!--//新增 ids角色授权-->
+	<insert id="insertIdsUsrRoleRelation" parameterType="map">
+		insert into ids_rolerelation (
+		ACCOUNTID,
+		ROLEID,
+		ID
+		)values(
+		#{ACCOUNTID},
+		#{ROLEID},
+		#{ID}
+		)
+	</insert>
+
+	<!--//删除 ids角色授权-->
+	<delete id="delIdsUsrRoleRelation" parameterType="map">
+		delete from ids_rolerelation where ACCOUNTID=#{ACCOUNTID}
+	</delete>
+
+    <!--获取第三方集成系统的用户列表-->
+    <select id="getSysUserList"  parameterType="map" resultType="map">
+		SELECT * FROM (
+		SELECT *
+		<if test="JCXTUSERSORTBYIDSUSER != null and JCXTUSERSORTBYIDSUSER != '' and JCXTUSERSORTBYIDSUSER != 'null'"><![CDATA[
+		 ,(case WHEN ID IN(SELECT ID from ids_sysaccount where IDS_ACCOUNTID=#{JCXTUSERSORTBYIDSUSER}) THEN 1 ELSE 2 END) as sort
+		 ]]></if>
+		from ids_sysaccount
+
+		<where>
+			1=1
+			<if test="IDS_SYSID != null and IDS_SYSID != '' and IDS_SYSID != 'null'"><![CDATA[
+	        and IDS_SYSID=#{IDS_SYSID}
+	     ]]></if>
+			<if test="SYS_ACOUNT_USERNAME != null and SYS_ACOUNT_USERNAME != '' and SYS_ACOUNT_USERNAME != 'null'"><![CDATA[
+	        and IDS_SYSUSER LIKE '%${SYS_ACOUNT_USERNAME}%'
+	     ]]></if>
+
+			<if test="JCXTUSERSORTBYIDSUSER != null and JCXTUSERSORTBYIDSUSER != '' and JCXTUSERSORTBYIDSUSER != 'null'"><![CDATA[
+		 AND(IDS_ACCOUNTID=#{JCXTUSERSORTBYIDSUSER} OR IDS_ACCOUNTID IS NULL)
+		 ]]></if>
+		</where>
+
+		limit #{pageB},#{pageS}) a LEFT JOIN  (SELECT ID,IDS_SYSNAME FROM ids_system )b ON a.IDS_SYSID=b.ID
+
+		<if test="JCXTUSERSORTBYIDSUSER != null and JCXTUSERSORTBYIDSUSER != '' and JCXTUSERSORTBYIDSUSER != 'null'"><![CDATA[
+		 ORDER  BY  sort
+		 ]]></if>
+    </select>
+
+	<!-- 查询总记录数 -->
+	<select id="sysUsrCount" parameterType="map" resultType="int">
+		select count(*) from ids_sysaccount
+		<where>
+			<if test="IDS_SYSID != null and IDS_SYSID != '' and IDS_SYSID != 'null'"><![CDATA[
+	        and IDS_SYSID=#{IDS_SYSID}
+	     ]]></if>
+			<if test="SYS_ACOUNT_USERNAME != null and SYS_ACOUNT_USERNAME != '' and SYS_ACOUNT_USERNAME != 'null'"><![CDATA[
+	        and IDS_SYSUSER LIKE '%${SYS_ACOUNT_USERNAME}%'
+	     ]]></if>
+			<if test="JCXTUSERSORTBYIDSUSER != null and JCXTUSERSORTBYIDSUSER != '' and JCXTUSERSORTBYIDSUSER != 'null'"><![CDATA[
+		    AND(IDS_ACCOUNTID=#{JCXTUSERSORTBYIDSUSER} OR IDS_ACCOUNTID IS NULL)
+		 ]]></if>
+		</where>
+	</select>
+
+	<!--//新增 ids用户与第三方用户 授权-->
+	<update id="insertIdsAcctRelation" parameterType="map">
+		UPDATE ids_sysaccount
+		  SET IDS_ACCOUNTID=#{IDS_ACCOUNTID}
+		  WHERE ID=#{ID}
+	</update>
+
+	<!--//删除 ids用户与第三方用户 授权 and  IDS_SYSUSRID in( SELECT ids_sysusrid from ids_sysusr  where ids_sysid=#{IDS_SYSID} )-->
+	<delete id="delIdsAcctRelation" parameterType="map">
+		UPDATE ids_sysaccount
+		  SET IDS_ACCOUNTID=NULL
+		  WHERE IDS_ACCOUNTID=#{IDS_ACCOUNTID}
+	</delete>
+
+	<!--获取ids用户与第三方用户列表-->
+	<select id="getIdsAcctrelationList"  parameterType="map" resultType="map">
+		SELECT a.*,b.IDS_SYSNAME from ids_sysaccount a LEFT JOIN(SELECT ID,IDS_SYSNAME FROM ids_system )b ON a.IDS_SYSID=b.ID
+		<where>
+			<if test="IDS_SYSID != null and IDS_SYSID != '' and IDS_SYSID != 'null'"><![CDATA[
+	        and a.IDS_SYSID=#{IDS_SYSID}
+	     ]]></if>
+			<if test="IDS_USERID != null and IDS_USERID != '' and IDS_USERID != 'null'"><![CDATA[
+	        and a.IDS_ACCOUNTID=#{IDS_USERID}
+	     ]]></if>
+		</where>
+	</select>
+
+	<!--add by SongChaoqun-->
+	<select id="listAllMenu"  parameterType="map" resultType="map">
+		select m.*,p.show_on_init,p.show_order from sys_menu m
+           left join (select show_on_init,show_order,menu_id from menu_privilege where role_id=#{role_id}) p on p.menu_id=m.menu_id
+          where m.menu_state=1
+	</select>
+
+	<delete id="removeMenuPriByRole" parameterType="map">
+		delete from menu_privilege where role_id=#{role_id}
+	</delete>
+
+	<insert id="saveMenuPri" parameterType="map">
+		insert into menu_privilege (
+		menu_id,
+		role_id,
+		show_on_init,
+		show_order,
+		cre_time
+		)values(
+		#{menu_id},
+		#{role_id},
+		#{show_on_init},
+		#{show_order},
+		now()
+		)
+	</insert>
+	<update id="updateMenuPri" parameterType="map">
+		update menu_privilege
+		   set show_on_init=#{show_on_init},
+		        show_order=#{show_order}
+		 where role_id=#{role_id}
+		   and menu_id=#{menu_id}
+	</update>
+	<delete id="deleteMenuPri" parameterType="map">
+		delete from menu_privilege
+		  where role_id=#{role_id} and menu_id=#{menu_id}
+	</delete>
+
+	<select id="listMenuPri"  parameterType="String" resultType="map">
+		select * from menu_privilege where role_id=#{role_id}
+	</select>
+	<!--add by SongChaoqun-->
+	<!--根据角色名精确查找
+	-->
+	<select id="selectObjByName"  parameterType="map" resultType="com.quick.portal.userRole.Role">
+		select * from user_role where role_name=#{role_name}
+	</select>
+
+
+</mapper>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quick.portal.application.IApplicationDao">
+	
+    <!--查询条件-->
+	<sql id="where">
+		1=1
+		<if test="app_id != null"><![CDATA[
+	       and app_id = #{app_id}
+	    ]]></if>
+		<if test="super_app_id != null"><![CDATA[
+	       and super_app_id = #{super_app_id}
+	    ]]></if>
+		<if test="dep_id != null"><![CDATA[
+	       and dep_id = #{dep_id}
+	    ]]></if>
+		<if test="app_name != null and app_name != '' and app_name != 'null'"><![CDATA[
+	       and instr(app_name,#{app_name})>0
+	    ]]></if>
+		<if test="app_level != null"><![CDATA[
+	       and app_level = #{app_level}
+	    ]]></if>
+		<if test="app_state != null"><![CDATA[
+	       and app_state = #{app_state}
+	    ]]></if>
+		<if test="is_app_page != null"><![CDATA[
+	       and (app_url is null or app_url='')
+	    ]]></if>
+		<if test="is_app_url != null"><![CDATA[
+	       and (app_url is not null and app_url != '')
+	    ]]></if>
+        <if test="_sql_where != null and _sql_where != ''"> <![CDATA[
+            and ${_sql_where}
+        ]]> </if>
+	</sql>
+    
+    <!-- 新增application -->
+	<insert id="insert" parameterType="com.quick.portal.application.ApplicationDO" useGeneratedKeys="true" keyProperty="app_id">
+		insert into application (
+    		  super_app_id,
+    		  app_name,
+    		  dep_id,
+    		  app_level,
+    		  app_state,
+    		  app_url,
+    		  app_preview_url,
+    		  reg_date,
+    		  pub_date,
+    		  cre_time,
+    		  upd_time
+		)values(
+			 #{super_app_id},
+			 #{app_name},
+			 #{dep_id},
+			 #{app_level},
+			 #{app_state},
+			 #{app_url},
+			 #{app_preview_url},
+			 #{reg_date},
+			 #{pub_date},
+			 #{cre_time},
+			 #{upd_time}
+			);
+		<selectKey resultType="int" order="AFTER" keyProperty="app_id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+		
+	<!-- 修改application -->
+	<update id="update" parameterType="com.quick.portal.application.ApplicationDO">
+		update application 
+		   set app_id=#{app_id}
+			  ,super_app_id=#{super_app_id}
+			  ,app_name=#{app_name}
+			  ,dep_id=#{dep_id}
+			  ,app_level=#{app_level}
+			  ,app_state=#{app_state}
+			  ,app_url=#{app_url}
+			  ,app_preview_url=#{app_preview_url}
+			  ,reg_date=#{reg_date}
+			  ,pub_date=#{pub_date}
+			  ,cre_time=#{cre_time}
+			  ,upd_time=#{upd_time}
+		 where app_id = #{app_id};
+		update sys_menu set menu_cn_name=#{app_name} where app_id=#{app_id};
+	</update>
+    
+	<!-- 删除 -->
+	<delete id="delete" parameterType="String">
+		delete from application where app_id = #{app_id};
+		delete from app_class_rela where app_id=#{app_id};
+		delete from app_class_rela where app_id=#{app_id};
+		delete from menu_privilege where menu_id in (select menu_id from sys_menu where app_id=#{app_id});
+		delete from sys_menu where app_id=#{app_id};
+	</delete>
+    
+    <!--查询-->
+	<select id="select" parameterType="map" resultType="map">
+		select a.*, s.super_app_name, d.dep_name from application a
+		  left join (select app_id super_app_id, app_name super_app_name from application) s on a.super_app_id=s.super_app_id
+		  left join user_department d on a.dep_id=d.dep_id
+		<where>
+			<include refid="where" />
+		</where>
+        <if test="_sql_order != null and _sql_order != ''">
+            order by ${_sql_order}
+        </if>
+	</select>
+	
+	<!-- 查询总记录数 -->
+	<select id="count" parameterType="map" resultType="int">
+		select count(*) from application
+		<where>
+			<include refid="where" />
+		</where>
+	</select>
+	
+    
+</mapper>

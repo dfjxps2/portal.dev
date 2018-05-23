@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quick.portal.sysMenu.ISysMenuDao">
+	
+    <!--查询条件-->
+	<sql id="where">
+		1=1
+		<if test="menu_id != null  and menu_id != '' and menu_id != 'null'"><![CDATA[ 
+	       and a.menu_id = #{menu_id}
+	    ]]></if>
+		<if test="super_menu_id != null and super_menu_id != ''  and super_menu_id != 'null'"><![CDATA[ 
+	       and a.super_menu_id = #{super_menu_id}
+	    ]]></if>
+	     <if test="menu_cn != null and menu_cn != '' and menu_cn != 'null'"><![CDATA[ 
+	       and a.menu_cn_name= #{menu_cn}
+	    ]]></if>
+	    <if test="menu_cn_name != null and menu_cn_name != '' and menu_cn_name != 'null'"><![CDATA[ 
+	       and a.menu_cn_name like  '%${menu_cn_name}%'
+	    ]]></if>
+	    <if test="menu_name != null and menu_name != '' and menu_name != 'null'"><![CDATA[ 
+	       and a.menu_name like '%${menu_name}%'
+	    ]]></if>
+		<if test="menu_level != null and menu_level != ''"><![CDATA[ 
+	       and a.menu_level = #{menu_level}
+	    ]]></if>
+		<if test="menu_state != null and menu_state != ''"><![CDATA[
+	       and a.menu_state = #{menu_state}
+	    ]]></if>
+		<if test="app_id != null and app_id != ''"><![CDATA[ 
+	       and a.app_id = #{app_id}
+	    ]]></if>
+		<if test="cre_time != null and cre_time != ''"><![CDATA[ 
+	       and a.cre_time >= #{cre_time}
+	    ]]></if>
+		<if test="upd_time != null and upd_time != ''"><![CDATA[ 
+	       and a.upd_time >= #{upd_time}
+	    ]]></if>
+        <if test="_sql_where != null and _sql_where != ''"> <![CDATA[
+            and ${_sql_where}
+        ]]> </if>
+	</sql>
+    
+    <!-- 新增sys_menu -->
+	<insert id="insert" parameterType="com.quick.portal.sysMenu.SysMenuDO">
+		insert into sys_menu (
+    		  super_menu_id,
+    		  menu_cn_name,
+    		  menu_name,
+    		  menu_icon_url,
+    		  menu_url,
+    		  menu_level,
+    		  menu_state,
+    		  disp_order,
+    		  app_id,
+    		  cre_time,
+    		  upd_time
+		)values(
+			 #{super_menu_id},
+			 #{menu_cn_name},
+			 #{menu_name},
+			 #{menu_icon_url},
+			 #{menu_url},
+			 #{menu_level},
+			 #{menu_state},
+			 #{disp_order},
+			 #{app_id},
+			 #{cre_time},
+			 #{upd_time}
+			)
+	</insert>
+		
+	<!-- 修改sys_menu -->
+	<update id="update" parameterType="com.quick.portal.sysMenu.SysMenuDO">
+			update sys_menu 
+			 <trim prefix="set" suffixOverrides=",">
+			 super_menu_id=#{super_menu_id},
+    		  menu_cn_name=#{menu_cn_name},
+    		  menu_name=#{menu_name},
+    		  menu_url=#{menu_url},
+    		  menu_level=#{menu_level},
+    		  menu_state=#{menu_state},
+    		  disp_order=#{disp_order},
+    		  app_id=#{app_id},
+    		  upd_time=#{upd_time},
+    		  <if test="menu_icon_url != null and menu_icon_url != '' and menu_name != 'null' "> <![CDATA[
+        	 menu_icon_url=#{menu_icon_url},
+        	 ]]> </if>
+        	  </trim>
+    		  where menu_id = #{menu_id}
+		<!-- update sys_menu 
+		   <trim prefix="set" suffixOverrides=",">
+		    <if test="menu_id != null"> <![CDATA[
+            super_menu_id=#{super_menu_id},
+        ]]> </if>
+         <if test="menu_cn_name != null"> <![CDATA[
+         	menu_cn_name=#{menu_cn_name},
+         ]]> </if>
+          <if test="menu_name != null"> <![CDATA[
+        	 menu_name=#{menu_name},
+         ]]> </if>
+          <if test="menu_icon_url != null"> <![CDATA[
+        	 menu_icon_url=#{menu_icon_url},
+         ]]> </if>
+          <if test="menu_url != null"> <![CDATA[
+         	menu_url=#{menu_url},
+         ]]> </if>
+          <if test="menu_level != null"> <![CDATA[
+         	menu_level=#{menu_level},
+         ]]> </if>
+          <if test="menu_state != null"> <![CDATA[
+         	menu_state=#{menu_state},
+         ]]> </if>
+          <if test="app_id != null"> <![CDATA[
+         	app_id=#{app_id},
+         ]]> </if>
+          <if test="upd_time != null"> <![CDATA[
+         	upd_time=#{upd_time},
+         ]]> </if>
+			  </trim>
+		 where menu_id = #{menu_id} -->
+	</update>
+	
+	<!-- 删除 -->
+	<delete id="delete" parameterType="String">
+	delete from sys_menu where menu_id = #{menu_id}
+	</delete>
+    
+	<!-- 删除 -->
+	<delete id="deletes" parameterType="com.quick.portal.sysMenu.SysMenuDO">
+	update sys_menu 
+	set menu_state = #{menu_state},
+		upd_time = #{upd_time}
+	 where menu_id = #{menu_id}
+		<!-- delete from sys_menu where menu_id = #{menu_id} -->
+	</delete>
+    
+    <!--查询-->
+	<select id="select" parameterType="map" resultType="map">
+	select 	
+			CASE WHEN b.menu_cn_name IS NULL THEN '无上级菜单' ELSE b.menu_cn_name END super_menu_name,
+			m.app_name,
+			 a.menu_id,
+			  a.super_menu_id,
+			  a.menu_cn_name,
+			  a.menu_name,
+			  a.menu_icon_url,
+			  a.menu_url,
+			  a.menu_level,
+			  a.menu_state,
+			  a.app_id,
+			  a.disp_order,
+			  a.cre_time,
+			  a.upd_time
+	from sys_menu a  
+	left join sys_menu b 
+		 on a.super_menu_id=b.menu_id
+	LEFT JOIN application m
+		ON m.app_id = a.app_id
+		<where>
+			<include refid="where" />
+		</where>
+        <if test="_sql_order != null and _sql_order != ''">
+            order by ${_sql_order}
+        </if>
+	</select>
+	
+	<!--add by SongChaoqun-->
+	<select id="listAllMenu"  parameterType="map" resultType="map">
+		select * from sys_menu
+		where menu_level is not null
+		and menu_id is not null
+		and super_menu_id is not null
+		and menu_cn_name is not null
+	</select>
+	
+	
+	
+	<!-- 查询总记录数 -->
+	<select id="count" parameterType="map" resultType="int">
+		select count(*) from sys_menu 
+		<where>
+			<include refid="where" />
+		</where>
+	</select>
+	
+    
+</mapper>

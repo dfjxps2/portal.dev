@@ -1,0 +1,111 @@
+html,body {
+     background: url("../images/High%20light.png") #1d8bd8 no-repeat top;
+     margin:0;
+     padding:0;  width:100%;
+     height:100%;
+ }
+.loginBox {
+    width:100%;
+    text-align:center;
+    height: 307px;
+    position: fixed;
+    top:0;
+    left:0;
+}
+ .loginBox .logo{
+     width:100%;
+ height:50px;
+ }
+ .loginBox .loginMain{
+     width:400px;
+     margin: 0 auto;
+ }
+ .loginMain input{
+     width:100%;
+     height:46px;
+     color:#666666;
+     font: normal 14px "Microsoft YaHei" ;
+     -moz-border-radius: 15px; /* Firefox */
+     -webkit-border-radius: 15px; /* Safari 和 Chrome */
+     border-radius: 15px; /* Opera 10.5+, 以及使用了IE-CSS3的IE浏览器 */
+     border: 0;
+ }
+ .username{
+     width:400px;
+     background: url("../images/userID.png") no-repeat #ffffff 20px ;
+     text-indent: 56px;
+ }
+ .password{
+     margin-top:45px;
+     margin-bottom: 60px;
+     width:400px;
+     background: url("../images/password.png") no-repeat #ffffff 20px;
+     text-indent: 56px;
+ }
+ input[type="button"]{
+    height: 36px;
+     line-height: 35px;
+     text-align: center;
+     color: #FFFFFF;
+     font: normal 14px "Microsoft YaHei" ;
+     width:100px;
+     background-color: #5EACEB;
+     -moz-border-radius: 5px; /* Firefox */
+     -webkit-border-radius: 5px; /* Safari 和 Chrome */
+     border-radius: 5px; /* Opera 10.5+, 以及使用了IE-CSS3的IE浏览器 */
+     border: 0;
+ }
+ input[type="button"]:hover{
+     height: 36px;
+     line-height: 35px;
+     text-align: center;
+     color: #FFFFFF;
+     font: normal 14px "Microsoft YaHei" ;
+     width:100px;
+     background-color: #69C0FD;
+     -moz-border-radius: 5px; /* Firefox */
+     -webkit-border-radius: 5px; /* Safari 和 Chrome */
+     border-radius: 5px; /* Opera 10.5+, 以及使用了IE-CSS3的IE浏览器 */
+     border: 0;
+ }
+
+
+.footer {
+    background: url("../images/line.png") repeat-x;
+    width:100%;
+    height:70px;
+    font-family: "Microsoft YaHei";
+    font-size: 12px;
+    color:#ffffff;
+    position: fixed;;
+    bottom: 0;
+    left:0;
+    text-align: center;
+    line-height: 70px;
+}
+ .errordiv{
+     height: 69px;
+     font: normal 14px "Microsoft YaHei" ;
+     color: #FFD75C;
+ }
+ .errorMsg{
+     height:14px;
+     width:100%;
+     overflow:hidden;
+     display: none;
+   position:relative;
+  top:40px;
+     left:0px;
+ }
+ input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
+     color: #CCCCCC;
+ }
+ input:-moz-placeholder, textarea:-moz-placeholder {
+     color: #CCCCCC;
+ }
+ input::-moz-placeholder, textarea::-moz-placeholder {
+     color: #CCCCCC;
+ }
+ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
+     color: #CCCCCC;
+ }

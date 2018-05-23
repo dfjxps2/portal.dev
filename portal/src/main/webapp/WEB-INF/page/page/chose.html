@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	  <#include "/WEB-INF/include/reslist.html" />
+	  <script src="${G.host}/res/js/indexCharts/setting.js"></script>
+  </head>
+   <script>
+    var _chosen = null;
+    var _chosenId = null;
+    var _chosenName = null;
+    //初始化表格
+    function  config(){
+       quick.serverUrl = "${G.serverUrl}";
+       quick.idField = "${G.idField}";
+       
+       $("#list").bootstrapTable("destroy");
+       _gd["list"]=new BGrid("#list");
+       _gd["list"].config({
+    	   url:quick.serverUrl+"/getList?i=" + Math.random(),
+    	   idField: quick.idField,
+    	   sortName: quick.idField,
+           cache:false,
+    	   height: $(document.body).height()-50,
+    	   toolbar:"#formSearch",
+    	   columns: [
+    		   {  checkbox: true },
+                   { field: 'template_id', title: 'template_id', width: 100  },
+                   { field: 'page_name', title: 'page_name', width: 100  },
+                   { field: 'user_id', title: 'user_id', width: 100  },
+                   { field: 'cre_time', title: 'cre_time', width: 100  },
+                   { field: 'upd_time', title: 'upd_time', width: 100  }
+    	   ],onClickRow:function(row,e){
+               _chosen = row;
+               _chosenId = row.page_id;
+               _chosenName = row.page_name;
+    	   }
+       });
+
+       _gd["list"].init();
+    }
+    function query(){
+       _gd['list'].refresh();
+       queryParm=getParm();
+    }
+  </script>
+  <body class="gray-bg">
+  <div class="wrapper wrapper-content wrapper-content-x animated fadeInRight">
+	  <div class="row">
+		  <div class="col-sm-12">
+			  <div class="ibox ibox-x">
+				  <div class="ibox-content ibox-content-x">
+					  <div class="panel-mar">
+							  <form id="formSearch" class="form-inline">
+                                  <div class="form-group" style="padding: 0px;width:180px;">
+                                      <input id="page_name" name="page_name" class="input-sm form-control" type="text" placeholder="输入page_name" /> 
+								  </div>
+								  <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="query();"> 查询</button> </span>
+							  </form>
+						</div>
+					  <div style ="margin:5px;">
+						  <table id="list" class="table-striped" style="table-layout:fixed"></table>
+					  </div>
+				  </div>
+			  </div>
+		  </div>
+	  </div>
+  </div>
+  </body>
+</html>

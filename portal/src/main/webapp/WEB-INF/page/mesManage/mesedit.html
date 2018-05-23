@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <#include "/WEB-INF/include/resedit.html" />
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="col-sm-10">
+                <div class="col-sm-12">
+                    <label id="pagename" class="col-xs-8" style="text-align:center;font-size: 22px;color:blue;margin-left: 180px"></label>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="pull-right ibox-toolbars hidefield" style="margin-right: -14px;margin-top: 2px;">
+                    <button type="button" class="btn btn-primary" onclick="cancel();">返回</button>
+                </div>
+            </div>
+
+            <div class="ibox">
+                <div class="ibox-content ibox-content-ad" style="margin-top: 25px;">
+                    <form id="pubform" name="pubform" method="post"  class="wizard-big addForm" enctype="multipart/form-data" accept="image/jpg, image/png">
+                        <div class="row">
+                            <div class="col-sm-6 form_ipt_botm">
+                                <div class="form-group">
+                                    <label class="col-xs-3 lable_top"><span class="span_require">*</span>标题</label>
+                                    <div class="col-xs-9"><input maxlength="20" class="form-control" id="msg_title" name="msg_title" class="form-control" /></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 form_ipt_botm">
+                                <div class="form-group">
+                                    <label class="col-xs-3 lable_top"><span></span>摘要</label>
+                                    <div class="col-xs-9"><textarea  class="form-control" id="msg_digest" name="msg_digest"></textarea></div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6 form_ipt_botm">
+                                <div class="form-group">
+                                    <label class="col-xs-3 lable_top"><span class="span_require">*</span>密级</label>
+                                    <div class="col-xs-9"> <select class="form-control required select_change" id="msg_class_id" name="msg_class_id"></select></div>
+                                </div>
+                            </div>
+
+                            <li class="li_file">
+                                <div class="uploader white">
+                                    　　<input id="upload"  onchange="uploadFiles();"  type="file" name="file"  />
+                                </div>
+                            </li>
+
+                            <div class="col-sm-6 form_ipt_botm">
+                                <div class="form-group">
+                                    <label class="col-xs-3 lable_top"><span></span>自动审批结果：</label>
+                                    <select name="appr_state" class="input-group form-control form-control-green select_change" id="appr_state">
+                                        <option value="">状态</option>
+                                        <option value="1">人工审核通过</option>
+                                        <option value="2">人工审核拒绝</option>
+                                        <option value="3">审核通过</option>
+                                        <option value="4">审核拒绝</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6 form_ipt_botm">
+                                <div class="form-group">
+                                    <label class="col-xs-4 lable_top"><span></span>标签类型</label>
+                                    <div class="col-xs-8"><div class="input-group"><input type="text" id="tag_id" readOnly="readOnly" class="form-control"/><span class="input-group-btn"><button class="btn btn-default" type="button" onclick="chosebox('tag_text', '${G.serverUrl}/mespubtag','tag_id');">...</button></span></div></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 form_ipt_botm">
+                                <div class="form-group">
+                                    <label class="col-xs-3 lable_top"><span></span>内容</label>
+                                    <div class="col-xs-9"><textarea  class="form-control" id="msgcontent" name="msgcontent"></textarea></div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div ibox-toolbars hidefield>
+                                    <input id="submit-form" type="button" class="pull-right btn btn-primary" onclick="formCommit()" value="保存">
+                                </div>
+                            </div>
+                            <input type="hidden" id="msg_id" name="msg_id" class="form-control" />
+                            <input type="hidden" id="msg_content" name="msg_content" class="form-control" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+<script>
+    function config() {
+        quick.serverUrl = "${G.serverUrl}";
+        quick.objName = "${G.objName}";
+        quick.idField = "${G.idField}";
+        quick.listUrl = quick.serverUrl + "/list";
+    }
+    window.onload = function() {
+        /*加载数据*/
+        var mode = $.request.queryString["mode"];
+        var sysid = $.request.queryString["msg_id"];
+        if (sysid) {
+            $('#pagename').html("内容管理修改");
+            $("input,textarea").attr("placeholder", "");
+            $(".hidefield").show();
+            $.post(quick.serverUrl + '/getEditMes?msg_id=' + sysid + "&i=" + Math.random(), function (data) {
+                setForm(data);
+                if (mode == "browse") {
+                    viewRead();
+                }
+            });
+        }
+    };
+
+    //内容管理查询--密级下拉框
+    function  SelectMsgCs() {
+        $.ajax({
+            type:"get",
+            url:"getMsgCs",
+            async:false,
+            dataType:"json",
+            success:function (data) {
+                $("#msg_class_id").append("<option selected hidden value=''>密级</option><option value= ''>密级</option>");
+                for(var i=0;i<data.length;i++){
+                    var item = data[i];
+                    $("#msg_class_id").append("<option value="+item.msg_class_id+">"+item.msg_class_id+" "+item.msg_class_name+"</option>")
+                }
+            }
+        });
+    }
+    SelectMsgCs();
+
+
+
+    // 保存
+    function formCommit(){
+        $("#pubform").ajaxSubmit({
+            type:'post',
+            url:'${G.host}/mesManage/editMes',
+            data: {
+                MERGE:$('#MERGE').prop('checked')
+            },
+            dataType:'json',
+            success:function(data){
+                if(data=="1"){
+                    layer.msg('内容修改成功，正在等待审核！', {icon:1,time: 1000,skin: 'layer-ext-moon'},function(){
+                        window.location.href = quick.serverUrl+"/list";
+                    });
+                }else{
+                    layer.msg('内容修改失败！', {icon:1,time: 1000,skin: 'layer-ext-moon'});
+                }
+            },
+            error:function () {
+                layer.msg('内容修改失败！', {icon:1,time: 1000,skin: 'layer-ext-moon'});
+            }
+
+        });
+    }
+
+
+
+    function chosebox(nid, url,id, fn){
+        if(!layer.values)
+            layer.values = {};
+        var val = $("#"+id).val();
+        layer.open({
+            type: 2 //此处以iframe举例
+            ,title: '选择记录'
+            ,area: ['680px', '500px']
+            ,shade: 0
+            ,maxmin: true
+            ,content: url + "?rid=" + val
+            ,btn: ['确认', '关闭'] //只是为了演示
+            ,yes: function(index, layero){
+                var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                if(!iframeWin._chosenId){
+                    alert('您还未选择记录，请点击要选择的行');
+                    return;
+                }
+                if(id){
+                    $("#"+nid).val(iframeWin._chosenName);
+                    $("#"+id).val(iframeWin._chosenId);
+                }
+                if(fn){
+                    var gd = iframeWin._gd["list"];
+                    var dt = gd.getSelect();
+                    fn(dt || [], iframeWin);
+                }
+
+                layer.closeAll();
+            }
+            ,btn2: function(){
+                layer.closeAll();
+            }
+        });
+    }
+
+    function uploadFiles() {/*上传文件*/
+        var file = document.getElementById("upload").files[0];
+        if (typeof(file) == "undefined") {
+            $("#fat-btn").attr("disabled", "true");
+            return;
+        }
+        var str = file.name.split(".");
+        var s = str[str.length - 1];
+        $("#errorMsg").html("").hide();
+        if (file.size > 1024 * 1024 * 5) {
+            $("#errorMsg").html("文件超过5M，请重新上传").show();
+            $("#fat-btn").attr("disabled", "true");
+            return;
+        }
+        //$("#errorAret").text("(这里为错误信息提示信息的地方)");
+        var uploadValue = $("#upload").val();
+        if (uploadValue != "" && uploadValue != null) {
+            $("#fat-btn").removeAttr("disabled");
+            $(".btn").click(function () {
+                $("#upload").attr("disabled", "true");
+                $("#btn_select").removeClass().addClass("button_disabled");
+                $("#fat-btn").removeAttr("disabled");
+                $("#uploadFile").removeClass("uploadFile_n").addClass("uploadFile_b");
+                $("#fat-btn").attr("disabled", "true");
+                $(".btn_text").html("正在处理您的请求，请稍后...");
+
+            });
+        } else {
+            $("#fat-btn").attr("disabled", "true");
+        }
+    }
+
+    function cancel(){
+        var url = quick.serverUrl+"/list";
+        window.location.href = url;
+    }
+</script>
+</html>

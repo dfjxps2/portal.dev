@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quick.portal.mesManage.MesManageDao">
+    <resultMap id="tagManage" type="com.quick.portal.mesManage.TagManageDo">
+        <id column="tag_id" property="tagId" jdbcType="INTEGER" />
+        <result column="tag_text" property="tagText" jdbcType="VARCHAR" />
+        <result column="tag_type_id" property="tagTypeId" jdbcType="INTEGER" />
+        <result column="super_type_id" property="superTypeId" jdbcType="INTEGER" />
+        <result column="tag_type_name" property="tagTypeName" jdbcType="VARCHAR" />
+    </resultMap>
+   <!--查询条件-->
+    <sql id="where">
+        1=1
+        <if test="msg_id!=null and msg_id !='' and !'null'.equals(msg_id)">
+            AND  msg_id = #{msg_id}
+        </if>
+        <if test="appr_state!=null and appr_state !='' and !'null'.equals(appr_state)">
+            AND  appr_state = #{appr_state}
+        </if>
+        <if test="msg_class_id!=null and msg_class_id !=''and !'null'.equals(msg_class_id) ">
+            AND  msg_class_id = #{msg_class_id}
+        </if>
+        <if test="msg_title!=null and msg_title !=''and !'null'.equals(msg_title) ">
+            AND  msg_title = #{msg_title}
+        </if>
+        <if test="msg_digest!=null and msg_digest !=''and !'null'.equals(msg_digest) ">
+            AND  msg_digest = #{msg_digest}
+        </if>
+        <if test="pub_time!=null and pub_time !='' and !'null'.equals(pub_time)">
+           <![CDATA[AND DATE_FORMAT(pub_time,'%Y-%m-%d')= DATE_FORMAT(#{pub_time},'%Y-%m-%d') ]]>
+        </if>
+        <if test="appr_time!=null">
+            <![CDATA[AND appr_time= #{appr_time} ]]>
+        </if>
+       <if test="_sql_where != null and _sql_where != '' "> <![CDATA[
+            and ${_sql_where}
+        ]]> </if>
+    </sql>
+
+    <sql id="tag">
+        1=1
+        <if test="tagText!=null and tagText !='' and !'null'.equals(tagText)">
+            AND  tag_text=#{tagText}
+        </if>
+        <if test="superTypeId!=null and superTypeId !='' and !'null'.equals(superTypeId)">
+            AND  super_tag_id =#{superTypeId}
+        </if>
+        <if test="tagTypeId!=null and tagTypeId !='' and !'null'.equals(tagTypeId)">
+            AND  tag_type_id =#{tagTypeId}
+        </if>
+    <if test="_sql_where != null and _sql_where != ''"> <![CDATA[
+            and ${_sql_where}
+        ]]> </if>
+    </sql>
+
+    <sql id="rules">
+        1=1
+        <if test="rule_id!=null and rule_id !='' and !'null'.equals(rule_id)">
+            AND  rule_id=#{rule_id}
+        </if>
+        <if test="rule_type_id!=null and rule_type_id !='' and !'null'.equals(rule_type_id)">
+            AND  rule_type_id =#{rule_type_id}
+        </if>
+        <if test="rule_type_name!=null and rule_type_name !='' and !'null'.equals(rule_type_name)">
+            AND  rule_type_name =#{rule_type_name}
+        </if>
+        <if test="param_name!=null and param_name !='' and !'null'.equals(param_name)">
+            AND  param_name =#{param_name}
+        </if>
+        <if test="_sql_where != null and _sql_where != ''"> <![CDATA[
+            and ${_sql_where}
+        ]]> </if>
+    </sql>
+
+    <!--内容创建-信息表插入数据-->
+    <insert id="insert" parameterType="com.quick.portal.mesManage.MesManageDO">
+        INSERT INTO
+        message(
+         msg_title,
+         msg_src_id,
+         src_msg_id,
+         msg_type_id,
+         msg_imprt_id,
+         msg_class_id,
+         msg_digest,
+         msg_content,
+         msg_attachment,
+         appr_state,
+         pub_time,
+         appr_time
+        )VALUES (
+        #{msg_title},
+        #{msg_src_id},
+        #{src_msg_id},
+        #{msg_type_id},
+        #{msg_imprt_id},
+        #{msg_class_id},
+        #{msg_digest},
+        #{msg_content},
+        #{msg_attachment},
+        #{appr_state},
+        #{pub_time},
+        #{appr_time}
+        )
+    </insert>
+          <!--内容管理初始化和查询-->
+   <select id="selectMes" parameterType="map" resultType="map">
+       SELECT met.*,su.user_name apprname FROM (SELECT mew.*,mc.msg_class_name
+      FROM (SELECT me.*,ms.msg_src_name,ms.msg_src_url   FROM message me LEFT join
+      msg_source ms on me.msg_src_id = ms.msg_src_id) mew LEFT JOIN
+      msg_classify mc on mew.msg_class_id = mc.msg_class_id)met LEFT JOIN
+      sys_user su on met.appr_user_id = su.user_id
+      <where>
+          <include refid="where" />
+      </where>
+   </select>
+    <!--内容管理，获取内容对应标签-->
+    <select id="selectMesTag" parameterType="String" resultType="String">
+        SELECT mt.tag_text FROM(SELECT mg.*,ts.tag_text FROM tags ts right join msg_tag mg on ts.tag_id = mg.tag_id WHERE 1=1) mt
+        WHERE mt.msg_id = #{mesId}
+    </select>
+
+    <!--内容管理初始化和查询,根据标签查询-->
+    <select id="selectMesByTag" parameterType="map" resultType="map">
+        SELECT mt.msg_id FROM portaldb.msg_tag mt
+        WHERE
+        <foreach collection="tag" item="mesId" open=" " close=" " separator="OR">
+            msg_id = #{mesId}
+        </foreach>
+    </select>
+
+    <!--内容管理查询，总记录数-->
+    <select id="count" parameterType="map" resultType="int">
+        select count(*) from message
+        <where>
+            <include refid="where" />
+        </where>
+    </select>
+    <!--内容管理查询，密级下拉框-->
+    <select id="selectMsgCs" resultType="map">
+        SELECT mc.*   FROM portaldb.msg_classify mc WHERE 1=1
+    </select>
+
+    <!--内容管理，修改-->
+    <update id="msgedit" parameterType="map" >
+        UPDATE portaldb.message
+        SET
+        msg_title= #{msg_title},
+        msg_class_id= #{msg_class_id},
+        msg_digest=  #{msg_digest},
+        msg_content= #{msg_content},
+        msg_attachment= #{msg_attachment},
+        pub_time= #{pub_time},
+        appr_state= #{appr_state},
+        appr_time= #{appr_time}
+        WHERE msg_id=#{msg_id}
+    </update>
+
+    <!--内容发布,信息标签-->
+    <insert id="insertMesTag" parameterType="map">
+        INSERT  INTO
+        portaldb.msg_tag
+        (msg_id,
+        tag_id)
+        VALUES (
+        #{msg_id},
+        #{tag_id}
+        )
+    </insert>
+    <!--内容管理，删除内容-->
+    <delete id="deleteMsg" parameterType="String">
+        DELETE FROM portaldb.message WHERE msg_id = #{msgId}
+    </delete>
+
+    <!--内容管理修改信息标签,删除原标签-->
+    <delete id="deleteMesTag" parameterType="int">
+        DELETE FROM portaldb.msg_tag
+        WHERE msg_id=#{msg_id}
+    </delete>
+
+    <!--内容标签-->
+    <select id="selectTagsTree" resultType="map">
+        SELECT e.tag_type_id,e.super_type_id,e.tag_type_name FROM tag_type e
+        UNION
+       SELECT s.tag_id,s.tag_type_id,s.tag_text FROM tags s
+    </select>
+
+    <!--根据标签查询msgid-->
+    <select id="mesByTag" resultType="map">
+        SELECT DISTINCT mt.msg_id  FROM portaldb.msg_tag mt WHERE tag_id =#{tag_id}
+    </select>
+
+
+    <!--自动审核规则管理-->
+    <select id="selectRules" resultType="map">
+        SELECT DISTINCT crp.*,   crrt.rule_type_id,crrt.rule_type_name    FROM content_rule_param crp LEFT JOIN  ( SELECT  cr.*,crt.rule_type_name  FROM content_rule cr LEFT JOIN content_rule_type crt
+		on cr.rule_type_id = crt.rule_type_id) crrt on crrt.rule_id = crp.rule_id
+		<where>
+            1=1
+            <if test="rule_id!=null and rule_id !='' and !'null'.equals(rule_id)">
+                AND  crp.rule_id=#{rule_id}
+            </if>
+            <if test="rule_type_id!=null and rule_type_id !='' and !'null'.equals(rule_type_id)">
+                AND  crrt.rule_type_id =#{rule_type_id}
+            </if>
+            <if test="rule_type_name!=null and rule_type_name !='' and !'null'.equals(rule_type_name)">
+                AND  crrt.rule_type_name =#{rule_type_name}
+            </if>
+            <if test="param_name!=null and param_name !='' and !'null'.equals(param_name)">
+                AND  crp.param_name =#{param_name}
+            </if>
+            <if test="_sql_where != null and _sql_where != ''"> <![CDATA[
+            and ${_sql_where}
+        ]]> </if>
+        </where>
+    </select>
+
+    <!--增加参数值，选择规则下拉框数据-->
+    <select id="selectRule" resultType="map">
+         SELECT DISTINCT crp.rule_id,crp.param_name, crrt.rule_type_name    FROM content_rule_param crp LEFT JOIN  ( SELECT  cr.*,crt.rule_type_name  FROM content_rule cr LEFT JOIN content_rule_type crt
+		on cr.rule_type_id = crt.rule_type_id) crrt on crrt.rule_id = crp.rule_id WHERE 1=1
+    </select>
+
+  <insert id="insertParamValue" parameterType="map">
+      INSERT INTO
+     content_rule_param(param_id, rule_id, param_name, param_value)
+     VALUES (
+     #{param_id},
+     #{rule_id},
+     #{param_name},
+     #{param_value}
+     )
+  </insert>
+
+    <!--查找规则参数表中目前最大的ID值-->
+    <select id="selectMaxParam" resultType="int">
+        SELECT max(param_id) FROM  content_rule_param WHERE 1=1
+    </select>
+
+    <!--将数据库中数据导出为指定格式的excel-->
+    <select id="exportExcel" resultType="map">
+     SELECT b.rule_id,b.rule_type_name,b.param_name,GROUP_CONCAT(param_value) paramvalue
+     FROM (SELECT  crp.*,   crrt.rule_type_id,crrt.rule_type_name FROM content_rule_param crp
+     LEFT JOIN  ( SELECT  cr.*,crt.rule_type_name  FROM content_rule cr LEFT JOIN content_rule_type crt
+	ON cr.rule_type_id = crt.rule_type_id) crrt ON crrt.rule_id = crp.rule_id ) b GROUP BY b.rule_id,b.rule_type_name,b.param_name
+    </select>
+
+    <!--规则参数表中数据量-->
+    <select id="countParam" resultType="int">
+        SELECT count(*) FROM  portaldb.content_rule_param WHERE 1=1
+    </select>
+
+     <!--自动审核规则，删除对应规则的参数值-->
+    <delete id="deleteParamValue" parameterType="map">
+        DELETE FROM portaldb.content_rule_param WHERE param_id =#{param_id}
+    </delete>
+
+    <!--内容管理初始化&#45;&#45;内容标签，标签类型分类-->
+    <select id="selectTagTree" resultType="map">
+      SELECT tag_type_id ma FROM tag_type tt  ORDER BY tt.tag_type_id DESC  LIMIT 1
+    </select>
+    <!--内容管理初始化&#45;&#45;内容标签，标签类型分类-->
+    <select id="selectTypeCla" resultType="map">
+        select tm.*,tty.tag_type_name superTypeName from (select ta.tag_id,ta.tag_type_id,ta.tag_text,
+        tt.super_type_id,tt.tag_type_name from tags ta join tag_type tt on ta.tag_type_id = tt.tag_type_id WHERE 1=1 )
+        tm left join tag_type tty on tm.super_type_id = tty.tag_type_id WHERE 1=1 group by tm.tag_type_id
+    </select>
+
+    <!--内容管理，审核状态-->
+    <update id="mesappr" parameterType="map" >
+        UPDATE portaldb.message
+        SET
+        appr_state= #{appr_state},
+        appr_time= #{appr_time},
+        appr_user_id=#{appr_user_id}
+        WHERE msg_id=#{msg_id}
+    </update>
+
+
+
+
+
+
+
+    <!--下面是标签管理和标签类型管理部分-->
+    <!--新增标签-->
+    <insert id="insertTag" parameterType="map" >
+        INSERT INTO tags(tag_id, tag_text, tag_type_id)
+         VALUES (#{tagId},#{tagText},#{tagTypeId})
+</insert>
+
+    <!--新增标签类型-->
+    <insert id="insertTagType" parameterType="map" >
+        INSERT INTO portaldb.tag_type(tag_type_id, super_type_id, tag_type_name)
+        VALUES (#{tagTypeId},#{superTypeId},#{tagTypeName})
+
+    </insert>
+
+    <!--修改 标签表-->
+    <update id="update" parameterType="map">
+        UPDATE
+        tags
+        SET
+        tag_text=#{tagText},
+        tag_type_id=#{tagTypeId}
+        WHERE tag_id = #{tagId}
+    </update>
+      <!--修改标签类型表-->
+    <update id="updateTagType" parameterType="map">
+        UPDATE
+        tag_type
+        SET
+        super_type_id=#{superTypeId},
+        tag_type_name=#{tagTypeName}
+        WHERE tag_type_id = #{tagTypeId}
+    </update>
+
+    <!--编辑获得父页面的数据-->
+    <select id="select" parameterType="map" resultType="map">
+         select tm.*,tty.tag_type_name superTypeName from (select ta.tag_id,ta.tag_type_id,ta.tag_text,tt.super_type_id,tt.tag_type_name
+       from tags ta join tag_type tt on ta.tag_type_id = tt.tag_type_id WHERE 1=1 ) tm left join tag_type tty
+       on tm.super_type_id = tty.tag_type_id
+       WHERE  tag_id= #{tagId}
+    </select>
+
+    <!-- 删除 -->
+    <delete id="delete" parameterType="String">
+        delete from message where msg_id = #{msg_id}
+    </delete>
+
+    <!--删除所选内容标签-->
+    <delete id="deleteTags" parameterType="map">
+        DELETE FROM tags WHERE tag_id = #{tagId}
+    </delete>
+
+    <!--删除所选标签类型及上级标签-->
+    <delete id="deleteTagsType" parameterType="map">
+        DELETE FROM portaldb.tag_type WHERE tag_type_id = #{tagTypeId}
+    </delete>
+     <!--初始化及查询-->
+    <select id="selectTagMes"  parameterType="map" resultType="map">
+        select tm.*,tty.tag_type_name superTypeName from (select ta.tag_id,ta.tag_type_id,ta.tag_text,
+        tt.super_type_id,tt.tag_type_name from tags ta join tag_type tt on ta.tag_type_id = tt.tag_type_id WHERE 1=1 )
+        tm left join tag_type tty on tm.super_type_id = tty.tag_type_id WHERE 1=1
+        <if test="tagText!=null and tagText !='' and !'null'.equals(tagText)">
+            AND  tag_text=#{tagText}
+        </if>
+        <if test="tagTypeId!=null and tagTypeId !='' and !'null'.equals(tagTypeId)">
+            AND  tm.tag_type_id =#{tagTypeId}
+        </if>
+        <if test="_sql_where != null and _sql_where != ''"> <![CDATA[
+            and ${_sql_where}
+        ]]> </if>
+    </select>
+
+    <!--当前标签最大ID值-->
+    <select id="selectMaxTagId"  resultType="int">
+       SELECT max(tag_id) FROM  tags WHERE 1=1
+    </select>
+
+    <!--当前标签类型最大ID值-->
+    <select id="selectMaxTypeTagId"  resultType="int">
+        SELECT max(tag_type_id) FROM  portaldb.tag_type WHERE 1=1
+    </select>
+
+
+    <!--查询上级标签总数-->
+    <select id="countSuperTag" parameterType="map" resultType="int">
+   SELECT COUNT(*) FROM (SELECT tt.*,ttd.tag_type_name FROM (SELECT DISTINCT  super_type_id FROM tag_type WHERE super_type_id is not null) tt
+    left join tag_type ttd on tt.super_type_id = ttd.tag_type_id)tag
+        <if test="tagText!=null and tagText !='' and !'null'.equals(tagText)">
+            WHERE  tag_text=#{tagText}
+        </if>
+    </select>
+
+    <!--查询上级标签-->
+    <select id="selectSuperTag"  parameterType="map" resultType="map">
+        SELECT tt.*,ttd.tag_type_name superTypeName FROM (SELECT DISTINCT  super_type_id FROM tag_type WHERE super_type_id is not null) tt
+    left join tag_type ttd on tt.super_type_id = ttd.tag_type_id
+    <where>
+        <include refid="tag"/>
+    </where>
+    </select>
+
+    <!--查询标签类型及对应上级标签-->
+    <select id="selectTagType"  parameterType="map" resultType="map">
+        SELECT DISTINCT st.*,stt.superTypeName FROM tag_type st LEFT JOIN (SELECT ty.super_type_id,ttd.tag_type_name superTypeName FROM (SELECT tt.super_type_id FROM tag_type tt)ty
+        LEFT JOIN tag_type ttd ON ty.super_type_id = ttd.tag_type_id) stt ON st.super_type_id = stt.super_type_id
+        <where>
+            <include refid="tag"/>
+        </where>
+    </select>
+
+    <!--查询标签类型总体-->
+   <select id="countTagType" parameterType="map" resultType="int">
+     SELECT COUNT(*)FROM (select st.*,stt.superTypeName from tag_type st left join (select ty.super_type_id,ttd.tag_type_name superTypeName
+       from(select tt.super_type_id from tag_type tt)ty left join tag_type ttd on ty.super_type_id = ttd.tag_type_id) stt on st.super_type_id =
+       stt.super_type_id) tts
+     <where>
+         <include refid="tag"/>
+     </where>
+   </select>
+
+    <!--标签总数的查询-->
+    <select id="selectTagCount" parameterType="map" resultType="int">
+        SELECT COUNT(*) FROM tags
+        <where>
+            <include refid="tag"/>
+        </where>
+</select>
+
+</mapper>

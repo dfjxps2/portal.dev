@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	  <#include "/WEB-INF/include/reslist.html" />
+  </head>
+   <script>
+       var pageNum=1;
+       var pageSize=10;
+       var queryParm = '';
+       var flag=true;
+       var pageFlag=0;
+	   //初始化表格
+	   function  config(){
+           var RFlag=$.request.queryString["RFlag"];
+		   quick.serverUrl = "${G.serverUrl}";
+		   quick.editUrl = "${G.editUrl}";
+		   quick.objName = "${G.objName}";
+		   quick.idField = "${G.idField}";
+		   $("#list").bootstrapTable("destroy");
+		   _gd["list"]=new BGrid("#list");
+		   _gd["list"].config({
+			   url:quick.serverUrl+"/getList?i=" + Math.random(),
+			   idField: quick.idField,
+			   sortName: quick.idField,
+               cache:false,
+			   height: $(document.body).height()-50,
+			   toolbar:"#formSearch",
+			   columns: [
+				   { field: 'config_id', title: '配置id', width: 40  },
+/*
+                   { field: 'user_id', title: '用户id',type:"hidden" , width: 60   },
+*/
+				   { field: 'version_num', title: '版本号', width: 40   },
+
+                   { field: 'cre_time', title: '配置修改时间', width: 80  },
+
+				   { field: 'details', title: '指标配置详情', width: 120   },
+
+				   { field: 'is_active', title: '生效状态', width: 60 ,formatter:function(value,row,index){
+					   var state = '<span style="color:#CFCFCF">未生效</span>';
+					   if (row.is_active==1) {
+						   state = '<span style="color:#9ACD32">已生效</span>';
+					   }
+					   return state;} },
+                   /*{ field: 'param_id', title: '参数id', width: 80  },
+                   { field: 'param_value', title: '参数值', width: 60  },
+				   { field: 'valid_status', title: '版本状态', width: 40  },*/
+
+				   { field: 'cz', align:'center', title: '操作',width: 90, formatter:function(value,row,index){
+					   var state= "<button type='button' class='btn_el' onclick='use(\""+row.config_id+"\",\""+row.user_id+"\",\""+row.cre_time+"\")'>启用</button>| "
+					          +"<button type='button' class='btn_el' onclick='edit(\""+row.config_id+"\",\""+row.version_num+"\")'>编辑版本号</button> "
+
+							  // +"<button type='button' class='btn_el' onclick='del(\""+row.config_id+"\",\""+row.config_id+"\")'>删除</button>";
+					   ;
+					   if(row.is_active==1){
+						   state= "<button type='button' class='btn_el' onclick='use(\""+row.config_id+"\",\""+row.user_id+"\",\""+row.cre_time+"\",\""+row.is_active+"\")'>禁用</button>| "
+								   +"<button type='button' class='btn_el' onclick='edit(\""+row.config_id+"\",\""+row.version_num+"\")'>编辑版本号</button> ";
+
+					   }
+					   return state;
+				   }
+				   }
+			   ],onPageChange:function(number, size){
+                   $("#IDS_PAGESIZE").val(size);
+                   $("#IDS_PAGENUM").val(number);
+                   pageNum=number;
+                   pageSize=size;
+               },onPostBody:function(data){
+				   if(queryParm=='' &&　(data == null || data.length == 0)){
+					   $(".no-records-found td").html('您还没有添加相关信息，请点击<a onclick="add();" href="javascript:void(0);">添加</a>');
+                   }
+			   }
+		   });
+
+           if(RFlag==1){
+               requery();
+           }else{
+               _gd["list"].init();
+           }
+	   }
+
+    //生效版本
+    function use(configID,userID,time,active){
+       layer.confirm(
+		   "确认将生效【"+time+"】指标配置版本吗？<br/>",
+		   {icon:3,title:"生效配置",skin: 'layer-ext-moon'},
+		   function(){
+			   $.ajax({
+				   type: "post",
+				   url: quick.serverUrl + '/use?config_id=' + configID+'&user_id='+userID+'&cre_time='+time+'&is_active='+active,
+				   dataType: "json",
+				   data:{ID:configID},
+				   success: function(data){
+					   layer.msg('指标配置成功生效', {icon:1,time: 1000,skin: 'layer-ext-moon'});
+                       _gd["list"].refresh();
+				   },
+				   error:function(err){
+					   layer.msg("结果异常",{icon:1,time: 1000,skin: 'layer-ext-moon'});
+				   }
+			   });
+		   }
+       );
+    }
+	   //删除记录
+	   function del(node,name){
+		   layer.confirm(
+				   "确认将删除【"+name+"】吗？<br/>删除后，所有关联数据将一并删除，且删除后不可恢复",
+				   {icon:3,title:"删除记录",skin: 'layer-ext-moon'},
+				   function(){
+					   $.ajax({
+						   type: "post",
+						   url: quick.serverUrl + '/delete?config_id=' + node,
+						   dataType: "json",
+						   data:{ID:node},
+						   success: function(data){
+							   layer.msg('删除记录成功', {icon:1,time: 1000,skin: 'layer-ext-moon'});
+							   _gd["list"].refresh();
+						   },
+						   error:function(err){
+							   layer.msg("结果异常",{icon:1,time: 1000,skin: 'layer-ext-moon'});
+						   }
+					   });
+				   }
+		   );
+	   }
+	//查看详细信息
+
+	function edit(id,version_num){
+		//alert(id);
+		//alert(version_num);
+		layer.open({
+			type: 1,
+			closeBtn: true,
+			shift: 7,
+			shadeClose: true,
+			content: "<div style='width:350px;'><div style='width:320px;margin-left: 3%;' class='form-group has-feedback'><p>请输入版本号</p><input id='version_num' class='form-control' type='text' name='version_num' placeholder='"+version_num+"'/></div>" +
+			"<button style='margin-top:5%;' type='button' class='btn btn-block btn-success btn-lg' onclick='updateVerNa("+id+")'>提交</button></div>"
+			//"<button style='margin-top:5%;' type='button' class='btn btn-block btn-success btn-lg' onclick='updateVerNa(\""+id+"\",\""+$("#version_name").val()+"\")'>提交</button></div>"
+
+		})
+       /* navAppend("编辑集成系统");/!*获取父页面元素并动态赋值父页面title*!/
+	    window.location.href=quick.editUrl + "?log_id="+id + getDetailParm();//跳转到另一个页面，并且还在当前框架*/
+	}
+	   function updateVerNa(id){
+		  // alert(id);
+		   //alert($("#version_num").val());
+		   var version_num=$("#version_num").val();
+			   $.ajax({
+				   type: "post",
+				   url : quick.serverUrl + "/updateVerNa",
+				   dataType:'json',
+				   data: {
+					   "config_id":id,
+					   "version_num":version_num
+				   },
+				   success: function(data){
+					   //alert(data);
+					   var updateSuccess = data;
+					   if(updateSuccess){
+						   layer.msg('修改成功', {
+							   time: 500, //0.5s后自动关闭
+							   // btn: ['明白了', '知道了']
+						   });
+						   query();
+					   }else{
+						   layer.msg('修改失败', {
+							   time: 500, //20s后自动关闭
+							   // btn: ['明白了', '知道了']
+						   });
+						   query();
+					   }
+				   }
+			   });
+			   layer.closeAll();
+
+	   }
+	function add(){
+		menuGoto(quick.editUrl);
+	}
+    //将url查询信息传至详细信息页面,返回时调用
+	function goDetail(obj){
+		var value = $(obj).attr("id");
+		navAppend("详情信息");/*获取父页面元素并动态赋值父页面title*/
+		window.location.href=quick.editUrl + "?mode=browse&log_id="+id + getDetailParm();
+	}
+    function query(){
+		pageNum=1;
+		pageSize=15;
+       _gd['list'].refresh();
+       queryParm=getParm();
+		//alert(queryParm);
+
+    }
+    //获取返回时传回的数据
+    function requery(){
+       var pn = Number($.request.queryString["IpageNum"]) || 1;
+       var ps =  $.request.queryString["IpageSize"] || 10;
+       
+       _gd["list"].config({
+           pageSize: ps
+           ,onLoadSuccess:function(){
+               if(pageFlag>0){
+                   return;
+               }
+               $('#list').bootstrapTable('selectPage', pn);
+               pageFlag++;
+           }
+       });
+       _gd["list"].init();
+    }
+    //获取查询框数据
+	function getParm(){
+		var s = '&I'+$("#formSearch").serialize().replace(/&/g, "&I");
+		return s;
+	}
+	function getDetailParm(){
+		var s= queryParm + "&IpageNum="+pageNum+"&IpageSize="+pageSize;
+		return s;
+	}
+  </script>
+  <body class="gray-bg">
+  <div class="wrapper wrapper-content wrapper-content-x animated fadeInRight">
+	  <div class="row">
+		  <div class="col-sm-12">
+			  <div class="ibox ibox-x">
+				  <div class="ibox-content ibox-content-x">
+					  <h1 align="center">指标配置管理[电脑]</h1>
+					  <div class="panel-mar">
+							  <form id="formSearch" class="form-inline">
+                                  <!--<div class="form-group" style="padding: 0px;width:180px;">
+                                      <input id="start_time" name="start_time" class="form-control" type="text" placeholder="开始时间" /> <label onclick="layerDateTime();" style="position: absolute;top: 0px;right: 15px;background-position-x: center;" class="laydate-icon inline demoicon layer_date"></label>
+								  </div>-->
+								  <div class="form-group" style="padding: 0px;width:130px;">
+									  <input id="start_time" name="start_time" class="form-control" onfocus="(this.type='date')" type="text" placeholder="开始时间" />
+								  </div>
+                                  <div class="form-group" style="padding: 0px;width:130px;">
+								  <input id="end_time" name="end_time" class="input-sm form-control" onfocus="(this.type='date')" type="text" placeholder="截止时间" />
+								  </div>
+								  <div class="form-group" style="padding: 0px;width:180px;">
+									  <input type="checkbox" id="config_ver" name="config_ver"  value="1" >只显示自定义版本</input>
+								  </div>
+								  <span class="input-group-btn" style="display:inline-block;">  <button class="btn btn-primary " type="button" onclick="query();"> 查询</button> </span>
+							  </form>
+						</div>
+					  <div style ="margin:5px;">
+						  <table id="list" class="table-striped" style="table-layout:fixed"></table>
+					  </div>
+				  </div>
+			  </div>
+		  </div>
+		  <input type="hidden"  id="IDS_PAGENUM" name="IDS_PAGENUM">
+		  <input type="hidden"  id="IDS_PAGESIZE" name="IDS_PAGENUM">
+  </div>
+  </div>
+  </body>
+</html>

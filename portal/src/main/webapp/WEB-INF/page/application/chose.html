@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	  <#include "/WEB-INF/include/reslist.html" />
+  </head>
+   <script>
+    var _chosen = null;
+    var _chosenId = null;
+    var _chosenName = null;
+    //初始化表格
+    function  config(){
+       quick.serverUrl = "${G.serverUrl}";
+       quick.idField = "${G.idField}";
+       
+       $("#list").bootstrapTable("destroy");
+       _gd["list"]=new BGrid("#list");
+       _gd["list"].config({
+    	   url:quick.serverUrl+"/getList?app_state=1&i=" + Math.random(),
+    	   idField: quick.idField,
+    	   sortName: quick.idField,
+           cache:false,
+    	   height: $(document.body).height()-50,
+    	   toolbar:"#formSearch",
+    	   columns: [
+                   {  checkbox: true },
+                   { field: 'super_app_id', title: '上级应用系统', width: 100  },
+                   { field: 'app_name', title: '应用系统名称', width: 100  },
+                   { field: 'dep_id', title: '部门', width: 100  },
+                   { field: 'app_level', title: '应用系统级别', width: 100  }
+    	   ],onClickRow:function(row,e){
+               _chosen = row;
+               _chosenId = row.app_id;
+               _chosenName = row.app_name;
+    	   },onCheck:function(row){
+               _chosen = row;
+               _chosenId = row.app_id;
+               _chosenName = row.app_name;
+           }
+       });
+
+       _gd["list"].init();
+    }
+    function query(){
+       _gd['list'].refresh();
+       queryParm=getParm();
+    }
+  </script>
+  <body class="gray-bg">
+  <div class="wrapper wrapper-content wrapper-content-x animated fadeInRight">
+	  <div class="row">
+		  <div class="col-sm-12">
+			  <div class="ibox ibox-x">
+				  <div class="ibox-content ibox-content-x">
+					  <div class="panel-mar">
+							  <form id="formSearch" class="form-inline" style="width:400px;height:40px;">
+                                  <div class="form-group" style="padding: 0px;width:180px;float:left;">
+                                      <input id="app_name" name="app_name" class="input-sm form-control" type="text" placeholder="输入应用系统名称" /> 
+								  </div>
+								  <button class="btn btn-primary " type="button" onclick="query();"> 查询</button>
+							  </form>
+						</div>
+					  <div style ="margin:5px;">
+						  <table id="list" class="table-striped" style="table-layout:fixed"></table>
+					  </div>
+				  </div>
+			  </div>
+		  </div>
+	  </div>
+  </div>
+  </body>
+</html>

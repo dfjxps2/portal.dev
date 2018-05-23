@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<#include "/WEB-INF/include/resedit.html" />
+	
+	<style type="text/css">
+	.form_ipt_botm{
+	margin-bottom: 15px;
+	}
+	</style>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-sm-12">
+		 <div class="col-sm-10">
+			<div class="col-sm-12">
+			      <label class="col-xs-8" style="text-align:center;font-size: 22px;color:blue;margin-left: 180px">菜单详细信息</label>            	  
+             </div>
+          </div>
+		 <div class="col-sm-2">   
+            <div class="pull-right ibox-toolbars hidefield" style="margin-right: -14px;margin-top: 2px;">
+			     <button type="button" class="btn btn-primary" onclick="cancel();">返回</button>			            	  
+             </div>
+         </div>    
+			<div class="ibox">
+				<div class="ibox-content ibox-content-ad" >
+					<form id="form" name="form" method="post" action="#" class="wizard-big addForm" enctype="multipart/form-data" accept="image/jpg, image/png">
+				    <div class="row">
+                        <div class="col-sm-12 form_ipt_botm"  style="margin-bottom: 7px">
+                        <div class="row">
+	                        <div class="col-sm-6 form_ipt_botm">
+	                            <div class="form-group">
+	                                <label class="col-xs-4 lable_top">菜单中文名：</label>
+	                                <div class="col-xs-8"><input type="text" id="menu_cn_name" name="menu_cn_name" readOnly="readOnly" class="form-control" style="width: 160px;text-align:center;" /></div>
+	                            </div>
+	                         </div>
+	                         <div class="col-sm-6 form_ipt_botm">
+	                            <div class="form-group">
+	                                <label class="col-xs-4 lable_top"><span></span>菜单英文名：</label>
+	                                <div class="col-xs-8"><input type="text" id="menu_name" name="menu_name"  readOnly="readOnly" class="form-control"  style="width: 160px;text-align:center;"/></div>
+	                            </div>
+	                         </div>
+                         </div>
+                        </div>
+                       <!--  <div class="col-sm-6 form_ipt_botm">
+                            
+                        </div> -->
+                         <div class="col-sm-6 form_ipt_botm">
+                            <div class="form-group">
+                                <label class="col-xs-4 lable_top">上级菜单：</label>
+                                 <div class="col-xs-8">
+                                 	<div class="input-group">
+                                 		<input type="text" id="super_menu_name" readOnly="readOnly" class="form-control" style="width: 160px;text-align:center;"/>
+                                 	</div>
+                                 </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 form_ipt_botm">
+                            <div class="form-group">
+                                <label class="col-xs-4 lable_top">菜单级别：</label>
+                                <div class="col-xs-8">
+                                	<div class="input-group">
+                                		<input type="text" id="menu_level" name = "menu_level" readOnly="readOnly" class="form-control" style="padding: 0px;width:40px;text-align:center;"/>
+                                	</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 form_ipt_botm">
+                            <div class="form-group">
+                                <label class="col-xs-4 lable_top">对应应用：</label>
+                                <div class="col-xs-8">
+	                               <div class="input-group">
+	                                	<input type="text" id="app_name" name = "app_name" readOnly="readOnly" class="form-control" style="padding: 0px;width:160px;text-align:center;"/>
+	                                </div>
+                               </div>
+                            </div>
+                        </div>
+                          <div class="col-sm-6 form_ipt_botm">
+		                       <div class="form-group">
+		                          <label class="col-xs-4 lable_top">菜单显示顺序：</label>
+		                          <div class="col-xs-8">
+			                          <div class="input-group">
+			                          	<input type="text" id="disp_order" name = "disp_order" readOnly="readOnly" class="form-control" style="padding: 0px;width:40px;text-align:center;"/>		                          
+			                          </div>
+		                           </div>
+		                        </div>
+                        </div>
+                        <div class="col-sm-6 form_ipt_botm">
+                        	<div class="row">
+	                           <div class="col-sm-12 form_ipt_botm" style="margin-bottom: 0px;">
+		                           <div class="form-group">
+		                              <label class="col-xs-4 lable_top" style="margin-left: -25px;">菜单图标：</label>
+                            		<div class="col-xs-8 form_ipt_botm">
+										<div id="preview">
+											<img id="imghead" border="0" src="" style=" width:200px;height:40px;">
+										</div>
+										<input type="file" onchange="previewImage(this);" id="previewImg" name="previewImg" style="display: none;">									
+									</div>
+                           			 </div>
+	                             </div>
+	                             <div class="col-sm-12 form_ipt_botm">
+		                            <div class="form-group">
+		                                <label class="col-xs-4 lable_top" style="margin-left: -25px;">创建时间：</label>
+                            		<div class="col-xs-8 radio_ipt">
+		                                	<input type="text" id="cre_time" name = "cre_time" readOnly="readOnly" class="form-control" style="width: 180px;text-align:center;"/>
+		                                </div>
+		                            </div>
+	                            </div>
+                            </div>
+                          </div>
+               
+                          <div class="col-sm-6 form_ipt_botm">
+                          <div class="row">
+	                           <div class="col-sm-12 form_ipt_botm">
+		                           <div class="form-group">
+		                                <label class="col-xs-4 lable_top">菜单状态：</label>
+		                                <div class="col-xs-8 radio_ipt">
+		                                	<input type="text" id="state_name" name = "state_name" readOnly="readOnly" class="form-control" style="width: 60px;text-align:center;"/>
+		                                </div>
+                           			 </div>
+	                             </div>
+	                             <div class="col-sm-12 form_ipt_botm">
+		                            <div class="form-group">
+		                                <label class="col-xs-4 lable_top">菜单功能URL：</label>
+		                                <div class="col-xs-8"><input type="text" id="menu_url" name = "menu_url" readOnly="readOnly" class="form-control" style="width: 180px;text-align:center;"/></div>
+		                            </div>
+	                            </div>
+                            </div>
+                        </div>
+                         <div class="col-sm-12 form_ipt_botm">
+                         	 <div class="row">
+                         	 	<div class="col-sm-6 form_ipt_botm"  style="margin-top: -14px;">
+		                         	<div class="form-group">
+		                            	<label class="col-xs-4 lable_top" style="margin-left: -25px;">修改时间：</label>
+		                            		<div class="col-xs-8 radio_ipt">
+				                                	<input type="text" id="upd_time" name = "upd_time" readOnly="readOnly" class="form-control" style="width: 180px;text-align:center;"/>
+				                            </div>
+				                     </div>   
+			                      </div> 
+			                      <div class="col-sm-6 form_ipt_botm">
+		                         	<div class="form-group pull-right">
+		                            	 <input id="submit-form" type="button" class="btn btn-primary" value="修改" onclick="updatta();">
+		                            	 <input type="hidden" id="menu_id" />
+				                     </div>   
+			                      </div>  
+		                     </div>      
+                          </div>
+                        </div>
+				    </div>
+				</form>
+			</div>
+			</div>
+		</div>
+
+	</div>
+</body>
+<script>
+/*新增或浏览*/
+//var mode = $.request.queryString["mode"];
+var sysid=$.request.queryString["menu_id"];
+if(sysid){
+    $("input,textarea").attr("placeholder", "");
+    $(".hidefield").show();
+    //$(".ediefield").hide();
+    $.post('${G.host}/sysMenu/getObj?menu_id=' + sysid + "&i=" + Math.random(), function(data){
+        setForm(data);
+        document.getElementsByName("menu_state").checked=false;
+		//$("#menu_state1").checked=false;
+		if (data.menu_state==1) {
+			$("#state_name").val("激活");
+		}else{
+			$("#state_name").val("禁用");
+		}
+		if (data.app_name==null||data.app_name=="") {
+			$("#app_name").val("无对应应用");
+		}else{
+			$("#app_name").val(data.app_name);
+		}
+		$("#menu_level").val(data.menu_level);
+       if (data.menu_state==1) {
+			$("#menu_state1").attr("checked","checked");
+		}else{
+			$("#menu_state0").attr("checked","checked");
+		}
+		//viewRead();
+        $("#imghead").attr('src','${G.host}/'+data.menu_icon_url);
+    });
+} 
+function updatta(){
+	var id = $("#menu_id").val();
+	window.location.href='${G.host}/sysMenu/edit' + "?menu_id="+id;//跳转到另一个页面，并且还在当前框架
+}
+
+function cancel(){
+	var url = '${G.host}/sysMenu/list' + urlDel(location.search, 'mode','menu_id')+ '?RFlag=1';
+	window.location.href = url;
+}
+</script>
+</html>

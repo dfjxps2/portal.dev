@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quick.portal.web.mainframe.MainFrameDao">
+
+
+    <resultMap id ="mainFrameResult" type="com.quick.portal.web.mainframe.MainFrameBean">
+            <result property="menuId" column="menu_id" />
+            <result property="superMenuId" column="super_menu_id" />
+            <result property="menuCnName" column="menu_Cn_name" />
+            <result property="menuUrl" column="menu_url" />
+            <result property="menuIconUrl" column="menu_icon_url" />
+    </resultMap>
+
+ 
+    
+     <!--根据MENU查询一个对象-->
+    <select id="searchMainFrame" parameterType="int" resultMap="mainFrameResult">
+	<![CDATA[		        
+			SELECT
+					U.MENU_ID,
+					U.MENU_CN_NAME,
+					U.MENU_ICON_URL,
+					U.SUPER_MENU_ID,
+					U.MENU_URL
+			FROM
+					SYS_MENU U,
+					MENU_PRIVILEGE E,
+					USER_ROLE_RELA A,
+					USER_ROLE R
+			WHERE
+					U.MENU_ID = E.MENU_ID
+			AND E.ROLE_ID = A.ROLE_ID
+			AND A.ROLE_ID = R.ROLE_ID
+			AND U.MENU_STATE = 1
+			AND R.ROLE_STATE = 1
+			AND A.USER_ID = #{userId}
+			ORDER BY
+				MENU_ID,
+				DISP_ORDER	
+		]]>
+	
+    </select>
+</mapper>

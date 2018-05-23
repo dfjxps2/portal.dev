@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quick.portal.security.authority.metric.IMetricPrivilegeDao">
+	
+    <!--查询条件-->
+	<sql id="where">
+		1=1
+		<if test="pri_id != null"><![CDATA[
+	       and pri_id = #{pri_id}
+	    ]]></if>
+		<if test="menu_id != null"><![CDATA[
+	       and menu_id = #{menu_id}
+	    ]]></if>
+		<if test="role_id != null"><![CDATA[
+	       and role_id = #{role_id}
+	    ]]></if>
+		<if test="menu_name != null and menu_name != '' and menu_name != 'null'"><![CDATA[
+	       and menu_id in (select menu_id from sys_menu where menu_name=#{menu_name})
+	    ]]></if>
+        <if test="_sql_where != null and _sql_where != ''"> <![CDATA[
+            and ${_sql_where}
+        ]]> </if>
+	</sql>
+    
+    <!-- 新增menu_privilege -->
+	<insert id="insert" parameterType="com.quick.portal.menuPrivilege.MenuPrivilegeDO">
+		insert into menu_privilege (
+    		  menu_id,
+    		  role_id,
+    		  cre_time,
+    		  upd_time
+		)values(
+			 #{menu_id},
+			 #{role_id},
+			 #{cre_time},
+			 #{upd_time}
+			)
+	</insert>
+		
+	<!-- 修改menu_privilege -->
+	<update id="update" parameterType="com.quick.portal.menuPrivilege.MenuPrivilegeDO">
+		update menu_privilege 
+		   set pri_id=#{pri_id}
+			  ,menu_id=#{menu_id}
+			  ,role_id=#{role_id}
+			  ,cre_time=#{cre_time}
+			  ,upd_time=#{upd_time}
+		 where pri_id = #{pri_id}
+	</update>
+    
+	<!-- 删除 -->
+	<delete id="delete" parameterType="String">
+		delete from menu_privilege where pri_id = #{pri_id}
+	</delete>
+    
+    <!--查询-->
+	<select id="select" parameterType="map" resultType="map">
+		select * from menu_privilege
+		<where>
+			<include refid="where" />
+		</where>
+        <if test="_sql_order != null and _sql_order != ''">
+            order by ${_sql_order}
+        </if>
+	</select>
+	
+	<!-- 查询总记录数 -->
+	<select id="count" parameterType="map" resultType="int">
+		select count(*) from menu_privilege
+		<where>
+			<include refid="where" />
+		</where>
+	</select>
+	
+	
+	<!--add by cxh-->
+	<select id="listAllMetric"  parameterType="map" resultType="map">
+		select * from metric where appr_state=1
+	</select>
+
+	<delete id="removeMetricPriByRole" parameterType="map">
+		delete from role_metric_privilege where role_id=#{roleId}
+	</delete>
+
+	<insert id="saveMetricPrivilege" parameterType="map">
+		<![CDATA[
+		INSERT INTO ROLE_METRIC_PRIVILEGE (
+			METRIC_ID,
+			ROLE_ID
+		)VALUES(
+		#{metricId},
+		#{roleId}
+		);
+		DELETE FROM ROLE_METRIC_PRIVILEGE  WHERE METRIC_ID IN  (
+ 			SELECT C.METRIC_ID FROM (
+				SELECT B.METRIC_ID FROM METRIC B WHERE  B.SRC_METRIC_SUP_ID ='root'
+			 ) AS C
+		) ; 
+		]]> 
+	</insert>
+
+	<select id="listMetricPrivilege"  parameterType="String" resultType="map">
+		<![CDATA[ select e.metric_id,c.src_metric_id from role_metric_privilege e ,metric c   where e.metric_id = c.metric_id and role_id=#{roleId}]]> 
+	</select>
+	
+    <!-- 保存指标数据 -->
+	<insert id="saveMetricData" parameterType="map">
+		<![CDATA[INSERT INTO METRIC (
+			METRIC_NAME,
+			SRC_METRIC_ID,
+			SRC_METRIC_SUP_ID,
+			APPR_STATE,
+			PUB_TIME,
+			APPR_TIME
+		)VALUES(
+		#{name},
+		#{id},
+		#{pid},
+		1,
+		CURRENT_TIMESTAMP(),
+		CURRENT_TIMESTAMP()
+		)]]>
+	</insert>
+	
+	<update id="updateMetricData" parameterType="map">
+		<![CDATA[UPDATE METRIC 
+		   SET METRIC_NAME=#{name}
+			  ,SRC_METRIC_SUP_ID=#{pid}
+			  ,PUB_TIME=CURRENT_TIMESTAMP()
+			  ,APPR_TIME=CURRENT_TIMESTAMP()
+		 WHERE SRC_METRIC_ID = #{id}
+		 ]]>
+	</update>
+	
+	
+	<select id="isExistMetricByID" parameterType="String" resultType="int">
+		<![CDATA[SELECT COUNT(*) FROM METRIC WHERE SRC_METRIC_ID =#{id}]]>
+	</select>
+	
+	<select id="searchMetricBySrcMetricId" parameterType="String" resultType="map">
+		<![CDATA[SELECT METRIC_ID FROM METRIC WHERE SRC_METRIC_ID =#{srcMetricId} ]]>
+	</select>
+	
+	
+	
+    
+</mapper>

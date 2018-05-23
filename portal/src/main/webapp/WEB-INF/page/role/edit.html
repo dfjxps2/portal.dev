@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>新增角色</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+	<script src="${G.host}/res/plugin/jQuery/jquery-1.11.3.min.js" type="text/javascript"></script>
+	<!--Bootstrap -->
+	<link href="${G.host}/res/plugin/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<script src="${G.host}/res/plugin/bootstrap/js/bootstrap.js"></script>
+	<script src="${G.host}/res/plugin/bootstrap/js/bootstrap.min.js"></script>
+
+	<link href="${G.host}/res/fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+	<link href="${G.host}/res/css/plugins/steps/jquery.steps.css" rel="stylesheet">
+	<link href="${G.host}/res/css/animate.min.css" rel="stylesheet">
+	<link href="${G.host}/res/css/styleIter.css" rel="stylesheet">
+
+	<!-- Loading Flat UI -->
+
+	<link rel="shortcut icon" href="${G.host}/res/plugin/FlatUI/img/favicon.ico">
+
+	<!-- jQuery (necessary for Flat UI's JavaScript plugins) -->
+	<!-- Include all compiled plugins (below), or include individual files as needed -->
+	<script src="${G.host}/res/plugin/FlatUI/js/flat-ui.min.js"></script>
+
+	<link href="${G.host}/res/plugin/bootstrap-table/bootstrap-table.css" rel="stylesheet">
+
+	<script src="${G.host}/res/plugin//bootstrap-table/bootstrap-table.js"></script>
+	<script src="${G.host}/res/plugin/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+	<#include "/WEB-INF/include/resedit.html" />
+
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="col-sm-10">
+				<div class="col-sm-12">
+					<label id="pagename" class="col-xs-8" style="text-align:center;font-size: 22px;color:blue;margin-left: 180px">角色编辑</label>
+				</div>
+			</div>
+			<div class="ibox">
+				<div class="ibox-content ibox-content-ad">
+					<form style="padding-top: 30px;" id="form" action="${G.host}/role/updataRole" class="wizard-big">
+						<input type="hidden" id="role_id" name="role_id" value=""/>
+						<div class="row">
+							<div class="col-sm-8 form_ipt_botm">
+								<div class="form-group">
+									<label class="col-xs-2 lable_top"><span class="span_require">*</span>名称</label>
+									<div class="col-xs-9">
+										<input maxlength="10" placeholder="输入2-10中文汉字或英文字母或数字的组合" id="role_name" name="role_name" type="text" class="form-control required">
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-8 form_ipt_botm">
+								<div class="form-group">
+									<label class="col-xs-2 lable_top"><span class="span_require">*</span>状态</label>
+									<div class="col-xs-9">
+										<select name="role_state" class="form-control required" id="role_state">
+											<option value="1">启用</option>
+											<option value="0">停用</option>
+										</select>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-sm-8 form_ipt_botm">
+								<div class="form-group">
+									<label class="col-xs-2 lable_top"></label>
+									<div class="col-xs-5">
+										<input id="submit-form" type="button" class="btn btn-primary" value="保存">
+<!--
+										<input type="button" class="btn btn-primary" value="返回" onclick="location.href='list';">
+-->
+									</div>
+									<div class="col-xs-5">
+									<input type="button" class="btn btn-primary" value="返回" onclick="location.href='list';">
+								</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+</body>
+<script src="${G.host}/res/js/content.min.js?v=1.0.0"></script>
+<script src="${G.host}/res/js/plugins/staps/jquery.steps.min.js"></script>
+<script src="${G.host}/res/js/plugins/validate/jquery.validate.min.js"></script>
+<script src="${G.host}/res/js/plugins/validate/messages_zh.min.js"></script>
+
+<link href="${G.host}/res/layer/skin/default/layer.css" rel="stylesheet">
+<link href="${G.host}/res/layer/skin/moon/style.css" rel="stylesheet">
+
+<script src="${G.host}/res/layer/layer.js"></script>
+
+<script>
+	var iscommit=false;
+		var name=$("#role_name").val();
+
+	window.onload = function() {
+		var role_id = $.request.queryString["role_id"];
+
+		$.ajax({
+			type: "post",
+			url: "getObj",
+			async:false,
+			data:{role_id:role_id},
+			dataType: "json",
+			success: function(data){
+				console.log(JSON.stringify(data));
+				if(data!=null){
+					var role_state = data.role_state;
+					var role_name = data.role_name;
+					var role_id = data.role_id;
+					$("#role_name").val(role_name);
+					$("#role_state").val(role_state);
+					$("#role_id").val(role_id);
+				}
+			}
+		});
+
+		/*自定义错误提示信息的方法*/
+		jQuery.validator.addMethod("idFuc", function(value, element) {//编码验证  //2-20位英文字母或者数字的组合
+			var tel = /^[0-9a-zA-Z]{0,100}$/;
+			return this.optional(element) || (tel.test(value));
+		},"格式不符合");
+
+		jQuery.validator.addMethod("idFuc1", function(value, element) {//编码验证  //2-20位英文字母或者数字的组合
+			var flag=true;
+			if(value.length<2 || value.length>20){
+				flag=false;
+			}
+			return this.optional(element) || flag;
+		},"请输入2-20位字符");
+
+		jQuery.validator.addMethod("nameFuc", function(value, element) {//名称验证  只能是2-10中文汉字或英文字母或数字的组合
+			var tel = /^[\u4E00-\u9FA5a-zA-Z0-9]{0,100}$/;
+			return this.optional(element) || (tel.test(value));
+		}, "格式不符合");
+
+		jQuery.validator.addMethod("nameFuc1", function(value, element) {//名称验证
+			var flag=true;
+			if(value.length<2 || value.length>10){
+				flag=false;
+			}
+			return this.optional(element) || flag;
+		}, "请输入2-10位字符");
+
+
+		jQuery.validator.addMethod("phoneFuc", function(value, element) {//手机号码验证
+			var tel = /^[0-9]{11}$/;
+			return this.optional(element) || (tel.test(value));
+		}, "只能是11位的数字");
+
+		$("#form").validate({
+
+			errorPlacement: function(error, element) {
+				element.parent().append(error);
+			},
+		rules: {
+				confirm: {
+					equalTo: "#role_id"
+				},
+				role_name:{
+					required: true,
+					nameFuc:true,
+					nameFuc1:true,
+					remote: {
+						url: "${G.host}/role/getObjByName",     //后台处理程序
+						type: "post",               //数据发送方式
+						dataType: "json",           //接受数据格式
+						data: {                     //要传递的数据
+							role_name: function() {
+								return $("#role_name").val();
+							}
+						},
+						dataFilter: function (data, type) {//判断控制器返回的内容
+							// console.log(data);
+							for(var p in data ){
+								if(data[p]==name&&data !="" && data!=null){
+									return true;
+								}
+							}
+							if ( data =="" || data==null) {
+								return true;
+							}else{
+								return false;
+							}
+						}
+					}
+				}
+			},
+			messages:{
+				role_name:{
+					remote:"已存在该角色名"
+				}
+			}
+		});
+		/*保存前*/
+		function submitBefore(){
+			var flag=false;
+		//	var name=$("#role_name").val();
+			 //alert(1);
+			$.ajax({
+				type: "post",
+				url:  '${G.host}/role/getObjByName?T='+Math.random(),
+				//dataType: "json",
+				async: false,
+				data:{role_name:$("#role_name").val()},
+				success: function(data){
+					//alert(data);
+					for(var p in data ){
+						if(data[p]==name&&data !="" && data!=null){
+							flag= false; //后台没有重复数据  可以执行更新
+							return flag;
+						}
+					}
+					console.log(data);
+					if ( data =="" || data==null) {
+						flag= false; //后台没有重复数据  可以执行更新
+					}else{
+						flag= true;  //后台有重复数据 不可以执行更新
+					}
+				}
+			});
+			return flag;
+		}
+		/*完成*/
+		function thingOver(){
+			iscommit=true;
+			//alert(submitBefore());
+			if(submitBefore()){
+				layer.msg('保存失败',{icon:1,time: 1000,skin: 'layer-ext-moon'});
+				iscommit=false;
+				return;
+			}else {
+				var role_name = $("#role_name").val();
+				var role_id = $("#role_id").val();
+				var role_state = $("#role_state").val();
+				var url = encodeURI("updataRole?role_id=" + role_id + "&role_name=" + encodeURI(role_name) + "&role_state=" + role_state);
+				layer.msg('保存成功！', {icon: 1, time: 1000, skin: 'layer-ext-moon'}, function () {
+					window.location.href = url;
+				});
+			}
+		}
+
+		/*保存*/
+		$("#submit-form").click(function () {
+			if (!($("#form").validate())) {
+				return false;
+			}
+
+			/*点击完成按钮跳转页面*/
+			if(!iscommit)
+				thingOver();
+
+		});
+	}
+</script>
+</html>

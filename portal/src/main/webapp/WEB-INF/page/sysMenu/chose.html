@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <#include "/WEB-INF/include/resedit.html" />
+    <link href="${G.host}/res/js/ztree/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+    <!--<link href="http://localhost:8080/console/res/layer/skin/default/layer.css" rel="stylesheet">-->
+    <script src="${G.host}/res/js/ztree/jquery.ztree.all.min.js" ></script>
+
+</head>
+<body class="gray-bg">
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content ibox-content-x">
+                    <div  class="col-sm-12" >
+                    <h3 class="col-sm-12" style="font-size: 16px">上级菜单选择</h3>
+                    </div>
+                    <div class="tabs-container">
+                        <div class="tab-content">
+                            <div id="tab-1" class="tab-pane active">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-sm-6 form_ipt_botm">
+                                            <div class="col-sm-6 form_ipt_botm">
+                                                <div class="form-group">
+                                                    <ul id="treeDemo" class="ztree"></ul>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+   var zTreeObj;
+    $(document).ready(function(){
+        listAllMenu();
+    });
+
+    function listAllMenu(){
+        zTreeObj = null;
+        var ztreeSetting = {
+            check: { 
+            	enable: true,
+                chkStyle: "radio",  //单选框
+                radioType: "all"   //对所有节点设置单选
+                },
+             callback: {
+            	onCheck: zTreeOnCheck
+            	},
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            },
+            view: {
+                // fontCss : {color:"#ff0011",fontSize:20,fontWeight:"bold"}
+            }
+        };
+        $.ajax({
+            type: "get",
+            url: "${G.host}/sysMenu/listAllMenu",
+            async:false,
+            dataType: "json",
+            success: function(data){
+            	//在控制台打印数据
+                //console.log(JSON.stringify(data));
+                var ztreeNodes = new Array();
+                if(data!=null&&data.length>0){
+                    $.each(data,function(i,dataNode){
+                        var menu_id = dataNode.menu_id;
+                        var super_menu_id = dataNode.super_menu_id;
+                        var menu_cn_name = dataNode.menu_cn_name;
+                        var menu_level = dataNode.menu_level;
+                        ztreeNodes.push({"id":menu_id, "pId":super_menu_id, "name":menu_cn_name,"level":menu_level});
+                    });
+                }
+                zTreeObj = $.fn.zTree.init($("#treeDemo"), ztreeSetting, ztreeNodes);
+                var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+                treeObj.expandAll(true);
+                //checkMenuPri();
+            }
+        });
+    }
+    
+    var _chosenId = null;
+    var _chosenName = null;
+    function zTreeOnCheck(event, treeId, treeNode) {
+    	_chosenLevel = treeNode.level;
+    	_chosenId = treeNode.id;
+        _chosenName = treeNode.name;
+    };
+	function checkMenuPri(){
+        var role_id = $.request.queryString["role_id"];
+        $.ajax({
+            type: "get",
+            url: "${G.host}/role/listMenuPri",
+            async:false,
+            data:{role_id:role_id},
+            dataType: "json",
+            success: function(data){
+                if(data!=null&&data.length>0){
+                    $.each(data,function(i,checkMenu){
+                        var menu_id_checked = checkMenu.menu_id;
+                        console.log(menu_id_checked);
+                        var hasCheckNode = zTreeObj.getNodesByParam("id",menu_id_checked);
+                        if(hasCheckNode!=null&&hasCheckNode.length>0)
+                            zTreeObj.checkNode(hasCheckNode[0], true, true);
+                    });
+                }
+
+            }
+        });
+    }
+</script>
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <#include "/WEB-INF/include/reslist.html" />
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content wrapper-content-x animated fadeInRight">
+    <div  class="row">
+        <div class="col-sm-12">
+            <div class="ibox ibox-x">
+                <div class="ibox-content ibox-content-x">
+                    <div  class="panel-mar">
+                        <form id="formSearch" class="form-inline">
+                            <div class="form-group" style="left:50px;width:90px;">
+                                <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="addTagType();"> 新增标签类型</button> </span>
+                            </div>
+                            <div class="form-group" style="left:auto;width:90px;">
+                                <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="editTagType();"> 编辑标签类型</button> </span>
+                            </div>
+                            <div class="form-group" style="left:auto;width:90px;">
+                                <span class="input-group-btn" style="display:inline-block;"><button id="tag_delete"  class="btn btn-primary " type="button" onclick="deleteTagType();"  > 删除标签类型</button> </span>
+                            </div>
+                            <div class="form-group" style="left:auto;width:90px;">
+                                    <button type="button" class="btn btn-primary" onclick="cancel();">返回</button>
+                            </div>
+                        </form>
+
+                        <div style ="margin:5px;">
+                            <table id="list" class="table-striped" style="table-layout:fixed"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    var pageNum=1;
+    var pageSize=10;
+    var queryParm = '';
+    var flag=true;
+    var pageFlag=0;
+    var isChekTagFlag=false;
+    var tag_checked_val=null;
+    //初始化表格
+    function  config(){
+        var RFlag=$.request.queryString["RFlag"];
+        quick.serverUrl = "${G.serverUrl}";
+        quick.editUrl = "${G.editUrl}";
+        quick.objName = "${G.objName}";
+        quick.idField = "${G.idField}";
+        $("#list").bootstrapTable("destroy");
+        _gridPool["list"]=new BGrid("#list");
+        _gridPool["list"].config({
+            url:quick.serverUrl+"/getTag?i=" + Math.random(),
+            idField: quick.idField,
+            sortName: quick.idField,
+            cache:false,
+            height: $(document.body).height()-50,
+            toolbar:"#formSearch",
+            clickToSelect:true,
+            columns: [
+                //{  checkbox: true,title:'选择' },
+                {  field: 'TAGSELECT', title: '选择', align: 'center',
+                    formatter:function(value,rec){
+                        return "<input id=\"tags"+rec.tag_type_id+"\" title=\"tags\" class=\"ck_qx\" type=\"checkbox\" name=\"tag\" value=\"" + rec.tag_type_id+ "\" >";
+                    }  },
+                { field: 'tag_type_id',  title:'标签类型ID'},
+                { field: 'superTypeName', title: '上级标签类型名称', width: 90  },
+                { field: 'tag_type_name', title: '标签类型名称', width: 100  }
+            ],onPageChange:function(number, size){
+                pageNum=number;
+                pageSize=size;
+
+            },onClickRow:function (row,e) {
+                tag_checked_val=row.tag_type_id;
+            },onPostBody:function(data){
+                if(queryParm=='' &&　(data == null || data.length == 0)){
+                    $(".no-records-found td").html('您还没有添加相关信息，请点击<a onclick="add();" href="javascript:void(0);">添加</a>');
+                }
+            }
+        });
+
+        if(RFlag==1){
+            requery();
+        }else{
+            _gd["list"].init();
+        }
+    }
+
+    //获取选中的值
+    function checkedVal(name){
+        var json = document.getElementsByName(name)  ;
+        var check_val = [];
+        for(var i=0;i<json.length;i++) {
+            if (json[i].checked) {
+                check_val.push(json[i].value);
+            }
+        }
+        var vals = check_val.join(',');
+        return vals;
+    }
+
+
+    function deleteTagType(){
+        if(tag_checked_val==null || tag_checked_val=="" ){
+            layer.msg("请选择标签",{icon:1,time: 1000,skin: 'layer-ext-moon'});
+            return;
+        };
+        layer.confirm(
+            "确认将删除吗？<br/>删除后，所有关联数据将一并删除，且删除后不可恢复",
+            {icon: 3, title: "删除记录", skin: 'layer-ext-moon'},
+           function () {
+               $.ajax({
+                   type: "post",
+                   url: quick.serverUrl + '/deleteTagType',
+                   dataType: "json",
+                   data: {
+                       TAG_TYPE_ID_LIST: checkedVal("tag")
+                   },
+                   success: function (data) {
+                       if (data == 1) {
+                           layer.msg('删除记录成功', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+                           _gd["list"].refresh();
+                       } else {
+                           layer.msg('删除记录失败', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+
+                       }
+                   },
+                   error: function (err) {
+                       layer.msg("结果异常", {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+                   }
+               })
+           }
+        );
+    }
+
+    function add(){
+        menuGoto(quick.editUrl);
+    }
+
+    function editTagType() {
+        var json = document.getElementsByName("tag");
+        var check_val = [];
+        for (var i = 0; i < json.length; i++) {
+            if (json[i].checked) {
+                check_val.push(json[i].value);
+            }
+        }
+        if (check_val.length <= 0) {
+            layer.msg('请选择需要编辑的标签', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+            return;
+        } else if (check_val.length > 1) {
+            layer.msg('只能编辑一条', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+            return;
+        } else {
+            window.location.href = quick.serverUrl + "/tagtypeedit?tag_type_id=" + check_val[0] + getDetailParm();
+        }
+    }
+    //新增标签类型
+    function addTagType() {
+        window.location.href=quick.serverUrl+"/addtagtype" ;
+    }
+    //获取返回时传回的数据
+    function requery(){
+        var pn = Number($.request.queryString["IpageNum"]) || 1;
+        var ps =  $.request.queryString["IpageSize"] || 10;
+
+        _gd["list"].config({
+            pageSize: ps
+            ,onLoadSuccess:function(){
+                if(pageFlag>0){
+                    return;
+                }
+                $('#list').bootstrapTable('selectPage', pn);
+                pageFlag++;
+            }
+        });
+        _gd["list"].init();
+    }
+    function getDetailParm(){
+        var s= queryParm + "&IpageNum="+pageNum+"&IpageSize="+pageSize;
+        return s;
+    }
+    function cancel(){
+        var url = quick.serverUrl+"/taglist" + urlDel(location.search, 'mode','tag_id') + '&RFlag=1';
+        window.location.href = url;
+    }
+
+</script>
+
+</html>

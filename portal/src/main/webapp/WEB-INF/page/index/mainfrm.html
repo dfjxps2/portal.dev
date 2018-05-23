@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>framemenu</title>
+<link rel="stylesheet" type="text/css"
+	href="${G.host}/res/css/bootsnav.css">
+<link rel="stylesheet" type="text/css"
+	href="${G.host}/res/css/tabs.css">
+<link rel="stylesheet" type="text/css"
+	href="${G.host}/res/css/bootstrap.css">
+<link rel="stylesheet" type="text/css"
+	href="${G.host}/res/css/awesome.css">
+<style type="text/css">
+body {
+	background-color: hsla(0, 0%, 18%, 1.00)
+}
+
+.jq22-header h1 {
+	text-align: center;
+	font-size: 28px;
+	color: #939393
+}
+
+.navbar-brand {
+	padding: 29px 15px;
+	height: auto;
+}
+
+nav.navbar.bootsnav {
+	border: none;
+	margin-bottom: 150px;
+}
+
+.navbar-nav {
+	float: left;
+}
+
+nav.navbar.bootsnav ul.nav>li>a {
+	color: #474747;
+	text-transform: uppercase;
+	padding: 30px;
+}
+
+nav.navbar.bootsnav ul.nav>li:hover {
+	background: #f4f4f4;
+}
+
+.nav>li:after {
+	content: "";
+	width: 0;
+	height: 5px;
+	background: #34c9dd;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	transition: all 0.5s ease 0s;
+}
+
+.nav>li:hover:after {
+	width: 100%;
+}
+
+nav.navbar.bootsnav ul.nav>li.dropdown>a.dropdown-toggle:after {
+	content: "+";
+	font-family: 'FontAwesome';
+	font-size: 16px;
+	font-weight: 500;
+	position: absolute;
+	top: 35%;
+	right: 10%;
+	transition: all 0.4s ease 0s;
+}
+
+nav.navbar.bootsnav ul.nav>li.dropdown.on>a.dropdown-toggle:after {
+	content: "\f105";
+	transform: rotate(90deg);
+}
+
+.dropdown-menu.multi-dropdown {
+	position: absolute;
+	left: -100% !important;
+}
+
+nav.navbar.bootsnav li.dropdown ul.dropdown-menu {
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+	border: none;
+}
+
+@media only screen and (max-width:990px) {
+	nav.navbar.bootsnav ul.nav>li.dropdown>a.dropdown-toggle:after, nav.navbar.bootsnav ul.nav>li.dropdown.on>a.dropdown-toggle:after
+		{
+		content: " ";
+	}
+	.dropdown-menu.multi-dropdown {
+		left: 0 !important;
+	}
+	nav.navbar.bootsnav ul.nav>li:hover {
+		background: transparent;
+	}
+	nav.navbar.bootsnav ul.nav>li>a {
+		margin: 0;
+	}
+}
+
+div.menuSideBar {
+	
+}
+
+div.menuSideBar li.nav-header {
+	font-size: 14px;
+	padding: 3px 15px;
+}
+
+div.menuSideBar .nav-list>li>a, div.menuSideBar .dropdown-menu li a {
+	-webkit-border-radius: 0px;
+	-moz-border-radius: 0px;
+	-ms-border-radius: 0px;
+	border-radius: 0px;
+}
+</style>
+</head>
+<body>
+	<div class="demo" style="padding: 2em 0;">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12" style="height: 100px;">
+					<nav class="navbar navbar-default navbar-mobile bootsnav" style="background-color: #000;">
+					       <li class="pull-left text-center">
+								<a class="J_menuItem" id="webwe">
+								 <img src="res/images/logo bg.png" >
+								</a>
+							</li>
+							
+						   <li class="pull-left text-center">
+								<a class="J_menuItem" id="webwe">
+								 <img src="res/images/logo bg.png" >
+								</a>
+							</li>
+							<li class="pull-left text-right">
+								<button class="btn btn-primary" type="button" onclick="location.href='home/main';">返回领导驾驶舱</button>
+								<button class="btn btn-info" type="button" onclick="quitIds();">退出登录</button>
+							</li>
+						</ul>
+					</nav>
+				</div>
+
+				<div class="col-md-12" style="height: 100px;">
+					<nav class="navbar navbar-default navbar-mobile bootsnav">
+						<div class="navbar-header">
+							<button type="button" class="navbar-toggle"
+								data-toggle="collapse" data-target="#navbar-menu">
+								<i class="fa fa-bars"></i>
+							</button>
+						</div>
+						<div class="collapse navbar-collapse" id="navbar-menu">
+							<ul id="menuSideBar" class="nav navbar-nav" data-in="fadeInDown"
+								data-out="fadeOutUp">
+							</ul>
+						</div>
+					</nav>
+				</div>
+				<div class="col-md-12" id="mainFrameTabs" style="padding: 0px;">
+					<!-- Nav tabs -->
+					<ul class="nav nav-tabs" role="tablist">
+						<li role="presentation" class="active noclose"><a
+							href="#bTabs_navTabsMainPage" data-toggle="tab">首页</a></li>
+					</ul>
+
+					<!-- Tab panes -->
+					<div class="tab-content">
+						<div class="tab-pane active" id="bTabs_navTabsMainPage">
+							<iframe src="${G.host}/goIframe" id="Iframe" style="height:500px; width:100%" frameborder="0" scrolling="yes"
+								style="border: 0px;"> </iframe>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="${G.host}/res/js/jquery.min.js"></script>
+	<script type="text/javascript" src="${G.host}/res/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="${G.host}/res/js/bootsnav.js"></script>
+	<script type="text/javascript" src="${G.host}/res/js/tabs.js"></script>
+	<script type="text/javascript" src="${G.host}/res/js/maindiv.js"></script>
+	<script type="text/javascript" src="${G.host}/res/layer/layer.js"></script>
+</body>
+</html>
+<script>
+	var dt = ${data};
+	drawMenu("#menuSideBar", dt);
+	function drawMenu(id, dt){
+		var html = [];
+		drawLi(html, dt);
+		$(id).html(html.join(''));
+		function drawLi(arr, dt){
+			for(var i = 0; i < dt.length; i++){
+				if(dt[i].children == null ||dt[i].children.length ==0)
+					arr.push('<li mid="'+ dt[i].menuId+ '" funurl="'+dt[i].menuUrl+'"><a tabindex="-1" href="javascript:void(0);">',dt[i].menuCnName,'</a></li>');
+				else{
+					arr.push('<li class="dropdown" >'
+							,'	<a href="#" class="dropdown-toggle" data-toggle="dropdown">',dt[i].menuCnName,'</a>'
+							,'	<ul class="dropdown-menu">');
+									drawLi(arr, dt[i].children);
+					arr.push('	</ul>'
+							,'</li>');
+				}
+			}
+		}
+	}
+	function quitIds(){
+        layer.confirm("确定退出",{btnAlign: 'c'},function(){
+            window.location.href = "quitIds";
+        });
+    }
+
+</script>

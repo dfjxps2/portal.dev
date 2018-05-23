@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <#include "/WEB-INF/include/reslist.html" />
+</head>
+<script>
+    var _chosen = null;
+    var _chosenId = [];
+    var _chosenName = null;
+    var _chosenAllId = null;
+
+
+    //初始化表格
+    function  config() {
+        quick.serverUrl = "${G.serverUrl}";
+        quick.idField = "${G.idField}";
+
+        $("#list").bootstrapTable("destroy");
+        _gd["list"] = new BGrid("#list");
+        _gd["list"].config({
+            url: quick.serverUrl + "/getTagData?i=" + Math.random(),
+            idField: quick.idField,
+            sortName: quick.idField,
+            cache: false,
+            height: $(document.body).height() - 50,
+            toolbar: "#formSearch",
+            columns: [
+                {
+                    field: 'TAGSELECT', title: '选择', align: 'center',
+                    formatter: function (value, rec) {
+                        return "<input id=\"tags" + rec.tag_id + "\" title=\"tags\" class=\"ck_qx\" type=\"checkbox\" name=\"tag\" value=\"" + rec.tag_id + "\" >";
+                    }
+                },
+                {field: 'tag_id', title: '标签ID', width: 70},
+                {field: 'tag_type_name', title: '标签类型名称', width: 100},
+                {field: 'tag_text', title: '标签名称', width: 90},
+                {field: 'tag_type_id', visible: false}
+            ], onClickRow: function (row, e) {
+                check(row.tag_id);
+                _chosen = row;
+                _chosenId = row.tag_id;
+                _chosenName = row.tag_text;
+            }, onCheck: function (row) {
+                _chosen = row;
+                _chosenId = row.tag_id;
+                _chosenName = row.tag_text;
+            }
+        });
+        _gd["list"].init();
+    }
+    var check_val = new Array();
+        function check(id) {
+            check_val.push(id);
+        }
+
+        var checked = check_val;
+    _chosenAllId=checked;
+
+</script>
+<body class="gray-bg">
+<div class="wrapper wrapper-content wrapper-content-x animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox ibox-x">
+                <div class="ibox-content ibox-content-x">
+                    <div style ="margin:5px;">
+                        <table id="list" class="table-striped" style="table-layout:fixed"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

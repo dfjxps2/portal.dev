@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://cxf.apache.org/jaxws
+        http://cxf.apache.org/schemas/jaxws.xsd">
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+
+	<bean id="syncDataInfoService"
+		class="com.quick.portal.security.synchrodata.bjcadata.SynchronizedDataInfoServiceImpl" />
+	<bean id="dataSynchronizedService"
+		class="com.quick.portal.security.synchrodata.bjcadata.DataSynchronizedServiceImpl">
+		<property name="syncDataInfoService" ref="syncDataInfoService"></property>
+	</bean>
+	<bean id="syncDataService"
+		class="com.quick.portal.security.synchrodata.bjcadata.SynchronizedDataServiceImpl" />
+
+
+	<bean id="userDataSyncService"
+		class="com.quick.portal.security.synchrodata.internal.DataSynchronzedServiceImpl" />
+
+	<jaxws:endpoint id="userDtSync"
+		implementor="com.quick.portal.security.synchrodata.internal.DataSynchronizedWsdlImpl"
+		address="http://127.0.0.1:17001/portal/UserDataSync" />
+	<jaxws:endpoint id="dataSynchronizedService"
+		implementor="com.quick.portal.security.synchrodata.bjcadata.DataSynchronizedServiceImpl"
+		address="http://127.0.0.1:17001/portal/dataSynchronizedService" />
+
+</beans>

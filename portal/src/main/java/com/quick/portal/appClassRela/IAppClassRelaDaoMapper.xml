@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quick.portal.appClassRela.IAppClassRelaDao">
+	
+    <!--查询条件-->
+	<sql id="where">
+		1=1
+		<if test="rel_id != null and rel_id != '' and rel_id != 'null'"><![CDATA[ 
+	       and rel_id = #{rel_id}
+	    ]]></if>
+		<if test="app_class_id != null and app_class_id != '' and app_class_id != 'null'"><![CDATA[ 
+	       and app_class_id = #{app_class_id}
+	    ]]></if>
+		<if test="app_id != null and app_id != '' and app_id != 'null'"><![CDATA[ 
+	       and app_id = #{app_id}
+	    ]]></if>
+        <if test="_sql_where != null and _sql_where != ''"> <![CDATA[
+            and ${_sql_where}
+        ]]> </if>
+	</sql>
+    
+    <!-- 新增app_class_rela -->
+	<insert id="insert" parameterType="com.quick.portal.appClassRela.AppClassRelaDO">
+		insert into app_class_rela (
+    		  app_class_id,
+    		  app_id
+		)values(
+			 #{app_class_id},
+			 #{app_id}
+			)
+	</insert>
+		
+	<!-- 修改app_class_rela -->
+	<update id="update" parameterType="com.quick.portal.appClassRela.AppClassRelaDO">
+		update app_class_rela 
+		   set rel_id=#{rel_id}
+			  ,app_class_id=#{app_class_id}
+			  ,app_id=#{app_id}
+		 where rel_id = #{rel_id}
+	</update>
+    
+	<!-- 删除 -->
+	<delete id="delete" parameterType="String">
+		delete from app_class_rela where rel_id = #{rel_id}
+	</delete>
+
+	<!-- 查询关联分类-->
+	<select id="selectRela" parameterType="map" resultType="map">
+		select c.app_class_name,c.app_class_id,r.rel_id from app_class c left join app_class_rela r on c.app_class_id=r.app_class_id and r.app_id=#{app_id}
+	</select>
+    <!--查询-->
+	<select id="select" parameterType="map" resultType="map">
+		select * from app_class_rela
+		<where>
+			<include refid="where" />
+		</where>
+        <if test="_sql_order != null and _sql_order != ''">
+            order by ${_sql_order}
+        </if>
+	</select>
+	
+	<!-- 查询总记录数 -->
+	<select id="count" parameterType="map" resultType="int">
+		select count(*) from app_class_rela
+		<where>
+			<include refid="where" />
+		</where>
+	</select>
+	
+    
+</mapper>

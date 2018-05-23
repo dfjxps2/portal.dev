@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quick.portal.pageTemplate.IPageTemplateDao">
+	
+    <!--查询条件-->
+	<sql id="where">
+		1=1
+		<if test="template_id != null and template_id != '' and template_id != 'null'"><![CDATA[ 
+	       and template_id = #{template_id}
+	    ]]></if>
+		<if test="template_name != null and template_name != '' and template_name != 'null'"><![CDATA[ 
+	       and template_name like '%'||#{template_name}||'%'
+	    ]]></if>
+        <if test="_sql_where != null and _sql_where != ''"> <![CDATA[
+            and ${_sql_where}
+        ]]> </if>
+	</sql>
+    
+    <!-- 新增page_template -->
+	<insert id="insert" parameterType="com.quick.portal.pageTemplate.PageTemplateDO">
+		insert into page_template (
+    		  template_name,
+    		  template_url,
+    		  icon_url
+		)values(
+			 #{template_name},
+			 #{template_url},
+			 #{icon_url}
+			)
+	</insert>
+		
+	<!-- 修改page_template -->
+	<update id="update" parameterType="com.quick.portal.pageTemplate.PageTemplateDO">
+		update page_template 
+		   set template_id=#{template_id}
+			  ,template_name=#{template_name}
+			  ,template_url=#{template_url}
+			  ,icon_url=#{icon_url}
+		 where template_id = #{template_id}
+	</update>
+    
+	<!-- 删除 -->
+	<delete id="delete" parameterType="String">
+		delete from page_template where template_id = #{template_id}
+	</delete>
+    
+    <!--查询-->
+	<select id="select" parameterType="map" resultType="map">
+		select * from page_template
+		<where>
+			<include refid="where" />
+		</where>
+        <if test="_sql_order != null and _sql_order != ''">
+            order by ${_sql_order}
+        </if>
+	</select>
+	
+	<!-- 查询总记录数 -->
+	<select id="count" parameterType="map" resultType="int">
+		select count(*) from page_template
+		<where>
+			<include refid="where" />
+		</where>
+	</select>
+	
+    
+</mapper>

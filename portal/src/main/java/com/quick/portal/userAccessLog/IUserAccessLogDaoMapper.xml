@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quick.portal.userAccessLog.IUserAccessLogDao">
+	
+    <!--查询条件-->
+	<sql id="where">
+		1=1
+		<if test="start_time != null and start_time != '' and start_time != 'null'"><![CDATA[
+	       and a.log_time >= #{start_time}
+	    ]]></if>
+		<if test="end_time != null and end_time != '' and end_time != 'null'"><![CDATA[
+	       and a.log_time <= #{end_time}
+	    ]]></if>
+		<if test="log_id != null and log_id != '' and log_id != 'null'"><![CDATA[ 
+	       and a.log_id = #{log_id}
+	    ]]></if>
+		<if test="log_time != null and log_time != '' and log_time != 'null'"><![CDATA[ 
+	       and a.log_time >= #{log_time}
+	    ]]></if>
+		<if test="log_type_id != null and log_type_id != '' and log_type_id != 'null'"><![CDATA[ 
+	       and a.log_type_id = #{log_type_id}
+	    ]]></if>
+		<if test="user_id != null and user_id != '' and user_id != 'null'"><![CDATA[ 
+	       and b.user_real_name like CONCAT(CONCAT('%', #{user_id}), '%')
+	    ]]></if>
+		<if test="user_ip != null and user_ip != '' and user_ip != 'null'"><![CDATA[ 
+	       and a.user_ip like '%'||#{user_ip}||'%'
+	    ]]></if>
+		<if test="user_op_type != null and user_op_type != '' and user_op_type != 'null'"><![CDATA[ 
+	       and a.user_op_type = #{user_op_type}
+	    ]]></if>
+		<if test="menu_id != null and menu_id != '' and menu_id != 'null'"><![CDATA[ 
+	       and a.menu_id = #{menu_id}
+	    ]]></if>
+        <if test="_sql_where != null and _sql_where != ''"> <![CDATA[
+            and ${_sql_where}
+        ]]> </if>
+	</sql>
+    
+    <!-- 新增user_access_log -->
+	<insert id="insert" parameterType="com.quick.portal.userAccessLog.UserAccessLogDO">
+		insert into user_access_log (
+    		  log_time,
+    		  log_type_id,
+    		  user_id,
+    		  user_ip,
+    		  user_op_type,
+    		  menu_id,
+    		  log_detail
+		)values(
+			 #{log_time},
+			 #{log_type_id},
+			 #{user_id},
+			 #{user_ip},
+			 #{user_op_type},
+			 #{menu_id},
+			 #{log_detail}
+			)
+	</insert>
+		
+	<!-- 修改user_access_log -->
+	<update id="update" parameterType="com.quick.portal.userAccessLog.UserAccessLogDO">
+		update user_access_log 
+		   set log_id=#{log_id}
+			  ,log_time=#{log_time}
+			  ,log_type_id=#{log_type_id}
+			  ,user_id=#{user_id}
+			  ,user_ip=#{user_ip}
+			  ,user_op_type=#{user_op_type}
+			  ,menu_id=#{menu_id}
+			  ,log_detail=#{log_detail}
+		 where log_id = #{log_id}
+	</update>
+    
+	<!-- 删除 -->
+	<delete id="delete" parameterType="String">
+		delete from user_access_log where log_id = #{log_id}
+	</delete>
+    
+    <!--查询-->
+	<select id="select" parameterType="map" resultType="map">
+		select a.log_id log_id,a.log_time log_time,c.log_type_name log_type_id,b.user_real_name user_id,a.user_ip,case a.user_op_type when '0' then'登录' when '1'then '退出' when '2'then '调用菜单'  end as user_op_type,
+		d.menu_cn_name menu_id,a.log_detail
+		from user_access_log a
+		left join sys_user b on a.user_id=b.user_id
+		left JOIN  log_type c on a.log_type_id=c.log_type_id
+		left JOIN sys_menu d on a.menu_id=d.menu_id
+
+
+		<where>
+			<include refid="where" />
+		</where>
+        <if test="_sql_order != null and _sql_order != ''">
+            order by ${_sql_order}
+        </if>
+	</select>
+	<!--<select id="select" parameterType="map" resultType="map">
+		select * from user_access_log
+		<where>
+			<include refid="where" />
+		</where>
+		<if test="_sql_order != null and _sql_order != ''">
+			order by ${_sql_order}
+		</if>
+	</select>-->
+	
+	<!-- 查询总记录数 -->
+	<select id="count" parameterType="map" resultType="int">
+		select count(*) from user_access_log a
+		<where>
+			<include refid="where" />
+		</where>
+	</select>
+	<!-- 查询最多访问用户数 -->
+	<select id="selectTopUser" parameterType="map" resultType="map">
+		select a.count,b.user_name from (select user_id ,COUNT(*) as count
+        FROM user_access_log
+		<!--<where>
+			<include refid="where" />
+		</where>-->
+		where 1=1
+		<if test="start_time != null and start_time != '' and start_time != 'null'"><![CDATA[
+	       and log_time >= #{start_time}
+	    ]]></if>
+		<if test="end_time != null and end_time != '' and end_time != 'null'"><![CDATA[
+	       and log_time <= #{end_time}
+	    ]]></if>
+        GROUP BY user_id) a
+        LEFT JOIN sys_user b
+        on a.user_id =b.user_id
+        ORDER BY a.count  limit 0,10;
+	</select>
+	<!-- 查询最多访问标签 -->
+	<select id="selectTopTag" parameterType="map" resultType="map">
+		select a.count,case when b.menu_cn_name is null then '退出操作' else b.menu_cn_name end as menu_cn_name
+		from (select menu_id ,COUNT(*) as count
+		FROM user_access_log
+		<!--<where>
+			<include refid="where" />
+		</where>-->
+		where 1=1
+		<if test="start_time != null and start_time != '' and start_time != 'null'"><![CDATA[
+	       and log_time >= #{start_time}
+	    ]]></if>
+		<if test="end_time != null and end_time != '' and end_time != 'null'"><![CDATA[
+	       and log_time <= #{end_time}
+	    ]]></if>
+
+		GROUP BY menu_id) a
+		LEFT JOIN sys_menu b
+		on a.menu_id =b.menu_id
+		ORDER BY a.count desc limit 0,10;
+	</select>
+</mapper>

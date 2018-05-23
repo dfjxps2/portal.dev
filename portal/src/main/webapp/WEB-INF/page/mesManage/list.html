@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <#include "/WEB-INF/include/reslist.html" />
+    <link href="./bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="../css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+    <link href="${G.host}/res/js/ztree/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+    <script src="${G.host}/res/js/ztree/jquery.ztree.all.min.js" ></script>
+    <style>
+        .other{
+            width:100%;
+        }
+        .zong{
+            width:90px;
+            padding:5px;
+        }
+
+        .nav {
+            height: 500px;
+            width:90px;
+            float:left;
+            padding:5px;
+        }
+        .section {
+            width:975px;
+            float:left;
+            padding:5px;
+        }
+        .firstdiv {
+            width:90px;
+            float:left;
+            padding:5px;
+        }
+        .footer {
+            width:975px;
+        }
+        .form-group{
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content wrapper-content-x animated fadeInRight">
+    <div class="col-sm-12">
+            <div class="ibox ibox-x">
+                <div class="ibox-content ibox-content-x">
+                    <div class="other">
+                        <div class="zong">
+                            <div class="firstdiv">
+                                <h3>内容标签</h3>
+                            </div>
+                            <div class="nav">
+                                    <ul id="treeDemo" class="ztree" style="float: left"></ul>
+                           </div>
+                        </div>
+                            <form id="formSearch" class="form-inline">
+                                <div class="form-group" style="padding-left: 5px;width:80px;">
+                                    <select name="appr_state" class="input-group form-control form-control-green select_change" id="appr_state">
+                                        <option value="">状态</option>
+                                        <option value="1">人工审核通过</option>
+                                        <option value="2">人工审核拒绝</option>
+                                        <option value="3">审核通过</option>
+                                        <option value="4">审核拒绝</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="padding-left: 5px;width:100px;">
+                                    <select class="form-control form-control-green select_change" id="msg_class_id" name="msg_class_id">
+                                    </select>
+                                </div>
+                                <div class="form-group" style="padding-left: 5px;width:100px;">
+                                    <input id="pub_time" name="pub_time" class="input-sm form-control" type="text" placeholder="发布日期"/>
+                                </div>
+                                <div class="form-group" style="padding-left: 0px;width: 90px;">
+                                    <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="query();"> 查询</button> </span>
+                                </div>
+                                <div class="form-group" style="padding-left:0px;width: 90px;">
+                                    <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="deleteMes();">删除内容</button> </span>
+                                </div>
+                                <div class="form-group" style="padding-left:0px;width: 90px;">
+                                    <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="mesIssueRe();">内容发布申请</button> </span>
+                                </div>
+                                <div class="form-group" style="padding-left:0px;width: 90px;">
+                                    <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="mesChange();">内容修改</button> </span>
+                                </div>
+                                <div  class="form-group" style="padding-left:0px;width: 90px;">
+                                    <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="apprRules();">审核管理</button> </span>
+                                </div>
+                                <div class="form-group" style="padding-left:0px;width: 90px;right: auto">
+                                    <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="mesTag();">内容标签管理</button> </span>
+                                </div>
+                                <div class="col-xs-9"><input type="hidden" id="tag_text" name="tag_text" class="form-control" /></div>
+                            </form>
+                        <div class="section">
+                            <div style ="margin:5px;">
+                                <table id="list" class="col-sm-12" style="table-layout:fixed" ></table>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                  </div>
+            </div>
+<script>
+    var pageNum=1;
+    var pageSize=10;
+    var queryParm = '';
+    var flag=true;
+    var pageFlag=0;
+    var isChekTagFlag=false;
+    var tag_checked_val=null;
+    var tags = null;
+
+    //内容查询--左侧标签树
+    var zTreeObj;
+    $(document).ready(function(){
+        listAllTag();
+    });
+
+    function listAllTag(){
+        zTreeObj = null;
+        var ztreeSetting = {
+            check: {enable: true},
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            },
+            view: { }
+        };
+        $.ajax({
+            type: "get",
+            url: "listAllTag",
+            async:false,
+            dataType: "json",
+            success: function(data){
+                console.log(JSON.stringify(data));
+                var ztreeNodes = new Array();
+                if(data!=null&&data.length>0){
+                    $.each(data,function(i,dataNode){
+                        var tag_type_id = dataNode.tag_type_id;
+                        var super_type_id = dataNode.super_type_id;
+                        var tag_type_name = dataNode.tag_type_name;
+                        ztreeNodes.push({"id":tag_type_id, "pId":super_type_id, "name":tag_type_name});
+                    });
+                }
+                zTreeObj = $.fn.zTree.init($("#treeDemo"), ztreeSetting, ztreeNodes);
+            }
+        });
+    }
+
+    //获取树中选中的标签值
+    function nodes(){
+        var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+        var  node=  treeObj.getCheckedNodes(true);
+        var v ="";
+        for(var i=0;i<node.length;i++){
+            v+=node[i].id + ",";
+        }
+        return v;
+    }
+
+    //初始化表格
+    function  config(){
+        var RFlag=$.request.queryString["RFlag"];
+        quick.serverUrl = "${G.serverUrl}";
+        quick.editUrl = "${G.editUrl}";
+        quick.objName = "${G.objName}";
+        quick.idField = "${G.idField}";
+        $("#list").bootstrapTable("destroy");
+        _gridPool["list"]=new BGrid("#list");
+        _gridPool["list"].config(
+            {
+            url:quick.serverUrl+"/getMesData?i="+ Math.random(),
+            idField: quick.idField,
+            sortName: quick.idField,
+            cache:false,
+            height: $(document.body).height(),
+            toolbar:"#formSearch",
+            clickToSelect:true,
+            columns: [
+                {  field: 'TAGSELECT', title: '选择',width: '8%', align: 'center',
+                    formatter:function(value,rec){
+                        return "<input id=\"msgs"+rec.msg_id+"\" title=\"msgs\" class=\"ck_qx\" type=\"checkbox\" name=\"msg\" value=\"" + rec.msg_id+ "\" >";
+                    }  },
+                {field:'msg_id',visible:false },
+                {field:'serialNum',title:'序列号', width: '8%', align: 'center'},
+                { field: 'msg_title', title: '标题', width: '10%' ,align: 'center',
+                    formatter:function (value,row) {
+                        var temp ='<a href= "${G.serverUrl}/mesdetail?msg_id='+row.msg_id+'">'+row.msg_title+'</a>';
+                        return temp;
+                    }},
+                { field: 'msg_digest', title: '摘要', width: '10%'  },
+                { field: 'msg_src_name', title: '来源', width: '5%'  },
+                { field: 'pub_time',title: '发布日期', width: '8%'},
+                { field: 'appr_state', title: '状态', width: '10%' ,formatter:function (value,rec) {
+                    var apprstate = rec.appr_state;
+                    if(apprstate=='1'){return '人工审核通过'};
+                    if(apprstate=='2'){return '人工审核拒绝'};
+                    if(apprstate=='3'){return '审核通过'};
+                    if(apprstate=='4'){return '审核拒绝'};
+                } },
+                { field: 'msg_class_name', title: '密级', width: '8%'  },
+                { field: 'msgtext',title: '标签', width: '15%'},
+                { field: 'apprname', title: '审核人', width: '8%'  },
+                { field: 'appr_time',title: '审核时间', width: '10%'}
+            ],onPageChange:function(number, size){
+                pageNum=number;
+                pageSize=size;
+
+            },onClickRow:function (row,e) {
+                tag_checked_val=row.tag_id;
+
+            },onPostBody:function(data){
+                if(queryParm=='' &&　(data == null || data.length == 0)){
+                    $(".no-records-found td").html('您还没有添加相关信息，请点击<a onclick="add();" href="javascript:void(0);">添加</a>');
+                }
+            }
+        });
+
+        if(RFlag==1){
+            requery();
+        }else{
+            _gd["list"].init();
+        }
+    }
+
+    function query(){
+        tags = nodes();
+        if(tags == "undefined"){
+            tags = null;
+        }
+        $("#tag_text").val(tags);
+        _gd['list'].refresh();
+    }
+
+    //内容删除
+    function deleteMes(){
+        var json = document.getElementsByName("msg");
+        var check_val = [];
+        for (var i = 0; i < json.length; i++) {
+            if (json[i].checked) {
+                check_val.push(json[i].value);
+            }
+        }
+        if(check_val.length<=0){
+            layer.msg("请选择标签",{icon:1,time: 1000,skin: 'layer-ext-moon'});
+            return;
+        };
+        layer.confirm(
+            "确认将删除吗？<br/>删除后，所有关联数据将一并删除，且删除后不可恢复",
+            {icon: 3, title: "删除记录", skin: 'layer-ext-moon'},
+            function(){
+                $.ajax({
+                    type: "post",
+                    url: quick.serverUrl + '/deleteMsg',
+                    dataType: "json",
+                    data:{
+                        MSG_PARAM_ID_LIST:check_val.join(",")
+                    },
+                    success: function (data) {
+                        if (data == 1) {
+                            layer.msg('删除记录成功', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+                            window.location.href=quick.serverUrl+"/list";
+                        }else {
+                            layer.msg('删除记录失败', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+
+                        }
+                    },
+                    error: function (err) {
+                        layer.msg("结果异常", {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+                    }
+                });
+            });
+    }
+
+
+
+    //内容标签管理
+    function mesTag() {
+        window.location.href=quick.serverUrl+"/taglist";
+    }
+    //内容修改
+    function mesChange() {
+        var json = document.getElementsByName("msg");
+        var check_val = [];
+        for (var i = 0; i < json.length; i++) {
+            if (json[i].checked) {
+                check_val.push(json[i].value);
+            }
+        }
+        if (check_val.length <= 0) {
+            layer.msg('请选择需要编辑的标签', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+            return;
+        } else if (check_val.length > 1) {
+            layer.msg('只能编辑一条', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+            return;
+        } else {
+            window.location.href = quick.serverUrl + "/mesedit?msg_id=" + check_val[0] + getDetailParm();
+        }
+    }
+
+    function getDetailParm(){
+        var s= queryParm + "&IpageNum="+pageNum+"&IpageSize="+pageSize;
+        return s;
+    }
+
+    //内容发布申请
+    function mesIssueRe() {
+       window.location.href=quick.serverUrl+"/mespublish" ;
+    }
+
+    //内容审核管理
+    function apprRules() {
+        window.location.href=quick.serverUrl+"/mesappr";
+    }
+
+    //内容管理查询--密级下拉框
+     function  SelectMsgCs() {
+        $.ajax({
+            type:"get",
+            url:"getMsgCs",
+            async:false,
+            dataType:"json",
+            success:function (data) {
+                $("#msg_class_id").append("<option selected hidden value=''>密级</option><option value= ''>密级</option>");
+                for(var i=0;i<data.length;i++){
+                    var item = data[i];
+                    $("#msg_class_id").append("<option value="+item.msg_class_id+">"+item.msg_class_id+" "+item.msg_class_name+"</option>")
+                }
+            }
+        });
+     }
+    SelectMsgCs();
+
+
+
+</script>
+    </body>
+    </html>

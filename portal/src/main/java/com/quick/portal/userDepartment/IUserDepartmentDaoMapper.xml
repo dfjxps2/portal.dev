@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quick.portal.userDepartment.IUserDepartmentDao">
+	
+    <!--查询条件-->
+	<sql id="where">
+		1=1
+		<if test="dep_id != null"><![CDATA[
+	       and dep_id = #{dep_id}
+	    ]]></if>
+		<if test="dep_name != null and dep_name != '' and dep_name != 'null'"><![CDATA[
+	       and instr(dep_name,#{dep_name})>0
+	    ]]></if>
+		<if test="super_dep_id != null"><![CDATA[
+	       and super_dep_id = #{super_dep_id}
+	    ]]></if>
+		<if test="dep_level != null"><![CDATA[
+	       and dep_level = #{dep_level}
+	    ]]></if>
+		<if test="dep_state != null"><![CDATA[
+	       and dep_state = #{dep_state}
+	    ]]></if>
+        <if test="_sql_where != null and _sql_where != ''"> <![CDATA[
+            and ${_sql_where}
+        ]]> </if>
+	</sql>
+    
+    <!-- 新增user_department -->
+	<insert id="insert" parameterType="com.quick.portal.userDepartment.UserDepartmentDO">
+		insert into user_department (
+    		  super_dep_id,
+    		  dep_name,
+    		  dep_level,
+    		  dep_state,
+    		  cre_time,
+    		  upd_time
+		)values(
+			 #{super_dep_id},
+			 #{dep_name},
+			 #{dep_level},
+			 #{dep_state},
+			 #{cre_time},
+			 #{upd_time}
+			)
+	</insert>
+		
+	<!-- 修改user_department -->
+	<update id="update" parameterType="com.quick.portal.userDepartment.UserDepartmentDO">
+		update user_department 
+		   set dep_id=#{dep_id}
+			  ,super_dep_id=#{super_dep_id}
+			  ,dep_name=#{dep_name}
+			  ,dep_level=#{dep_level}
+			  ,dep_state=#{dep_state}
+			  ,cre_time=#{cre_time}
+			  ,upd_time=#{upd_time}
+		 where dep_id = #{dep_id}
+	</update>
+    
+	<!-- 删除 -->
+	<delete id="delete" parameterType="String">
+		delete from user_department where dep_id = #{dep_id}
+	</delete>
+    
+    <!--查询-->
+	<select id="select" parameterType="map" resultType="map">
+		select d.*,s.super_dep_name from user_department d
+		  left join (select dep_id id, dep_name super_dep_name from user_department) s on d.super_dep_id=s.id
+		<where>
+			<include refid="where" />
+		</where>
+        <if test="_sql_order != null and _sql_order != ''">
+            order by ${_sql_order}
+        </if>
+	</select>
+	
+	<!-- 查询总记录数 -->
+	<select id="count" parameterType="map" resultType="int">
+		select count(*) from user_department
+		<where>
+			<include refid="where" />
+		</where>
+	</select>
+	
+    
+</mapper>

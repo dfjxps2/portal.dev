@@ -1,0 +1,220 @@
+﻿<html>
+<head>
+<meta charset="UTF-8">
+<link href="${G.host}/res/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="${G.host}/res/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<link href="${G.host}/res/script/home/gridstack.min.css" rel="stylesheet" type="text/css" />
+<link href="${G.host}/res/layer/skin/moon/style.css" rel="stylesheet" type="text/css" />
+<link href="${G.host}/res/script/home/css/menu.css" rel="stylesheet" type="text/css" />
+<style>
+ body{background-color: #203140;font:12px/150% Arial,Verdana,"宋体";}
+.nav{position:absolute;top:0px;left:0;background-image:url(${G.host}/res/script/home/images/top.png);width:100%;height:76px;z-index:2;}
+.bar {height:52px;line-height:52px;padding-left:15px;background-color:#efefef;}
+.apps{margin:20px;}
+.footer{background-color:#274360;color:#fff;position:absolute;bottom:0px;left:0px;width:100%;height:52px;z-index:2;}
+.main{background-color:#fff;margin:0 auto;width:90%;height:95%;padding-top:76px;}
+/*del*/
+.cell{position: relative; padding: 10px;}
+.cell .cell-ctx {z-index: 10;text-indent: 2px;overflow: hidden;border-bottom-left-radius: 3px;border-bottom-right-radius: 3px;}
+.cell .cell-remove {display: none;position: absolute;top: 9px;right: 10px;cursor:pointer;color: white;background: #101010;border-radius: 50%;font-size: 16px;border: 1px solid white;height: 24px;width: 24px;line-height: 24px;text-align: center;}
+.shake {
+    -webkit-transform-origin: center center;
+    -webkit-animation-name: shake-rotate;
+    -webkit-animation-duration: 0.5s;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-iteration-count: 2;
+}
+.shakecontainer .img-container img {
+	border: 1px solid #CCCCCC;
+	border-radius: 6px;
+}
+.shakecontainer .img-content {display: none;}
+.shakecontainer .cell-remove {display: block;}
+@-webkit-keyframes shake-rotate {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+    12.5% {
+        -webkit-transform: rotate(1.25deg);
+    }
+    25% {
+        -webkit-transform: rotate(2.5deg);
+    }
+    37.5% {
+        -webkit-transform: rotate(1.25deg);
+    }
+    50% {
+        -webkit-transform: rotate(0deg);
+    }
+    62.5% {
+        -webkit-transform: rotate(-1.25deg);
+    }
+    75% {
+        -webkit-transform: rotate(-2.5deg);
+    }
+    87.5% {
+        -webkit-transform: rotate(-1.25deg);
+    }
+    100% {
+        -webkit-transform: rotate(0deg);
+    }
+}
+
+.box {width:90%;height:450px;margin:0 auto;}
+.left{float:left;}
+.right{float:right;}
+.clear{clear:both;}
+.hide{display:none;}
+.show{display:block;}
+.box .cell{cursor:move;text-align:center;}
+/*.box .cell img{width:80%;height:80%;}*/
+.ss32{width:400px;height:220px;}
+.ss31{width:300px;height:200px;}
+.ss34{width:300px;height:420px;}
+.ss62{width:600px;height:200px;}
+.ss21{width:320px; height:180px;}
+.ss24{width:250px; height:360px;}
+.sortable { list-style-type: none; /*margin: 0; padding: 0;*/ }
+.board {overflow: auto;position:relative;}
+.board canvas{}
+
+.panl{width:790px;height:550px;}
+.toolbar{height:40px;line-height:40px;padding-left: 0px;}
+.toolbar li{float:left;list-style-type:none;padding-right:10px;}
+.toolbar li img{width:24px;height:24px; margin-top: 5px;border-width: 1px;border-style: dashed;border-color: rgba(20, 126, 239, 0.5);}
+.toolbar li img.active{border-width: 2px; border-style: dashed; border-color: rgb(230,69,4); margin-top : 5px;}
+.btn-base1{color:#fff;background-color:#2ca4b0;}
+.btn-base2{color:#fff;background-color:#d7a303;}
+.btn:hover{color: #fff;background-color: #274360;border-color: #204d74;  }
+.pagination { display: inline-block; padding-left: 0; margin: 5px 0; border-radius: 4px; }
+.addwin .layui-layer-btn{text-align:center;background-color:#274360;}
+</style>
+</head>
+	<body>
+		<div class="nav">
+			<div class="left">
+				<div style="float:left;">
+					<button type="button" class="hamburger is-closed animated fadeInLeft" data-toggle="offcanvas">
+						<span class="hamb-top"></span>
+						<span class="hamb-middle"></span>
+						<span class="hamb-bottom"></span>
+					</button>
+				</div>
+				<div style="float:left;padding-left:50px;"><a href="main"><img src="${G.host}/res/script/home/images/logo.png" title="系统首页"></a></div>
+			</div>
+			<div class="right" style="width:250px;">
+			<#if roleid == 1 || isadmin == 1 >
+			<div style="width:170px;float:left;"><a href="javascript:void(0);" onclick="location.href='../mainframe';"><img src="${G.host}/res/script/home/images/niu.png" title="后台"></a></div>
+			</#if>
+			</div>
+		</div>
+		<div id="wrapper" class="main">
+			<div class="overlay"></div>
+			<!-- Sidebar -->
+			<nav class="navbar" id="sidebar-wrapper" role="navigation">
+				<ul class="mnav sidebar-nav">
+					<li class="sidebar-brand">
+						<a href="#">
+							Bootstrap 3
+						</a>
+					</li>
+					<li>
+						<a href="#"><i class="fa fa-fw fa-home"></i> Home</a>
+					</li>
+					<li>
+						<a href="#"><i class="fa fa-fw fa-folder"></i> Page one</a>
+					</li>
+					<li>
+						<a href="#"><i class="fa fa-fw fa-file-o"></i> Second page</a>
+					</li>
+					<li>
+						<a href="#"><i class="fa fa-fw fa-cog"></i> Third page</a>
+					</li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-plus"></i> Dropdown <span class="caret"></span></a>
+						<ul class="dropdown-menu" role="menu">
+							<li class="dropdown-header">Dropdown heading</li>
+							<li><a href="#">Action</a></li>
+							<li><a href="#">Another action</a></li>
+							<li><a href="#">Something else here</a></li>
+							<li><a href="#">Separated link</a></li>
+							<li><a href="#">One more separated link</a></li>
+						</ul>
+					</li>
+					<li>
+						<a href="#"><i class="fa fa-fw fa-bank"></i> Page four</a>
+					</li>
+					<li>
+						<a href="#"><i class="fa fa-fw fa-dropbox"></i> Page 5</a>
+					</li>
+					<li>
+						<a href="#"><i class="fa fa-fw fa-twitter"></i> Last page</a>
+					</li>
+				</ul>
+			</nav>
+			<!-- /#sidebar-wrapper -->
+			<div id="apps-wrapper">
+				<div class="bar form-inline">
+					<div class="form-group" style="width:30%;min-width:220px;padding:0px 20px;">
+						<input type="text" placeholder="请输入搜索内容" class="form-control" style="width:100%;" id="txt" name="txt">
+					</div>
+					<div class="form-group" style="width:100px;">
+						<button class="btn btn-base1" type="button" onclick="query();">&nbsp;&nbsp;&nbsp;&nbsp;搜索&nbsp;&nbsp;&nbsp;&nbsp;</button>
+					</div>
+					<div class="form-group" style="width:100px;">
+						<button class="btn btn-base1" type="button" onclick="capture();">&nbsp;&nbsp;&nbsp;&nbsp;批示&nbsp;&nbsp;&nbsp;&nbsp;</button>
+					</div>
+					<div class="form-group" style="width:100px;">
+						<button id="add" class="btn btn-base2" type="button" onclick="addnew();">&nbsp;&nbsp;&nbsp;&nbsp;添加&nbsp;&nbsp;&nbsp;&nbsp;</button>
+					</div>
+					<div class="form-group" style="width:100px;">
+						<button id="del" class="btn btn-base2" type="button" onclick="adddel();">&nbsp;&nbsp;&nbsp;&nbsp;删除&nbsp;&nbsp;&nbsp;&nbsp;</button>
+						<button id="delend" class="btn btn-primary hide" type="button" onclick="delend();">&nbsp;&nbsp;&nbsp;&nbsp;完成&nbsp;&nbsp;&nbsp;&nbsp;</button>
+					</div>
+					<div class="form-group" style="width:100px;">
+						<button id="exit" class="btn btn-default" type="button" onclick="location.href = 'logout';">退出</button>
+					</div>
+					<div class="form-group" style="width:200px;">
+						<ul id="pager" class="pagination right" style="margin-top:5px;">
+						</ul>
+					</div>
+				</div>
+				<div id="apps" class="apps">
+				</div>
+				<div style="background-color:#efefef;" class="pager"></div>
+			</div>
+		</div>
+		<div class="footer" aria-label="应用分页">
+			<h3 style="text-align:center;font-size:16px;">东方金信 版权所有2018</h3>
+		</div>
+	</body>
+</html>
+<script src="${G.host}/res/plugin/jQuery/jquery-1.11.3.min.js" type="text/javascript"></script>
+<script src="${G.host}/res/js/jquery-ui.min.js" type="text/javascript"></script>
+<script src="${G.host}/res/script/home/lodash.min.js" type="text/javascript"></script>
+<script src="${G.host}/res/script/home/knockout.min.js" type="text/javascript"></script>
+<script src="${G.host}/res/script/home/gridstack.min.js" type="text/javascript"></script>
+<script src="${G.host}/res/js/jquery.form.js" type="text/javascript"></script>
+<!--[if lt IE 11]>
+<script type="text/javascript" src="${G.host}/res/js/hack/html5.js"></script>
+<script type="text/javascript" src="${G.host}/res/js/hack/excanvas.compiled.js"></script>
+<script type="text/javascript" src="${G.host}/res/js/hack/bluebird.min.js"></script>
+<![endif]-->
+<script src="${G.host}/res/js/hack/html2canvas.js" type="text/javascript"></script>
+<script src="${G.host}/res/js/plugins/layer/layer.min.js"></script>
+<script src="${G.host}/res/script/home/main.js" type="text/javascript"></script>
+
+<script>
+var page = 1;
+var pageMax = 1;
+var isdel = false;
+var ids = [];
+var ww = [];
+var apps = ${apps};
+var _host = '${G.host}';
+$(function() {
+	ini_portlet();
+	loadmenu();
+	loadapp('#apps',apps);
+});
+</script>

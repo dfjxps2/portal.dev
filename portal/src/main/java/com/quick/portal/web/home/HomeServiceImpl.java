@@ -1,0 +1,139 @@
+/**
+ * <h3>标题 : potal统一门户-application </h3>
+ * <h3>描述 : application服务实现类</h3>
+ * <h3>日期 : 2018-04-13</h3>
+ * <h3>版权 : Copyright (C) 北京东方金信科技有限公司</h3>
+ * 
+ * <p>
+ * @author 你自己的姓名 mazong@seaboxdata.com
+ * @version <b>v1.0.0</b>
+ *          
+ * <b>修改历史:</b>
+ * -------------------------------------------
+ * 修改人 修改日期 修改描述
+ * -------------------------------------------
+ *          
+ *          
+ * </p>
+ */
+package com.quick.portal.web.home;
+
+import com.quick.core.base.ISysBaseDao;
+import com.quick.core.base.SysBaseService;
+import com.quick.core.base.model.DataStore;
+import com.quick.core.util.common.DateTime;
+import com.quick.portal.application.ApplicationDO;
+import com.quick.portal.application.IApplicationDao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * application服务实现类
+ */
+ @Transactional
+ @Service("homeService")
+public class HomeServiceImpl extends SysBaseService<ApplicationDO> implements IHomeService {
+    
+    @Autowired
+    private IHomeDao dao;
+
+    /**
+     * 查询用户所有应用
+     *
+     * @param m
+     * @return
+     */
+    @Override
+    public List<Map<String, Object>> queryUserApp(Map<String, Object> m) {
+        return dao.queryUserApp(m);
+    }
+
+    /**
+     * 查询所有应用
+     *
+     * @param m
+     * @return
+     */
+    @Override
+    public List<Map<String, Object>> queryApp(Map<String, Object> m) {
+        return dao.queryApp(m);
+    }
+
+    /**
+     * 添加用户桌面
+     *
+     * @param m
+     * @return
+     */
+    @Override
+    public int addDashboard(Map<String, Object> m) {
+        int c = dao.countDashboard(m);
+        if(c == 0){
+            c = dao.addDashboard(m);
+            return dao.addDashboard_Apps(m) + c;
+        }
+        return c;
+    }
+
+    /**
+     * 更新应用排序
+     *
+     * @param list
+     * @return
+     */
+    @Override
+    public int updateAppSort(List<Map<String, Object>> list) {
+        for(Map<String, Object> m : list)
+            dao.updateAppSort(m);
+        return list.size();
+    }
+
+    /**
+     * 删除用户应用
+     *
+     * @param config_id
+     * @return
+     */
+    @Override
+    public int deleteApp(String config_id) {
+        return dao.deleteApp(config_id);
+    }
+
+    /**
+     * 添加用户应用
+     *
+     * @param m
+     * @return
+     */
+    @Override
+    public int addApp(Map<String, Object> m) {
+        return dao.addApp(m);
+    }
+
+    @Override
+    public Map<String, Object> queryAppConfig(Map<String, Object> m) {
+        Map<String, Object> md = dao.queryAppConfig(m);
+        //如果没有用户桌面，就添加一个
+        Boolean isadd = false;
+        if(md == null){
+            isadd = true;
+            md = new HashMap<>();
+            md.put("dashboard_id", 0);
+            md.put("param_value", 1);
+        }else{
+            String val = md.get("dashboard_id").toString();
+            if("0".equals(val))
+                isadd = true;
+        }
+        if(isadd){
+            dao.addApp(m);
+            md.put("dashboard_id", m.get("dashboard_id"));
+        }
+        return md;
+    }
+}

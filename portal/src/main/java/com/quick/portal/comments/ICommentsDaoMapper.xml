@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quick.portal.comments.ICommentsDao">
+	
+    <!--查询条件-->
+	<sql id="where">
+		1=1
+		<if test="comment_id != null and comment_id != '' and comment_id != 'null'"><![CDATA[ 
+	       and comment_id = #{comment_id}
+	    ]]></if>
+		<if test="user_id != null and user_id != '' and user_id != 'null'"><![CDATA[ 
+	       and user_id = #{user_id}
+	    ]]></if>
+		<if test="cmt_state != null and cmt_state != '' and cmt_state != 'null'"><![CDATA[ 
+	       and cmt_state = #{cmt_state}
+	    ]]></if>
+        <if test="_sql_where != null and _sql_where != ''"> <![CDATA[
+            and ${_sql_where}
+        ]]> </if>
+	</sql>
+    
+    <!-- 新增comments -->
+	<insert id="insert" parameterType="com.quick.portal.comments.CommentsDO">
+		insert into comments (
+    		  user_id,
+    		  conent,
+    		  snapshot_url,
+    		  cmt_time,
+    		  cmt_state
+		)values(
+			 #{user_id},
+			 #{conent},
+			 #{snapshot_url},
+			 #{cmt_time},
+			 #{cmt_state}
+			)
+	</insert>
+		
+	<!-- 修改comments -->
+	<update id="update" parameterType="com.quick.portal.comments.CommentsDO">
+		update comments 
+		   set comment_id=#{comment_id}
+			  ,user_id=#{user_id}
+			  ,conent=#{conent}
+			  ,snapshot_url=#{snapshot_url}
+			  ,cmt_time=#{cmt_time}
+			  ,cmt_state=#{cmt_state}
+		 where comment_id = #{comment_id}
+	</update>
+    
+	<!-- 删除 -->
+	<delete id="delete" parameterType="String">
+		delete from comments where comment_id = #{comment_id}
+	</delete>
+    
+    <!--查询-->
+	<select id="select" parameterType="map" resultType="map">
+		select c.*,u.user_name from comments c left join sys_user u on c.user_id=u.user_id
+		<where>
+			<include refid="where" />
+		</where>
+        <if test="_sql_order != null and _sql_order != ''">
+            order by ${_sql_order}
+        </if>
+	</select>
+	
+	<!-- 查询总记录数 -->
+	<select id="count" parameterType="map" resultType="int">
+		select count(*) from comments
+		<where>
+			<include refid="where" />
+		</where>
+	</select>
+	
+    
+</mapper>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quick.portal.search.infomng.IInfoMngDao">
+
+
+<!-- 通过部门编号查询数据是否重复 -->
+	<select id="isExitsVisitInfo" parameterType="map" resultType="int">
+		<![CDATA[ SELECT COUNT(*) FROM VISIT_STATS WHERE USER_ID =#{user_id} AND VISIT_OBJ_ID =#{visit_obj_id}
+		]]> 
+	</select>
+
+
+<!-- 修改 -->
+	<update id="updExitsVisitInfo" parameterType="com.quick.portal.search.infomng.InfoMngDO">
+		<![CDATA[ UPDATE VISIT_STATS 
+		   SET VISIT_TIMES =VISIT_TIMES+1,
+    		   LAST_VISIT_TIME = CURRENT_TIMESTAMP()
+		 WHERE USER_ID = #{user_id} AND VISIT_OBJ_ID =#{visit_obj_id}
+		 ]]> 
+	</update>
+	
+	<!-- 新增  user_dept_tmp-->
+    <insert id="saveVisitInfo" parameterType="map">
+		<![CDATA[ INSERT INTO VISIT_STATS (
+			USER_ID,
+			VISIT_OBJ_ID,
+			VISIT_OBJ_TYPE,
+			LAST_VISIT_TIME,
+			VISIT_TIMES
+		)VALUES(
+			#{user_id},
+			#{visit_obj_id},
+			#{visit_obj_type},
+			CURRENT_TIMESTAMP(),
+			1
+		)]]> 
+	</insert>
+	
+	
+	<!-- 通过url查询msgID -->
+	<select id="searchMsgByUrl" parameterType="String" resultType="map">
+		SELECT MSG_ID FROM MESSAGE WHERE MSG_CONTENT=#{url}
+	</select>
+
+	
+	<!-- 通过用户编号查询msg URL -->
+	<select id="getSolrInfoByCurrUserID" parameterType="int" resultType="map">
+		<![CDATA[ 
+		SELECT  E.MSG_CONTENT FROM  VISIT_STATS S,MESSAGE E WHERE S.VISIT_OBJ_ID = E.MSG_ID AND S.USER_ID=#{userID}
+		]]> 
+	</select>
+	
+	
+	
+	
+	<!-- 新增  user_dept_tmp-->
+    <insert id="saveSearchTermsInfo" parameterType="map">
+		<![CDATA[ INSERT INTO SEARCH_KEYWORDS (
+			USER_ID,
+			KEYWORD,
+			SEARCH_TIMES,
+			LAST_SEARCH_TIME
+		)VALUES(
+			#{user_id},
+			#{keyword},
+			1,
+			CURRENT_TIMESTAMP()
+		)]]> 
+		</insert>
+	
+	<!-- 通过用户编号、关键字查询数据是否重复 -->
+	<select id="isExitsSearchTermsInfo" parameterType="map" resultType="int">
+		<![CDATA[ SELECT COUNT(*) FROM SEARCH_KEYWORDS WHERE USER_ID =#{user_id} AND KEYWORD =#{keyword}
+		]]> 
+	</select>
+
+	<!--修改搜索次数  -->
+	<update id="updSearchTermsInfo" parameterType="com.quick.portal.search.infomng.InfoMngDO">
+		<![CDATA[ UPDATE SEARCH_KEYWORDS
+		   SET SEARCH_TIMES =SEARCH_TIMES+1,
+    		   LAST_SEARCH_TIME = CURRENT_TIMESTAMP()
+		 WHERE USER_ID = #{user_id} AND KEYWORD =#{keyword}
+		 ]]> 
+	</update>
+
+</mapper>

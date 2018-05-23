@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	  <#include "/WEB-INF/include/reslist.html" />
+  </head>
+   <script>
+       var pageNum=1;
+       var pageSize=10;
+       var queryParm = '';
+       var flag=true;
+       var pageFlag=0;
+	   //初始化表格
+	   function  config(){
+           var RFlag=$.request.queryString["RFlag"];
+		   quick.serverUrl = "${G.serverUrl}";
+		   quick.editUrl = "${G.editUrl}";
+		   quick.objName = "${G.objName}";
+		   quick.idField = "${G.idField}";
+           
+		   $("#list").bootstrapTable("destroy");
+		   _gd["list"]=new BGrid("#list");
+		   _gd["list"].config({
+			   url:quick.serverUrl+"/getList?i=" + Math.random(),
+			   idField: quick.idField,
+			   sortName: quick.idField,
+               cache:false,
+			   height: $(document.body).height()-50,
+			   toolbar:"#formSearch",
+			   columns: [
+				   {  checkbox: true },
+                   { field: 'super_dep_name', title: '上级部门', width: 100  },
+				   { field: 'dep_name',  title: '部门名称' ,width: '12%',formatter:function(value,row,index){
+					   return "<a href='javascript:void(0)' onclick=\"goDetail(this);\" id='"+row.dep_id+"'>"+row.dep_name+"</a>";
+				   }},
+                   { field: 'dep_level', title: '部门级别', width: 100  },
+                   { field: 'dep_state', title: '部门状态', width: 100  },
+                   { field: 'cre_time', title: '创建时间', width: 100  },
+                   { field: 'upd_time', title: '更新时间', width: 100  },
+				   { field: 'CZ',  title: '操作',width: '15%', formatter:function(value,row,index){
+					   return "<button type='button' class='btn_el' onclick='edit(\""+row.dep_id+"\",\""+row.dep_name+"\")'>编辑</button>| "
+							   +"<button type='button' class='btn_el' onclick='del(\""+row.dep_id+"\",\""+row.dep_name+"\")'>删除</button>";
+					   ;
+				   }}
+			   ],onPageChange:function(number, size){
+                   $("#IDS_PAGESIZE").val(size);
+                   $("#IDS_PAGENUM").val(number);
+                   pageNum=number;
+                   pageSize=size;
+               },onPostBody:function(data){
+				   if(queryParm=='' &&　(data == null || data.length == 0)){
+					   $(".no-records-found td").html('您还没有添加相关信息，请点击<a onclick="add();" href="javascript:void(0);">添加</a>');
+                   }
+			   }
+		   });
+
+           if(RFlag==1){
+               requery();
+           }else{
+               _gd["list"].init();
+           }
+	   }
+
+    //删除记录
+    function del(node,name){
+       layer.confirm(
+		   "确认将删除【"+name+"】吗？<br/>删除后，所有关联数据将一并删除，且删除后不可恢复",
+		   {icon:3,title:"删除记录",skin: 'layer-ext-moon'},
+		   function(){
+			   $.ajax({
+				   type: "post",
+				   url: quick.serverUrl + '/delete?dep_id=' + node,
+				   dataType: "json",
+				   data:{ID:node},
+				   success: function(data){
+					   layer.msg('删除记录成功', {icon:1,time: 1000,skin: 'layer-ext-moon'});
+                       _gd["list"].refresh();
+				   },
+				   error:function(err){
+					   layer.msg("结果异常",{icon:1,time: 1000,skin: 'layer-ext-moon'});
+				   }
+			   });
+		   }
+       );
+    }
+    
+	//查看详细信息
+	function edit(id){
+        navAppend("编辑集成系统");/*获取父页面元素并动态赋值父页面title*/
+	    window.location.href=quick.editUrl + "?dep_id="+id + getDetailParm();//跳转到另一个页面，并且还在当前框架
+	}
+	function add(){
+		menuGoto(quick.editUrl);
+	}
+    //将url查询信息传至详细信息页面,返回时调用
+	function goDetail(obj){
+		var id = $(obj).attr("id");
+		navAppend("详情信息");/*获取父页面元素并动态赋值父页面title*/
+		window.location.href=quick.editUrl + "?mode=browse&dep_id="+id + getDetailParm();
+	}
+    function query(){
+       _gd['list'].refresh();
+       queryParm=getParm();
+    }
+    //获取返回时传回的数据
+    function requery(){
+       var pn = Number($.request.queryString["IpageNum"]) || 1;
+       var ps =  $.request.queryString["IpageSize"] || 10;
+       
+       _gd["list"].config({
+           pageSize: ps
+           ,onLoadSuccess:function(){
+               if(pageFlag>0){
+                   return;
+               }
+               $('#list').bootstrapTable('selectPage', pn);
+               pageFlag++;
+           }
+       });
+       _gd["list"].init();
+    }
+    //获取查询框数据
+	function getParm(){
+		var s = '&I'+$("#formSearch").serialize().replace(/&/g, "&I");
+		return s;
+	}
+	function getDetailParm(){
+		var s= queryParm + "&IpageNum="+pageNum+"&IpageSize="+pageSize;
+		return s;
+	}
+  </script>
+  <body class="gray-bg">
+  <div class="wrapper wrapper-content wrapper-content-x animated fadeInRight">
+	  <div class="row">
+		  <div class="col-sm-12">
+			  <div class="ibox ibox-x">
+				  <div class="ibox-content ibox-content-x">
+					  <div class="panel-mar">
+							  <form id="formSearch" class="form-inline">
+                                  <div class="form-group" style="padding: 0px;width:180px;">
+									  <input id="dep_name" name="dep_name" class="input-sm form-control" type="text" placeholder="输入部门名称" />
+								  </div>
+								  <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="query();"> 查询</button> </span>
+								  <div class="form-group" style="width:100px;float:right;">
+									  <button type="button" class="btn btn-primary" onclick="location.href='edit';"> 新增部门</button>
+								  </div>
+							  </form>
+						</div>
+					  <div style ="margin:5px;">
+						  <table id="list" class="table-striped" style="table-layout:fixed"></table>
+					  </div>
+				  </div>
+			  </div>
+		  </div>
+		  <input type="hidden"  id="IDS_PAGENUM" name="IDS_PAGENUM">
+		  <input type="hidden"  id="IDS_PAGESIZE" name="IDS_PAGENUM">
+	  </div>
+  </div>
+  </body>
+</html>

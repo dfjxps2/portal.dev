@@ -1,0 +1,57 @@
+
+.ibox {
+    clear: both;
+    padding: 0;
+}
+.fixed-table-container tbody td {
+   border-left:0px;
+    height: 20px;
+}
+/*
+.fixed-table-container tbody .selected td {
+    background-color: #23c6c8;;
+}*/
+.text-info{
+    color: #31708f;
+}
+.fixed-table-container thead th {
+    height: 0;
+    padding: 0;
+    margin: 0;
+    border-left: 0px;
+}
+.fixed-table-container {
+    border:0;
+}
+
+.ibox-contents {
+    background: #fff;
+    color: inherit;
+    padding: 15px 20px 20px;
+    border-color: #e7eaec;
+    -webkit-border-image: none;
+    -o-border-image: none;
+    border-image: none;
+    border-style: solid solid none;
+    border-width: 1px 0;
+}
+.ibox-title {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #fff;
+    border-color: #e7eaec;
+    -webkit-border-image: none;
+    -o-border-image: none;
+    border-image: none;
+    border-style: solid solid none;
+    border-width: 4px 0 0;
+    color: inherit;
+    margin-bottom: 0;
+    padding: 2px 15px 7px;
+    min-height: 48px;
+}
+.ibox-title h5{
+    padding-top: 12px;
+}

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>auth</title>
+      <#include "/WEB-INF/include/reslist.html" />
+      <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+      <script src="${G.host}/res/plugin/jQuery/jquery-1.11.3.min.js" type="text/javascript"></script>
+	  <!--Bootstrap -->
+	  <link href="${G.host}/res/plugin/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	  <script src="${G.host}/res/plugin/bootstrap/js/bootstrap.min.js"></script>
+      <link href="${G.host}/res/plugin/bootstrap-table/bootstrap-table.css" rel="stylesheet">
+	  <!-- Loading Flat UI -->
+	  <link href="${G.host}/res/fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+	  <link href="${G.host}/res/css/animate.min.css" rel="stylesheet">
+	   <link href="${G.host}/res/css/styleIter.css" rel="stylesheet">
+	  <script src="${G.host}/res/plugin/bootstrap-table/bootstrap-table.js"></script>
+	  <script src="${G.host}/res/plugin/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+	  <script src="${G.host}/res/js/core/base.js"></script>
+	  <script src="${G.host}/res/js/core/sysbaseList.js"></script>
+	  <link href="${G.host}/res/css/hk0405.css" rel="stylesheet">
+      <link href="${G.host}/res/layer/skin/default/layer.css" rel="stylesheet">
+      <link href="${G.host}/res/layer/skin/moon/style.css" rel="stylesheet">
+      <script src="${G.host}/res/layer/layer.js"></script>
+
+      <style>
+		  .bs-bars{width:100%}
+		  /*.pagination-info {
+			  background-color: white;
+		  }*/
+		  .table>tbody>tr:hover {
+			  background-color: #f8fcff;
+		  }
+
+		  .fixed-table-container input[type="checkbox"] {
+			  display:none;
+			  margin: 0 auto !important;
+		  }
+          .fixed-table-container tbody .mySeleced td {
+              background-color: #a5cbff;
+          }
+
+          table{
+              table-layout:fixed;
+          }
+
+          td{
+              overflow:hidden;
+              text-overflow:ellipsis;
+              white-space:nowrap;
+          }
+          td:hover{
+              text-overflow:inherit;
+              overflow:visible;
+              white-space:pre-wrap;
+              word-break:break-all;
+          }
+	  </style>
+  </head>
+   <script>
+       //获取页面url的参数
+       $.request = (function(){
+           var apiMap = {};
+           function request(queryStr){
+               var api = {};
+               if (apiMap[queryStr]) {
+                   return apiMap[queryStr];
+               }
+               api.queryString = (function(){
+                   var urlParams = {};
+                   var e, d = function(s){
+                       return decodeURIComponent(s.replace(/\+/g, " "));
+                   }, q = queryStr.substring(queryStr.indexOf('?') + 1), r = /([^&=]+)=?([^&]*)/g;
+                   while (e = r.exec(q))
+                       urlParams[d(e[1])] = d(e[2]);
+                   return urlParams;
+               })();
+               api.getUrl = function(){
+                   var url = queryStr.substring(0, queryStr.indexOf('?') + 1);
+                   for (var p in api.queryString) {
+                       url += p + '=' + api.queryString[p] + "&";
+                   }
+                   if (url.lastIndexOf('&') == url.length - 1) {
+                       return url.substring(0, url.lastIndexOf('&'));
+                   }
+                   return url;
+               }
+               apiMap[queryStr] = api;
+               return api;
+           }
+           $.extend(request, request(window.location.href));
+           return request;
+       })();
+
+	   var pageNum=1;
+	   var pageSize=15;
+       var queryParm = '';
+       var flag=true;
+       var pageFlag=0;
+
+       var RFlag=$.request.queryString["RFlag"];
+       //回车查询
+       document.onkeydown=function(event){
+           var e = event || window.event || arguments.callee.caller.arguments[0];
+           if(e && e.keyCode==13){ // enter 键
+               search();
+           }
+       };
+       //列表初始化
+     function  config(){
+//         quick.serverUrl = "${G.serverUrl}";
+         quick.serverUrl = "${G.host}/role";
+         quick.editUrl = "${G.editUrl}";
+         quick.objName = "${G.objName}";
+         quick.idField = "${G.idField}";
+          $('#tb_role').bootstrapTable('destroy');
+             _gridPool["tb_role"] = new BGrid("#tb_role");
+             _gridPool["tb_role"].config({
+                 url: quick.serverUrl + "/getList",
+                 idField: quick.idField,
+                 sortName: quick.idField,
+                 cache: false,
+                 height:$(window).height() - 50,
+                 toolbar: "#formSearch",
+                 columns: [[
+                     {
+                         field: 'role_id',title: '编码',width: '5%',align: 'left',formatter: function (value, row, index){
+
+                         if (value == "" || value == null) {
+                                 return "-";
+                             }
+
+                             return value;
+                         }
+                     },
+                     {
+                         field: 'role_name',width: '10%',title: '名称',align: 'left',formatter: function (value, row, index) {
+                             if (value == "" || value == null) {
+                                 return "-";
+                             } else {
+                                 return value;
+                             }
+                         }
+                     },
+                     {
+
+                         field: 'role_state',width: '5%',title: '角色状态',align: 'left',formatter: function (value, row, index) {
+                         if (value == '0' ) {
+                             return "停用";
+                         } else if (value=='1'){
+                             return "启用";
+                         }else{
+                             return "-";
+
+                         }
+                     }
+                     },
+
+                    /*  {
+                         field: 'cre_time',
+                         width: '10%',
+                         title: '创建时间',
+                         align: 'center',
+                         formatter: function (value, row, index) {
+
+                             if (value == "" || value == null) {
+                                 return "-";
+                             } else {
+                                 return value;
+                             }
+
+                         }
+                     }, */
+                     {
+                         field: 'upd_time',width: '10%',title: '更新时间',align: 'center',formatter: function (value, row, index) {
+
+                         if (value == "" || value == null) {
+                             return "-";
+                         } else {
+                             return value;
+                         }
+
+                     }
+                     },
+                     {
+                         field: 'CZ', width: '30%', title: '操作', align: 'center', formatter: function (value, row, index) {
+
+                         return "<button type='button' id='btn_auth' class='btn_el' onclick='edit(\""+row.role_id+"\",\""+row.role_name+"\")'>编辑</button>| "+
+                                "<button type='button' id='btn_auth' class='btn_el' onclick='auth(\""+row.role_id+"\",\""+row.role_name+"\")'>功能权限</button>| "+
+                                "<button type='button' id='btn_auth' class='btn_el' onclick='metricAuth(\""+row.role_id+"\",\""+row.role_name+"\")'>指标权限</button>| "+
+                                "<button id='btn_delete' type='button' class='btn_el'  onclick='del(\"" + row.role_id + "\",\"" + row.role_name + "\")'>删除</button>";
+                         /*
+                     var srt='<div class="btn-group">';
+                         srt+='<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">操作 <span class="caret"></span>';
+                         srt+='</button>';
+                         srt+='<ul class="dropdown-menu">';
+                         srt+="<li><a href='#' onclick='del(\""+row.IDS_ROLEID+"\")'>删除</a></li>";
+
+                         srt+='</ul>';
+                         srt+='</div>';
+                     return srt;
+                    */
+                         //+" <button id=\"btn_edit\" type=\"button\" class=\"btn btn-info btn-sm\" onclick='edit(\""+row.IDS_ROLEID+"\")'>  <span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span>查看 </button>";
+                 }}
+             ]],onPageChange:function(number, size){
+                 $("#IDS_PAGESIZE").val(size);
+                 $("#IDS_PAGENUM").val(number);
+                    pageNum=number;
+                     pageSize=size;
+             },onClickRow:function(row,e){
+                     var trs=$('#tb_role').find("tr");
+                     for(var i=0;i<trs.length;i++){
+                         if( $(trs[i]).hasClass("mySeleced"))
+                         {
+                             $(trs[i]).removeClass("mySeleced");
+                         }
+                     }
+                     var tr= $(e).find("td").parent();
+                     tr.addClass("mySeleced");
+
+             },
+             onLoadSuccess:function(data){
+
+             }
+         })
+
+         if(RFlag==1){
+             query();
+
+         }else{
+             _gridPool["tb_role"].init();
+         }
+
+     }
+       /*隐藏三级title*/
+       $(window.parent.document).find("#title_list_two").html($(this).find("span").html()).removeClass("title_list");
+       $(window.parent.document).find(".icon-right").removeClass("glyphicon").removeClass("glyphicon-chevron-right").removeClass("title_list");
+       $(window.parent.document).find("#title_list_thr").html("");
+     //获取查询
+       function getParm(){
+           var s = '&I'+$("#formSearch").serialize().replace(/&/g, "&I");
+           return s;
+       }
+       //跳转到角色信息页面
+       function goDetail(obj){
+           /*获取父页面元素并动态赋值父页面title*/
+           $(window.parent.document).find(".icon-right").addClass("glyphicon").addClass("glyphicon-chevron-right").addClass("title_list");
+           $(window.parent.document).find("#title_list_two").addClass("title_list");
+           $(window.parent.document).find("#title_list_thr").html("基本信息");
+
+           //var value = $(obj).text();
+           var value = $(obj).attr("id");
+           if(RFlag==1){
+             queryParm=getParm();
+           }
+           var url='${G.host}/role/detail?IDS_ROLEID='+value+queryParm + "&pageNum="+pageNum+"&pageSize="+pageSize;
+           window.location.href = url;
+       }
+
+       //查看详细信息
+       function auth(role_id,role_name){
+           navAppend("权限配置");/*获取父页面元素并动态赋值父页面title*/
+           if(quick.authUrl){}
+           else{
+               quick.authUrl = "${G.host}/role/roleAuth.do";
+           }
+           window.location.href=quick.authUrl + "?role_id="+role_id + getDetailParm();//跳转到另一个页面，并且还在当前框架
+       }
+	   
+	   //查看指标信息
+       function metricAuth(role_id,role_name){
+           navAppend("指标权限配置");/*获取父页面元素并动态赋值父页面title*/
+           if(quick.authUrl){}
+           else{
+               quick.authUrl = "${G.host}/role/metricAuth.do";
+           }
+           window.location.href=quick.authUrl + "?role_id="+role_id + getDetailParm();//跳转到另一个页面，并且还在当前框架
+       }
+	   
+       function getDetailParm(){
+           var s= queryParm + "&IpageNum="+pageNum+"&IpageSize="+pageSize;
+           return s;
+       }
+
+ /*删除*/
+ function del(id,name){
+	 var msg ="确认将该角色【"+name+"】从系统中删除？删除后不可恢复";
+	  layer.confirm(
+			 msg,
+			 {icon:3,title:"删除角色",skin: 'layer-ext-moon'},
+			 function(){
+				 $.ajax({
+					 type: "post",
+					 url: '${G.host}/role/delete',
+					 dataType: "json",
+					 data:{role_id:id},
+					 success: function(data){
+                         layer.msg('删除角色成功', {icon:1,time: 1000,skin: 'layer-ext-moon'});
+                         _gridPool["tb_role"].refresh();
+					 },
+					 error:function(err){
+						 layer.msg("结果异常",{icon:1,time: 1000,skin: 'layer-ext-moon'});
+					 }
+				 });
+			 }
+	 );
+ }
+     //编辑
+	function edit(role_id,role_name){
+        navAppend("修改角色");/*获取父页面元素并动态赋值父页面title*/
+        var pageURL="${G.host}/role/edit?role_id="+role_id+"&role_name="+role_name;
+	   window.location.href=pageURL;//跳转到另一个页面，并且还在当前框架
+	}
+
+    //返回按钮刷新
+     function query(){
+        var pn = $.request.queryString["IpageNum"] || 1;
+        var ps =  $.request.queryString["IpageSize"] || 15;
+
+        var ir= $.request.queryString["IIDS_ROLECODE"];
+         var is= $.request.queryString["IIDS_SYSID"];
+         var IroleName= $.request.queryString["IIDS_ROLENAME"];
+         if(ir!='undefined'){
+             $("#IDS_ROLECODE").val(ir);
+         }
+         if(IroleName!='undefined'){
+             $("#IDS_ROLENAME").val(IroleName);
+         }
+//        if(is!='undefined'){
+//         $("#IDS_SYSID").val(is);}
+
+           _gridPool["tb_role"].config({
+               pageSize: ps
+               ,onLoadSuccess:function(data){
+                   //console.log(data.total);
+                     if(pageFlag>0){
+                        // $("#IDS_ROLEID").val(ir);
+                         return;
+                     }
+                     if(is!='undefined')
+                        $("#IDS_SYSID").val(is);
+                     $('#tb_role').bootstrapTable('selectPage',Number( pn));
+                      pageFlag++;
+               }
+           });
+          // $("#tb_role").bootstrapTable(_gridPool["tb_role"].options); $('#tb_role').bootstrapTable('refresh');
+         _gridPool["tb_role"].init();
+       }
+
+       //查询
+       function search(){
+           pageNum=1;
+           pageSize=15;
+           _gridPool['tb_role'].refresh();
+           queryParm=getParm();
+       }
+   </script>
+  <body class="gray-bg">
+  <div class="wrapper wrapper-content animated fadeInRight">
+      <div class="row">
+          <div class="col-sm-12">
+              <div class="ibox ibox-x">
+                  <!--
+				  <div class="ibox-title">
+					  <h5><i class="glyphicon glyphicon-chevron-right"></i> 查询角色</h5>
+				  </div>-->
+                  <div class="ibox-content ibox-content-x">
+                      <div class="panel-mar">
+                          <form class="form-inline" id="formSearch">
+                              <div class="form-group" style="width:159px;">
+                                  <input type="text" placeholder="编码" class="input-sm form-control" id="role_id" name="role_id" />
+                              </div>
+                              <div class="form-group" style="width:159px;">
+                                  <input type="text" class="form-control form-control-green" name="role_name" id="role_name" placeholder="名称">
+                              </div>
+                              <button type="button" class="btn btn-primary" onclick="search()"> 查询</button>
+                              <div class="form-group" style="width:100px;float:right;">
+                                  <button type="button" class="btn btn-primary" onclick="location.href='addRole';"> 新增角色</button>
+                              </div>
+                          </form>
+                      </div>
+                      <div class="panel-default-green">
+                      <table class="table table-stripped" id="tb_role"></table>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  <input type="hidden"  id="IDS_PAGENUM" name="IDS_PAGENUM">
+  <input type="hidden"  id="IDS_PAGESIZE" name="IDS_PAGENUM">
+  </body>
+</html>

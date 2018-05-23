@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	  <#include "/WEB-INF/include/reslist.html" />
+  </head>
+   <script>
+    var _chosen = null;
+    var _chosenId = null;
+    var _chosenName = null;
+    //初始化表格
+    function  config(){
+       quick.serverUrl = "${G.serverUrl}";
+       quick.idField = "${G.idField}";
+       
+       $("#list").bootstrapTable("destroy");
+       _gd["list"]=new BGrid("#list");
+       _gd["list"].config({
+    	   url:quick.serverUrl+"/getList?i=" + Math.random(),
+    	   idField: quick.idField,
+    	   sortName: quick.idField,
+           cache:false,
+    	   height: $(document.body).height()-50,
+    	   toolbar:"#formSearch",
+    	   columns: [
+    		   {  checkbox: true },
+                   { field: 'user_id', title: '用户ID', width: 100  },
+                   { field: 'role_id', title: '用户角色ID', width: 100  },
+                   { field: 'cre_time', title: '创建时间', width: 100  },
+                   { field: 'upd_time', title: '更新时间', width: 100  }
+    	   ],onClickRow:function(row,e){
+               _chosen = row;
+               _chosenId = row.rel_id;
+               _chosenName = row.role_name;
+    	   }
+       });
+
+       _gd["list"].init();
+    }
+    function query(){
+       _gd['list'].refresh();
+       queryParm=getParm();
+    }
+  </script>
+  <body class="gray-bg">
+  <div class="wrapper wrapper-content wrapper-content-x animated fadeInRight">
+	  <div class="row">
+		  <div class="col-sm-12">
+			  <div class="ibox ibox-x">
+				  <div class="ibox-content ibox-content-x">
+					  <div class="panel-mar">
+							  <form id="formSearch" class="form-inline">
+                                  <div class="form-group" style="padding: 0px;width:180px;">
+                                      <input id="cre_time" name="cre_time" class="form-control" type="text" placeholder="2018-04-13" /> <label onclick="layerDateTime();" style="position: absolute;top: 0px;right: 15px;background-position-x: center;" class="laydate-icon inline demoicon layer_date"></label>
+								  </div>
+								  <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="query();"> 查询</button> </span>
+							  </form>
+						</div>
+					  <div style ="margin:5px;">
+						  <table id="list" class="table-striped" style="table-layout:fixed"></table>
+					  </div>
+				  </div>
+			  </div>
+		  </div>
+	  </div>
+  </div>
+  </body>
+</html>

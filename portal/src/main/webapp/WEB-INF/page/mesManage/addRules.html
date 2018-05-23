@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <#include "/WEB-INF/include/resedit.html" />
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="col-sm-10">
+                <div class="col-sm-12">
+                    <label id="pagename" class="col-xs-8" style="text-align:center;font-size: 22px;color:blue;margin-left: 180px"></label>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="pull-right ibox-toolbars hidefield" style="margin-right: -14px;margin-top: 2px;">
+                    <button type="button" class="btn btn-primary" onclick="cancel();">返回</button>
+                </div>
+            </div>
+
+            <div class="ibox">
+                <div class="ibox-content ibox-content-ad" style="margin-top: 25px;">
+                    <form id="form" name="form" method="post" action="${G.serverUrl}/save" class="wizard-big addForm" enctype="multipart/form-data" accept="image/jpg, image/png">
+                        <div class="row">
+                            <div class="col-sm-6 form_ipt_botm">
+                                <div class="form-group">
+                                   <select id="rule_id" name="rule_id" class="form-control form-control-green select_change" readonly="readonly"/>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6 form_ipt_botm">
+                                <div class="form-group">
+                                    <label class="col-xs-3 lable_top"><span></span>规则参数值</label>
+                                    <div class="col-xs-9"><input class="form-control" id="param_value" name="param_n" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div ibox-toolbars hidefield>
+                                    <input id="submit-form" type="button" class="pull-right btn btn-primary" value="保存">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+<script>
+    function config() {
+        quick.serverUrl = "${G.serverUrl}";
+        quick.objName = "${G.objName}";
+        quick.idField = "${G.idField}";
+        quick.listUrl = quick.serverUrl + "/contentrule";
+    }
+
+    window.onload = function() {
+
+        $('#pagename').html("新增规则参数值");
+    };
+    // 保存
+    $("#submit-form").click(function () {
+        if(!($("#form").valid())){
+            return false;
+        }
+        var subData={
+            ruleValue:$("#rule_id").val(),
+            param_value:$("#param_value").val()
+        }
+        $.ajax({
+            type: "post",
+            url: "insertParamValue",
+            data:subData,
+            dataType: "json",
+            success: function(data){
+                if(data=="1"){
+                    layer.msg('保存成功！', {icon:1,time: 1000,skin: 'layer-ext-moon'},function(){
+                        window.location.href = quick.serverUrl+"/list";
+                    });
+                }else{
+                    layer.msg('保存失败！', {icon:1,time: 1000,skin: 'layer-ext-moon'});
+                }
+            },
+            error:function () {
+                layer.msg('保存失败！', {icon:1,time: 1000,skin: 'layer-ext-moon'});
+            }
+        });
+    })
+
+    function cancel(){
+        var url = quick.listUrl + urlDel(location.search, 'mode','rule_id') + '&RFlag=1';
+        window.location.href = url;
+    }
+   function SelectRule(){
+        $.ajax({
+            type:"get",
+            url:"getRules",
+            asyn:false,
+            dataType:"json",
+            success:function (data) {
+                $("#rule_id").append("<option selected hidden value=''>规则类型 参数名称</option><option value=''>选择规则</option> ");
+              for(var i=0;i<data.length;i++){
+                  var item = data[i];
+                  $("#rule_id").append("<option value="+item.rule_id+""+item.rule_type_name+">"+item.rule_type_name+" "+item.param_name+"</option>")
+              }
+            }
+        });
+   }
+   SelectRule();
+</script>
+</html>

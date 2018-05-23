@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>统一门户</title>
+    <link rel="stylesheet" href="${host}/res/script/home/css/login.css" />
+    <script src="${host}/res/js/jquery.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        <#if errorMsg?? >
+        $("#errorMsg").html("${errorMsg}").show();
+        </#if>
+
+        $(function(){
+            var bodyHeight=document.body.clientHeight;
+            $(".loginBox").css("top",(bodyHeight-377)/2);
+
+            /*回车切换下一个控件*/
+            $(":text,:password").keydown(function(e) {
+                e = e || event;
+                var k = e.keyCode || e.which;
+                if (k == 13) {
+                    var el = document.activeElement;
+                    if (el.id == "txtUserName")
+                        $("#txtPassword").focus();
+                    else if(el.id=="txtPassword")
+                        $("#btnLogin").click();
+                    return false;
+                }
+            });
+        });
+
+        /*登录*/
+        function login() {
+            var uu = $("#txtUserName");
+            var pp = $("#txtPassword");
+            $.ajax({
+                type: "POST",
+                url: "${host}/home/dologin",
+                data:{username:encodeURI(uu.val().toLowerCase()),password:pp.val(),t:new Date()} ,
+                beforeSend: function () {  $('#btnLogin').attr('disabled', 'true'); }, //发送数据之前
+                complete: function () {$('#btnLogin').removeAttr('disabled'); }, //接收数据完毕
+                success: function (data) {
+                    if (data == "1") {
+                        location.href = "${host}/home/main";
+                    } else if(data == "2"){
+                    	location.href = "${host}/mainframe";
+                    }else {
+                        $("#errorMsg").html(data).show();
+                        $('#btnLogin').removeAttr('disabled');
+                        return false;
+                    }
+                }
+            });
+        }
+    </script>
+</head>
+
+<body>
+<div class="loginBox">
+    <div class="logo"><img src="${host}/res/script/home/images/logo_portal.png"></div>
+
+    <div class="loginMain">
+        <div class="errordiv">
+            <span id="errorMsg" class="errorMsg" >用户名或密码错误，请重新输入</span>
+        </div>
+            <input type="text" id="txtUserName"  class="username" placeholder="请输入用户名"/>
+            <input type="password" id="txtPassword"  class="password" placeholder="请输入密码"/>
+
+                    <input type="button" class="loginbtn" id="btnLogin" value="登录" onclick="return login(this)" />
+
+    </div>
+</div>
+<div class="footer">Copyright © 2018 北京东方金信科技有限公司  All Rights Reserved.</div>
+
+</body>
+
+</html>

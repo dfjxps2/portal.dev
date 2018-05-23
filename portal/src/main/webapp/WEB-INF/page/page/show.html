@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<#include "/WEB-INF/include/resedit.html" />
+    <link href="${G.host}/res/script/home/gridstack.min.css" rel="stylesheet" type="text/css" />
+	<link href="${G.host}/upload/pageTemplate/t1/style.css" rel="stylesheet" type="text/css" />
+    <script src="${G.host}/res/js/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="${G.host}/res/script/home/lodash.min.js" type="text/javascript"></script>
+    <script src="${G.host}/res/script/home/knockout.min.js" type="text/javascript"></script>
+    <script src="${G.host}/res/script/home/gridstack.min.js" type="text/javascript"></script>
+    <script src="${G.host}/res/js/echarts/echarts.js"></script>
+	<script src="${G.host}/res/js/indexCharts/indexChart.js"></script>
+</head>
+<script>
+
+var name = "";
+</script>
+<body class="qbody">
+<div class="wrapper wrapper-content animated fadeInRight qpage">
+	<div class="row">
+        <div class="col-sm-12">
+            <div class="container-fluid qmain">
+                <div id="box" class="grid-stack qbox" data-bind="component: {name: 'dashboard-grid', params: $data}"></div>
+            </div>
+        </div>
+	</div>
+</div>
+
+</body>
+<script>
+    var _tmpls={},_layout = [],_ca;
+    function config() {
+        quick.serverUrl = "${G.serverUrl}";
+        quick.objName = "${G.objName}";
+        quick.idField = "${G.idField}";
+        quick.listUrl = quick.serverUrl + "/list";
+        
+    }
+    function getMetricData(metricList){
+    	$.ajax({
+            url:"http://portal-server:8082/services/measures",
+            data:{meaId:metricList,to:2018,from:2015},
+            type:'get',
+            success:function(res){
+            	add(res.measure,name,co,_layout);
+            }
+        });
+    }
+    var co = [];
+	window.onload = function() {
+        /*加载数据*/
+        var mode = $.request.queryString["mode"];
+        var sysid=$.request.queryString["page_id"];
+        var rid= $.request.queryString["app_id"];
+        if(localStorage.pageLayout != null)
+                _layout = JSON.parse(localStorage.pageLayout);
+        co = JSON.parse(localStorage.pageShow);
+        for(var i = 0; i < _layout.length;i++){
+        	_layout[i].sid = 's'+_layout[i].no;
+        }
+		initLayout();
+		var metricList = '';
+		var met = [];
+		for (var j = 0; j < co.length; j++) {
+			met.push(co[j].metric_id);
+		}
+		met = onlyData(met);
+		for (var k = 0; k < met.length; k++) {
+			if (j ==met.length-1) {
+				metricList= metricList+met[k];
+			}else{
+				metricList= metricList+met[k]+',';
+			} 
+		}
+		getMetricData(metricList);
+	}
+	// add(data1,name,co,_layout); 
+    function initPlugin(){
+        ko.components.register('dashboard-grid', {
+            viewModel: {
+                createViewModel: function (controller, componentInfo) {
+                    var ViewModel = function (controller, componentInfo) {
+                        var grid = null;
+
+                        this.widgets = controller.widgets;
+
+                        this.afterAddWidget = function (items) {
+                            if (grid == null) {
+                                grid = $(componentInfo.element).find('.grid-stack').gridstack({
+                                    cell_height:40,
+                                    vertical_margin:10,
+                                    auto: false
+                                }).data('gridstack');
+                            }
+
+                            var item = _.find(items, function (i) { return i.nodeType == 1 });
+                            grid.add_widget(item);
+
+							add(data1,name,co,_layout);
+                            ko.utils.domNodeDisposal.addDisposeCallback(item, function () {
+                                grid.remove_widget(item);
+                            });
+                        };
+                    };
+
+                    return new ViewModel(controller, componentInfo);
+                }
+            },
+            template:
+                    [
+                        '<div class="grid-stack" data-bind="foreach: {data: widgets, afterRender: afterAddWidget}">',
+                        '   <div class="grid-stack-item" data-bind="attr: {\'id\': $data.sid,\'data-gs-x\': $data.x, \'data-gs-y\': $data.y, \'data-gs-width\': $data.width, \'data-gs-height\': $data.height, \'data-gs-auto-position\': $data.auto_position}">',
+                        '       <div class="grid-stack-item-content"></div>',
+                        '   </div>',
+                        '</div> '
+                    ].join('')
+        });
+        window.Controller = function (widgets) {
+            var self = this;
+
+            this.widgets = ko.observableArray(widgets);
+
+            this.add_new_widget = function () {
+                var cc = controller.widgets().length || 1;
+                this.widgets.push({
+                    x: 0,
+                    y: 0,
+                    width: 4,
+                    height: 2,
+                    id:0,
+                    no:(cc+1),
+                    auto_position: true
+                });
+            };
+
+            this.delete_widget = function (item) {
+                self.widgets.remove(item);
+            };
+        };
+
+        var controller = new Controller(_layout);
+        ko.applyBindings(controller);
+        _ca = controller.widgets;
+    }
+    function initLayout(){
+		var str = [];
+		for(var i = 0; i < _layout.length; i++){
+			var n = _layout[i];
+			str.push('<div class="grid-stack-item" data-gs-x="',n.x,'" data-gs-y="',n.y,'" data-gs-width="',n.width,'" data-gs-height="',n.height,'" data-gs-auto-position="true">');
+				str.push('<div class="grid-stack-item-content qsection"><div id="', n.sid,'" class="_qbody"></div></div>');
+			str.push('</div>');
+		}
+		$("#box").html(str.join(''));
+
+		var ch = getCH();
+		$('.grid-stack').gridstack({
+			cellHeight:ch,
+			staticGrid:true
+		});
+		function getCH(){
+			var h = 4;
+			$("#box").find(".grid-stack-item").each(function(){
+				var xh = parseInt(this.dataset.gsY) + parseInt(this.dataset.gsHeight);
+				if(xh > h)
+					h = xh;
+			});
+			if(h>12) h = 12;
+			return $(window).height() / h - 20;
+		}
+    }
+
+    function find_sec(no){
+        var arr = _ca();
+        for(var i = 0; i< arr.length; i++){
+            if(arr[i].no == no)
+                return arr[i];
+        }
+        return null;
+    }
+</script>
+</html>

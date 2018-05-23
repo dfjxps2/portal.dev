@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quick.portal.security.synchrodata.bjcadata.ISynchronizedDataDao">
+	
+	<!-- 用户返回MAP -->
+<!-- 	<resultMap id="UserResultMap" type="com.quick.portal.sysUser.SysUserDO">
+        <result property="user_id" column="USER_ID" />
+        <result property="user_name" column="USER_NAME" />
+        <result property="user_password" column="USER_PASSWORD" />
+        <result property="user_real_name" column="USER_REAL_NAME" />
+        <result property="user_state" column="USER_STATE" />
+        <result property="job_id" column="JOB_ID" />
+        <result property="job_name" column="JOB_NAME" />
+        <result property="user_addr" column="USER_ADDR" />
+        <result property="user_tel" column="USER_TEL" />
+        <result property="cre_time" column="CRE_TIME" />
+        <result property="upd_time" column="UPD_TIME" />
+    </resultMap> -->
+	
+    <!-- 同步角色信息开始 -->
+    <!-- 新增  user_role_tmp-->
+	<insert id="insertTmpRoleData" parameterType="com.bjca.uums.client.bean.RoleInformation">
+		<![CDATA[ 
+		INSERT INTO USER_ROLE_TMP (
+    		  ROLE_NO,
+    		  ROLE_CODE,
+    		  ROLE_NAME,
+    		  ROLE_DESC,
+    		  ROLE_TYPE,
+    		  ROLE_STATE
+		)VALUES(
+			 #{urFlowno},
+			 #{userRoleCode},
+			 #{userRoleName},
+			 #{userRoleDescribe},
+			 1,
+			 #{userRoleState}
+			)
+			]]> 
+	</insert>
+	<!--merge user_role -->
+	<update id="mergeRoleData" parameterType="com.bjca.uums.client.bean.RoleInformation">
+		 <![CDATA[ 
+		   INSERT INTO USER_ROLE(ROLE_NO,ROLE_CODE,ROLE_DESC,ROLE_NAME,ROLE_STATE,ROLE_TYPE,CRE_TIME,UPD_TIME ) 
+		   SELECT ROLE_NO,ROLE_CODE,ROLE_DESC,ROLE_NAME,ROLE_STATE,1,CURRENT_TIMESTAMP(),CURRENT_TIMESTAMP() FROM USER_ROLE_TMP P ON DUPLICATE KEY 
+ 		   UPDATE ROLE_CODE=P.ROLE_CODE,ROLE_DESC=P.ROLE_DESC,ROLE_NAME=P.ROLE_NAME,ROLE_STATE=P.ROLE_STATE,CRE_TIME=CURRENT_TIMESTAMP(),UPD_TIME=CURRENT_TIMESTAMP();
+  		]]>  
+	</update>
+	<!-- 删除 -->
+	<delete id="removeTmpRoleData" parameterType="String">
+		 <![CDATA[ DELETE FROM USER_ROLE_TMP ]]>  
+	</delete>
+	<!-- 同步角色信息结束 -->
+	
+	
+	<!-- 同步部门信息开始 -->
+    <!-- 新增  user_dept-->
+	<insert id="insertDeptData" parameterType="com.bjca.uums.client.bean.DepartmentInformation">
+		 <![CDATA[INSERT INTO USER_DEPARTMENT (
+    		  DEP_GLOBAL_ID,
+    		  SUP_DEP_GLOBAL_ID,
+    		  DEP_NAME,
+    		  DEP_STATE,
+    		  DEP_LEVEL,
+    		  CRE_TIME,
+    		  UPD_TIME
+		)VALUES(
+			 #{departCode},
+			 #{departUpcode},
+			 #{departName},
+			 1,
+			 1,
+			 CURRENT_TIMESTAMP(),
+			 CURRENT_TIMESTAMP()
+			)]]>  
+	</insert>
+	<!-- 通过部门编号查询数据是否重复 -->
+	<select id="isExistDeptGlobalIDByDepGlogbalID" parameterType="String" resultType="int">
+		<![CDATA[ SELECT COUNT(*) FROM USER_DEPARTMENT WHERE DEP_GLOBAL_ID =#{depGlogbalID}
+		]]> 
+	</select>
+	
+	<!-- 修改 -->
+	<update id="updateDeptDataByDeptCode" parameterType="com.bjca.uums.client.bean.DepartmentInformation">
+		<![CDATA[ UPDATE USER_DEPARTMENT 
+		   SET DEP_NAME = #{departName},
+		   	   SUP_DEP_GLOBAL_ID = #{departUpcode},
+		   	   DEP_STATE = 1,
+    		   CRE_TIME = CURRENT_TIMESTAMP(),
+    		   UPD_TIME = CURRENT_TIMESTAMP()
+		 WHERE DEP_GLOBAL_ID = #{departCode}]]>  
+	</update>
+	
+	<insert id="saveDeptData" parameterType="map">
+		<![CDATA[INSERT INTO USER_DEPARTMENT (
+    		  DEP_NAME,
+    		  DEP_GLOBAL_ID,
+    		  SUP_DEP_GLOBAL_ID,
+    		  DEP_STATE,
+    		  DEP_LEVEL,
+    		  CRE_TIME,
+    		  UPD_TIME
+		)VALUES(
+			 #{departName},
+			 #{departCode},
+			 #{departUpcode},
+			 1,
+			 1,
+			 CURRENT_TIMESTAMP(),
+			 CURRENT_TIMESTAMP()
+			)]]>  
+	</insert>
+	
+	<!-- 删除 -->
+	<delete id="removeDeptDataByDeptCode" parameterType="String">
+		<![CDATA[UPDATE USER_DEPARTMENT SET DEP_STATE = 0 WHERE DEP_GLOBAL_ID =#{deptCode}]]>  
+	</delete>
+	
+	<!-- 删除公服系统所有机构数据 -->
+	<delete id="removeAllDeptData" parameterType="String">
+		<![CDATA[DELETE FROM USER_DEPARTMENT  WHERE DEP_GLOBAL_ID IS NOT NULL]]> 
+	</delete>
+	<!-- 通过部门编号查询部门ID -->
+	<select id="searchFullDeptInfo" parameterType="String" resultType="map">
+		<![CDATA[SELECT DEP_ID,SUP_DEP_GLOBAL_ID FROM USER_DEPARTMENT WHERE DEP_STATE =1 AND SUPER_DEP_ID IS NULL AND SUP_DEP_GLOBAL_ID IS NOT NULL]]> 
+	</select>
+	
+	<!-- 修改部门上级编号 -->
+	<update id="updateSuperDepId" parameterType="map">
+		<![CDATA[ 
+		UPDATE USER_DEPARTMENT T,(
+		SELECT  DEP_ID FROM USER_DEPARTMENT WHERE DEP_GLOBAL_ID=#{supDepGlobalID}
+		) T2
+		SET T.SUPER_DEP_ID = T2.DEP_ID
+		WHERE  T.DEP_ID =#{deptID} AND T.DEP_STATE =1
+  		]]> 
+	</update>
+	
+	<!--merge user_department -->
+	<update id="mergeDeptData" parameterType="com.bjca.uums.client.bean.DepartmentInformation">
+		<![CDATA[ 
+		   INSERT INTO USER_DEPARTMENT
+		   (dep_global_id,sup_dep_global_id,DEP_NAME,DEP_STATE,CRE_TIME,UPD_TIME ) 
+		   SELECT DEP_ID,SUPER_DEP_ID,DEP_NAME,DEP_STATE,CURRENT_TIMESTAMP(),CURRENT_TIMESTAMP() 
+		   FROM USER_DEPARTMENT_TMP P ON DUPLICATE KEY 
+ 		   UPDATE dep_global_id=P.DEP_ID,sup_dep_global_id=P.SUPER_DEP_ID,DEP_NAME=P.DEP_NAME,
+		   DEP_STATE=P.DEP_STATE,CRE_TIME=CURRENT_TIMESTAMP(),UPD_TIME=CURRENT_TIMESTAMP();
+  		]]> 
+	</update>
+	<!-- 同步部门信息结束 -->
+	
+	
+	<!-- 同步个人信息开始 -->
+    <!-- 新增  sys_user-->
+	<insert id="insertPersonData" parameterType="com.bjca.uums.client.bean.PersonInformation">
+		<![CDATA[ 
+		INSERT INTO SYS_USER (
+    		  USER_NAME,
+    		  USER_PASSWORD,
+    		  USER_REAL_NAME,
+    		  USER_STATE,
+    		  USER_ADDR,
+    		  USER_TEL,
+    		  USER_GLOBAL_ID,
+    		  CRE_TIME,
+    		  UPD_TIME
+		)VALUES(
+			 #{userDefault5},
+			 #{userDefault3},
+			 #{userDefault4},
+			 1,
+			 #{userAddress},
+			 #{userPhone},
+			 #{uniqueid},
+			 CURRENT_TIMESTAMP(),
+			 CURRENT_TIMESTAMP()
+			)
+		]]> 
+	</insert>
+	<!-- 通过部门编号查询数据是否重复 -->
+	<select id="isExistUserGlobalIDByUserGlogbalID" parameterType="String" resultType="int">
+		<![CDATA[ SELECT COUNT(*) FROM SYS_USER WHERE USER_GLOBAL_ID =#{userGlogbalID}
+		]]> 
+	</select>
+	<!-- 修改 -->
+	<update id="updatePersonData" parameterType="com.bjca.uums.client.bean.PersonInformation">
+		<![CDATA[ UPDATE SYS_USER 
+		   SET USER_NAME = #{userDefault5},
+		   	   USER_PASSWORD =#{userDefault3},
+		   	   USER_REAL_NAME =#{userDefault4},
+		   	   USER_ADDR=#{userAddress},
+		   	   USER_TEL =#{userPhone},
+		   	   USER_STATE = 1,
+		   	   CRE_TIME = CURRENT_TIMESTAMP(),
+    		   UPD_TIME = CURRENT_TIMESTAMP()
+		 WHERE USER_GLOBAL_ID = #{uniqueid}
+		 ]]> 
+	</update>
+
+	<!-- 删除 -->
+	<delete id="removePersonDataByID" parameterType="String">
+		<![CDATA[ UPDATE  SYS_USER SET USER_STATE = 0 WHERE USER_GLOBAL_ID =#{uid}  ]]> 
+	</delete>
+	
+	
+	
+	<!-- 下发CAS用户到集成系统,下发批量用户数据 -->
+	<select id="getAllUsersData" parameterType="String" resultType="map">
+		<![CDATA[ 
+		SELECT U.USER_ID,U.USER_NAME,U.USER_PASSWORD,
+    		   U.USER_REAL_NAME,U.USER_STATE,U.JOB_ID,B.JOB_NAME,
+    		   U.USER_ADDR,
+    		   U.USER_TEL,
+    		   U.CRE_TIME,
+    		   U.UPD_TIME
+		FROM SYS_USER U,USER_JOB B 
+		WHERE  U.JOB_ID=B.JOB_ID
+		AND U.USER_STATE =1 AND U.USER_GLOBAL_ID IS NULL 
+		 
+		]]> 
+	</select>
+	<!-- 下发单个用户数据 -->
+	<select id="getUsersDataByIDOrName" parameterType="String" resultType="map">
+		<![CDATA[ 
+		SELECT U.USER_ID,U.USER_NAME,U.USER_PASSWORD,
+    		   U.USER_REAL_NAME,U.USER_STATE,U.JOB_ID,B.JOB_NAME,
+    		   U.USER_ADDR,
+    		   U.USER_TEL,
+    		   U.CRE_TIME,
+    		   U.UPD_TIME
+		FROM SYS_USER U,USER_JOB B 
+		WHERE  U.JOB_ID=B.JOB_ID
+		AND U.USER_STATE =1 AND U.USER_GLOBAL_ID IS NULL 	]]> 
+		<if test="_parameter != null and _parameter != ''">
+			<![CDATA[ 
+	       		AND ( USER_NAME = #{_parameter}  OR USER_REAL_NAME = #{_parameter})
+	    	]]>
+	    </if>  
+		 
+	</select>
+	
+	
+	<!--merge user_department -->
+	<update id="mergePersonData" parameterType="com.bjca.uums.client.bean.PersonInformation">
+		<![CDATA[ 
+		   INSERT INTO SYS_USER
+		   (USER_ID,USER_NAME,USER_PASSWORD,USER_REAL_NAME,USER_ADDR,USER_TEL,USER_GLOBAL_ID,USER_TYPE,USER_STATE,CRE_TIME,UPD_TIME ) 
+		   SELECT UNIQUE_ID,USER_DEFAULT5,USER_DEFAULT3,USER_DEFAULT4,USER_ADDRESS,USER_MOBILE,1,USER_STATE,
+		   CURRENT_TIMESTAMP(),CURRENT_TIMESTAMP() 
+		   FROM SYS_USER_TMP P ON DUPLICATE KEY 
+ 		   UPDATE USER_NAME=P.USER_DEFAULT5,USER_PASSWORD=P.USER_DEFAULT3,USER_REAL_NAME=P.USER_DEFAULT4,
+		   USER_ADDR=P.USER_ADDRESS,USER_TEL=USER_MOBILE,USER_STATE=P.USER_STATE,
+		   CRE_TIME=CURRENT_TIMESTAMP(),UPD_TIME=CURRENT_TIMESTAMP();
+  		]]> 
+		
+	</update>
+	
+	
+	<!-- 同步个人用户信息结束 -->
+    
+    
+    
+    
+    <!-- 同步用户与部门关系信息开始 -->
+    <!-- 新增  user_dept_tmp-->
+    <insert id="insertPersonDeptRelaData" parameterType="map">
+		<![CDATA[ INSERT INTO USER_DEP_RELA (
+			USER_ID,
+			DEP_ID
+		)VALUES(
+			#{userID},
+			#{depID}
+		)]]> 
+	</insert>
+	
+	<delete id="removePersonDeptRelaDataByUserID" parameterType="String">
+		<![CDATA[ 
+		DELETE FROM USER_DEP_RELA  WHERE USER_ID IN(
+  		SELECT B.USER_ID FROM (
+		SELECT USER_ID AS USER_ID FROM SYS_USER WHERE USER_GLOBAL_ID =#{userID}) AS B)
+		]]> 
+	</delete>
+	<!-- 通过用户编号查询用户ID -->
+	<select id="searchPersonByGlobalID" parameterType="String" resultType="map">
+		SELECT USER_ID FROM SYS_USER WHERE USER_GLOBAL_ID=#{userGlobalID}
+	</select>
+	
+	<!-- 通过部门编号查询部门ID -->
+	<select id="searchDeptByGlobalID" parameterType="String" resultType="map">
+		SELECT DEP_ID FROM USER_DEPARTMENT WHERE DEP_GLOBAL_ID =#{deptGlobalID}
+	</select>
+	
+	<!--merge user_department -->
+	<update id="mergePersonDeptRelaData" parameterType="com.bjca.uums.client.bean.PersonInformation">
+		<![CDATA[ 
+		   INSERT INTO USER_DEP_RELA(RELA_ID,USER_ID,DEP_ID) 
+		   SELECT RELA_ID,USER_ID,DEP_ID 
+		   FROM USER_DEP_RELA_TMP P ON DUPLICATE KEY 
+ 		   UPDATE USER_ID=P.USER_ID,DEP_ID=P.DEP_ID;
+  		]]> 
+		
+	</update>
+	<!-- 删除 -->
+	<delete id="removeTmpPersonDeptRelaData" parameterType="String">
+		<![CDATA[ DELETE FROM USER_DEP_RELA_TMP ]]> 
+	</delete>
+	
+	<!-- 同步用户与部门关系信息结束 -->
+    
+    
+    
+</mapper>

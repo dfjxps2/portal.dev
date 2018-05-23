@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quick.portal.sectionMetric.ISectionMetricDao">
+	
+    <!--查询条件-->
+	<!-- <sql id="where">
+		1=1
+		<if test="metric_id != null and metric_id != '' and metric_id != 'null'"><![CDATA[ 
+	       and metric_id = #{metric_id}
+	    ]]></if>
+		<if test="metric_src_id != null and metric_src_id != '' and metric_src_id != 'null'"><![CDATA[ 
+	       and metric_src_id = #{metric_src_id}
+	    ]]></if>
+		<if test="src_metric_id != null and src_metric_id != '' and src_metric_id != 'null'"><![CDATA[ 
+	       and src_metric_id like '%'||#{src_metric_id}||'%'
+	    ]]></if>
+		<if test="appr_state != null and appr_state != '' and appr_state != 'null'"><![CDATA[ 
+	       and appr_state = #{appr_state}
+	    ]]></if>
+		<if test="pub_time != null and pub_time != '' and pub_time != 'null'"><![CDATA[ 
+	       and pub_time >= #{pub_time}
+	    ]]></if>
+		<if test="appr_time != null and appr_time != '' and appr_time != 'null'"><![CDATA[ 
+	       and appr_time >= #{appr_time}
+	    ]]></if>
+        <if test="_sql_where != null and _sql_where != ''"> <![CDATA[
+            and ${_sql_where}
+        ]]> </if>
+	</sql> -->
+    
+    <!-- 新增metric -->
+	<insert id="insert" parameterType="com.quick.portal.sectionMetric.SectionMetricDO">
+		insert into section_metric (
+    		  section_id,
+    		  metric_id
+		)values(
+			 #{section_id},
+			 #{metric_id}
+			);
+	<selectKey resultType="int" order="AFTER" keyProperty="sec_metric_id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>		
+	</insert>
+		
+	<!-- 修改metric -->
+	<update id="update" parameterType="com.quick.portal.sectionMetric.SectionMetricDO">
+		update section_metric 
+		   set section_id=#{section_id}
+			  ,metric_id=#{metric_id}
+		 where sec_metric_id = #{sec_metric_id}
+	</update>
+    
+	<!-- 删除 -->
+	<delete id="delete" parameterType="String">
+		delete from section_metric where sec_metric_id = #{sec_metric_id}
+	</delete>
+    
+    <!--查询-->
+	<!-- <select id="select" parameterType="map" resultType="map">
+		select * from sec_metric_config
+		<where>
+			<include refid="where" />
+		</where>
+        <if test="_sql_order != null and _sql_order != ''">
+            order by ${_sql_order}
+        </if>
+	</select> -->
+	
+	<!-- 查询总记录数 -->
+	<select id="count" parameterType="map" resultType="int">
+		select count(*) from section_metric
+		<!-- <where>
+			<include refid="where" />
+		</where> -->
+	</select>
+	
+    
+</mapper>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quick.portal.page.IPageDao">
+
+    <!--查询条件-->
+	<sql id="where">
+		1=1
+		<if test="page_id != null and page_id != '' and page_id != 'null'"><![CDATA[ 
+	       and page_id = #{page_id}
+	    ]]></if>
+		<if test="template_id != null and template_id != '' and template_id != 'null'"><![CDATA[ 
+	       and template_id = #{template_id}
+	    ]]></if>
+		<if test="user_id != null and user_id != '' and user_id != 'null'"><![CDATA[ 
+	       and user_id = #{user_id}
+	    ]]></if>
+		<if test="cre_time != null and cre_time != '' and cre_time != 'null'"><![CDATA[ 
+	       and cre_time >= #{cre_time}
+	    ]]></if>
+		<if test="upd_time != null and upd_time != '' and upd_time != 'null'"><![CDATA[ 
+	       and upd_time >= #{upd_time}
+	    ]]></if>
+        <if test="_sql_where != null and _sql_where != ''"> <![CDATA[
+            and ${_sql_where}
+        ]]> </if>
+		<if test="app_id != null and app_id != '' and app_id != 'null'"><![CDATA[
+	       and page_id in (select page_id from app_page where app_id=#{app_id})
+	    ]]></if>
+	</sql>
+    
+    <!-- 新增page -->
+	<insert id="insert" parameterType="com.quick.portal.page.PageDO">
+		insert into page (
+    		  template_id,
+    		  page_name,
+    		  user_id,
+    		  cre_time,
+    		  upd_time
+		)values(
+			 #{template_id},
+			 #{page_name},
+			 #{user_id},
+			 #{cre_time},
+			 #{upd_time}
+		);
+		<selectKey resultType="int" order="AFTER" keyProperty="page_id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+		
+	<!-- 修改page -->
+	<update id="update" parameterType="com.quick.portal.page.PageDO">
+		update page 
+		   set page_id=#{page_id}
+			  ,template_id=#{template_id}
+			  ,page_name=#{page_name}
+			  ,user_id=#{user_id}
+			  ,cre_time=#{cre_time}
+			  ,upd_time=#{upd_time}
+		 where page_id = #{page_id}
+	</update>
+    
+	<!-- 删除 -->
+	<delete id="delete" parameterType="String">
+		delete from page where page_id = #{page_id}
+	</delete>
+    
+    <!--查询-->
+	<select id="select" parameterType="map" resultType="map">
+		select p.*,u.user_name from page p left join sys_user u on p.user_id=u.user_id
+		<where>
+			<include refid="where" />
+		</where>
+        <if test="_sql_order != null and _sql_order != ''">
+            order by ${_sql_order}
+        </if>
+	</select>
+	
+	<!-- 查询总记录数 -->
+	<select id="count" parameterType="map" resultType="int">
+		select count(*) from page
+		<where>
+			<include refid="where" />
+		</where>
+	</select>
+
+    
+</mapper>

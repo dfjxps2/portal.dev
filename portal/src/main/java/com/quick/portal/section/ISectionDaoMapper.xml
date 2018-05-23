@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quick.portal.section.ISectionDao">
+	
+    <!--查询条件-->
+	<sql id="where">
+		1=1
+		<if test="section_id != null and section_id != '' and section_id != 'null'"><![CDATA[ 
+	       and section_id = #{section_id}
+	    ]]></if>
+		<if test="section_type != null and section_type != '' and section_type != 'null'"><![CDATA[ 
+	       and section_type = #{section_type}
+	    ]]></if>
+		<if test="upd_time != null and upd_time != '' and upd_time != 'null'"><![CDATA[ 
+	       and upd_time >= #{upd_time}
+	    ]]></if>
+        <if test="_sql_where != null and _sql_where != ''"> <![CDATA[
+            and ${_sql_where}
+        ]]> </if>
+	</sql>
+    
+    <!-- 新增section -->
+	<insert id="insert" parameterType="com.quick.portal.section.SectionDO">
+		insert into section (
+    		  section_name,
+    		  section_type,
+    		  section_url,
+    		  upd_time
+		)values(
+			 #{section_name},
+			 #{section_type},
+			 #{section_url},
+			 #{upd_time}
+			);
+		<selectKey resultType="int" order="AFTER" keyProperty="section_id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+		
+	<!-- 修改section -->
+	<update id="update" parameterType="com.quick.portal.section.SectionDO">
+		update section 
+		   set section_id=#{section_id}
+			  ,section_name=#{section_name}
+			  ,section_type=#{section_type}
+			  ,section_url=#{section_url}
+			  ,upd_time=#{upd_time}
+		 where section_id = #{section_id}
+	</update>
+    
+	<!-- 删除 -->
+	<delete id="delete" parameterType="String">
+		delete from page_section where section_id = #{section_id};
+		delete from sec_metric_config where sec_metric_id in (select sec_metric_id from section_metric where section_id = #{section_id});
+		delete from section_metric where section_id = #{section_id};
+		delete from section where section_id = #{section_id};
+	</delete>
+    
+    <!--查询-->
+	<select id="select" parameterType="map" resultType="map">
+		select * from section
+		<where>
+			<include refid="where" />
+		</where>
+        <if test="_sql_order != null and _sql_order != ''">
+            order by ${_sql_order}
+        </if>
+	</select>
+	
+	<!-- 查询总记录数 -->
+	<select id="count" parameterType="map" resultType="int">
+		select count(*) from section
+		<where>
+			<include refid="where" />
+		</where>
+	</select>
+
+	<!--栏目绑定页面 -->
+	<insert id="insertPageSection">
+		insert into page_section (
+			section_id,
+			page_id,
+			section_idx
+		)values(
+			#{param1},
+			#{param2},
+			#{param3}
+		)
+	</insert>
+	<!-- 新增栏目绑定指标 -->
+	<insert id="insertSectionMetric">
+		insert into section_metric (
+		section_id,
+		metric_id
+		)values(
+		#{param1},
+		#{param2}
+		)
+	</insert>
+	<!-- 修改栏目绑定指标 -->
+	<update id="updateSectionMetric">
+		update section_metric
+		set sec_metric_id=#{param1}
+		,section_id=#{param2}
+		,metric_id=#{param3}
+		where sec_metric_id = #{param1}
+	</update>
+	<!-- 新增栏目绑定信息源 -->
+	<insert id="insertSectionMsg">
+		insert into section_msg_src (
+		section_id,
+		msg_src_id,
+		msg_type_id
+		)values(
+		#{param1},
+		#{param2},
+		#{param3}
+		)
+	</insert>
+
+	<!-- 修改栏目绑定信息源 -->
+	<update id="updateSectionMsg">
+		update section_msg_src
+		set sec_msg_src_id=#{param1}
+		,section_id=#{param2}
+		,msg_src_id=#{param3}
+		,msg_type_id=#{param4}
+		where sec_msg_src_id = #{param1}
+	</update>
+	<!--查询页面-->
+	<select id="selectPageSection" parameterType="int" resultType="map">
+		select s.* from section s left join page_section p on s.section_id=p.section_id
+		where p.page_id=#{page_id}
+	</select>
+	<!--查询页面所有关联指标 -->
+	<select id="selectPageMetric" parameterType="int" resultType="map">
+		select * from section_metric
+		where section_id in (select section_id from page_section where page_id=#{page_id})
+	</select>
+	<select id="selectPageMetricConfig" parameterType="int" resultType="map">
+		select * from sec_metric_config
+		where sec_metric_id in (select sec_metric_id from page_section p left join section_metric m on p.section_id=m.section_id and page_id=#{page_id})
+	</select>
+	<!--查询页面所有关联信息源 -->
+	<select id="selectPageMsg" parameterType="int" resultType="map">
+		select * from section_msg_src
+		where section_id in (select section_id from page_section where page_id=#{page_id})
+	</select>
+</mapper>

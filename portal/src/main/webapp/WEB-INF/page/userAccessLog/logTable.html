@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	  <#include "/WEB-INF/include/reslist.html" />
+  </head>
+  <script  type="text/javascript">
+	  function queryItem(){
+		  quick.serverUrl = "${G.serverUrl}";
+		  queryParm=getParm();
+		   var items =[];
+		  $.ajax({
+			  type: "post",
+			  url: quick.serverUrl + "/logTableItem?i=" + Math.random() + queryParm,
+			  dataType: "json",
+			  success: function(data){
+			        //alert('123');
+				  for(var item in data){
+					 var count=data[item]
+				  }
+				  document.getElementById("h1").innerHTML= "起始时间："+$('#start_time').val()+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"截止时间："+$('#end_time').val(),
+
+				  document.getElementById("h2").innerHTML= "期间系统运行状况：正常&nbsp;&nbsp;系统访问人次:"+data[item]+"&nbsp;&nbsp;"+"文件下载次数：0"
+
+			  }
+		  });
+	  }
+
+	  function queryUser(){
+		  var dom = document.getElementById("containerUser");
+		  var myChart = echarts.init(dom);
+		  var app = {};
+		 /* option = null;*/
+		  app.title = '用户访问分析 - 条形图';
+		 myChart.setOption({
+			  title: {
+				  text: '用户访问系统次数',
+				  subtext: '数据来自日志记录'
+			  },
+			  tooltip: {
+				  trigger: 'axis',
+				  axisPointer: {
+					  type: 'shadow'
+				  }
+			  },
+			  grid: {
+				  left: '3%',
+				  right: '4%',
+				  bottom: '3%',
+				  containLabel: true
+			  },
+			  xAxis: {
+				  type: 'value',
+				 // boundaryGap: [0, 0.01],
+				  minInterval: 1
+			  },
+			  yAxis: {
+				  type: 'category',
+				 // boundaryGap: [0,1],
+				  "axisLabel":{
+					  interval: 0
+				  },
+				  data:[]
+			  },
+			  series: [
+				  {
+					  type: 'bar',
+					 // barWidth:15,
+					  barMaxWidth:20,
+					  barGap:20,
+					  itemStyle:{
+						  normal:{
+							  color:'#4169E1'
+						  }
+					  },
+					  data:[]
+				  }
+			  ]
+		  });
+		  myChart.showLoading();    //数据加载完之前先显示一段简单的loading动画
+		  quick.serverUrl = "${G.serverUrl}";
+		 /* _gd['list'].refresh();*/
+		  queryParm=getParm();/*alert(queryParm);*/
+		  var names=[];
+		  var nums= [];
+			  $.ajax({
+				  type: "post",
+				  url: quick.serverUrl + "/logTableUser?i=" + Math.random() + queryParm,
+				  dataType: "json",
+				  success: function(data){
+                        /* alert(123);*/
+					  $.each(data, function (index, item) {
+						  names.push(item.user_name);    //挨个取出类别并填入类别数组
+						  nums.push(item.count);    //挨个取出销量并填入销量数组
+					  });
+						if(nums.length==0){
+							alert("没有查询到数据记录...")
+						}else {
+							myChart.hideLoading();    //隐藏加载动画
+							myChart.setOption({        //加载数据图表
+								yAxis: {
+									data: names
+								},
+								series: [{
+									// 根据名字对应到相应的系列
+									name: '发布排行',  //显示在上部的标题
+									data: nums
+								}]
+							});
+						}
+				  }/*,
+				  error: function (errorMsg) {
+					  //请求失败时执行该函数
+					  alert("图表请求数据失败!");
+					  myChart.hideLoading();
+				  }*/
+			  });
+	  }
+	  /*显示菜单排序 */
+	  function queryTag(){
+		  var dom = document.getElementById("containerTag");
+		  var myChart = echarts.init(dom);
+		  var app = {};
+		  /* option = null;*/
+		  app.title = '菜单访问分析 - 条形图';
+		  myChart.setOption({
+			  title: {
+				  text: '菜单被访问次数',
+
+				  subtext: '数据来自日志记录'
+			  },
+
+			  tooltip: {
+				  trigger: 'axis',
+				  axisPointer: {
+					  type: 'shadow'
+				  }
+			  },
+
+			  grid: {
+				  left: '3%',
+				  right: '4%',
+				  bottom: '3%',
+				  containLabel: true
+			  },
+			  xAxis: {
+				  type: 'value',
+				 // boundaryGap: [0, 0.01],
+				  minInterval: 1
+			  },
+			  yAxis: {
+				  type: 'category',
+				  boundaryGap: [0, 1],
+				  "axisLabel":{
+					  interval: 0
+				  },
+				  data:[]
+			  },
+			  series: [
+				  {
+					  type: 'bar',
+					  barMaxWidth:20,
+					  barGap:20,
+					  itemStyle:{
+						  normal:{
+							  color:'#4169E1'
+						  }
+					  },
+					  data:[]
+				  }
+			  ]
+		  });
+		  myChart.showLoading();    //数据加载完之前先显示一段简单的loading动画
+
+		  quick.serverUrl = "${G.serverUrl}";
+		  /* _gd['list'].refresh();*/
+		  queryParm=getParm();/*alert(queryParm);*/
+		  var names=[];
+		  var nums= [];
+		  $.ajax({
+			  type: "post",
+			  url: quick.serverUrl + "/logTableTag?i=" + Math.random() + queryParm,
+			  dataType: "json",
+			  success: function(data){
+				  //alert(123);
+
+				  $.each(data, function (index, item) {
+					  names.push(item.menu_cn_name);    //挨个取出类别并填入类别数组
+					  nums.push(item.count);    //挨个取出销量并填入销量数组
+				  });
+				  names.reverse();
+				  nums.reverse();
+				  if(nums.length==0){
+					  //alert("没有查询到数据")
+				  }else {
+					  myChart.hideLoading();    //隐藏加载动画
+					  myChart.setOption({        //加载数据图表
+						  yAxis: {
+							  data: names
+						  },
+						  series: [{
+							  // 根据名字对应到相应的系列
+							  name: '发布排行',  //显示在上部的标题
+							  data: nums
+						  }]
+					  })
+				  }
+			  }/*,
+			   error: function (errorMsg) {
+			   //请求失败时执行该函数
+			   alert("图表请求数据失败!");
+			   myChart.hideLoading();
+			   }*/
+		  });
+	  }
+	  function getParm(){
+		  var s = '&'+$("#formSearch").serialize().replace(/&/g, "&");
+		  return s;
+	  }
+	  /* 图表*/
+	  /*queryItem();
+	  queryUser();
+	  queryTag();*/
+  </script>
+
+   <body class="gray-bg">
+   <div class="wrapper wrapper-content wrapper-content-x animated fadeInRight">
+	   <div class="row">
+		   <!--<div class="col-sm-12">
+			   <div class="ibox ibox-x">
+				   <div class="ibox-content ibox-content-x">
+					   <div class="panel-mar">-->
+						   <form id="formSearch" class="form-inline">
+
+							   <div class="form-group" style="padding: 10px;width:180px;">
+								    <input id="start_time" name="start_time" class="form-control" onfocus="(this.type='date')" type="text" placeholder="起始时间" />
+							   </div>
+							   <div class="form-group" style="padding: 10px;width:180px;">
+								   <input id="end_time" name="end_time" class="input-sm form-control" onfocus="(this.type='date')" type="text" placeholder="截止时间" />
+							   </div>
+
+							   <span class="input-group-btn" style="display:inline-block;">  <button class="btn btn-primary " type="button" onclick="queryUser();queryTag();queryItem()"> 查询</button> </span>
+						   </form>
+					   <!--</div>-->
+
+				  <!-- </div>
+			   </div>
+		   </div>-->
+	   </div>
+   </div>
+   <div id="containerItem" style="height:15%">
+	   <h5 id="h1" align="right"></h5>
+	   <h5 id="h2" align="right"></h5>
+   </div>
+   <div id="containerUser" style="height:40%"></div>
+   <div id="containerTag" style="height:40%"></div>
+
+  </body>
+</html>

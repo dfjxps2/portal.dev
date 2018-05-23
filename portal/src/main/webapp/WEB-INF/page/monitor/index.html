@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="${G.host}/res/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="${G.host}/res/css/animate.min.css" rel="stylesheet">
+<link href="${G.host}/res/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<link href="${G.host}/res/script/home/gridstack.min.css" rel="stylesheet" type="text/css" />
+<link href="${G.host}/res/layer/skin/moon/style.css" rel="stylesheet" type="text/css" />
+<link href="${G.host}/upload/pageTemplate/t1/style.css" rel="stylesheet" type="text/css" />
+<script src="${G.host}/res/plugin/jQuery/jquery-1.11.3.min.js" type="text/javascript"></script>
+<script src="${G.host}/res/js/jquery-ui.min.js" type="text/javascript"></script>
+<script src="${G.host}/res/script/home/lodash.min.js" type="text/javascript"></script>
+<script src="${G.host}/res/script/home/knockout.min.js" type="text/javascript"></script>
+<script src="${G.host}/res/script/home/gridstack.min.js" type="text/javascript"></script>
+<script src="${G.host}/res/js/echarts/echarts.js"></script>
+<script src="${G.host}/res/js/indexCharts/indexChart.js"></script>
+
+</head>
+
+<body class="qbody">
+<div class="qheader-title"><div class="qheader-title1">${app.app_name}</div><div class="qheader-title2">${pageList[0].page_name}</div></div>
+<div class="qheader"><div class="qmenu-ico" onclick="$('.qmenu').toggle();"><i class="fa fa-list-ul"></i></div></div>
+<div class="qpage animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="container-fluid qmain">
+                <div id="box" class="grid-stack qbox" data-bind="component: {name: 'dashboard-grid', params: $data}"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="qmenu" style="display:none;"><ul id="appmenu" class="sidenav"></ul></div>
+</body>
+
+</html>
+<script>
+    var _tmpls={},_layout = ${layout},co = [],name,_page=${pageJson};
+    window.onload = function() {
+        initLayout();
+        initChart();
+        initMenu(_page);
+    }
+    function initLayout(){
+        for(var i = 0; i < _layout.length;i++){
+            _layout[i].sid = 's'+_layout[i].no;
+        }
+        var str = [];
+        for(var i = 0; i < _layout.length; i++){
+            var n = _layout[i];
+            str.push('<div class="grid-stack-item" data-gs-x="',n.x,'" data-gs-y="',n.y,'" data-gs-width="',n.width,'" data-gs-height="',n.height,'" data-gs-auto-position="true">');
+            str.push('<div class="grid-stack-item-content qsection"><div class="_qborder"></div><div id="', n.sid,'" class="_qbody"></div></div>');
+            str.push('</div>');
+        }
+        $("#box").html(str.join(''));
+        var ch = getCH();
+        $('.grid-stack').gridstack({
+            cellHeight:ch,
+            staticGrid:true
+        });
+        function getCH(){
+            var h = 4;
+            $("#box").find(".grid-stack-item").each(function(){
+                var xh = parseInt(this.dataset.gsY) + parseInt(this.dataset.gsHeight);
+                if(xh > h)
+                    h = xh;
+            });
+            if(h>12) h = 12;
+            return ($(window).height() - 68) / h - 20;
+        }
+    }
+    function initChart(){
+        for(var m = 0; m < _layout.length; m++){
+            for(var n = 0; n < _layout[m].metric.length; n++) {
+                _layout[m].metric[n].section_id = _layout[m].no;
+                co.push(_layout[m].metric[n]);
+            }
+        }
+        var metricList = '';
+        for (var j = 0; j < co.length; j++) {
+            if (j ==co.length-1) {
+                metricList= metricList+co[j].metric_id;
+            }else{
+                metricList= metricList+co[j].metric_id+',';
+            }
+        }
+        getMetricData(metricList);
+    }
+    function getMetricData(metricList){
+        $.ajax({
+            url:"http://portal-server:8082/services/measures",
+            data:{meaId:metricList,to:2018,from:2015},
+            type:'get',
+            success:function(res){
+                add(res.measure,name,co,_layout);
+                hideMask();
+            },error:function(jqr){
+                hideMask();
+                alert("网络出错");
+            }
+        });
+    }
+    function initMenu(dt){
+        var str = [];
+        for(var i = 0; i <dt.length; i++){
+            str.push('<li>','<a href="${G.host}/monitor/index?t=${app.app_id}&p=', dt[i].page_id,'"><i class="fa fa-fw fa-file-o"></i>', dt[i].page_name , '</a>','</li>');
+        }
+        $("#appmenu").html(str.join(''));
+    }
+    function showMask(){
+        $("#qmask").show();
+    }
+    function hideMask(){
+        $("#qmask").hide();
+    }
+</script>

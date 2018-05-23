@@ -1,0 +1,379 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+    <title></title>
+    <link rel="shortcut icon" href="/favicon.ico"/>
+    <link rel="bookmark" href="/favicon.ico"/>
+    <script src="${base}/res/js/jquery-1.11.3.min.js" type="text/javascript"></script>
+    <script src="${base}/res/js/easyui/jquery.easyui.min.js" type="text/javascript"></script>
+    <script src="${base}/res/js/easyui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+    <link href="${base}/res/js/easyui/themes/suibian-blue/easyui.css" rel="stylesheet" />
+    <link href="${base}/res/css/icon.css" rel="stylesheet" />
+    <link href="${base}/res/themes/suibian-blue/body.css" rel="stylesheet" />
+    <script src="${base}/res/js/easyui/jquery.jdirk.min.js" type="text/javascript"></script>
+    <script src="${base}/res/js/easyui/jeasyui.extensions.all.min.js" type="text/javascript"></script>
+    <link href="${base}/res/themes/cloud/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="${base}/res/fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <script src="${base}/res/js/Common/jquery.lwtCountdown-1.0.js" type="text/javascript"></script>
+    <script src="${base}/res/js/Jscript.common.js" type="text/javascript"></script>
+    <link href="${base}/res/js/quickui/quickui.css" rel="stylesheet" type="text/css" />
+    <script src="${base}/res/js/quickui/quickui.js" type="text/javascript"></script>
+    <script src="${base}/res/js/quickui/quickui.box.js" type="text/javascript"></script>
+    <script src="${base}/res/js/quickui/quickui.loader.js" type="text/javascript"></script>
+
+
+
+    <script type="text/javascript">
+        var _menus =${menuJson};
+        var __host = '${base}';
+        var __currentTabId = '';
+    </script>
+    <script type="text/javascript">
+        function changePwd() {
+            openWindow({
+                title:"修改密码",
+                iconCls: 'icon-key',
+                width: 400,
+                height: 210,
+                bodyCls:'hideOverflow',
+                shadow: true,
+                url:'${base}/sys/user/ModifyPassword',
+                modal: true,
+                minimizable: false,
+                maximizable: false,
+                loadingMessage: '正在加载，请稍候...'});
+            $('#win').window('center');
+        }
+        function ClearCache(){
+            $.messager.progress();	// 显示进度条
+            $.ajax({
+                url:'${base}/yw/stcsb/CreateStcReport',
+                type:'POST',
+                success: function(data){
+                    $.messager.progress('close');
+                    //checkResult(data,true);
+
+                }
+
+
+            });
+        }
+        //单击事件
+        function iniOnClick(arr) {
+            $.each(arr, function (i, o) {
+                try {
+                    $('#' + o).click(function () {
+                        var fn = o + "()";
+                        eval(fn);
+                    });
+                } catch (e) { console.debug(e); }
+            });
+        }
+
+        var menuDb = _menus;
+
+        $(function () {
+
+            setTopMenu();
+            iniOnClick(["btnFullScreen", "btnExit","clearCache", "mainTabs_jumpHome", "mainTabs_closeAll", "mainTabs_toggleAll"]);
+            $("#rightFrame").attr("src","${base}/welcome.do");
+
+        });
+        var kkk=0;
+
+        //全屏
+        function btnFullScreen() {
+            if ($.util.supportsFullScreen) {
+                if ($.util.isFullScreen()) {
+                    $.util.cancelFullScreen();
+                    $("#fullIcon").removeClass().addClass("fa fa-expand");
+                } else {
+                    $.util.requestFullScreen();
+                    $("#fullIcon").removeClass().addClass("fa fa-compress");
+                }
+            } else {
+                $.easyui.messager.show("当前浏览器不支持全屏 API，请更换至最新的 Chrome/Firefox/Safari 浏览器或通过 F11 快捷键进行操作。");
+            }
+        }
+
+        //退出系统
+        function btnExit() {
+            $.easyui.messager.confirm("操作提醒", "您确定要退出当前系统？", function (c) {
+                if (c) {
+                    window.location="/dologout.do";
+                }
+            });
+        }
+        //主页
+        function mainTabs_jumpHome() {
+            var t = $("#mainTabs");
+            var panel =  panel = findTab("rightFrame","主页","${base}/welcome.do");
+            if (panel && panel.length) {
+                var index = t.tabs("getTabIndex", panel);
+                t.tabs("select", index);
+            }
+        }
+        //全部关闭
+        function mainTabs_closeAll( ) {
+            $("#mainTabs").tabs("closeAllClosable");
+        }
+        //
+        function mainTabs_toggleAll() {
+            $(mainLayout).layout("toggleAll", "collapse");
+        }
+
+        //添加Tab
+        function addTabs(id,tl, hr) {
+            var t = $("#mainTabs");
+            var panel = findTab(id,tl, hr);
+            if(hr.indexOf("?")!=-1){
+                hr+="&MENUID="+id;
+            }
+            else{
+                hr+="?MENUID="+id;
+            }
+            if (panel && panel.length) {
+                var index = t.tabs("getTabIndex", panel);
+                t.tabs("select", index);
+            } else {
+                var openTabCount=t.tabs('tabs').length ;
+
+                if(openTabCount>10){
+                    //最多打开10个窗口
+                    $.messager.confirm('提示', '最多只能打开<b style="color:red;">10</b>个窗口！<br/><br/>是否要关闭第一个窗口？', function(r){
+                        if(r){
+                            //关闭第一个窗口
+                            t.tabs("close", 1);
+
+                            //添加Tab
+                            t.tabs("add", {
+                                id:'tab_'+id,
+                                title: tl,  iniframe: true, closable: true,refreshable:false,
+                                content:'<iframe id="menuF_'+id+'" scrolling="auto" overflow="auto" frameborder="0"  src="'+__host+hr+'" style="width:100%;height:100%;display:block"></iframe>'
+                            });
+                        }
+                    });
+                }else{
+                    t.tabs("add", {
+                        id:'tab_'+id,
+                        title: tl,  iniframe: true, closable: true,refreshable:false,
+                        content:'<iframe id="menuF_'+id+'" scrolling="auto"  overflow="auto" frameborder="0"  src="'+__host+hr+'" style="width:100%;height:100%;display:block"></iframe>'
+                    });
+                }
+            }
+
+        }
+        //查找指定
+        function findTab(id,titleP,titleH) {
+            return $.array.first($("#mainTabs").tabs("tabs"), function (val) {
+                var opts = val.panel("options");
+                var h=val.find("iframe").attr("src");
+                var frameId=val.find("iframe").attr("id");
+                var findId="menuF_"+id;
+                return opts.title == titleP &&frameId==findId;
+            });
+        }
+        //关闭Tab
+        function closeTab(id, parentid) {
+            $("#link_" + id).prev().removeClass().addClass("tab_after");
+            $("#link_" + id).prev().find("iframe").show();
+            $("#link_" + id).remove();
+            var chindNode = $("#link" + id + "_iframe")[0];
+            if (chindNode != null)
+                chindNode.parentNode.removeChild(chindNode);
+        }
+
+        //顶部菜单
+        function setTopMenu() {
+            menuTop = [];
+            var sMenu = "";
+            var sPop = ""; //弹出菜单
+            var n=0;
+            $(menuDb).each(function (i,item) {
+                if (item.PARENTID == "0") {
+                    n++;
+                    if (n > 8)
+                    {
+                        sPop += '<div data-options="iconCls:\'' + item.ICONURL + '\'" onclick="setLeftMenu(this, \'' + item.MENUID + '\',\''+item.TITLE+'\',\''+item.URL+'\')"> ' + item.TITLE + '</div>';
+                    }
+                    else
+                    {
+                        sMenu +='<li><a id="li_' + item.MENUID + ' "href="javascript:void(0)" class=""  onClick="setLeftMenu(this, \'' + item.MENUID + '\',\''+item.TITLE+'\',\''+item.URL+'\')" ><i class="'+item.ICONURL+'" ></i><h2>'+item.TITLE+'</h2></a></li>';
+                    }
+                }
+            });
+            if (sPop.length > 0) {
+                sMeun += "<li ><a  href=\"javascript:void(0)\" class=\"more\">更多</a></li>";
+                $('#mm_more').html(sPop);
+            }
+
+
+            $("#topUl").append(sMenu);
+            $('#topUl  a:first').click();
+            $("#topPop").menu();
+            if(n==1){
+                $("#topUl").hide();
+            }
+            $('.more').menubutton({
+                menu: '#mm_more'
+            });
+        }
+        //二级菜单
+        function setLeftMenu(obj, mId,title,url) {
+
+            $('#topUl .selected').removeClass('selected');
+            $(obj).addClass('selected');
+            if(url!=''&&url!='null'&&url!='#')
+            {
+                document.getElementById("rightFrame").src=url;
+                return;
+            }
+
+            $('#westDiv').empty();
+            var s = '';
+            s +='<div class="lefttop"><span></span>'+title+'</div><dl class="leftmenu">'
+            $(menuDb).each(function (i, item) {
+                if (item.PARENTID == mId) {
+                    s+='<dd><div class="title" id="title_'+item.MENUID+'" Title="'+item.TITLE+'"> <span><i class="'+item.ICONURL+'" style="color:#66B4D5;font-size:16px;width:16px;height:16px;display:block"></i></span>'+item.TITLE+'</div><ul class="menuson" id="ul_' + item.MENUID + '">'+
+                            setLeftTwoMenu(item.MENUID) +'</ul></dd>';
+                }
+            });
+
+            s+='</dl>';
+            $('#westDiv').append(s);
+            $(".menuson li").click(function(){
+                $(".menuson li.active").removeClass("active")
+                $(this).addClass("active");
+            });
+
+            $('.title').click(function(){
+                var $ul = $(this).next('ul');
+                $('dd').find('ul').slideUp(100);
+                if($ul.is(':visible')){
+                    $(this).next('ul').slideUp(100);
+                }else{
+                    $(this).next('ul').slideDown(100);
+                }
+            });
+            $('.title').next('ul').slideUp(100);
+
+        }
+        //三级菜单
+        function setLeftTwoMenu( mId) {
+            var s="";
+            $(menuDb).each(function (i, item) {
+                if (item.PARENTID == mId) {
+                    s+='  <li id="'+item.MENUID+'" parentid="'+mId+'"><cite></cite><a href="javascript:addTabs(\''+item.MENUID+'\',\''+item.TITLE+'\',\''+item.URL+'\')" >'+item.TITLE+'</a><i></i></li>';
+                }
+            });
+            return s;
+        }
+        //tab与左边菜单联动
+        function tabSelect(title,index){
+            var  tab=$("#mainTabs").tabs("getTab",index);
+            if(tab){
+                var id=tab[0].id;
+                if(id!='homePanel'){
+                    $(".menuson li.active").removeClass("active")
+                    $("#"+id.substr(4)).addClass("active");
+                    var parentid=$("#"+id.substr(4)).attr("parentid");
+
+                    var $ul = $('#title_'+parentid).next('ul');
+                    if(!$ul.is(':visible')){
+                        $('#title_'+parentid).trigger("click");
+                    }
+                }else{
+                    $(".menuson li.active").removeClass("active");
+                    $('.title').next('ul').slideUp(100);
+                }
+            }
+
+        }
+
+    </script>
+    <style type="text/css">
+        .hideOverflow{
+            overflow:hidden;
+        }
+
+    </style>
+</head>
+<body class="admin">
+<!--遮罩 -->
+<div id="maskContainer" >
+    <div class="datagrid-mask" style="display: block;"></div>
+    <div class="datagrid-mask-msg" style="display: block; left: 50%; margin-left: -52.5px;">
+        正在加载...
+    </div>
+</div>
+<div id="mainLayout" class="easyui-layout" data-options="fit: true" >
+    <div data-options="region: 'north', border: false, height: 88" class="head" style="background:url(${base}/res/themes/cloud/images/topbg.gif) repeat-x;">
+        <div class="topleft">
+            <img src="${base}/res/themes/cloud/images/l04.png" heihgt="70px" width="70px"/>
+            <span><font data-text="信息数据平台">信息数据平台</font></span>
+            <!--<img src="/res/themes/cloud/images/logo${System}.png" title="系统首页" />-->
+
+        </div>
+
+        <ul class="nav" id="topUl">
+
+
+
+        </ul>
+
+        <div class="topright">
+            <div class="Messge">
+                <i class="fa fa-volume-up" ></i><a href="javascript:addTabs('消息','消息','${base}/sys/announce/announce')"><i>通知</i><b id="MCount" style="display:none"></b></a></li>
+            </div>
+            <div class="user">
+                <i class="fa fa-legal" style="color:#fff"></i>
+                <span class="i" id="Notice-2">${user.depName}</span>
+			  <span class="userSpan">
+				 <a class="easyui-menubutton" data-options="menu:'#mm_user', menuAlign: 'right'">${user.userName}</a>
+				 </span>
+            </div>
+        </div>
+
+    </div>
+    <!-- 左部菜单 -->
+    <div id="westDiv" data-options="region:'west'" style="width: 189px;background:#f0f9fd;">
+
+    </div>
+    <div data-options="region:'center',noheader:true,border:false">
+        <div id="mainTabs_tools" class="tabs-tool">
+            <table>
+                <tr>
+                    <td><a id="mainTabs_jumpHome" class="easyui-linkbutton easyui-tooltip" title="跳转至主页选项卡" data-options="plain: true, iconCls: 'icon-hamburg-home'"></a></td>
+                    <td>
+                        <div class="datagrid-btn-separator"></div>
+                    </td>
+
+                    <td><a id="mainTabs_closeAll" class="easyui-linkbutton easyui-tooltip" title="关闭所有选项卡" data-options="plain: true, iconCls: 'icon-standard-cross'"></a></td>
+                </tr>
+            </table>
+        </div>
+
+        <div id="mainTabs" class="easyui-tabs" data-options="fit: true, border: true, tools: '#mainTabs_tools',tabHeight:40,lineHeight:0,onSelect:tabSelect">
+            <div id="homePanel" data-options="title: '主页', iconCls: 'icon-hamburg-home',refreshable:false ">
+                <iframe  id="rightFrame"  frameborder="0" style="width: 100%; height: 100%;display:block"   ></iframe>
+            </div>
+
+        </div>
+
+    </div>
+    <div id="mm_user">
+        <div data-options="iconCls:'icon-reply'" class="password" onclick="window.location.href='System.do'">返回系统选择</div>
+        <div data-options="iconCls:'icon-key'" class="password" onclick="changePwd();">修改密码</div>
+        <div data-options="iconCls:'icon-recycle'" class="password" onclick="ClearCache();">清除缓存</div>
+        <div data-options="iconCls:'icon-sign-out'" class="password" onclick="btnExit();">退出</div>
+    </div>
+    <div id="mm_more" style="display: none; width: 120px;">
+    </div>
+    <div id="wPwd" class="easyui-window" closed="true"></div>
+
+</div>
+
+</body>
+</html>

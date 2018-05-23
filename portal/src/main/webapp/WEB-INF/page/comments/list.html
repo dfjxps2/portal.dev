@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	  <#include "/WEB-INF/include/reslist.html" />
+  </head>
+   <script>
+       var pageNum=1;
+       var pageSize=10;
+       var queryParm = '';
+       var flag=true;
+       var pageFlag=0;
+	   //初始化表格
+	   function  config(){
+           var RFlag=$.request.queryString["RFlag"];
+		   quick.serverUrl = "${G.serverUrl}";
+		   quick.editUrl = "${G.editUrl}";
+		   quick.objName = "${G.objName}";
+		   quick.idField = "${G.idField}";
+           
+		   $("#list").bootstrapTable("destroy");
+		   _gd["list"]=new BGrid("#list");
+		   _gd["list"].config({
+			   url:quick.serverUrl+"/getList?i=" + Math.random(),
+			   idField: quick.idField,
+			   sortName: quick.idField,
+               cache:false,
+			   height: $(document.body).height()-50,
+			   toolbar:"#formSearch",
+			   columns: [
+				   {  checkbox: true },
+                   { field: 'user_name', title: '批示用户', width: 90  },
+                   { field: 'cmt_time', title: '批示时间', width: 100  },
+				   { field: 'conent', title: '批示备注', width: 200  },
+                   { field: 'cmt_state', title: '处理状态', width: 60  },
+				   { field: 'CZ',  title: '操作',width: '15%', formatter:function(value,row,index){
+					   return "<button type='button' class='btn_el' onclick='pic(\""+row.snapshot_url+"\",\""+row.comment_id+"\")'>附件</button>| "
+							   +"<button type='button' class='btn_el' onclick='edit(\""+row.comment_id+"\",\""+row.comment_id+"\")'>处理</button>";
+					   ;
+				   }}
+			   ],onPageChange:function(number, size){
+                   $("#IDS_PAGESIZE").val(size);
+                   $("#IDS_PAGENUM").val(number);
+                   pageNum=number;
+                   pageSize=size;
+               }
+		   });
+
+           if(RFlag==1){
+               requery();
+           }else{
+               _gd["list"].init();
+           }
+	   }
+
+    //删除记录
+    function pic(url,name){
+		layer.open({
+			type: 2,
+			title: false,
+			maxmin: true,
+			shade: [0],
+			area: ['600px', '400px'],
+			anim: 2,
+			content: '${G.host}/' + url
+		});
+    }
+    
+	//查看详细信息
+	function edit(id){
+		$.post('${G.serverUrl}/update?comment_id='+id, function(ds){
+			if(ds && ds.code == 1){
+				layer.alert(ds.msg);
+				query();
+			}else{
+				layer.alert("处理失败");
+			}
+		});
+	}
+	function add(){
+		menuGoto(quick.editUrl);
+	}
+    //将url查询信息传至详细信息页面,返回时调用
+	function goDetail(obj){
+		var value = $(obj).attr("id");
+		navAppend("详情信息");/*获取父页面元素并动态赋值父页面title*/
+		window.location.href=quick.editUrl + "?mode=browse&comment_id="+id + getDetailParm();
+	}
+    function query(){
+       _gd['list'].refresh();
+       queryParm=getParm();
+    }
+    //获取返回时传回的数据
+    function requery(){
+       var pn = Number($.request.queryString["IpageNum"]) || 1;
+       var ps =  $.request.queryString["IpageSize"] || 10;
+       
+       _gd["list"].config({
+           pageSize: ps
+           ,onLoadSuccess:function(){
+               if(pageFlag>0){
+                   return;
+               }
+               $('#list').bootstrapTable('selectPage', pn);
+               pageFlag++;
+           }
+       });
+       _gd["list"].init();
+    }
+    //获取查询框数据
+	function getParm(){
+		var s = '&I'+$("#formSearch").serialize().replace(/&/g, "&I");
+		return s;
+	}
+	function getDetailParm(){
+		var s= queryParm + "&IpageNum="+pageNum+"&IpageSize="+pageSize;
+		return s;
+	}
+  </script>
+  <body class="gray-bg">
+  <div class="wrapper wrapper-content wrapper-content-x animated fadeInRight">
+	  <div class="row">
+		  <div class="col-sm-12">
+			  <div class="ibox ibox-x">
+				  <div class="ibox-content ibox-content-x">
+					  <div class="panel-mar">
+							  <form id="formSearch" class="form-inline">
+                                  <div class="form-group" style="padding: 0px;width:180px;">
+                                      <input id="cmt_time" name="cmt_time" class="form-control" type="text" placeholder="2018-05-03" /> <label onclick="layerDateTime();" style="position: absolute;top: 0px;right: 15px;background-position-x: center;" class="laydate-icon inline demoicon layer_date"></label>
+								  </div>
+								  <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="query();"> 查询</button> </span>
+								  <!--<div class="form-group" style="width:100px;float:right;">
+									  <button type="button" class="btn btn-primary" onclick="location.href='edit';"> 处理</button>
+								  </div>-->
+							  </form>
+						</div>
+					  <div style ="margin:5px;">
+						  <table id="list" class="table-striped" style="table-layout:fixed"></table>
+					  </div>
+				  </div>
+			  </div>
+		  </div>
+		  <input type="hidden"  id="IDS_PAGENUM" name="IDS_PAGENUM">
+		  <input type="hidden"  id="IDS_PAGESIZE" name="IDS_PAGENUM">
+	  </div>
+  </div>
+  </body>
+</html>

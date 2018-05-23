@@ -1,0 +1,126 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" >
+<title>欢迎登录后台管理系统</title>
+  <link href="res/plugin/bootstrap/css/bootstrap.min.css"  rel="stylesheet" type="text/css" >
+  <link href="res/fonts/font-awesome/css/font-awesome.min.css"  rel="stylesheet" type="text/css" >
+  <script src="res/plugin/jQuery/jquery-3.2.0.min.js" type="text/javascript"></script>
+  <script src="res/plugin/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+   <link href="res/css/main.css"  rel="stylesheet" type="text/css" >
+    <script src="res/js/Common/cookie.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function(){
+
+            <#if errMsg?? >
+            $("#errorAlert").html('${errMsg}');
+             $("#errorAlert").show();
+            $('#btnLogin').removeAttr('disabled');
+            </#if>
+            /*回车切换下一个控件*/
+            $(":text,:password").keydown(function(e) {
+                e = e || event;
+                var k = e.keyCode || e.which;
+                if (k == 13) {
+                var el = document.activeElement;
+                if (el.id == "txtUserName")
+                $("#txtPassword").focus();
+                else if(el.id=="txtPassword")
+                $("#btnLogin").click();
+                return false;
+            }
+            });
+            });
+
+        /*登录*/
+        function login() {
+            var uu = $("#txtUserName");
+            var pp = $("#txtPassword");
+            $.ajax({
+                type: "POST",
+                url: "dologin",
+                data:{username:encodeURI(uu.val().toLowerCase()),password:pp.val(),t:new Date()} ,
+                beforeSend: function () {  $('#btnLogin').attr('disabled', 'true'); }, //发送数据之前
+                complete: function () {$('#btnLogin').removeAttr('disabled'); }, //接收数据完毕
+                success: function (data) {
+                    if (data == "1") {
+                        $.cookie("SIP.user", uu.val(), { expires: 7 });    //save cookie
+                       location.href = "index.do";
+                    } else {
+                        $("#errorAlert").html(data);
+                        $("#errorAlert").show();
+                        $('#btnLogin').removeAttr('disabled');
+                        return false;
+                    }
+                }
+            });
+        }
+    </script>
+</head>
+
+<body >
+<div class="main-container" >
+
+    <div id="content" class="content-container">
+        <!-- uiView: --><section  class="view-container animate-fade-up" style="">
+        <div class="page-signin ng-scope" >
+
+        <div class="wrapper">
+            <div class="main-body">
+                <div class="body-inner">
+                    <div class="card bg-white">
+                        <div class="card-content">
+
+                            <section class="logo text-center">
+                                <h1>IDS</h1>
+                            </section>
+                            <div style="width:100%;height:40px">
+                            <div id="errorAlert" class="alert alert-danger" style="margin-bottom:5px;padding:8px;display: none">发生错误</div>
+                            </div>
+                            <form class="form-horizontal ng-pristine ng-valid">
+                                <fieldset>
+                                    <div class="form-group">
+                                        <div class="ui-input-group">
+                                            <input id="txtUserName" name="username" type="text" required="" class="form-control">
+                                            <span class="input-bar"></span>
+                                            <label>账户</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="ui-input-group">
+                                            <input id="txtPassword" name="password" type="password" required="" class="form-control">
+                                            <span class="input-bar"></span>
+                                            <label>密码</label>
+                                        </div>
+                                    </div>
+
+
+                                </fieldset>
+                            </form>
+                        </div>
+                        <div class="card-action no-border text-right">
+                            <button id="btnLogin" class="btn btn-primary" style="width:100%" onclick="return login(this)">登录</button>
+                        </div>
+                    </div>
+
+                    <div class="additional-info">
+                        <a href="http://www.xinwing.com"> © 2017 海南海建鑫网智能科技有限公司 版权所有</a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div></section>
+    </div>
+
+</div>
+
+
+
+</body>
+
+</html>

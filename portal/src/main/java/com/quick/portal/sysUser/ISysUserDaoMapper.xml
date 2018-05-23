@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quick.portal.sysUser.ISysUserDao">
+
+	<!--查询条件-->
+	<sql id="where">
+		1=1
+		<if test="user_id != null and user_id != '' and !'null'.equals(user_id)"><![CDATA[
+	       and user_id = #{user_id}
+	    ]]></if>
+		<if test="user_password != null and user_password != '' and !'null'.equals(user_password)"><![CDATA[
+	       and user_password = #{user_password}
+	    ]]></if>
+		<if test="user_state != null and user_state != '' and !'null'.equals(user_state)"><![CDATA[
+	       and user_state = #{user_state}
+	    ]]></if>
+		<if test="user_real_name != null and user_real_name != '' and !'null'.equals(user_real_name)"><![CDATA[
+	     and user_real_name = #{user_real_name}
+       ]]></if>
+		<if test="job_id != null and job_id != '' and !'null'.equals(job_id)"><![CDATA[
+	       and job_id = #{job_id}
+	    ]]></if>
+		<if test="dep_id != null and dep_id != '' and !'null'.equals(dep_id)"><![CDATA[
+	       and dep_id = #{dep_id}
+	    ]]></if>
+		<if test="user_name != null and user_name != '' and !'null'.equals(user_name)"><![CDATA[
+	       and user_name = #{user_name}
+	    ]]></if>
+		<if test="cre_time != null and cre_time != '' and !'null'.equals(cre_time)"><![CDATA[
+	       and cre_time >= #{cre_time}
+	    ]]></if>
+		<if test="upd_time != null and upd_time != '' and !'null'.equals(upd_time)"><![CDATA[
+	       and upd_time >= #{upd_time}
+	    ]]></if>
+		<if test="_sql_where != null and _sql_where != ''"> <![CDATA[
+            and ${_sql_where}
+        ]]> </if>
+	</sql>
+
+	<!-- 新增sys_user -->
+	<insert id="insert" parameterType="com.quick.portal.sysUser.SysUserDO">
+		insert into sys_user (
+    		  user_name,
+    		  user_password,
+    		  user_real_name,
+    		  user_state,
+    		  job_id,
+    		  user_addr,
+    		  user_tel,
+    		  cre_time,
+    		  upd_time
+		)values(
+			 #{user_name},
+			 #{user_password},
+			 #{user_real_name},
+			 #{user_state},
+			 #{job_id},
+			 #{user_addr},
+			 #{user_tel},
+			 #{cre_time},
+			 #{upd_time}
+			)
+	</insert>
+
+	<insert id="insertUserDepRela" parameterType="com.quick.portal.sysUser.SysUserDO">
+		INSERT INTO user_dep_rela(
+		   user_id,
+		    dep_id
+		)VALUES(
+		#{user_id},
+		#{dep_id}
+		)
+	</insert>
+
+	<!-- 修改sys_user -->
+	<update id="update" parameterType="com.quick.portal.sysUser.SysUserDO">
+		update sys_user 
+		   set
+		      user_name = #{user_name},
+		      user_real_name = #{user_real_name},
+		      user_addr = #{user_addr},
+		      user_state=#{user_state},
+			  user_tel=#{user_tel},
+			  job_id=#{job_id}
+		 where user_id = #{user_id}
+	</update>
+
+	<update id="updateUserDepRela" parameterType="com.quick.portal.sysUser.SysUserDO">
+		UPDATE  user_dep_rela
+		      SET
+		      dep_id = #{dep_id},
+		      user_id = #{user_id}
+		  WHERE  rela_id = #{rela_id}
+	</update>
+
+	<update id="updatePassword" parameterType="com.quick.portal.sysUser.SysUserDO">
+		update sys_user
+		set
+		user_password=#{user_password}
+		where user_id = #{user_id}
+	</update>
+
+
+	<!-- 删除 -->
+	<delete id="delete" parameterType="String">
+		delete from sys_user where user_id = #{user_id}
+	</delete>
+
+	<delete id="deleteUserDepRela" parameterType="String">
+		delete from user_dep_rela WHERE  rela_id = #{rela_id}
+	</delete>
+
+
+	<select id="select" parameterType="map" resultType="map">
+		select urd.*,uj.job_name from (select udrn.*, udn.dep_name from(select urn.*,udr.dep_id,udr.rela_id from (select su.*,rn.role_name role_name,rn.rel_id rel_id,rn.role_id role_id from sys_user su
+		left join(select urr.user_id, ur.role_name,urr.rel_id,ur.role_id from  user_role ur , user_role_rela urr where ur.role_id = urr.role_id) rn on su.user_id = rn.user_id where 1=1) urn
+		left join user_dep_rela udr on urn.user_id = udr.user_id where 1=1) udrn left join user_department udn
+		on udrn.dep_id = udn.dep_id  where 1=1)urd left join user_job uj on urd.job_id=uj.job_id
+		<where>
+		<include refid="where" />
+		</where>
+		<if test="_sql_order != null and _sql_order != ''">
+		order by ${_sql_order}
+     	</if>
+	</select>
+
+	<!--用户新增查询生产用户id-->
+	<select id="selectUserId" resultType="java.lang.String" >
+		select su.user_id from sys_user  su
+		WHERE 1=1
+		ORDER BY  su.user_id  DESC
+		LIMIT 0,1
+	</select>
+
+
+
+	<!--初始化和查询-->
+	<select id="getAllUser"  parameterType="map" resultType="map">
+		select urd.*,uj.job_name from (select udrn.*, udn.dep_name from(select urn.*,udr.dep_id,udr.rela_id from (select su.*,rn.role_name role_name,rn.rel_id rel_id from sys_user su
+		left join(select urr.user_id, ur.role_name,urr.rel_id from  user_role ur , user_role_rela urr where ur.role_id = urr.role_id) rn on su.user_id = rn.user_id where 1=1) urn
+		left join user_dep_rela udr on urn.user_id = udr.user_id where 1=1) udrn left join user_department udn
+		on udrn.dep_id = udn.dep_id  where 1=1)urd left join user_job uj on urd.job_id=uj.job_id where 1=1
+		<if test="job_id != null and job_id != '' and  !'null'.equals(job_id)"><![CDATA[
+	       and  uj.job_id = #{job_id}
+	    ]]></if>
+		<if test="dep_id != null and dep_id != '' and  !'null'.equals(dep_id)"><![CDATA[
+	       and  urd.dep_id = #{dep_id}
+	    ]]></if>
+		<if test="role_name != null and role_name != '' and  !'null'.equals(role_name)"><![CDATA[
+	       and  urd.role_name = #{role_name}
+	    ]]></if>
+		<if test="user_name != null and user_name != '' and !'null'.equals(user_name)"><![CDATA[
+	       and urd.user_name = #{user_name}
+	    ]]></if>
+		<!--<if test="_sql_where != null and _sql_where != ''"> <![CDATA[-->
+            <!--and ${_sql_where}-->
+        <!--]]> </if>-->
+		<if test="_sql_order != null and _sql_order != ''">
+			order by ${_sql_order}
+		</if>
+	</select>
+
+	<!-- 查询总记录数 -->
+	<select id="count" parameterType="map" resultType="int">
+
+		select count(*) from sys_user
+		<where>
+			<include refid="where" />
+		</where>
+	</select>
+
+	<select id="recount" parameterType="java.lang.String" resultType="int">
+		select count(*) from user_dep_rela
+		where dep_id = #{depid}
+	</select>
+
+	<!--用户编辑角色-->
+	<select id="getUserRoleRe" parameterType="java.lang.String" resultType="com.quick.portal.userRoleRela.UserRoleRelaDO" >
+		SELECT urr.*  FROM  user_role_rela urr WHERE  user_id = #{user_id}
+	</select>
+
+
+	<!--用户名称验证-->
+	<select id="selectByName" parameterType="java.lang.String" resultType="map">
+		SELECT su.* FROM  sys_user su WHERE  su.user_name = #{user_name}
+	</select>
+
+</mapper>

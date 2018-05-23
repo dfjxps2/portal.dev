@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<#include "/WEB-INF/include/resedit.html" />
+    <link href="${G.host}/res/script/home/gridstack.min.css" rel="stylesheet" type="text/css" />
+    <script src="${G.host}/res/js/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="${G.host}/res/script/home/lodash.min.js" type="text/javascript"></script>
+    <script src="${G.host}/res/script/home/knockout.min.js" type="text/javascript"></script>
+    <script src="${G.host}/res/script/home/gridstack.min.js" type="text/javascript"></script>
+    <script src="${G.host}/res/script/home/gridstack.jQueryUI.js" type="text/javascript"></script>
+    <script src="${G.host}/res/js/indexCharts/indexChart.js"></script>
+    <style type="text/css">
+        .form-group{margin-right:0px;}
+        .panel{min-height: 410px;}
+        .tab-pane{min-height:350px;}
+        .lbox{padding:10px;min-height:410px;}
+        .lbox-title{height:60px;line-height:60px;width:100%;background-color:#fff;}
+        .tmpl-active{border:1px solid #ff5354;background-color:#efefef;}
+        #tmpl li{float:left;padding:0 15px 15px 0;width:30%;height:70px;line-height:70px;}
+        .grid-stack {background: #fff;cursor:move;}
+        .grid-stack-item-content {color: #2c3e50; background-color: #e5e6e7;position: relative;}
+        .dgs-toolbar{width:100%;height:25px;line-height: 25px;text-align:right;position: absolute;top:0;z-index:2;}
+        .dgs-ctx{width:100%;height:100%;line-height: 100%;text-align:center;display: flex;vertical-align: middle;  align-items: center;  justify-content: center;}
+    </style>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+        <div class="col-sm-8">
+            <div class="container-fluid lbox" style="min-height:360px;width:99%;">
+                <div class="lbox-title">
+                    <div style="float:left;">
+                        &nbsp;&nbsp;<button type="button" class="btn btn-primary" onclick="cancel();">返回列表</button>
+                    </div>
+                    <div style="float:right;">
+                        <button id="btnview" style="display: none;" class="btn btn-primary" onclick="preview();">预览</button>
+                        <button class="btn btn-primary" data-bind="click: add_new_widget">添加栏目</button>&nbsp;&nbsp;
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+                <div id="box" data-bind="component: {name: 'dashboard-grid', params: $data}"></div>
+            </div>
+        </div>
+		<div class="col-sm-4">
+			<div class="ibox tabs-container">
+                <ul class="nav nav-tabs" style="margin-top:0px">
+                    <li><a data-toggle="tab" href="#tab-1" aria-expanded="true">布局选择</a></li>
+                    <li class="active"><a data-toggle="tab" href="#tab-2" aria-expanded="true">基本信息</a></li>
+                </ul>
+                <div class="tab-content ibox-content ibox-content-ad">
+                    <div id="tab-1" class="tab-pane">
+                        <ul id="tmpl">
+
+                        </ul>
+                    </div>
+                    <div id="tab-2" class="tab-pane active">
+                        <form id="form" name="form" method="post" action="${G.serverUrl}/save" class="wizard-big addForm" enctype="multipart/form-data" accept="image/jpg, image/png">
+                            <div class="row">
+                                <div class="col-sm-12 form_ipt_botm">
+                                    <div class="form-group">
+                                        <label class="col-xs-4 lable_top"><span class="span_require">*</span>名称</label>
+                                        <div class="col-xs-8"><input type="text" id="page_name" name="page_name" class="form-control required" /></div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 form_ipt_botm">
+                                    <div class="form-group">
+                                        <label class="col-xs-4 lable_top"><span></span>创建人</label>
+                                        <div class="col-xs-8"><input type="text" id="user_NAME" readOnly="readOnly" class="form-control"/></div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 form_ipt_botm">
+                                    <div class="form-group">
+                                        <label class="col-xs-4 lable_top"><span></span>创建时间</label>
+                                        <div class="col-xs-8"><input id="cre_time" name="cre_time" type="text" class="form-control"  readonly="readOnly">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 form_ipt_botm">
+                                    <div class="form-group">
+                                        <label class="col-xs-4 lable_top"><span></span>更新时间</label>
+                                        <div class="col-xs-8"><input id="upd_time" name="upd_time" type="text" class="form-control"  readonly="readOnly">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12 ediefield">
+                                    <div class="form-group">
+                                        <label class="col-xs-4 lable_top"></label>
+                                        <div class="col-xs-8">
+                                            <input type="hidden" id="page_id" name="page_id" />
+                                            <input type="hidden" id="template_id" name="template_id" />
+                                            <input type="hidden" id="user_id" name="user_id" />
+                                            <input type="hidden" id="section_json" name="section_json" />
+                                            <input type="hidden" id="metric_json" name="metric_json" />
+                                            <input type="hidden" id="metric_json_1" name="metric_json_1" />
+                                            <input type="hidden" id="app_id" name="app_id" />
+                                            <input id="submit-form" type="button" class="btn btn-primary" value="保存" onclick="return thingOver();">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+</body>
+<script>
+    var _tmpls={},_layout = ${layout},_metric = ${metric}, _ca;
+    function config() {
+        quick.serverUrl = "${G.serverUrl}";
+        quick.objName = "${G.objName}";
+        quick.idField = "${G.idField}";
+        quick.listUrl = quick.serverUrl + "/list";
+    }
+	window.onload = function() {
+		/*自定义错误提示信息的方法*/
+
+		$("#form").validate({
+			errorPlacement: function(error, element) {
+                element.parent().append(error);
+			},
+            ignore : ":disabled",
+			rules: {
+			}
+		});
+        /*加载数据*/
+        var mode = $.request.queryString["mode"];
+        var sysid=$.request.queryString["page_id"];
+        var rid= $.request.queryString["app_id"];
+        $("#app_id").val(rid);
+        if(sysid){
+            $("#btnview").show();
+            $.post(quick.serverUrl + '/getObj?page_id=' + sysid + "&i=" + Math.random(), function(data){
+                setForm(data);
+				if(mode == "browse"){
+                    viewRead();
+                }
+            });
+        }
+        $.post('${G.host}/pageTemplate/getData',function(data){
+            tmpls = data;
+            var str = [];
+            for(var i = 0; i < data.length;i++){
+                str.push('<li><a href="javascript:void(0);" data-id="',data[i].template_id,'" onclick="choseTmpl(this,&quot;',data[i].template_id, '&quot;,&quot;',data[i].template_url,'&quot;)"><img src="${G.host}/', data[i].icon_url,'" alt="" /></a></li>');
+            }
+            $("#tmpl").html(str.join(''));
+            setchose($("#template_id").val());
+        },'json');
+        extLayout();
+        initPlugin();
+	}
+    /*完成*/
+    var isdone = true;
+    function thingOver(){
+    	addMetricInfo();
+        if(!isdone) {
+            return false;
+        }
+        isdone = false;
+        var b = save();
+        if(!b){
+            isdone = true;
+            return b;
+        }
+    }
+    function save(){
+        if(!$("#form").valid()){
+            return false;
+        }
+        var tid = $("#template_id").val();
+        if(tid == ''){
+            layer.alert("请先选择模板");
+            return false;
+        }
+        var arr = getLayout();
+        if(arr == null || arr.length == 0){
+            layer.alert("栏目不能为空,请添加栏目");
+            return false;
+        }
+        $("#section_json").val(JSON.stringify(arr));
+        clearPlaceHodler();
+        quick.submit(function(data) {
+            isdone=true;
+            if(data.code != "1"){
+                layer.msg('保存失败,'+ data.msg,{icon:1,time: 3000,skin: 'layer-ext-moon'});
+                return;
+            }
+            layer.msg('保存成功',{icon:1,time: 1500,skin: 'layer-ext-moon'}, function(){
+                $("#page_id").val(data.page_id);
+                cancel();
+            });
+        });
+        return true;
+    }
+	function cancel(){
+		var url = quick.listUrl + urlDel(location.search, 'mode','page_id') + '&RFlag=1';
+		window.location.href = url;
+	}
+    function choseTmpl(o,id,url){
+        $("#tmpl>li>a>img").removeClass("tmpl-active");
+        $(o).find("img").addClass("tmpl-active");
+        if(_tmpls[id]){
+            $("#template_id").val(id);
+            initLayout(_tmpls[id]);
+        }else{
+            $.get('${G.host}/'+url, function(html){
+                var ctx = $(html);
+                var txt = ctx.html();
+                try{
+                    var json = eval("("+txt+")");
+                    _tmpls[id] = json;
+                    initLayout(json);
+                    $("#template_id").val(id);
+                }catch (e){
+                    alert("无法加载模板"+ e.description);
+                }
+            });
+        }
+
+    }
+    function setchose(id){
+        var ls = $("#tmpl").find("li>a");
+        for(var i = 0; i < ls.size(); i++){
+            if(ls[i].dataset.id == id)
+                ls.eq(i).find("img").addClass("tmpl-active");
+        }
+    }
+    function initPlugin(){
+        ko.components.register('dashboard-grid', {
+            viewModel: {
+                createViewModel: function (controller, componentInfo) {
+                    var ViewModel = function (controller, componentInfo) {
+                        var grid = null;
+
+                        this.widgets = controller.widgets;
+
+                        this.afterAddWidget = function (items) {
+                            if (grid == null) {
+                                grid = $(componentInfo.element).find('.grid-stack').gridstack({
+                                    cellHeight:40,
+                                    vertical_margin:10,
+                                    auto: false
+                                }).data('gridstack');
+                            }
+
+                            var item = _.find(items, function (i) { return i.nodeType == 1 });
+                            grid.add_widget(item);
+                            ko.utils.domNodeDisposal.addDisposeCallback(item, function () {
+                                grid.remove_widget(item);
+                            });
+                        };
+                    };
+
+                    return new ViewModel(controller, componentInfo);
+                }
+            },
+            template:
+                    [
+                        '<div class="grid-stack" data-bind="foreach: {data: widgets, afterRender: afterAddWidget}">',
+                        '   <div class="grid-stack-item" data-bind="attr: {\'data-gs-x\': $data.x, \'data-gs-y\': $data.y, \'data-gs-width\': $data.width, \'data-gs-height\': $data.height, \'data-gs-auto-position\': $data.auto_position}">',
+                        '       <div class="grid-stack-item-content"><div class="dgs-toolbar"><a data-bind="click: $root.delete_widget"><i class="fa fa-trash"></i>&nbsp;</a></div><div class="dgs-ctx"><a data-bind="html:showBind($data),attr: {\'data-no\': $data.no,\'data-id\': $data.id,\'data-metric\': $data.metric}" href="javascript:void(0);" onclick="showsetting(this);"><i class="fa fa-plus"></i>点击添加栏目</a></div>',
+                        '       </div>',
+                        '   </div>',
+                        '</div> '
+                    ].join('')
+        });
+        window.Controller = function (widgets) {
+            var self = this;
+
+            this.widgets = ko.observableArray(widgets);
+
+            this.add_new_widget = function () {
+                var cc = controller.widgets().length || 1;
+                this.widgets.push({
+                    x: 0,
+                    y: 0,
+                    width: 4,
+                    height: 2,
+                    id:0,
+                    no:(cc+1),
+                    auto_position: true
+                });
+            };
+
+            this.delete_widget = function (item) {
+                self.widgets.remove(item);
+            };
+        };
+
+        var controller = new Controller(_layout);
+        ko.applyBindings(controller);
+        _ca = controller.widgets;
+    }
+    function initLayout(cfg){
+        _ca.removeAll();
+        for(var i = 0; i < cfg.length; i++)
+            _ca.push(cfg[i]);
+    }
+    function getLayout(){
+        var dd = _.map($('.grid-stack > .grid-stack-item:visible'), function (el) {
+            el = $(el);
+            var node = el.data('_gridstack_node');
+            var a = el.find(".dgs-ctx>a")[0];
+
+            return {
+                x: node.x,
+                y: node.y,
+                id:a.dataset.id,
+                no:a.dataset.no,
+                width: node.width,
+                height: node.height
+            };
+        }, this);
+        return dd;
+    }
+    
+    var metricInfo = [];
+    function showsetting(o){
+    	settingbox('section_NAME', '${G.serverUrl}/setting?rid=' + o.dataset.id + "&rmt=" + o.dataset.metric,null, function(ar){
+    		if(ar == null || ar.length == 0)
+                return ;
+    		for(var i = 0; i < ar.length; i++)
+    			ar[i]["section_id"] = o.dataset.no;
+            var rem = [];
+            for (var j = 0; j < metricInfo.length; j++) {
+                if (o.dataset.no==metricInfo[j].section_id) {
+                    metricInfo.splice(j);
+                }
+            }
+            var metric_name = [];
+            for (var n = 0; n < ar.length; n++) {
+                metricInfo.push(ar[n]);
+                metric_name.push(ar[n].measure_name);
+            }
+            for(var x = 0; x < _ca().length; x++){
+                var no = _ca()[x].no;
+                if(no == o.dataset.no){
+                    var item = _ca()[x];
+                    item.metric = metric_name.join(',');
+                    _ca.remove(item);
+                    _ca.push(item);
+                }
+            }
+
+        },{
+            area: [$(window).width()+'px', $(window).height()+'px']
+        });
+    }
+    
+    function addMetricInfo(){
+    	$("#metric_json").val(JSON.stringify(metricInfo));
+    }
+
+    function find_sec(no){
+        var arr = _ca();
+        for(var i = 0; i< arr.length; i++){
+            if(arr[i].no == no)
+                return arr[i];
+        }
+        return null;
+    }
+    function find_sec_metric(ls,sid){
+        for(var i = 0; i <ls.length; i++)
+            if(ls[i].section_id ==sid)
+                return ls[i];
+        return null;
+    }
+    function preview(){
+        var id =$.request.queryString["page_id"];
+        var sjson = getLayout();
+        localStorage.pageShow =JSON.stringify(metricInfo);//JSON.parse(metricInfo);
+        localStorage.pageLayout = JSON.stringify(sjson);
+        window.open('show?p=' + id);
+    }
+    function extLayout(){
+        if(_metric == null || _metric.length == 0)
+            return;
+        for(var i = 0; i < _layout.length; i++){
+            var m = find_sec_metric(_metric, _layout[i].id);
+            if(m){
+                if(!_layout[i].metric)
+                    _layout[i].metric = m.measure_name;
+                else
+                    _layout[i].metric = "," + m.measure_name;
+            }
+        }
+        for(var j = 0; j < _metric.length; j++){
+            var m = {};
+            for(var n in _metric[j])
+                m[n] = _metric[j][n];
+            for(var k = 0; k < _layout.length; k++){
+                if(_layout[k].id == m.section_id)
+                    m.section_id=_layout[k].no;
+            }
+            metricInfo.push(m);
+        }
+    }
+    function showBind(d){
+        if(d.metric)
+            return '<i class="fa fa-pie-chart"></i>绑定：'+ d.metric+'</a>';
+        else
+            return '<i class="fa fa-plus"></i>点击添加栏目</a>';
+    }
+
+    function settingbox(nid, url,id, fn, opt){
+        if(!layer.values)
+            layer.values = {};
+        var val = $("#"+id).val();
+        opt = opt || {};
+        var d = {
+            type: 2
+            ,title: '选择记录'
+            ,area: ['680px', '500px']
+            ,shade: 0
+            ,maxmin: true
+            ,content: url
+            ,btn: ['确认', '关闭'] //只是为了演示
+            ,yes: function(index, layero){
+                var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                var fd = iframeWin.getFrom();
+                if(fd==null){
+                    alert('您还未选择记录，请点击要选择的行');
+                    return;
+                }
+                if(fn){
+                    fn(fd, iframeWin);
+                }
+                layer.closeAll();
+            }
+            ,btn2: function(){
+                layer.closeAll();
+            }
+        };
+        var o = $.extend(d, opt);
+        layer.open(o);
+    }
+
+</script>
+</html>

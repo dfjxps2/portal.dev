@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	  <#include "/WEB-INF/include/reslist.html" />
+  </head>
+   <script>
+    var _chosen = null;
+    var _chosenId = null;
+    var _chosenName = null;
+    //初始化表格
+    function  config(){
+       quick.serverUrl = "${G.serverUrl}";
+       quick.idField = "${G.idField}";
+       var sysid = request.get("rid");
+       $("#list").bootstrapTable("destroy");
+       _gd["list"]=new BGrid("#list");
+       _gd["list"].config({
+    	   url:quick.serverUrl+"/getRela?app_id="+sysid+"&i=" + Math.random(),
+    	   idField: quick.idField,
+    	   sortName: quick.idField,
+           //singleSelect: false,
+           cache:false,
+    	   height: $(document.body).height()-50,
+    	   toolbar:"#formSearch",
+    	   columns: [
+                   {  checkbox: true },
+                   { field: 'app_class_name', title: '分类名称', width: 100  }
+    	   ],onClickRow:function(row,e){
+               _chosen = row;
+               _chosenId = row.app_class_id;
+               _chosenName = row.app_class_name;
+    	   },onCheck:function(row,e){
+               _chosen = row;
+               _chosenId = row.app_class_id;
+               _chosenName = row.app_class_name;
+           }
+       });
+
+       _gd["list"].init();
+    }
+    function query(){
+       _gd['list'].refresh();
+       queryParm=getParm();
+    }
+  </script>
+  <body class="gray-bg">
+  <div class="wrapper wrapper-content wrapper-content-x animated fadeInRight">
+	  <div class="row">
+		  <div class="col-sm-12">
+			  <div class="ibox ibox-x">
+				  <div class="ibox-content ibox-content-x">
+					  <div class="panel-mar">
+							  <form id="formSearch" class="form-inline">
+								  <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="query();"> 查询</button> </span>
+							  </form>
+						</div>
+					  <div style ="margin:5px;">
+						  <table id="list" class="table-striped" style="table-layout:fixed"></table>
+					  </div>
+				  </div>
+			  </div>
+		  </div>
+	  </div>
+  </div>
+  </body>
+</html>

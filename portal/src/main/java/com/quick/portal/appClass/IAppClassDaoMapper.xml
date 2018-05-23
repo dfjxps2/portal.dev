@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quick.portal.appClass.IAppClassDao">
+	
+    <!--查询条件-->
+	<sql id="where">
+		1=1
+		<if test="app_class_id != null and app_class_id != '' and app_class_id != 'null'"><![CDATA[ 
+	       and app_class_id = #{app_class_id}
+	    ]]></if>
+		<if test="cre_time != null and cre_time != '' and cre_time != 'null'"><![CDATA[ 
+	       and cre_time >= #{cre_time}
+	    ]]></if>
+		<if test="upd_time != null and upd_time != '' and upd_time != 'null'"><![CDATA[ 
+	       and upd_time >= #{upd_time}
+	    ]]></if>
+        <if test="_sql_where != null and _sql_where != ''"> <![CDATA[
+            and ${_sql_where}
+        ]]> </if>
+	</sql>
+    
+    <!-- 新增app_class -->
+	<insert id="insert" parameterType="com.quick.portal.appClass.AppClassDO">
+		insert into app_class (
+    		  app_class_name,
+    		  cre_time,
+    		  upd_time
+		)values(
+			 #{app_class_name},
+			 #{cre_time},
+			 #{upd_time}
+			)
+	</insert>
+		
+	<!-- 修改app_class -->
+	<update id="update" parameterType="com.quick.portal.appClass.AppClassDO">
+		update app_class 
+		   set app_class_id=#{app_class_id}
+			  ,app_class_name=#{app_class_name}
+			  ,cre_time=#{cre_time}
+			  ,upd_time=#{upd_time}
+		 where app_class_id = #{app_class_id}
+	</update>
+    
+	<!-- 删除 -->
+	<delete id="delete" parameterType="String">
+		delete from app_class where app_class_id = #{app_class_id}
+	</delete>
+    
+    <!--查询-->
+	<select id="select" parameterType="map" resultType="map">
+		select * from app_class
+		<where>
+			<include refid="where" />
+		</where>
+        <if test="_sql_order != null and _sql_order != ''">
+            order by ${_sql_order}
+        </if>
+	</select>
+	
+	<!-- 查询总记录数 -->
+	<select id="count" parameterType="map" resultType="int">
+		select count(*) from app_class
+		<where>
+			<include refid="where" />
+		</where>
+	</select>
+	
+    
+</mapper>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	  <#include "/WEB-INF/include/reslist.html" />
+  </head>
+   <script>
+       var pageNum=1;
+       var pageSize=10;
+       var queryParm = '';
+       var flag=true;
+       var pageFlag=0;
+	   //初始化表格
+	   function config(){
+           var RFlag=$.request.queryString["RFlag"];
+		   quick.serverUrl = "${G.serverUrl}";
+		   quick.editUrl = "${G.editUrl}";
+		   quick.objName = "${G.objName}";
+		   quick.idField = "${G.idField}";
+           
+		   $("#list").bootstrapTable("destroy");
+		   _gd["list"]=new BGrid("#list");
+		   _gd["list"].config({
+			   type: "post",
+			   url:quick.serverUrl+"/getInfo?i=" + Math.random(),
+			   idField: quick.idField,
+			   sortName: quick.idField,
+               cache:false,
+			   height: $(document.body).height()-50,
+			   toolbar:"#formSearch",
+			   columns: [
+				   {  checkbox: true },
+				   { field: 'title', title: '文件名称', width: 100  },
+				   { field: 'id', title: '文件路径', width: 100  },
+				   { field: 'author_name', title: '文件上传者', width: 100  },
+				   { field: 'create_time', title: '文件上传时间', width: 100  },
+			       { field: 'status', title: '查阅状态', width: 80 , formatter:function(value,row,index){
+			    	   var state = '<span style="color:#CFCFCF">未阅</span>';  
+                	   if (row.status=="1") {
+                		   state = '<span style="color:#9ACD32">已阅</span>';  
+                	   }
+                	   return state;
+                   }},
+				   { field: 'CZ',  title: '操作',width: '15%', formatter:function(value,row,index){
+					   return "<button type='button' class='btn_el' onclick='down(\""+row.id+"\",\""+row.objtype+"\")'>下载</button>";
+			
+				   }}
+			   ],onPageChange:function(number, size){
+                   $("#IDS_PAGESIZE").val(size);
+                   $("#IDS_PAGENUM").val(number);
+                   pageNum=number;
+                   pageSize=size;
+               },onPostBody:function(data){
+				   if(queryParm=='' &&　(data == null || data.length == 0)){
+					   $(".no-records-found td").html('您还没有添加相关信息，请点击<a onclick="add();" href="javascript:void(0);">添加</a>');
+                   }
+			   }
+		   });
+
+           if(RFlag==1){
+               requery();
+           }else{
+               _gd["list"].init();
+           }
+	   }
+
+   
+    
+	//查看详细信息
+	function down(id,type){
+		if(id ==null ||id =="" || id=="undefined"){
+			$. layer.msg("文件路径不对，请联系管理员",{icon:1,time: 1000,skin: 'layer-ext-moon'}); 
+			return false ;
+		}
+	  id= 'C:/Users/cxh/Desktop/test/doc/solr.docx';
+	  id = encodeURI(id);
+	  type = 1;
+	  var param ='?type='+type+'&id='+id;	  
+	  var url =quick.serverUrl+'/download';
+	  url = url +param;
+	  alert(url)
+	  window.location.href= url; 
+	}
+
+
+    function query(){
+       _gd['list'].refresh();
+       queryParm=getParm();
+    }
+    //获取返回时传回的数据
+    function requery(){
+       var pn = Number($.request.queryString["IpageNum"]) || 1;
+       var ps =  $.request.queryString["IpageSize"] || 10;
+       
+       _gd["list"].config({
+           pageSize: ps
+           ,onLoadSuccess:function(){
+               if(pageFlag>0){
+                   return;
+               }
+               $('#list').bootstrapTable('selectPage', pn);
+               pageFlag++;
+           }
+       });
+       _gd["list"].init();
+    }
+    //获取查询框数据
+	function getParm(){
+		var s = '&I'+$("#formSearch").serialize().replace(/&/g, "&I");
+		return s;
+	}
+	function getDetailParm(){
+		var s= queryParm + "&IpageNum="+pageNum+"&IpageSize="+pageSize;
+		return s;
+	}
+  </script>
+  <body class="gray-bg">
+  <div class="wrapper wrapper-content wrapper-content-x animated fadeInRight">
+	  <div class="row">
+		  <div class="col-sm-12">
+			  <div class="ibox ibox-x">
+				  <div class="ibox-content ibox-content-x">
+					  <div class="panel-mar">
+							  <form id="formSearch" class="form-inline">
+							  	    <div class="form-group" style="padding: 0px;width:96px;">
+                        				 <select name="obj_type" class="input-group form-control form-control-green select_change" id="IDS_SYSPLATFORM">
+										  <option value="9">全部</option>
+										  <option value="4">未阅</option>
+										  <option value="5">已阅</option>
+										  <option value="1">指标</option>
+										  <option value="2">消息</option>
+										  <option value="3">应用</option>
+									  </select>
+									</div>
+								   <div class="form-group" style="padding: 0px;width:180px;">
+                                      <input id="title" name="title" class="input-sm form-control" type="text" placeholder="输入搜索内容" /> 
+								  </div>
+                                  <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="query();"> 查询</button> </span>
+							  </form>
+						</div>
+					  <div style ="margin:5px;">
+						  <table id="list" class="table-striped" style="table-layout:fixed"></table>
+					  </div>
+				  </div>
+			  </div>
+		  </div>
+		  <input type="hidden"  id="IDS_PAGENUM" name="IDS_PAGENUM">
+		  <input type="hidden"  id="IDS_PAGESIZE" name="IDS_PAGENUM">
+	  </div>
+  </div>
+  </body>
+</html>

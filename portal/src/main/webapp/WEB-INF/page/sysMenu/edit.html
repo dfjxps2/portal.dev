@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<#include "/WEB-INF/include/resedit.html" />
+	
+	<style type="text/css">
+	.form_ipt_botm{
+	margin-bottom: 20px;
+	}
+	#menu_cn_name-error{
+	font-size: 10px;
+	}
+	#menu_name-error{
+	font-size: 10px;
+	}
+	#menu_url-error{
+	font-size: 10px;
+	}
+	#disp_order-error{
+	font-size: 10px;
+	}
+	
+	</style>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-sm-12">
+            <div class="col-sm-10">
+			<div class="col-sm-12">
+			      <label id="pagename" class="col-xs-8" style="text-align:center;font-size: 22px;color:blue;margin-left: 180px"></label>            	  
+             </div>
+          </div>
+		 <div class="col-sm-2">   
+            <div class="pull-right ibox-toolbars hidefield" style="margin-right: -14px;margin-top: 2px;">
+			     <button type="button" class="btn btn-primary" onclick="cancel();">返回</button>			            	  
+             </div>
+         </div>   
+			<div class="ibox">
+				<div class="ibox-content ibox-content-ad" >
+					<form id="form" name="form" method="post" action="${G.serverUrl}/savepic" class="wizard-big addForm" enctype="multipart/form-data" accept="image/jpg, image/png">
+				    <div class="row">
+                        <div class="col-sm-12 form_ipt_botm"  style="margin-bottom: 7px">
+                        <div class="row">
+	                        <div class="col-sm-6 form_ipt_botm">
+	                            <div class="form-group">
+	                                <label class="col-xs-4 lable_top"><span class="span_require">*</span>菜单中文名：</label>
+	                                <div class="col-xs-8"><input type="text" id="menu_cn_name" name="menu_cn_name" class="form-control required" /></div>
+	                            </div>
+	                         </div>
+	                         <div class="col-sm-6 form_ipt_botm">
+	                            <div class="form-group">
+	                                <label class="col-xs-4 lable_top"><span class="span_require">*</span>菜单英文名：</label>
+	                                <div class="col-xs-8"><input type="text" id="menu_name" name="menu_name" class="form-control" /></div>
+	                            </div>
+	                         </div>
+                         </div>
+                        </div>
+                       <!--  <div class="col-sm-6 form_ipt_botm">
+                            
+                        </div> -->
+                         <div class="col-sm-6 form_ipt_botm">
+                            <div class="form-group">
+                                <label class="col-xs-4 lable_top">上级菜单：</label>
+                                 <div class="col-xs-8">
+                                 	<div class="input-group"  style="width: 190px;">
+                                 		<input type="text" id="super_menu_name" readOnly="readOnly" class="form-control"/>
+                                 		<input type="hidden" id="super_menu_id" name="super_menu_id" />
+                                 		<span class="input-group-btn">
+                                 			<button class="btn btn-default" type="button" onclick="choseboxs('super_menu_name', '${G.serverUrl}/chose','super_menu_id','menu_level');">
+                                 				...
+                                 			</button>
+                                 		</span>
+                                 	</div>
+                                 </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 form_ipt_botm">
+                            <div class="form-group">
+                                <label class="col-xs-4 lable_top">菜单级别：</label>
+                                <div class="col-xs-8">
+                                <input type="text" id="menu_level" name = "menu_level" readOnly="readOnly" class="form-control" style="padding: 0px;width:70px;text-align:center;"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 form_ipt_botm">
+                            <div class="form-group">
+                                <label class="col-xs-4 lable_top">对应应用：</label>
+                                <div class="col-xs-8">
+	                                <select id="app_id" name="app_id" class="input-group form-control form-control-green select_change" style="width: 150px"></select>
+                                </div>
+                            </div>
+                        </div>
+                          <div class="col-sm-6 form_ipt_botm">
+		                       <div class="form-group">
+		                          <label class="col-xs-4 lable_top">菜单显示顺序：</label>
+		                          <div class="col-xs-8">
+		                            <input type="number" style="padding: 0px;width:70px;text-align:center;" id="disp_order" name="disp_order" data-options="min:0,precision:0" class="form-control required" />
+		                          </div>
+		                        </div>
+                        </div>
+                        <div class="col-sm-6 form_ipt_botm">
+                            	<label class="col-xs-4 lable_top" style="margin-left: -34px;">菜单图标：</label>
+                            		<div class="col-xs-8 form_ipt_botm">
+										<div id="preview">
+											<img id="imghead" border="0" src="" style=" width:200px;height:40px;">
+										</div>
+										<input type="file" onchange="previewImage(this);" id="previewImg" name="previewImg" style="display: none;">									
+									</div>
+							<div class="col-xs-12" style="text-align:left;">
+									<div class="col-xs-12">
+										<div class="col-xs-6"  style="margin-top: -13px;" >
+											<span class="input-group-btn ediefield" style="text-align:right;"><button class="btn btn-primary " type="button" style="width:82px;" onclick="$('#previewImg').click();">上传图片</button></span>
+										</div>
+										<div class="col-xs-6" style="margin-top: -19px">		
+												<span class="help-block ediefield">要求图片尺寸须为200*40像素，
+                                            	大小不超过1M<br />支持格式：png/jpg</span>
+										</div>
+									</div>
+									<div class="col-xs-12">
+										<label style="color:#8a1f11;display:none;font-weight: 700;" id="pic"></label>
+									</div>					
+							</div>
+                          </div>
+                          <div class="col-sm-6 form_ipt_botm">
+                          <div class="row">
+	                           <div class="col-sm-12 form_ipt_botm">
+		                           <div class="form-group">
+		                                <label class="col-xs-4 lable_top">菜单激活标志：</label>
+		                                <div class="col-xs-8 radio_ipt">
+		                                	<label class="radio-inline" style="width: 60px;">
+		                                		<input type="radio" name="menu_state" id="menu_state1" value="1" />
+		                                		<label for="menu_state1">
+		                                		</label>
+		                                		<span>&ensp;是</span>
+		                                	</label>
+		                                	<label class="radio-inline">
+		                                		<input type="radio" name="menu_state" id="menu_state0" value="0" />
+		                                		<label for="menu_state0">
+		                                		</label>
+		                                		<span>&ensp;否</span>
+		                                	</label>
+		                                </div>
+                           			 </div>
+	                             </div>
+	                             <div class="col-sm-12 form_ipt_botm">
+		                            <div class="form-group" style="margin-right: 0px;">
+		                                <label class="col-xs-4 lable_top" style="margin-left: -33px;"><span class="span_require">*</span>菜单功能URL：</label>
+		                                <div class="col-xs-8"><input type="text" id="menu_url" name="menu_url" class="form-control required" /></div>
+		                            </div>
+	                            </div>
+                            </div>
+                        </div>
+                           <div class="col-sm-12" style="text-align:right;">
+						    <div class="form-group" style="margin-bottom: 52px;">
+							    <label class="col-xs-4 lable_top"></label>
+							    <div class="col-xs-8">
+                    		<input type="hidden" id="menu_id" name="menu_id" />
+                    		<input type="hidden" id="cre_time" name="cre_time" />
+                    		<input type="hidden" id="upd_time" name="upd_time" />
+
+                                    <input id="submit-form" type="button" class="btn btn-primary" value="保存" onclick="return thingOver();">
+							    </div>
+						    </div>
+					    </div>
+                        </div>
+				    </div>
+				</form>
+			</div>
+			</div>
+		</div>
+
+	</div>
+</body>
+<script>
+_gridPool["app_id"]=new BCombobox("#app_id");
+_gridPool["app_id"].load("${G.host}/application/getData", {textField:"app_name",valueField:"app_id",emptyObj:{app_id:"",app_name:"请选择对应应用"} });
+/* _gridPool["super_menu_id"]=new BCombobox("#super_menu_id");
+_gridPool["super_menu_id"].load("${G.host}/sysMenu/getData", {textField:"menu_cn_name",valueField:"menu_id",emptyObj:{menu_id:"",menu_cn_name:"请选择上级菜单"} }); */
+	$("#menu_state0").attr("checked","checked");
+	$("#menu_level").val(0);
+	$("#disp_order").val(1);
+	
+	var  h=null;
+	//图片上传预览    IE是用了滤镜。
+	function previewImage(file)
+	{
+		$("#imghead").attr("src", "");
+		document.getElementById('imghead').style.display="";
+		var myFlag=false;
+		var MAXWIDTH  = 200;
+		var MAXHEIGHT = 40;
+		var div = document.getElementById('preview');
+		if (file.files && file.files[0])
+		{
+			div.innerHTML ='<img id=imghead onclick=$("#previewImg").click()>';
+			var img = document.getElementById('imghead');
+			img.onload = function(){
+				var hhFlag=flagW();
+				var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+				w=img.offsetWidth;
+				h=img.offsetHeight;
+				img.width  =  rect.width;
+				img.height =  rect.height;
+				img.style.marginTop = rect.top+'px';
+				if( myFlag && hhFlag){
+					//thingOver();
+				}
+			}
+			var reader = new FileReader();
+			reader.onload = function(evt){img.src = evt.target.result;}
+			reader.readAsDataURL(file.files[0]);
+		}
+//		else //兼容IE
+//		{
+//			var sFilter='filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src="';
+//			file.select();
+//			var src = document.selection.createRange().text;
+//			div.innerHTML = '<img id=imghead>';
+//			var img = document.getElementById('imghead');
+//			img.filters.item('DXImageTransform.Microsoft.AlphaImageLoader').src = src;
+//			var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+//			status =('rect:'+rect.top+','+rect.left+','+rect.width+','+rect.height);
+//			div.innerHTML = "<div id=divhead style='width:"+rect.width+"px;height:"+rect.height+"px;margin-top:"+rect.top+"px;"+sFilter+src+"\"'></div>";
+//		}
+		//验证尺寸
+		var f=document.getElementById("previewImg").value;
+		var flagtype=(!/\.(jpg|png|JPG|PNG)$/.test(f));
+		//验证大小
+		var maxSize = 1*1024*1024;
+		var dom = document.getElementById("previewImg");
+		var fileSize =  dom.files[0].size;//文件的大小，单位为字节B
+		if(flagtype){
+			document.getElementById('pic').innerHTML = "图片类型必须是.jpg,png中的一种";
+			document.getElementById('pic').style.display="";
+			//return false;
+		}else if(fileSize>maxSize){
+			document.getElementById('pic').innerHTML = "请上传大小在1M以下的图片文件";
+			document.getElementById('pic').style.display="";
+			//return false;
+		}else {
+			document.getElementById('pic').style.display="none";
+			//thingOver();
+			myFlag=true;
+		}
+	}
+	function clacImgZoomParam( maxWidth, maxHeight, width, height ){
+		var param = {top:0, left:0, width:width, height:height};
+		if( width>maxWidth || height>maxHeight ){
+			rateWidth = width / maxWidth;
+			rateHeight = height / maxHeight;
+
+			if( rateWidth > rateHeight ){
+				param.width =  maxWidth;
+				param.height = Math.round(height / rateWidth);
+			}else{
+				param.width = Math.round(width / rateHeight);
+				param.height = maxHeight;
+			}
+		}
+		param.left = Math.round((maxWidth - param.width) / 2);
+		param.top = Math.round((maxHeight - param.height) / 2);
+		return param;
+	}
+	//验证尺寸
+	function flagW(){
+		var img = document.getElementById('imghead');
+		var hh = img.offsetHeight;
+		var ww = img.offsetWidth;
+		if(ww!=200||hh!=40){
+			document.getElementById('pic').innerHTML = "请上传200x40的图片";
+			document.getElementById('pic').style.display="";
+			return false;
+		}else {
+			return true;
+		}
+	}
+	//验证图片是否为空
+	function checkPicNull(){
+		var f=document.getElementById("previewImg").value;
+		if(f!=null||f!=""||f!=undefined){
+			document.getElementById('pic').style.display="none";
+			return true;
+		}
+	}
+</script>
+<script>
+	var oldName = '';		
+	var oldId = '';		
+
+	
+	window.onload = function() {
+		/*自定义错误提示信息的方法*/
+		//判断是否为空
+		jQuery.validator.addMethod("checkPicNull", function(value,element) {
+			if(f==null||f==""||f==undefined){
+				document.getElementById('pic').innerHTML = "图标为必选项";
+				document.getElementById('pic').style.display="";
+				return false;
+			}else {
+				return true;
+			}
+		}, "");
+		//判断图片尺寸
+		jQuery.validator.addMethod("checkPicW", function(value,element) {
+			if(w!=200||h!=40){
+				return false;
+			}else {
+				return true;
+			}
+		}, "");
+		//判断图片大小
+		jQuery.validator.addMethod("checkPicSize", function(value,element) {
+			var fileSize=element.files[0].size;
+			var maxSize = 1*1024*1024;
+			if(fileSize > maxSize){
+				return false;
+			}else{
+				return true;
+			}
+		}, "");
+		jQuery.validator.addMethod("checkPic", function(value, element) {
+			//判断图片类型
+			var f=document.getElementById("previewImg").value;
+			var flag=(!/\.(jpg|png|JPG|PNG)$/.test(f))
+			return this.optional(element) || (!flag);
+		}, "");
+		jQuery.validator.addMethod("nameFuc", function(value, element) {//名称验证
+			var name = $("#menu_cn_name").val().length<2||$("#menu_cn_name").val().length>40;
+			return this.optional(element) || (!name);
+		}, "菜单中文名称只允许为2~40个字符！");
+		jQuery.validator.addMethod("menuFuc", function(value, element) {//名称验证
+			//reg.test($("#menu_name").val())
+			var reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
+			var f = true;
+			if(reg.test($("#menu_name").val())){
+				f = false;
+			}
+			f = $("#menu_name").val().length>40||$("#menu_name").val().length<1;
+			return this.optional(element) || (!f);
+		}, "菜单英文名称只允许为1~40个字符，且不含汉字！");
+		jQuery.validator.addMethod("", function(value, element) {//描述验证
+			var flag= $("#disp_order1").val().length>0;
+			//console.log(flag);
+			return this.optional(element) || (!flag);
+		}, "不能为空！");
+		jQuery.validator.addMethod("addressFuc", function(value, element) {//地址验证
+			var flag;
+			var vv = $("#menu_url").val();
+			if(vv.indexOf("http://") == 0 || vv.indexOf("https://") == 0){
+				flag= false;
+			}else{
+			    flag= true;
+			}
+			return this.optional(element) || (!flag);
+		}, "这网址不是以http://或者https://开头，或者不是网址！");
+			
+		//form表单输入规则验证
+			  $("#form").validate({
+					errorPlacement: function(error, element) {
+		                element.parent().append(error);
+					},
+		            ignore : ":disabled",
+		            rules: {
+		            	menu_name: {
+							required: true,
+							menuFuc:true
+						},
+						menu_cn_name: {
+							required: true,
+							nameFuc:true,
+							//判断 菜单名是否重复
+							remote: {
+								  url: "${G.host}/sysMenu/VerifiedExists",     //后台处理程序
+								  type: "post",               //数据发送方式
+								  dataType: "json",           //接受数据格式
+								  data: {fieldName:'menu_cn',                     //要传递的数据
+									  fieldValue: function() {
+										  return $("#menu_cn_name").val();
+									  }
+								  },
+								  dataFilter: function (data, type) {//判断控制器返回的内容
+		                              //console.log(data);
+		                             if ( data =="" || data==null|| data>0) {
+		                            	  if (oldId=='') {
+											  return false;
+										  }else {
+											 if ($("#menu_cn_name").val()==oldName) {
+												  return true;
+											}else {
+												  return false;
+											}
+										}
+									  }else{
+										return true;
+									  } 
+								  }
+							  }
+						} ,
+						menu_url: {
+							required: true,
+							addressFuc:true
+						}
+					},
+					 messages:{
+					     menu_cn_name : {
+					         remote:"该菜单名已存在"
+					     }
+					 }
+				});
+		
+			
+			  
+		
+     /*新增或浏览*/
+        //var mode = $.request.queryString["mode"];
+        var sysid=$.request.queryString["menu_id"];
+        if(sysid){
+        	$('#pagename').html("修改菜单信息");
+            $("input,textarea").attr("placeholder", "");
+            $(".hidefield").show();
+            //$(".ediefield").hide();
+            $.post('${G.host}/sysMenu/getObj?menu_id=' + sysid + "&i=" + Math.random(), function(data){
+                setForm(data);
+                oldName = data.menu_cn_name;
+                oldId = data.menu_id;
+                document.getElementsByName("menu_state").checked=false;
+				//$("#menu_state1").checked=false;
+				$("#menu_level").val(data.menu_level);
+               if (data.menu_state==1) {
+					$("#menu_state1").attr("checked","checked");
+				}else{
+					$("#menu_state0").attr("checked","checked");
+				}
+				//viewRead();
+                $("#imghead").attr('src','${G.host}/'+data.menu_icon_url);
+            });
+        }else{
+        	$('#pagename').html("新增菜单");
+        }
+	}
+	/*完成*/
+    var isdone = true;
+    function thingOver(){
+        if(!isdone) {
+            return false;
+        }
+    
+        if(!$("#form").valid()){
+        	isdone=true;
+            return false;
+        }
+        isdone = true;
+        clearPlaceHodler();
+        $('#form').ajaxSubmit(function(info) {
+        	//将html形式转换为json型数据
+        	info = JSON.parse(info);
+        	if (info.code>0) {
+            layer.msg('保存成功！', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+            //var a = {'IDS_SYSPLATFORM':'Java'};
+           // newForm(a);
+          	 w=null;h=null;
+           $('#imghead').attr("src","");
+            $('#previewImg').val("");
+            /* $('#IDS_SYSDETAIL').val("");
+			$('#IDS_SYSAUTHTYPE').val('1'); */
+            //isdone = true;
+            cancel();
+        	}else{
+				layer.msg(info.msg, {icon: 1, time: 1000, skin: 'layer-ext-moon'});	
+			}
+        });
+    }
+	function cancel(){
+		var url = '${G.host}/sysMenu/list' + urlDel(location.search, 'mode','menu_id')+ '?RFlag=1';
+		window.location.href = url;
+	}
+	
+	
+	function choseboxs(nid, url,id,levelid){
+	    if(!layer.values)
+	        layer.values = {};
+	    layer.open({
+	        type: 2 //此处以iframe举例
+	        ,title: '选择记录'
+	        ,area: ['600px', '500px']
+	        ,shade: 0
+	        ,maxmin: true
+	        ,content: url + "?rid=" + id
+	        ,btn: ['确认', '关闭'] //只是为了演示
+	        ,yes: function(index, layero){
+	            var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+	            if(!iframeWin._chosenId){
+	                layer.msg('您还未选择记录，请点击要选择的行', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+	                return;
+	            }
+	            $("#"+nid).val(iframeWin._chosenName);
+	            $("#"+id).val(iframeWin._chosenId);
+	            $("#"+levelid).val(iframeWin._chosenLevel);
+	            layer.closeAll();
+	        }
+	        ,btn2: function(){
+	            layer.closeAll();
+	        }
+	        ,zIndex: layer.zIndex //重点1
+	        ,success: function(layero){
+	            layer.setTop(layero); //重点2
+	        }
+	    });
+	}
+	
+</script>
+</html>

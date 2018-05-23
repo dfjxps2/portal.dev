@@ -1,0 +1,95 @@
+.iframe_page_bc{
+	 background: #fff;
+ }
+.checkbox input[type=checkbox], .checkbox-inline input[type=checkbox], .radio input[type=radio], .radio-inline input[type=radio]{
+	margin-top: 4px;
+}
+.mrCheck{
+	position: absolute;
+	right: -92px;
+	top: 25px;
+	z-index: 11;
+}
+.pos_rel{
+	position: relative;
+}
+.layer_users{
+	margin-left: 110px;
+}
+.btn_box{
+	display: inline-block;
+	margin: 0px 0 5px 0;
+	vertical-align: middle;
+}
+.wrapper-content-x{
+	padding: 0px 10px 0 10px;
+}
+
+.authScroll{
+	height: 270px;
+	overflow-y: scroll;
+}
+.panel-mar{
+	margin-top: 10px;
+	margin-bottom: 0;
+}
+.fixed-table-container thead th{
+	border-left: none;
+	width: 10%;
+}
+.fixed-table-container tbody td{
+	border-left: none;
+	width: 10%;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.bte_search{
+	margin-left: -5px;
+	border-radius: 0 3px 3px 0;
+	margin-top: 1px;
+}
+.error_box{
+	display: inline-block;
+}
+#change_user{
+	display: none;
+	padding: 15px;
+}
+.layer_btn{
+	position: absolute;
+	top: -5px;
+	left: 50px;
+	outline: none;
+}
+.fixed-table-container{
+	border: none;
+}
+.thead_pad{
+	padding: 15px;
+}
+.table>tbody>tr:hover {
+	background-color: #f8fcff;
+}
+.fixed-table-container tbody .selected td {
+	background-color: #a5cbff;
+}
+.change_btn{
+	margin-left: -26px;
+}
+.success_info{
+	line-height: 80px;
+	font-size: 24px;
+	font-weight: bold;
+}
+.text-info {
+	color: #4778c7;
+}
+option:hover{
+	color: white;
+	background-image:linear-gradient(#1e90ff, #1e90ff);
+}
+.bootstrap-table .table {
+	table-layout: fixed;
+	word-wrap:break-word;
+}
