@@ -274,19 +274,26 @@
             this.widgets = ko.observableArray(widgets);
 
             this.add_new_widget = function () {
-                var cc = controller.widgets().length || 1;
+                var cc = JsonDown(controller.widgets(),'no');
+                alert(cc[0].no*1+1);
                 this.widgets.push({
                     x: 0,
                     y: 0,
                     width: 4,
                     height: 2,
                     id:0,
-                    no:(cc+1),
+                    no:(cc[0].no*1+1),
                     auto_position: true
                 });
             };
 
             this.delete_widget = function (item) {
+            	for (var i = 0; i < metricInfo.length; i++) {
+					if (item.no==metricInfo[i].section_id) {
+						//alert(metricInfo[i].section_id+'====='+item.no)
+						remove(metricInfo,i);
+					}
+				}
                 self.widgets.remove(item);
             };
         };
