@@ -1,8 +1,9 @@
 var colo = ['rgb(255,0,0)','rgb(0,128,0)','rgb(255,140,0)','rgb(0,0,255)','rgb(128,0,128)','rgb(255,0,255)','rgb(0,255,255)'];
-
+var ba = 0;
 //添加柱状图
 function bar(data,settingData,name,num){
-	var color = colo[num];//settingData.color;
+	var color = colo[ba];//settingData.color;
+	ba++;
 	var datas = [];
 	for (var i = 0; i < data.length; i++) {
 		datas.push(data[i].value);
@@ -12,7 +13,7 @@ function bar(data,settingData,name,num){
           type: 'bar',
           barGap :'0',
           z:2,
-          //barWidth:'50%',
+          barWidth:'50%',
           itemStyle: {
 				normal: {
 				color: color,	
@@ -34,7 +35,8 @@ return color;
 
 //添加折线图
 function line(data,settingData,typeData,name,num){
-	var color = colo[num];//settingData.color;
+	var color = colo[ba];//settingData.color;
+	ba++;
 	var datas = [];
 	for (var i = 0; i < data.length; i++) {
 		datas.push(data[i].value);
@@ -87,29 +89,29 @@ function pie(data,settingData,name){
 	var sum = 0;
 	for (var i = 0; i < data.length; i++) {
 		tmp = {};
-		if (i<8) {
+		//if (i<8) {
 			tmp.value=data[i].value;
 			tmp.name=data[i].object_name;
 			datas.push(tmp);	
-		}else {
+		/*}else {
 			sum = sum +data[i].value;
-		}
+		}*/
 	}
-	tmp1.value=sum;
+	/*tmp1.value=sum;
 	tmp1.name='其它';
 	if (sum>0) {
 		datas.push(tmp1);
-	}
-	
+	}*/
+	datas = JsonDown(datas,'value');
 	var radius1 = '55%';
 	if (type=="ringPie"||type=="ringRose") {
-		radius1 = ['20%', '55%'];
+		radius1 = ['30%', '55%'];
 	}
 	var pies =  [{
 			name:name,
             type:'pie',
             radius : radius1,
-            center : ['50%', '55%'],
+            center : ['50%', '60%'],
             //roseType : 'area',
             data:datas,
             itemStyle: {
@@ -402,66 +404,7 @@ function gauge(data,name,id){
 		dat.push(tmp);
 	}
 	var myChart = echarts.init(document.getElementById(id));
-	/*option = {
-		    color: ["#37A2DA", "#32C5E9", "#67E0E3"],
-		    series: [{
-		        name: '业务指标',
-		        type: 'gauge',
-		        detail: {
-		            formatter: '{value}%'
-		        },
-		        axisLine:{
-	                lineStyle:{
-	                  width:1  
-	                }
-	                },
-	            splitLine:{
-	                show:true,
-	                length:5,
-	                lineStyle:{
-	                  width:1
-	                }
-	            },
-	            axisTick:{
-	                splitNumber:5,
-	                length:2
-	             },
-	             axisLabel: {
-	                 show: true,
-	                 textStyle: {
-	                     fontSize: 6
-	                 }
-	             },
-	             pointer:{
-	                 width:2
-	             },
-	             title:{
-	            	 textStyle: {
-	            		 color:'red',
-	                     fontSize: 8
-	                 }
-	             },
-		        axisLine: {
-		            show: true,
-		            lineStyle: {
-		                width: 3,
-		                shadowBlur: 0,
-		                color: [
-		                    [0.3, '#67e0e3'],
-		                    [0.7, '#37a2da'],
-		                    [1, '#fd666d']
-		                ]
-		            }
-		        },
-		        detail: {
-		        	formatter:'{value}%',
-	                textStyle: {
-		                     fontSize: 8
-		                 }
-	            },
-		        data: dat[0]
-		    }]
-		};*/
+	
 	option = {
 		    timeline: {
 		        axisType: 'category',
@@ -626,6 +569,9 @@ function pie_echart(series,name,id){
 
 //生成柱状图和折线图方法
 function bar_echart(data,name,id){
+	ba = 0;
+	var o = document.getElementById(id);
+	var wid= o.offsetWidth; //宽度
 	var legendData = [];
 	var series = data.series;
 	var xAxis = data.xAxis;
@@ -633,6 +579,30 @@ function bar_echart(data,name,id){
 	//alert(JSON.stringify(xAxis[0].data));
 	var colList = ['#FFFF00','#00FFFF','#00FF00','#8A2BE2','#FF0000'];
 	var k = 0;
+	var list = [];
+	var lt = [];
+	var tnp = [];
+	var ty = series[0].name;
+	for (var j = 0; j < (xAxis[0].data).length; j++) {
+		tnp = [];
+		tnp.push((xAxis[0].data)[j]);
+		for (var l = 0; l < series.length; l++) {
+			tnp.push((series[l].data)[j]);	
+		}
+		list.push(tnp);
+	}
+	var newData = changeData(list,1);
+	for (var c = 0; c < (series.length)+1; c++) {
+		var sd = [];
+		for (var d = 0; d < newData.length; d++) {
+			sd.push(newData[d][c]);
+		}
+		if (c<1) {
+			xAxis[0].data = sd;
+		}else{
+			series[c-1].data = sd;
+		}
+	}
 	for (var i = 0; i < series.length; i++) {
 		legendData.push(series[i].name);
 		if (series[i].type=="bar") {
@@ -647,10 +617,16 @@ function bar_echart(data,name,id){
 			}
 		}
 	}
+	if (series.length>1) {
+		var w = parseInt(70/series.length)+'%';
+		for (var s = 0; s < series.length; s++) {
+			series[s].barWidth = w;
+		}
+	}
 	var bottom = '4%';
 	var dataZoom = [];
-	if (series[0].data.length>15) {
-		var end =  Math.ceil((15/series[0].data.length)*100);
+	if (wid/series[0].data.length<13) {
+		var end =  parseInt((wid/15)/series[0].data.length*90);
 		bottom = '10%';
 		dataZoom = [{
 	    	show:'true',
@@ -665,8 +641,8 @@ function bar_echart(data,name,id){
 	        },
 	        xAxisIndex: 0,
 	        width:'90%',
-	        height:'6%',
-	        bottom:'4%',
+	        height:'5%',
+	        bottom:'3%',
 	        start: 0,
 	        end: end,
 	        handleSize: '50%',
@@ -763,25 +739,61 @@ function add(data,name,typeData,sectionData){
 //生成表格方法
 function add_table(data,name){
 	var times = [];
+	var names = [];
 	for (var i = 0; i < data.length; i++) {
+		if (data[0].month_id == data[i].month_id) {
+			names.push(data[i].object_name);	
+		}
 		times.push(data[i].month_id);
 	}
 	times = onlyData(times);
-	var width = 90/(times.length+1);
-	var str = '<table style="border:1px solid #00FFFF;margin-left:3%;margin-right:3%;margin-top:6%;">'+
-		'<tr>'+
-		'<td style="width:'+width+'%;border:1px solid #00FFFF;text-align:center;color:#00FFFF;font-size:14px;">对象</td>';
-	for (var a = 0; a < times.length; a++) {
-		 str =  str + '<td style="width:'+width+'%;border:1px solid #00FFFF;text-align:center;color:#00FFFF;font-size:14px;">'+times[a]+'</td>';
+	var compare = function (x, y) {//降序排序
+		 if (x < y) {
+		        return 1;
+		    } else if (x > y) {
+		        return -1;
+		    } else {
+		        return 0;
+		    }
 	}
-	str =  str + '</tr>';
-	for (var j = 0; j < data.length; j++) {
-		str = str + '<tr>'+
-		'<td style="width:'+width+'%;border:1px solid #00FFFF;font-size:12px;color:#fff">'+data[j].object_name+'</td>';
-		for (var k = 0; k < times.length; k++) {
-			if (times[k]==data[j].month_id) {
-				str = str + '<td style="width:'+width+'%;border:1px solid #00FFFF;text-align:center;font-size:12px;color:#fff">'+data[j].value+'</td>';
+	times.sort(compare);
+	var width = 90/(times.length+1);
+	var str = '<p style="width:100%;text-align:center;font-size:15px;color:#fff;margin-top:2%;">'+name+'</p>'+
+		'<table style="border:1px solid #00FFFF;margin-left:5%;width:90%;margin-top:1%;margin-bottom:4%;">'+
+		'<tr style = "height:33px;border:2px solid #00FFFF;">'+
+		'<td style="width:'+width+'%;border:1px solid #00FFFF;text-align:center;color:#00FFFF;font-size:16px;">对象</td>';
+	for (var a = 0; a < times.length; a++) {
+		 str =  str + '<td style="width:'+width+'%;border:1px solid #00FFFF;text-align:center;color:#00FFFF;font-size:16px;">'+times[a]+'</td>';
+	}
+	//吧数据解析成  需要的格式
+	var tableData = [];
+	for (var a = 0; a < times.length; a++) {
+		var ta = [];
+		for (var b = 0; b < data.length; b++) {
+			if (times[a]==data[b].month_id) {
+				ta.push(data[b].value);
 			}
+		}
+		tableData.push(ta);
+	}
+	//吧数据  解析成排序需要的格式
+	var ss = [];
+	for (var s = 0; s < names.length; s++) {
+		var mm = [];
+		mm.push(names[s]);
+		for (var y = 0; y < tableData.length; y++) {
+			mm.push(tableData[y][s]);
+		}
+		ss.push(mm);
+	}
+	//数据根据第一列数据降序排序
+	var tData = changeData(ss,1);
+	str =  str + '</tr>';
+	for (var j = 0; j < tData.length; j++) {
+		str = str + '<tr style = "height:25px">'+
+		'<td style="width:'+width+'%;border:1px solid #00FFFF;font-size:12px;text-align:center;color:#fff">'+tData[j][0]+'</td>';
+		for (var k = 0; k < tableData.length; k++) {
+			str = str + '<td style="width:'+width+'%;border:1px solid #00FFFF;text-align:center;font-size:12px;color:#fff">'+tData[j][k+1]+'</td>';
 		}
 		str =  str + '</tr>';
 	}
@@ -819,7 +831,6 @@ function addEchart(data,name,typeData,id){
 	}
 	//生成图表展示的容器
 	var tbody=window.document.getElementById(id);
-	//alert(typs);
 	var str = "";
 	//既有柱状图和折线图  又有其他类型图形  生成两个容器
 	var ma = 0;
@@ -831,19 +842,23 @@ function addEchart(data,name,typeData,id){
 	if ((a==true&&c==true)) {
 		var div1 = id+'chart1';
 		var div2 = id+'chart2';
-		str='<div id = "'+div1+'" style="width: 48%;height:100%;float: left;">'+
+		str='<div id = "'+div1+'" style="width: 49%;height:100%;float: left;">'+
 		'</div>'+
-		'<div style="width: 49%;height:100%;float: left;">'+
-			'<table id = "'+div2+'" style="width: 100%;height:99%;">'+
-			'</table>'+
+		'<div id = "'+div2+'div" style="width: 50%;height:100%;float: left;">'+
 		'</div>';
 		tbody.innerHTML = str;
 		//添加柱状和折线图
 		bar_echart(barData,name,div1);
 		//添加其他类型图表
-		var tab=window.document.getElementById(div2);
-		var st = "";
+		var divs = div2+'div';
 		if (pieData.length>1) {
+			var tab1=window.document.getElementById(divs);
+			var tabs1 = '<table id = "'+div2+'" style="width: 100%;height:99%;">'+
+			'</table>';
+			tab1.innerHTML = tabs1;
+			
+			var st = "";
+			var tab2=window.document.getElementById(div2);
 			for (var k = 0; k < ma; k++) {
 				var id1 = id+(2*k);
 				var id2 = id+(2*k+1);
@@ -852,7 +867,7 @@ function addEchart(data,name,typeData,id){
 				'<td id = "'+id2+'" style="width:50%;"></td>'+
 			'</tr>';
 			}
-			tab.innerHTML = st;
+			tab2.innerHTML = st;
 			for (var j = 0; j < pieData.length; j++) {
 				var ids = id+j;
 				if (pieData[j].type=='pie') {
@@ -866,27 +881,28 @@ function addEchart(data,name,typeData,id){
 			}
 		}else{
 			if (pieData[0].type=='pie') {
-				pie_echart(pieData[0].value,pieData[0].name,div2);
+				pie_echart(pieData[0].value,pieData[0].name,divs);
 			}else if (pieData[0].type=='table'){
-				var table1=window.document.getElementById(div2);
+				var table1=window.document.getElementById(divs);
 				table1.innerHTML = pieData[0].value;
 			}else if (pieData[0].type=='gauge'){
-				gauge(pieData[0].value,pieData[0].name,ids);
+				gauge(pieData[0].value,pieData[0].name,divs);
 			}
 		}
 	}else if ((a==true&&c==false)||(a==false&&c==true)) {
 		//只有柱状图和折线图  或者没有柱状图和折线图时生成一个容器
 		var div3 = id+'chart1';
 		if (a==false&&c==true) {
-			strs='<div style="width: 99%;height:100%;">'+
+			var strs = '';
+			if (pieData.length>1) {
+				strs='<div style="width: 99%;height:100%;">'+
 				'<table id = "'+div3+'" style="width: 100%;height:99%;">'+
 				'</table>'+
-			'</div>';
-			tbody.innerHTML = strs;
-			
-			var tabs=window.document.getElementById(div3);
-			var sts = "";
-			if (pieData.length>1) {
+				'</div>';
+				tbody.innerHTML = strs;
+				
+				var sts = "";
+				var tabs=window.document.getElementById(div3);
 				for (var k = 0; k < ma; k++) {
 					var id1 = id+(2*k);
 					var id2 = id+(2*k+1);
@@ -908,6 +924,9 @@ function addEchart(data,name,typeData,id){
 					}
 				}
 			}else{
+				strs='<div id = "'+div3+'" style="width: 99%;height:100%;">'+
+				'</div>';
+				tbody.innerHTML = strs;
 				if (pieData[0].type=='pie') {
 					pie_echart(pieData[0].value,pieData[0].name,div3);
 				}else if (pieData[0].type=='table'){
@@ -1003,3 +1022,41 @@ function JsonDown(json,key){
     return json;
 }
 
+
+//柱状折线图排序方法
+function changeData(data,num){
+	var dd = [];
+	var tmp = {};
+	for (var i = 0; i < data.length; i++) {
+		tmp = {};
+		tmp.value = data[i][num];
+		tmp.name = data[i][0];
+		dd.push(tmp);
+	}
+	var dds = JsonDown(dd,'value');
+	var ret = [];
+	for (var j = 0; j < dds.length; j++) {
+		for (var k = 0; k < data.length; k++) {
+			if (dds[j].name == data[k][0]&&dds[j].value == data[k][num]) {
+				ret.push(data[k]);
+			}
+		}
+	}
+	return ret;
+}
+
+//对json数据进行降序排序
+function listDown(data,j){
+    //console.log(json);
+	for (var i = 1; i < data.length; i++) {
+		var temp = data[i],
+		 val  = temp[j],
+		 k    = i-1;
+		while(i >=0 && data[i][k]<val){
+			data[k+1] = data[k];
+            k = k-1;   
+        }
+		data[k+1] = temp;
+	}
+    return data;
+}
