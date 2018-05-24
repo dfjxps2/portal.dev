@@ -175,7 +175,7 @@
 </body>
 <script>
 _gridPool["app_id"]=new BCombobox("#app_id");
-_gridPool["app_id"].load("${G.host}/application/getData", {textField:"app_name",valueField:"app_id",emptyObj:{app_id:"",app_name:"请选择对应应用"} });
+_gridPool["app_id"].load("${G.host}/sysMenu/getApp", {textField:"app_name",valueField:"app_id",emptyObj:{app_id:"",app_name:"请选择对应应用"} });
 /* _gridPool["super_menu_id"]=new BCombobox("#super_menu_id");
 _gridPool["super_menu_id"].load("${G.host}/sysMenu/getData", {textField:"menu_cn_name",valueField:"menu_id",emptyObj:{menu_id:"",menu_cn_name:"请选择上级菜单"} }); */
 	$("#menu_state0").attr("checked","checked");
