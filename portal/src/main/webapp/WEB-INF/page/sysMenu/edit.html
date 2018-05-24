@@ -33,7 +33,7 @@
              </div>
           </div>
 		 <div class="col-sm-2">   
-            <div class="pull-right ibox-toolbars hidefield" style="margin-right: -14px;margin-top: 2px;">
+            <div class="pull-right ibox-toolbars hidefield" style="margin-top: 2px;">
 			     <button type="button" class="btn btn-primary" onclick="cancel();">返回</button>			            	  
              </div>
          </div>   
@@ -96,7 +96,7 @@
 		                       <div class="form-group">
 		                          <label class="col-xs-4 lable_top">菜单显示顺序：</label>
 		                          <div class="col-xs-8">
-		                            <input type="number" style="padding: 0px;width:70px;text-align:center;" id="disp_order" name="disp_order" data-options="min:0,precision:0" class="form-control required" />
+		                            <input type="number" min = "1" style="padding: 0px;width:70px;text-align:center;" id="disp_order" name="disp_order" data-options="min:0,precision:0" class="form-control required" />
 		                          </div>
 		                        </div>
                         </div>
@@ -345,7 +345,7 @@ _gridPool["super_menu_id"].load("${G.host}/sysMenu/getData", {textField:"menu_cn
 			//console.log(flag);
 			return this.optional(element) || (!flag);
 		}, "不能为空！");
-		jQuery.validator.addMethod("addressFuc", function(value, element) {//地址验证
+		/* jQuery.validator.addMethod("addressFuc", function(value, element) {//地址验证
 			var flag;
 			var vv = $("#menu_url").val();
 			if(vv.indexOf("http://") == 0 || vv.indexOf("https://") == 0){
@@ -354,7 +354,7 @@ _gridPool["super_menu_id"].load("${G.host}/sysMenu/getData", {textField:"menu_cn
 			    flag= true;
 			}
 			return this.optional(element) || (!flag);
-		}, "这网址不是以http://或者https://开头，或者不是网址！");
+		}, "这网址不是以http://或者https://开头，或者不是网址！"); */
 			
 		//form表单输入规则验证
 			  $("#form").validate({
@@ -399,8 +399,7 @@ _gridPool["super_menu_id"].load("${G.host}/sysMenu/getData", {textField:"menu_cn
 							  }
 						} ,
 						menu_url: {
-							required: true,
-							addressFuc:true
+							required: true
 						}
 					},
 					 messages:{
