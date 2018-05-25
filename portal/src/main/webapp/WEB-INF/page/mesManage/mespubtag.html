@@ -35,8 +35,8 @@
                 _chosen = row;
                 _chosenId = row.tag_id;
                 _chosenName = row.tag_text;
-                check(row.tag_id);
             }, onCheck: function (row) {
+                check(row.tag_id);
                 _chosen = row;
                 _chosenId = row.tag_id;
                 _chosenName = row.tag_text;
@@ -48,7 +48,6 @@
         function check(id) {
             check_val.push(id);
         }
-      //  var checked = check_val;
     _chosenAllId=check_val;
 
 </script>
