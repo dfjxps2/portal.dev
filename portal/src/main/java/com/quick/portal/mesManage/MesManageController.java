@@ -6,6 +6,7 @@ import com.quick.core.base.model.DataStore;
 import com.quick.core.base.model.JsonDataGrid;
 import com.quick.core.base.model.PageBounds;
 import com.quick.core.util.common.QRequest;
+import com.quick.portal.search.infomng.SolrInfoConstants;
 import com.quick.portal.search.infomng.SolrUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -48,6 +49,7 @@ import java.util.*;
 @Scope("prototype")
 @RequestMapping(value = "/mesManage")
 public class MesManageController extends SysBaseController<MesManageDO> {
+
 
     @Resource(name="mesManageService")
     private MesManageService mesManageService;
@@ -197,15 +199,15 @@ public class MesManageController extends SysBaseController<MesManageDO> {
            }
            mesManageDO.setMsg_attachment(path+attName);//上传附件存放路径
            mesManageDO.setMsg_content(path+contentName); //上传信息内容存放路径
-           mesManageDO.setMsg_src_id(2);
-           mesManageDO.setMsg_type_id(2);
+           mesManageDO.setMsg_src_id(MesInfoConstants.PLATFORM_SOURCE_ID);
+           mesManageDO.setMsg_type_id(MesInfoConstants.PLATFORM_MES_TYPE);
            Calendar date = Calendar.getInstance();
            Date date1 =date.getTime();
            mesManageDO.setPub_time(date1);
            mesManageDO.setAppr_time(date1);
             String id = path+contentName;
            String content = combinFile(fa,mesManageDO);
-           String type = "2";
+           String type = SolrInfoConstants.MSG_OBJ_TYPE;
            Map<String,Object> map = new HashMap<>();
          SolrUtils.addSolrInfo(id,content,type,title);
            List<Map<String,Object>> rules=  mesManageDao.selectRules(map);
@@ -217,7 +219,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
                response.getWriter().flush();
                return;
            }
-           mesManageDO.setAppr_state(3);
+           mesManageDO.setAppr_state(MesInfoConstants.AUTOMATIC_APPROVAL);
            mesManageDao.insert(mesManageDO);
            map.clear();
            map.put("appr_time",mesManageDO.getAppr_time());
@@ -404,10 +406,12 @@ public class MesManageController extends SysBaseController<MesManageDO> {
             fa = createFile(path,attName);
             file.transferTo(fa);
             map.put("msg_attachment",path+attName);
+        }else {
+            fa = new File(mesManageDO.getMsg_attachment());
         }
         //标签
         String[] tags = tagId[0].split(",");
-        if(tagId!=null && tags.length>0){
+        if(tagId[0]!=null && tags.length>0 && !tagId[0].equals("") ){
             mesManageDao.deleteMesTag(mesManageDO.getMsg_id());
             for(int i=0;i<tags.length;i++){
                 Map<String,Object> maptag = new HashMap<>();
@@ -426,7 +430,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
             map.put("msg_content",path+contentName);
         //标题，摘要，内容，附件 文件
             String id = path+contentName;
-            String type = "2";
+            String type = SolrInfoConstants.MSG_OBJ_TYPE;
             String content = combinFile(fa,mesManageDO);
             SolrUtils.addSolrInfo(id,content,type,title);
             Map<String,Object> mapone = new HashMap<>();
@@ -439,7 +443,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
                 response.getWriter().flush();
                 return;
             }
-            map.put("appr_state",3);
+            map.put("appr_state",MesInfoConstants.AUTOMATIC_APPROVAL);
         if(mesManageDO.getMsg_id()!= null && !mesManageDO.getMsg_id().equals("undefined") && !"null".equals(mesManageDO.getMsg_id())){
             map.put("msg_id",mesManageDO.getMsg_id());
         }
