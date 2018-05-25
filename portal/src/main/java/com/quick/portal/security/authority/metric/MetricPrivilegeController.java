@@ -36,6 +36,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.quick.core.base.ISysBaseService;
 import com.quick.core.base.SysBaseController;
+import com.quick.core.util.common.QCookie;
 
 /**
  * metricPrivilege请求类
@@ -75,6 +76,13 @@ public class MetricPrivilegeController extends SysBaseController<MetricPrivilege
     @RequestMapping(value = "/saveMetricData",method = RequestMethod.POST)
     @ResponseBody
     public String saveMetricData(String metricData) throws Exception {
+    	String flag = "1";
+    	//当前用户编号
+    	String userID = QCookie.getValue(request, "ids");
+    	boolean isSolr = MetricPrivilegeUtils.isExpriationTime(userID);
+    	if(! isSolr){
+    		 return flag;
+    	}
     	try {
     		metricData = URLDecoder.decode(metricData, MetricPrivilegeConstants.LANGUAGE_CODE_UTF);
 		} catch (UnsupportedEncodingException e) {
@@ -84,7 +92,7 @@ public class MetricPrivilegeController extends SysBaseController<MetricPrivilege
         JSONArray jsonObject = (JSONArray) JSONObject.parse(metricData);
         List<MetricBean> retList = jsonObject.toJavaList(MetricBean.class);
         metricPrivilegeService.saveMetricData(retList);
-        return "1";
+        return flag;
     }
     
     

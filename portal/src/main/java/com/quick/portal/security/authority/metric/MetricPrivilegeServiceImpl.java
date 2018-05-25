@@ -29,6 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.quick.core.base.ISysBaseDao;
 import com.quick.core.base.SysBaseService;
 import com.quick.core.base.model.DataStore;
+import com.quick.portal.search.infomng.SolrInfoConstants;
+import com.quick.portal.search.infomng.SolrUtils;
 
 /**
  * metric_privilege服务实现类
@@ -125,9 +127,9 @@ public class MetricPrivilegeServiceImpl extends SysBaseService<MetricPrivilegeDO
 	 * (non-Javadoc)
 	 * @see com.quick.portal.security.authority.metric.IMetricPrivilegeService#saveMetricData(java.util.List)
 	 */
-	@Override
+/*	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public boolean saveMetricData(List<MetricBean> retList) {
+	public void saveMetricData(List<MetricBean> retList) {
 		// TODO Auto-generated method stub
 		String pid = null;
 		String pName = null;
@@ -158,7 +160,59 @@ public class MetricPrivilegeServiceImpl extends SysBaseService<MetricPrivilegeDO
 			}
 			
 		}
-		return false;
+	}*/
+	
+	/*
+	 * 保存指标权限 
+	 * (non-Javadoc)
+	 * @see com.quick.portal.security.authority.metric.IMetricPrivilegeService#saveMetricData(java.util.List)
+	 */
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void saveMetricData(List<MetricBean> retList) {
+		String pid = null;
+		String pName = null;
+		boolean bool = false;
+		for(MetricBean mtcBean:retList){
+			pid = mtcBean.getCategory_id();
+			pName = mtcBean.getCategory_name();
+			//父节点指标
+			bool = isExistMetricByID(pid);
+			if(bool){
+				updateMetricData(MetricPrivilegeConstants.ROOT_NODE,pid,pName);
+			}else{
+				saveMetricData(MetricPrivilegeConstants.ROOT_NODE,pid,pName);
+			}
+			//solr增加指标
+			SolrUtils.addSolrInfo(pid, pName, SolrInfoConstants.INDEX_OBJ_TYPE, pName);
+			List<MetricBeanVO> mList = mtcBean.getMeasures();
+			if(null != mList && mList.size()>0){
+				//保存子节点指标数据
+				saveChildMetricData(pid,mList);
+			}
+		}
+	}
+	
+	/*
+	 * step1:保存子节点指标数据
+	 * step2:solr增加指标
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	public void saveChildMetricData(String pid, List<MetricBeanVO> childList) {
+		String id = null;
+		String name = null;
+		boolean flag = false;;
+		for(MetricBeanVO mb :childList){
+			 id = mb.getMeasure_id();
+			 name = mb.getMeasure_name();
+			 flag = isExistMetricByID(id);
+			 if(flag){
+				 updateMetricData(pid,id,name);	
+			 }else{
+				 saveMetricData(pid,id,name);
+			 }
+			SolrUtils.addSolrInfo(id, name, SolrInfoConstants.INDEX_OBJ_TYPE, name);
+		}
 	}
 	/*
 	 * 保存指标数据
