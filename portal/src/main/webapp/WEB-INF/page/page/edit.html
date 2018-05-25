@@ -275,7 +275,6 @@
 
             this.add_new_widget = function () {
                 var cc = JsonDown(controller.widgets(),'no');
-                alert(cc[0].no*1+1);
                 this.widgets.push({
                     x: 0,
                     y: 0,
@@ -290,7 +289,6 @@
             this.delete_widget = function (item) {
             	for (var i = 0; i < metricInfo.length; i++) {
 					if (item.no==metricInfo[i].section_id) {
-						//alert(metricInfo[i].section_id+'====='+item.no)
 						remove(metricInfo,i);
 					}
 				}
@@ -348,15 +346,18 @@
     		for(var i = 0; i < ar.length; i++)
     			ar[i]["section_id"] = o.dataset.no;
             var rem = [];
+            var ss = [];
             for (var k = 0; k < ar.length; k++) {
 				if (metricInfo.length>0) {
 					for (var j = 0; j < metricInfo.length; j++) {
-						if (ar[k].section_id==metricInfo[j].section_id) {
-							remove(metricInfo,j);
+						if (ar[k].section_id!=metricInfo[j].section_id) {
+							//remove(metricInfo,j);
+							ss.push(metricInfo[j]);
 						}
 					}
 				}
 			}
+            metricInfo = ss;
             var metric_name = [];
             for (var n = 0; n < ar.length; n++) {
                 metricInfo.push(ar[n]);

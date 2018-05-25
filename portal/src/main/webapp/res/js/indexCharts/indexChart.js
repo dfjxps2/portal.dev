@@ -2,6 +2,9 @@ var colo = ['rgb(255,0,0)','rgb(0,128,0)','rgb(255,140,0)','rgb(0,0,255)','rgb(1
 var ba = 0;
 //添加柱状图
 function bar(data,settingData,name,num){
+	if (ba>6) {
+		ba = 0;
+	}
 	var color = colo[ba];//settingData.color;
 	ba++;
 	var datas = [];
@@ -35,6 +38,9 @@ return color;
 
 //添加折线图
 function line(data,settingData,typeData,name,num){
+	if (ba>6) {
+		ba = 0;
+	}
 	var color = colo[ba];//settingData.color;
 	ba++;
 	var datas = [];
@@ -146,7 +152,7 @@ function pie(data,settingData,name){
 				name:name,
 	            type:'pie',
 	            radius : radius1,
-	            center : ['50%', '55%'],
+	            center : ['50%', '60%'],
 	            roseType : 'area',
 	            data:datas,
 	            itemStyle: {
@@ -189,13 +195,22 @@ function dataType(data,typeData){
 	var series3 = '';
 	var xAxis = [];
 	var tmp = {};
+	
+	
+	var tt = [];
+	var tmm = {};
 	for (var i = 0; i < data.length; i++) {
 		for (var j = 0; j < typeData.length; j++) {
 			if (data[i].measure_id==typeData[j].metric_id) {
 				if (typeData[j].charts=="bar"||typeData[j].charts=="line") {
-						xAxis = getxAxis(data[i].measures);
-					series1.push(chartType(data[i].measures,typeData[j],typeData,data[i].measure_name,i));	
-				}else if (typeData[j].charts!="line"&&typeData[j].charts!="bar") {
+					tmm = {};
+					//series1.push(chartType(data[i].measures,typeData[j],typeData,data[i].measure_name,i));
+					tmm.value = getxAxis(data[i].measures);
+					tmm.data = chartType(data[i].measures,typeData[j],typeData,data[i].measure_name,i);
+					tmm.category_id = typeData[j].category_id;
+					tmm.dimension = typeData[j].dimension;
+					tt.push(tmm);
+				} else if (typeData[j].charts!="line"&&typeData[j].charts!="bar") {
 					if (typeData[j].charts=="table") {
 						tmp = {};
 						tmp.value = add_table(data[i].measures,data[i].measure_name);
@@ -219,13 +234,37 @@ function dataType(data,typeData){
 			}
 		}
 	}
+	var cat = [];
+	var dim = [];
+	for (var a = 0; a < tt.length; a++) {
+		cat.push(tt[a].category_id);
+		dim.push(tt[a].dimension);
+	}
+	cat = onlyData(cat);
+	dim = onlyData(dim);
+	var all = [];
+	var tmpp = {};
+	for (var b = 0; b < cat.length; b++) {
+		for (var c = 0; c < dim.length; c++) {
+			series1 = [];
+			tmpp = {};
+			for (var d = 0; d < tt.length; d++) {
+				if (tt[d].category_id ==cat[b]&&tt[d].dimension==dim[c]) {
+					xAxis = tt[d].value;
+					series1.push(tt[d].data);
+				}
+			}
+			if (series1.length>0) {
+				tmpp.xAxis = xAxis;
+				tmpp.yAxis = getyAxis(series1);
+				tmpp.series = series1;
+				all.push(tmpp);
+			}
+		}
+	}
 	var em1 = {};
-	if (series1.length>0) {
-		var tmps = {};
-		tmps.series = series1;
-		tmps.xAxis = xAxis;
-		tmps.yAxis = getyAxis(series1);
-		em1.value =tmps;
+	if (all.length>0) {
+		em1.value =all;
 		em1.name = "bar";
 		series.push(em1);
 	}
@@ -393,7 +432,6 @@ function getyAxis(data){
 
 //生成仪表盘
 function gauge(data,name,id){
-	//alert(JSON.stringify(data));
 	var dat = [];
 	var tmp = {};
 	var timeData = [];
@@ -577,13 +615,11 @@ function bar_echart(data,name,id){
 	var series = data.series;
 	var xAxis = data.xAxis;
 	var yAxis = data.yAxis;
-	//alert(JSON.stringify(xAxis[0].data));
 	var colList = ['#FFFF00','#00FFFF','#00FF00','#8A2BE2','#FF0000'];
 	var k = 0;
 	var list = [];
 	var lt = [];
 	var tnp = [];
-	var ty = series[0].name;
 	for (var j = 0; j < (xAxis[0].data).length; j++) {
 		tnp = [];
 		tnp.push((xAxis[0].data)[j]);
@@ -687,7 +723,7 @@ function bar_echart(data,name,id){
 		    	  right:'4%',
 		    	  textStyle: {			   
 		  		      color: '#fff',
-		  		      fontSize:8
+		  		      fontSize:10
 		        }
 		   },
 		   grid: {
@@ -774,7 +810,6 @@ function add_table(data,name){
 
 //向页面添加图表方法  data--指标数据   name--栏目名称       typeData--栏目图表信息   id--栏目的div的id
 function add(data,name,typeData,sectionData){
-	//alert(JSON.stringify(typeData));
 	var id = "";
 	for (var i = 0; i < sectionData.length; i++) {
 		var dat = [];
@@ -838,7 +873,27 @@ function addEchart(data,name,typeData,id){
 		'</div>';
 		tbody.innerHTML = str;
 		//添加柱状和折线图
-		bar_echart(barData,name,div1);
+		if (barData.length>1) {
+			var barDiv=window.document.getElementById(div1);
+			var bar1 = '<table id = "'+div1+'bar" style="width: 100%;height:99%;">';
+			var heights = 99/Math.ceil(barData.length/2);
+			for (var v = 0; v < Math.ceil(barData.length/2); v++) {
+				var barId1 = id+'bar'+(2*v);
+				var barId2 = id+'bar'+(2*v+1);
+				bar1 = bar1 + '<tr style="height:'+heights+'%;">'+
+				'<td id = "'+barId1+'" style="width:50%;"></td>'+
+				'<td id = "'+barId2+'" style="width:50%;"></td>'+
+			'</tr>';
+			}
+			bar1 = bar1 +'</table>';
+			barDiv.innerHTML = bar1;
+			for (var p = 0; p < barData.length; p++) {
+				var barId3 = id+'bar'+p;
+				bar_echart(barData[p],name,barId3);
+			}
+		}else{
+			bar_echart(barData[0],name,div1);
+		}
 		//添加其他类型图表
 		var divs = div2+'div';
 		if (pieData.length>1) {
@@ -930,7 +985,27 @@ function addEchart(data,name,typeData,id){
 			str='<div id = "'+div3+'" style="width: 99%;height:100%;">'+
 			'</div>';
 			tbody.innerHTML = str;
-			bar_echart(barData,name,div3);
+			if (barData.length>1) {
+				var barDiv2=window.document.getElementById(div3);
+				var bar2 = '<table id = "'+div3+'bar" style="width: 100%;height:99%;">';
+				var height2 = 99/Math.ceil(barData.length/2);
+				for (var s = 0; s < Math.ceil(barData.length/2); s++) {
+					var barId4 = id+'bar'+(2*s);
+					var barId5 = id+'bar'+(2*s+1);
+					bar2 = bar2 + '<tr style="height:'+height2+'%;">'+
+					'<td id = "'+barId4+'" style="width:50%;"></td>'+
+					'<td id = "'+barId5+'" style="width:50%;"></td>'+
+				'</tr>';
+				}
+				bar2 = bar2 +'</table>';
+				barDiv2.innerHTML = bar2;
+				for (var h = 0; h < barData.length; h++) {
+					var barId6 = id+'bar'+h;
+					bar_echart(barData[h],name,barId6);
+				}
+			}else{
+				bar_echart(barData[0],name,div3);
+			}
 		}
 	}
 }
