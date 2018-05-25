@@ -29,6 +29,7 @@ public class SolrUtils {
 
 	/**
 	 * 添加文档 用solrJ创建索引
+	 * @throws Exception 
 	 */
 	public static void addSolrInfo(String id, String content, String type,String title) {
 		SolrInputDocument doc = new SolrInputDocument();
@@ -38,11 +39,13 @@ public class SolrUtils {
 		doc.addField("create_time", DateTime.Now().getTime());
 		doc.addField("portal_doc_class", type);
 		doc.addField("portal_doc_title", title);
+		HttpSolrClient server = null;
 		try {
-			HttpSolrClient server = InitSolrServer.initServer(SolrInfoConstants.PORTAL_DOC_URL);
+		    server = InitSolrServer.initServer(SolrInfoConstants.PORTAL_DOC_URL);
 			UpdateResponse response = server.add(doc);
 			// 提交
 			server.commit();
+			server.close();
 			System.out.println("########## Query Time :" + response.getQTime());
 			System.out.println("########## Elapsed Time :"
 					+ response.getElapsedTime());
@@ -50,7 +53,14 @@ public class SolrUtils {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}finally{
+				   try {
+					server.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					System.out.println("添加文档 用solrJ创建索引异常："+e.getLocalizedMessage());	
+			   }
+			}
 	}
 
 	/**
