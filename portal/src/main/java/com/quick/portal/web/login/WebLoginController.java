@@ -73,7 +73,9 @@ public class WebLoginController {
     		  loginer = loadCASUserInfo(request,response);
     		  rid =  String.valueOf(loginer.getRole_id());
     	 }
-		 if(ADMINISTRATOR_ROLE.equals(rid) ||PORTAL_ADMINISTRATOR_ROLE.equals(rid)){
+       	 //平台用户:1:app;2:sys;公服用户:1:app
+    	 String flag = getSysUrlByUserGlobalID(loginer.getUser_global_id(),rid);
+		 if(SYS_MENU_FLAG.equals(flag) || SYS_MENU_FLAG.equals(flag)){
     		 return "redirect:/mainframe";
 		 }else{
     		 return "redirect:/home/main"; 
@@ -116,13 +118,9 @@ public class WebLoginController {
            List<Map<String,Object>> roles = userRoleRelaService.select(parm);
            saveSession(loginUser,roles, request, response);
            userAccessLogService.saveLog(request, UserAccessLogConstants.SYS_LOG_TYPE_ID, UserAccessLogConstants.LOGIN_USER_OP_TYPE,1,loginUser.getUser_real_name() + "登录成功");
-           //平台用户
-           if(null == loginUser.getUser_global_id() || "".equals(loginUser.getUser_global_id())){
-        	   flag = "2";
-        	 //公服用户
-           }else{
-        	   flag = "1";
-           }
+           String rid = QCookie.getValue(request, "sbd.role");
+           // 平台用户:1:app;2:sys;公服用户:1:app
+           flag = getSysUrlByUserGlobalID(loginUser.getUser_global_id(),rid);
        } catch (Exception e) {
             e.printStackTrace();
             return  e.getMessage();
@@ -174,6 +172,34 @@ public class WebLoginController {
 	}
     
     
+    /*
+     * 平台用户:1:app;2:sys
+     * 公服用户:1:app
+     * 1:app;2:sys
+     */
+
+    public String getSysUrlByUserGlobalID(String userGlobalID,String rid){
+    	String flag = APP_MENU_FLAG;
+    	//平台用户
+    	if(null == userGlobalID || "".equals(userGlobalID)){
+     	   if(ADMINISTRATOR_ROLE.equals(rid) || PORTAL_ADMINISTRATOR_ROLE.equals(rid)){
+         	   flag = SYS_MENU_FLAG;
+            }else{
+         	   flag = APP_MENU_FLAG;
+            }
+     	 //公服用户
+        }else{
+     	   flag = APP_MENU_FLAG;
+        }
+    	return flag;
+    }
+  
+    
+    
+    public final static String ADMINISTRATOR_USER = "admin" ;
     public final static String ADMINISTRATOR_ROLE = "1" ;
     public final static String PORTAL_ADMINISTRATOR_ROLE = "100" ;
+    
+    public final static String SYS_MENU_FLAG = "2" ;
+    public final static String APP_MENU_FLAG = "1" ;
 }
