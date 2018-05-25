@@ -14,7 +14,6 @@
     function  config() {
         quick.serverUrl = "${G.serverUrl}";
         quick.idField = "${G.idField}";
-
         $("#list").bootstrapTable("destroy");
         _gd["list"] = new BGrid("#list");
         _gd["list"].config({
@@ -25,21 +24,18 @@
             height: $(document.body).height() - 50,
             toolbar: "#formSearch",
             columns: [
-                {
-                    field: 'TAGSELECT', title: '选择', align: 'center',
-                    formatter: function (value, rec) {
-                        return "<input id=\"tags" + rec.tag_id + "\" title=\"tags\" class=\"ck_qx\" type=\"checkbox\" name=\"tag\" value=\"" + rec.tag_id + "\" >";
-                    }
-                },
+                {field: 'TAGSELECT',title:'选择',checkbox: true },
                 {field: 'tag_id', title: '标签ID', width: 70},
                 {field: 'tag_type_name', title: '标签类型名称', width: 100},
                 {field: 'tag_text', title: '标签名称', width: 90},
                 {field: 'tag_type_id', visible: false}
-            ], onClickRow: function (row, e) {
-                check(row.tag_id);
+            ],
+            singleSelect:false,
+            onClickRow: function (row, e) {
                 _chosen = row;
                 _chosenId = row.tag_id;
                 _chosenName = row.tag_text;
+                check(row.tag_id);
             }, onCheck: function (row) {
                 _chosen = row;
                 _chosenId = row.tag_id;
@@ -52,9 +48,8 @@
         function check(id) {
             check_val.push(id);
         }
-
-        var checked = check_val;
-    _chosenAllId=checked;
+      //  var checked = check_val;
+    _chosenAllId=check_val;
 
 </script>
 <body class="gray-bg">

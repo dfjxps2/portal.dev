@@ -34,7 +34,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="row">
                                 <div ibox-toolbars hidefield>
                                     <input id="submit-form" type="button" class="pull-right btn btn-primary" value="保存">
@@ -60,7 +59,7 @@
 
     window.onload = function() {
         /*加载数据*/
-            $('#pagename').html("新增内容标签类型");
+            $('#pagename').html("新增标签类型");
     };
 
     //获得标签类型进行查询
@@ -71,10 +70,10 @@
             async:false,
             dataType: "json",
             success: function(data){
-                $("#superTypeName").append("<option selected hidden value=''>选择标签类型</option>");
+                $("#superTypeName").append("<option selected hidden value=''>选择上级标签类型</option>");
                 for (var i = 0; i < data.length; i++) {
                     var item = data[i];
-                    $("#superTypeName").append("<option  value=" +item.tagTypeId+ ">"+item.tagTypeId+"  "+  item.tagTypeName+"</option>");
+                    $("#superTypeName").append("<option  value=" +item.tagTypeId+ ">"+  item.tagTypeName+"</option>");
                 }
             }
         });
@@ -110,7 +109,7 @@
     })
 
     function cancel(){
-        var url = quick.serverUrl+"/tagtypelist" + urlDel(location.search, 'mode','tag_type_id') + '&RFlag=1';
+        var url = quick.serverUrl+"/tagtypelist" ;
         window.location.href = url;
     }
 </script>

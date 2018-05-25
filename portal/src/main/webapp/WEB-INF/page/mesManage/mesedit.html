@@ -2,6 +2,37 @@
 <html>
 <head>
     <#include "/WEB-INF/include/resedit.html" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+    <script src="${G.host}/res/plugin/jQuery/jquery-1.11.3.min.js" type="text/javascript"></script>
+    <!--Bootstrap -->
+    <link href="${G.host}/res/plugin/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="${G.host}/res/plugin/bootstrap/js/bootstrap.min.js"></script>
+    <!-- Loading Flat UI -->
+    <link href="${G.host}/res/fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="${G.host}/res/css/animate.min.css" rel="stylesheet">
+    <link href="${G.host}/res/css/style.css" rel="stylesheet">
+    <link rel="shortcut icon" href="${G.host}/res/plugin/FlatUI/img/favicon.ico">
+    <!-- jQuery (necessary for Flat UI's JavaScript plugins) -->
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="${G.host}/res/plugin/FlatUI/js/flat-ui.min.js"></script>
+    <link href="${G.host}/res/plugin/bootstrap-table/bootstrap-table.css" rel="stylesheet">
+    <script src="${G.host}/res/plugin//bootstrap-table/bootstrap-table.js"></script>
+    <script src="${G.host}/res/plugin/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="${G.host}/res/js/core/base.js"></script>
+    <script src="${G.host}/res/js/core/sysbaseList.js"></script>
+    <script src="${G.host}/res/plugin/jquery.form.js"></script>
+    <link href="${G.host}/res/css/hk0405.css" rel="stylesheet">
+    <link href="${G.host}/res/css/styleIter.css" rel="stylesheet">
+    <link href="${G.host}/res/css/import.css" rel="stylesheet">
+    <script>
+        function fileOnMouseDown(){
+            $("#btn_select").removeClass("button_normal").addClass("button_press");
+        }
+        function fileOnMouseUp(){
+            $("#btn_select").removeClass("button_press").addClass("button_normal");
+        }
+    </script>
 </head>
 <body class="gray-bg">
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -19,78 +50,74 @@
             </div>
 
             <div class="ibox">
-                <div class="ibox-content ibox-content-ad" style="margin-top: 25px;">
+                <div class="ibox-content ibox-content-ad" style="margin-top: -15px;height: 420px;width:900px;">
                     <form id="pubform" name="pubform" method="post"  class="wizard-big addForm" enctype="multipart/form-data" accept="image/jpg, image/png">
-                        <div class="row">
-                            <div class="col-sm-6 form_ipt_botm">
-                                <div class="form-group">
-                                    <label class="col-xs-3 lable_top"><span class="span_require">*</span>标题</label>
-                                    <div class="col-xs-9"><input maxlength="20" class="form-control" id="msg_title" name="msg_title" class="form-control" /></div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 form_ipt_botm">
-                                <div class="form-group">
-                                    <label class="col-xs-3 lable_top"><span></span>摘要</label>
-                                    <div class="col-xs-9"><textarea  class="form-control" id="msg_digest" name="msg_digest"></textarea></div>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6 form_ipt_botm">
-                                <div class="form-group">
-                                    <label class="col-xs-3 lable_top"><span class="span_require">*</span>密级</label>
-                                    <div class="col-xs-9"> <select class="form-control required select_change" id="msg_class_id" name="msg_class_id"></select></div>
-                                </div>
-                            </div>
-
-                            <li class="li_file">
-                                <div class="uploader white">
-                                    　　<input id="upload"  onchange="uploadFiles();"  type="file" name="file"  />
-                                </div>
-                            </li>
-
-                            <div class="col-sm-6 form_ipt_botm">
-                                <div class="form-group">
-                                    <label class="col-xs-3 lable_top"><span></span>自动审批结果：</label>
-                                    <select name="appr_state" class="input-group form-control form-control-green select_change" id="appr_state">
-                                        <option value="">状态</option>
-                                        <option value="1">人工审核通过</option>
-                                        <option value="2">人工审核拒绝</option>
-                                        <option value="3">审核通过</option>
-                                        <option value="4">审核拒绝</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6 form_ipt_botm">
-                                <div class="form-group">
-                                    <label class="col-xs-4 lable_top"><span></span>标签类型</label>
-                                    <div class="col-xs-8"><div class="input-group"><input type="text" id="tag_id" readOnly="readOnly" class="form-control"/><span class="input-group-btn"><button class="btn btn-default" type="button" onclick="chosebox('tag_text', '${G.serverUrl}/mespubtag','tag_id');">...</button></span></div></div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 form_ipt_botm">
-                                <div class="form-group">
-                                    <label class="col-xs-3 lable_top"><span></span>内容</label>
-                                    <div class="col-xs-9"><textarea  class="form-control" id="msgcontent" name="msgcontent"></textarea></div>
-                                </div>
-                            </div>
-
+                        <div class="row" style="margin-top:15px">
                             <div class="row">
-                                <div ibox-toolbars hidefield>
-                                    <input id="submit-form" type="button" class="pull-right btn btn-primary" onclick="formCommit()" value="保存">
+                                <div class="col-sm-6 form_ipt_botm">
+                                    <div class="form-group">
+                                        <label class="col-xs-3 lable_top"><span class="span_require">*</span>标题</label>
+                                        <div class="col-xs-9"><input maxlength="50" class="form-control " id="msg_title" name="msg_title" readonly="true" /></div>
+                                    </div>
                                 </div>
+
+                                <div class="col-sm-6 form_ipt_botm">
+                                    <div class="form-group">
+                                        <label class="col-xs-3 lable_top"><span></span>摘要</label>
+                                        <div class="col-xs-9"><textarea  class="form-control required" id="msg_digest" name="msg_digest"></textarea></div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6 form_ipt_botm">
+                                    <div class="form-group">
+                                        <label class="col-xs-3 lable_top"><span class="span_require">*</span>密级</label>
+                                        <div class="col-xs-9"> <select class="form-control required select_change" id="msg_class_id" name="msg_class_id"></select></div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6 form_ipt_botm">
+                                    <div class="form-group">
+                                        <label class="col-xs-4 lable_top"><span></span>标签</label>
+                                        <div class="col-xs-8"><div class="input-group"><input type="text" id="tag_text" readOnly="readOnly" class="form-control required"/><span class="input-group-btn"><button class="btn btn-default" type="button" onclick="chosebox('tag_text', '${G.serverUrl}/mespubtag','tagId');">...</button></span></div></div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6 form_ipt_botm">
+                                    <div class="form-group">
+                                        <label class="col-xs-3 lable_top"><span></span>内容</label>
+                                        <div class="col-xs-9"><textarea  class="form-control required" id="msgcontent" name="msgcontent"></textarea></div>
+                                    </div>
+                                </div>
+                                <li class="li_file"  >
+                                    <div class="uploader white" >
+                                        <input type="text" class="filename"  readonly="readonly">
+                                        <input id="btn_select" type="button" name="file" class="button_normal"  value="选择附件">
+                                        　<input id="upload"  onchange="uploadFiles();"  type="file" name="file"  onmousedown="fileOnMouseDown()" onmouseup="fileOnMouseUp()" />
+                                    </div>
+                                </li>
                             </div>
-                            <input type="hidden" id="msg_id" name="msg_id" class="form-control" />
-                            <input type="hidden" id="msg_content" name="msg_content" class="form-control" />
+                            <div ibox-toolbars hidefield  style="margin-bottom: 15px">
+                                <input id="submit-form" type="button" class="pull-right btn btn-primary" onclick="formCommit()" value="保存">
+                                <input type="hidden" id="msg_id" name="msg_id" class="form-control" />
+                                <input type="hidden" id="msg_content" name="msg_content" class="form-control" />
+                                <input type="hidden" id="msg_attachment" name="msg_attachment" class="form-control" />
+                                <input type="hidden" id="tagId" name="tagId" class="form-control" />
+                        </div>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-
     </div>
 </div>
-
 </body>
+<script src="${G.host}/res/js/bootstrap.min.js?v=3.3.6"></script>
+<script src="${G.host}/res/js/content.min.js?v=1.0.0"></script>
+<script src="${G.host}/res/js/plugins/layer/layer.min.js"></script>
+<script src="${G.host}/res/js/plugins/staps/jquery.steps.min.js"></script>
+<script src="${G.host}/res/js/plugins/validate/jquery.validate.min.js"></script>
+<script src="${G.host}/res/js/plugins/validate/messages_zh.min.js"></script>
+<script src="${G.host}/res/plugin/jquery.form.js"></script>
 <script>
     function config() {
         quick.serverUrl = "${G.serverUrl}";
@@ -98,6 +125,10 @@
         quick.idField = "${G.idField}";
         quick.listUrl = quick.serverUrl + "/list";
     }
+
+    $(function(){
+        $("input[type=file]").change(function(){$(this).parents(".uploader").find(".filename").val($(this).val());});
+    });
     window.onload = function() {
         /*加载数据*/
         var mode = $.request.queryString["mode"];
@@ -126,14 +157,12 @@
                 $("#msg_class_id").append("<option selected hidden value=''>密级</option><option value= ''>密级</option>");
                 for(var i=0;i<data.length;i++){
                     var item = data[i];
-                    $("#msg_class_id").append("<option value="+item.msg_class_id+">"+item.msg_class_id+" "+item.msg_class_name+"</option>")
+                    $("#msg_class_id").append("<option value="+item.msg_class_id+"> "+item.msg_class_name+"</option>")
                 }
             }
         });
     }
     SelectMsgCs();
-
-
 
     // 保存
     function formCommit(){
@@ -160,8 +189,6 @@
         });
     }
 
-
-
     function chosebox(nid, url,id, fn){
         if(!layer.values)
             layer.values = {};
@@ -182,7 +209,7 @@
                 }
                 if(id){
                     $("#"+nid).val(iframeWin._chosenName);
-                    $("#"+id).val(iframeWin._chosenId);
+                    $("#"+id).val(iframeWin._chosenAllId);
                 }
                 if(fn){
                     var gd = iframeWin._gd["list"];
@@ -204,26 +231,17 @@
             $("#fat-btn").attr("disabled", "true");
             return;
         }
-        var str = file.name.split(".");
-        var s = str[str.length - 1];
         $("#errorMsg").html("").hide();
         if (file.size > 1024 * 1024 * 5) {
             $("#errorMsg").html("文件超过5M，请重新上传").show();
             $("#fat-btn").attr("disabled", "true");
             return;
         }
-        //$("#errorAret").text("(这里为错误信息提示信息的地方)");
         var uploadValue = $("#upload").val();
         if (uploadValue != "" && uploadValue != null) {
-            $("#fat-btn").removeAttr("disabled");
             $(".btn").click(function () {
-                $("#upload").attr("disabled", "true");
                 $("#btn_select").removeClass().addClass("button_disabled");
-                $("#fat-btn").removeAttr("disabled");
                 $("#uploadFile").removeClass("uploadFile_n").addClass("uploadFile_b");
-                $("#fat-btn").attr("disabled", "true");
-                $(".btn_text").html("正在处理您的请求，请稍后...");
-
             });
         } else {
             $("#fat-btn").attr("disabled", "true");

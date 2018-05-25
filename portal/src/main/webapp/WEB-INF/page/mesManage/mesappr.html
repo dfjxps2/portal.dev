@@ -53,11 +53,11 @@
                         <form id="formSearch" class="form-inline">
                             <div class="form-group" style="padding-left: 5px;width:100px;">
                                 <select name="appr_state" class="input-group form-control form-control-green select_change" id="appr_state">
-                                    <option value="">状态</option>
+                                    <option value="">审核状态</option>
                                     <option value="1">人工审核通过</option>
-                                    <option value="2">人工审核拒绝</option>
+                                    <option value="2">人工审核未通过</option>
                                     <option value="3">审核通过</option>
-                                    <option value="4">审核拒绝</option>
+                                    <option value="4">审核未通过</option>
                                 </select>
                             </div>
                             <div class="form-group" style="padding-left: 5px;width:100px;">
@@ -74,11 +74,11 @@
                             <div class="form-group" style="padding-left:0px;width: 90px;">
                                 <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="manualappr();">人工审批通过</button> </span>
                             </div>
-                            <div class="form-group" style="padding-left:0px;width: 90px;">
-                                <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="manualreject();">人工审批拒绝</button> </span>
+                            <div class="form-group" style="padding-left:0px;width: 100px;">
+                                <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" style="width: 100px;" onclick="manualreject();">人工审批未通过</button> </span>
                             </div>
                             <div  class="form-group" style="padding-left:0px;width: 90px;">
-                                <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="apprRules();">审核规则管理</button> </span>
+                                <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="apprRules();">自动审核管理</button> </span>
                             </div>
                             <div  class="form-group" style="padding-left:0px;width: 90px;">
                                     <button type="button" class=" btn btn-primary" onclick="cancel();">返回</button>
@@ -160,7 +160,6 @@
                 }
             }
         });
-
         if(RFlag==1){
             requery();
         }else{
@@ -207,7 +206,7 @@
                     dataType: "json",
                     data: {
                         appr_state: 1,
-                        msg_id: checkedVal("msg"),
+                        msgids: checkedVal("msg"),
                         appr_user_id: user_id
                     },
                     success: function (data) {
@@ -279,7 +278,7 @@
                 $("#msg_class_id").append("<option selected hidden value=''>密级</option><option value= ''>密级</option>");
                 for(var i=0;i<data.length;i++){
                     var item = data[i];
-                    $("#msg_class_id").append("<option value="+item.msg_class_id+">"+item.msg_class_id+" "+item.msg_class_name+"</option>")
+                    $("#msg_class_id").append("<option value="+item.msg_class_id+"> "+item.msg_class_name+"</option>")
                 }
             }
         });

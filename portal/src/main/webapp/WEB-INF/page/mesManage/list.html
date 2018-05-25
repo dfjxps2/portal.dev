@@ -11,7 +11,7 @@
             width:100%;
         }
         .zong{
-            width:90px;
+            width:100px;
             padding:5px;
         }
 
@@ -30,9 +30,6 @@
             width:90px;
             float:left;
             padding:5px;
-        }
-        .footer {
-            width:975px;
         }
         .form-group{
             margin-right: 10px;
@@ -56,11 +53,11 @@
                             <form id="formSearch" class="form-inline">
                                 <div class="form-group" style="padding-left: 5px;width:80px;">
                                     <select name="appr_state" class="input-group form-control form-control-green select_change" id="appr_state">
-                                        <option value="">状态</option>
+                                        <option value="">审核状态</option>
                                         <option value="1">人工审核通过</option>
-                                        <option value="2">人工审核拒绝</option>
+                                        <option value="2">人工审核未通过</option>
                                         <option value="3">审核通过</option>
-                                        <option value="4">审核拒绝</option>
+                                        <option value="4">审核未通过</option>
                                     </select>
                                 </div>
                                 <div class="form-group" style="padding-left: 5px;width:100px;">
@@ -210,7 +207,11 @@
             },onClickRow:function (row,e) {
                 tag_checked_val=row.tag_id;
 
-            },onPostBody:function(data){
+            },onClickCell:function () {
+
+
+            }
+            ,onPostBody:function(data){
                 if(queryParm=='' &&　(data == null || data.length == 0)){
                     $(".no-records-found td").html('您还没有添加相关信息，请点击<a onclick="add();" href="javascript:void(0);">添加</a>');
                 }
@@ -224,6 +225,9 @@
         }
     }
 
+    function formatOperat(value,row,index){
+
+    }
     function query(){
         tags = nodes();
         if(tags == "undefined"){
@@ -272,8 +276,6 @@
                 });
             });
     }
-
-
 
     //内容标签管理
     function mesTag() {
@@ -325,15 +327,12 @@
                 $("#msg_class_id").append("<option selected hidden value=''>密级</option><option value= ''>密级</option>");
                 for(var i=0;i<data.length;i++){
                     var item = data[i];
-                    $("#msg_class_id").append("<option value="+item.msg_class_id+">"+item.msg_class_id+" "+item.msg_class_name+"</option>")
+                    $("#msg_class_id").append("<option value="+item.msg_class_id+"> "+item.msg_class_name+"</option>")
                 }
             }
         });
      }
     SelectMsgCs();
-
-
-
 </script>
     </body>
     </html>
