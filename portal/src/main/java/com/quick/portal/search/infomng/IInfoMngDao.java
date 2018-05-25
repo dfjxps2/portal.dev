@@ -41,7 +41,7 @@ public interface IInfoMngDao<InfoMngDO> extends ISysBaseDao<SysUserDO> {
 	//按热点搜索信息查询
 	public List<Map<String, Object>> getHotSearchInfo();
 	//按热点搜索信息查询
-	public List<Map<String, Object>> getPersonalHabitsInfo(String userID);
+	public List<Map<String, Object>> getPersonalHabitsInfo(int userID);
 	//通过用户编号、关键字查询数据是否重复
 	public int isExitsSearchTermsInfo(InfoMngDO info);
 	//修改搜索次数

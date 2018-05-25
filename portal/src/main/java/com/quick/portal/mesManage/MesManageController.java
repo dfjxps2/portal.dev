@@ -6,6 +6,7 @@ import com.quick.core.base.model.DataStore;
 import com.quick.core.base.model.JsonDataGrid;
 import com.quick.core.base.model.PageBounds;
 import com.quick.core.util.common.QRequest;
+import com.quick.portal.search.infomng.SolrInfoConstants;
 import com.quick.portal.search.infomng.SolrUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -48,6 +49,7 @@ import java.util.*;
 @Scope("prototype")
 @RequestMapping(value = "/mesManage")
 public class MesManageController extends SysBaseController<MesManageDO> {
+
 
     @Resource(name="mesManageService")
     private MesManageService mesManageService;
@@ -183,8 +185,9 @@ public class MesManageController extends SysBaseController<MesManageDO> {
        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
        MultipartFile file = multipartRequest.getFile("file");
+       String title = mesManageDO.getMsg_title();
        String attName = file.getOriginalFilename(); //附件文件名
-       String contentName = mesManageDO.getMsg_title()+".txt"; //发布信息内容文件名
+       String contentName = title+".txt"; //发布信息内容文件名
        File fc = createFile(path,contentName);
        File fa = createFile(path,attName);
        FileOutputStream fos = null;
@@ -196,38 +199,27 @@ public class MesManageController extends SysBaseController<MesManageDO> {
            }
            mesManageDO.setMsg_attachment(path+attName);//上传附件存放路径
            mesManageDO.setMsg_content(path+contentName); //上传信息内容存放路径
-           mesManageDO.setMsg_src_id(2);
-           mesManageDO.setMsg_type_id(2);
+           mesManageDO.setMsg_src_id(MesInfoConstants.PLATFORM_SOURCE_ID);
+           mesManageDO.setMsg_type_id(MesInfoConstants.PLATFORM_MES_TYPE);
            Calendar date = Calendar.getInstance();
            Date date1 =date.getTime();
            mesManageDO.setPub_time(date1);
            mesManageDO.setAppr_time(date1);
             String id = path+contentName;
            String content = combinFile(fa,mesManageDO);
-           String type = "msg";
+           String type = SolrInfoConstants.MSG_OBJ_TYPE;
            Map<String,Object> map = new HashMap<>();
-         SolrUtils.addSolrInfo(id,content,type);
+         SolrUtils.addSolrInfo(id,content,type,title);
            List<Map<String,Object>> rules=  mesManageDao.selectRules(map);
-           PageBounds pageBounds = new PageBounds();
-           pageBounds.setPageNo(1);
-           pageBounds.setPageSize(10);
-           for(Map<String,Object> data:rules){
-               Map<String,Object> solr = new HashMap<>();
-               solr.put("title",data.get("param_value"));
-               SolrQuery query = SolrUtils.getAllSolrQuery(solr, pageBounds,"2");
-               SolrDocumentList docList = SolrUtils.getSolrInfoDataByTitle(query);
-               if (docList.getNumFound() >0){
-                SolrUtils.deleteSolrInfo(id);
-                deleteFile(path+contentName);
-                deleteFile(path+attName);
-                   response.getWriter().write("2");
-                   response.getWriter().flush();
-                   return;
-               }else {
-                   mesManageDO.setAppr_state(3);
-                   continue;
-               }
+           int lab = autoFilter(rules,id);
+           if(lab ==1){
+               deleteFile(path+contentName);
+               deleteFile(path+attName);
+               response.getWriter().write("2");
+               response.getWriter().flush();
+               return;
            }
+           mesManageDO.setAppr_state(MesInfoConstants.AUTOMATIC_APPROVAL);
            mesManageDao.insert(mesManageDO);
            map.clear();
            map.put("appr_time",mesManageDO.getAppr_time());
@@ -337,7 +329,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
     }
 
     //删除指定路径下的文件
-    public void deleteFile(String path){
+    public static  void deleteFile(String path){
         File file = new File(path);
         if(file.exists() && file.isFile()) {
               file.delete();
@@ -397,19 +389,14 @@ public class MesManageController extends SysBaseController<MesManageDO> {
     }
 
     //内容管理-修改
-    @RequestMapping(value="editMes")
+    @RequestMapping(value="editMes",method={RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
     public void editMes(MesManageDO mesManageDO,String[] tagId,HttpServletRequest request,HttpServletResponse response,boolean MERGE) throws Exception {
-        Map<String,Object> map = new HashMap<>();
-        map.put("msg_id",mesManageDO.getMsg_id());
-        try {
-            SolrUtils.deleteSolrInfo(mesManageDO.getMsg_content());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        deleteFile(mesManageDO.getMsg_content());
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         MultipartFile file = multipartRequest.getFile("file");
+        String title = mesManageDO.getMsg_title();
+        Map<String,Object> map = new HashMap<>();
+        map.put("msg_id",mesManageDO.getMsg_id());
         String path = createPath();
         File fa = null;
         //附件保存
@@ -419,7 +406,19 @@ public class MesManageController extends SysBaseController<MesManageDO> {
             fa = createFile(path,attName);
             file.transferTo(fa);
             map.put("msg_attachment",path+attName);
+        }else {
+            fa = new File(mesManageDO.getMsg_attachment());
         }
+        //标签
+        String[] tags = tagId[0].split(",");
+        if(tagId[0]!=null && tags.length>0 && !tagId[0].equals("") ){
+            mesManageDao.deleteMesTag(mesManageDO.getMsg_id());
+            for(int i=0;i<tags.length;i++){
+                Map<String,Object> maptag = new HashMap<>();
+                maptag.put("msg_id",mesManageDO.getMsg_id());
+                maptag.put("tag_id",Integer.parseInt(tags[i]));
+                mesManageDao.insertMesTag(maptag);
+            }}
         List<Map<String,Object>> list = mesManageDao.selectMes(map);
         map.clear();
         map = list.get(0);
@@ -431,9 +430,9 @@ public class MesManageController extends SysBaseController<MesManageDO> {
             map.put("msg_content",path+contentName);
         //标题，摘要，内容，附件 文件
             String id = path+contentName;
-            String type = "msg";
+            String type = SolrInfoConstants.MSG_OBJ_TYPE;
             String content = combinFile(fa,mesManageDO);
-            SolrUtils.addSolrInfo(id,content,type);
+            SolrUtils.addSolrInfo(id,content,type,title);
             Map<String,Object> mapone = new HashMap<>();
             List<Map<String,Object>> rules=  mesManageDao.selectRules(mapone);
             int lab = autoFilter(rules,id);
@@ -444,8 +443,12 @@ public class MesManageController extends SysBaseController<MesManageDO> {
                 response.getWriter().flush();
                 return;
             }
+            map.put("appr_state",MesInfoConstants.AUTOMATIC_APPROVAL);
         if(mesManageDO.getMsg_id()!= null && !mesManageDO.getMsg_id().equals("undefined") && !"null".equals(mesManageDO.getMsg_id())){
             map.put("msg_id",mesManageDO.getMsg_id());
+        }
+        if(mesManageDO.getMsg_attachment()!= null && !mesManageDO.getMsg_attachment().equals("undefined") && !"null".equals(mesManageDO.getMsg_attachment())){
+            map.put("msg_attachement",mesManageDO.getMsg_attachment());
         }
         if(mesManageDO.getMsg_title()!= null && !mesManageDO.getMsg_title().equals("undefined") && !"null".equals(mesManageDO.getMsg_title())){
             map.put("msg_title",mesManageDO.getMsg_title());
@@ -456,20 +459,9 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         if(mesManageDO.getMsg_class_id()!= null && !mesManageDO.getMsg_class_id().equals("undefined") && !"null".equals(mesManageDO.getMsg_class_id())){
             map.put("msg_class_id",mesManageDO.getMsg_class_id());
         }
-        if(mesManageDO.getAppr_state()!= null && !mesManageDO.getAppr_state().equals("undefined") && !"null".equals(mesManageDO.getAppr_state())){
-            map.put("appr_state",mesManageDO.getAppr_state());
-        }
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-HH hh:mm:ss");
         map.put("appr_time",format.format(date.getTime()));
-        if(tagId!=null && tagId.length>0){
-            mesManageDao.deleteMesTag(mesManageDO.getMsg_id());
-            for(int i=0;i<tagId.length;i++){
-                Map<String,Object> maptag = new HashMap<>();
-                maptag.put("msg_id",mesManageDO.getMsg_id());
-                maptag.put("tag_id",tagId[i]);
-                mesManageDao.insertMesTag(maptag);
-            }}
         mesManageDao.msgedit(map);
         try {
             response.getWriter().write("1");
@@ -487,7 +479,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         int i=0;
         while( i<rules.size()){
             Map<String,Object> solr = new HashMap<>();
-            solr.put("title",rules.get(i).get("param_value"));
+            solr.put("keyword",rules.get(i).get("param_value"));
             SolrQuery query = SolrUtils.getAllSolrQuery(solr, pageBounds,"2");
             SolrDocumentList docList = SolrUtils.getSolrInfoDataByTitle(query);
             if (docList.getNumFound() >0){
@@ -786,17 +778,20 @@ public class MesManageController extends SysBaseController<MesManageDO> {
 
     @RequestMapping(value="editAppr")
     @ResponseBody
-    public String editAppr(MesManageDO mesManageDO){
+    public String editAppr(MesManageDO mesManageDO,String[] msgids){
         Map<String,Object> map = new HashMap<>();
         if(mesManageDO.getAppr_state()!= null && !mesManageDO.getAppr_state().equals("undefined") && !"null".equals(mesManageDO.getAppr_state())){
             map.put("appr_state",mesManageDO.getAppr_state());
         }
-        if(mesManageDO.getMsg_id()!= null && !mesManageDO.getMsg_id().equals("undefined") && !"null".equals(mesManageDO.getMsg_id())){
-            map.put("msg_id", mesManageDO.getMsg_id());
-        }
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss ");
         map.put("appr_time",new Date());
-        mesManageDao.mesappr(map);
+        if(msgids!=null && msgids.length>0){
+            String[] msgs = msgids[0].split(",");
+            for (String data:msgs){
+                map.put("msg_id",Integer.parseInt(data));
+                mesManageDao.mesappr(map);
+            }
+        }
         try {
             response.getWriter().write("1");
             response.getWriter().flush();

@@ -1,6 +1,6 @@
 /**
- * <h3>标题 : potal统一门户-sys_user </h3>
- * <h3>描述 : sys_user请求类</h3>
+ * <h3>标题 : potal统一门户-InfoMngController </h3>
+ * <h3>描述 : InfoMngController请求类</h3>
  * <h3>日期 : 2018-04-13</h3>
  * <h3>版权 : Copyright (C) 北京东方金信科技有限公司</h3>
  *
@@ -64,6 +64,9 @@ public class InfoMngController extends SysBaseController<InfoMngDO> {
 	    //页面请求
 	    @RequestMapping
 	    public String list(ModelMap model) {
+	    	String ids = QCookie.getValue(request, "ids");
+	    	String habitInfo = infoMngService.getPersonalHabitsInfo(ids);
+	    	model.addAttribute("data", habitInfo);
 	        return view();
 	    }
 	    @RequestMapping
@@ -81,35 +84,42 @@ public class InfoMngController extends SysBaseController<InfoMngDO> {
 		 * 
 		 * @return
 		 */
-		@RequestMapping(value = "/getInfo", method=RequestMethod.GET)
+		@RequestMapping(value = "/getInfo")
 		@ResponseBody
 		public Object getInfo(String json) {
 			String str = "[]";
-			String type = QRequest.getString(request, "obj_type");
-			int pageSize = QRequest.getInteger(request, "pageSize", 10); // 获取datagrid传来的行数
-			int pageNo = QRequest.getInteger(request, "page", 1); // 获取datagrid传来的页码
-			// 日期格式
+			// 默认O条数据
+			int recordCount = 0;
+			List dt = new ArrayList<>();
+			Map<String, Object> queryMap = getQueryMap(request, null,
+					null, null, null);
+			Map<String, Object> mp = new HashMap();
+			String keyword = queryMap.get("keyword").toString();
+	        if(null == keyword || "".equals(keyword)){
+	        	mp = new HashMap();
+	 			mp.put("rows", 0);
+	        }else{
+	        	String type = QRequest.getString(request, "obj_type");
+				int pageSize = QRequest.getInteger(request, "pageSize", 10); // 获取datagrid传来的行数
+				int pageNo = QRequest.getInteger(request, "page", 1); // 获取datagrid传来的页码
+				PageBounds pager = new PageBounds(pageNo, pageSize);
+				//当前用户编号
+				String ids = QCookie.getValue(request, "ids");
+				List retList = infoMngService.getSolrInfo(queryMap, pager,ids,type);
+				if(null !=retList && !retList.isEmpty()){
+					dt = (List)retList.get(1);
+					recordCount = (int) retList.get(0);
+					//记录搜索信息
+					saveSearchTermsInfo(queryMap,ids);
+				}else{
+					mp = new HashMap();
+					mp.put("rows", 0);
+				}
+	        }
+	        // 日期格式
 			String dateTimeFormat = QRequest.getString(request, "dateTimeFormat",
 					"yyyy-MM-dd HH:mm"); // 例：dateTimeFormat=yyyy-MM-dd HH:mm
 			response.setContentType(QRequest.getResponseType("json")); // 输出JS文件
-			// 默认O条数据
-			int recordCount = 0;
-			Map<String, Object> queryMap = getQueryMap(request, null,
-					null, null, null);
-			PageBounds pager = new PageBounds(pageNo, pageSize);
-			List dt = new ArrayList<>();
-			//当前用户编号
-			String ids = QCookie.getValue(request, "ids");
-			List retList = infoMngService.getSolrInfo(queryMap, pager,ids,type);
-			if(null !=retList && !retList.isEmpty()){
-				dt = (List)retList.get(1);
-				recordCount = (int) retList.get(0);
-				//记录搜索信息
-				saveSearchTermsInfo(queryMap,ids);
-			}else{
-				Map<String, Object> mp = new HashMap();
-				mp.put("rows", 0);
-			}
 			str = new JsonDataGrid(recordCount, dt).toJson(dateTimeFormat);
 			try {
 				response.getWriter().print(str);
@@ -149,21 +159,6 @@ public class InfoMngController extends SysBaseController<InfoMngDO> {
 		}
 	    
 	    
-	    /**
-	     * 按热点搜索信息查询
-	     *
-	     * @throws IOException
-	     */
-	    @RequestMapping(value = "/getHotSearchInfo")
-		public void getHotSearchInfo(HttpServletRequest request,
-				HttpServletResponse response) throws Exception {
-	    	 String json = infoMngService.getHotSearchInfo();
-	         try {
-	        	 response.getWriter().write(json);
-	         } catch (IOException e) {
-	             e.printStackTrace();
-	         }
-		}
 	    
 	    /**
 	     * 按个人习惯搜索信息查询

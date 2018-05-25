@@ -42,5 +42,5 @@ public interface IMetricPrivilegeService extends ISysBaseService<MetricPrivilege
      */
     List<Map<String,Object>> listMetricPrivilege(String roleId);
     
-    boolean saveMetricData(List<MetricBean> retList);
+    void saveMetricData(List<MetricBean> retList);
 }

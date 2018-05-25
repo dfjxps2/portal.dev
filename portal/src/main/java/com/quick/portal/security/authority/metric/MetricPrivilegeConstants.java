@@ -30,6 +30,8 @@ public class MetricPrivilegeConstants {
 	 public static final String METRIC_ID_FIELD = "METRIC_ID";
 	 
 	 public static final String ROOT_NODE = "root";
+	 
+	 public static final String GET_METRIC_INFO_URL = "http://10.1.3.193:8082/services/reMeaSys";
 		
 	 
 	

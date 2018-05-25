@@ -30,4 +30,6 @@ public interface ISysMenuDao<SysMenuDO> extends ISysBaseDao<SysMenuDO> {
 	int deletes(SysMenuDO sy);
 	
 	 List<Map<String,Object>> listAllMenu();
+	 
+	 public int getIsAppMenuByID(SysMenuDO sysMenu);
 }

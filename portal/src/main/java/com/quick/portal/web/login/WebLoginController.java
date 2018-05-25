@@ -17,33 +17,30 @@
  */
 package com.quick.portal.web.login;
 
-import com.quick.core.base.AppResource;
-import com.quick.core.util.common.QCommon;
-import com.quick.core.util.common.QCookie;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.quick.core.base.AppResource;
+import com.quick.core.util.common.QCommon;
+import com.quick.core.util.common.QCookie;
 import com.quick.portal.sysUser.ISysUserService;
 import com.quick.portal.sysUser.SysUserDO;
 import com.quick.portal.userAccessLog.IUserAccessLogService;
 import com.quick.portal.userAccessLog.UserAccessLogConstants;
 import com.quick.portal.userRoleRela.IUserRoleRelaService;
-
-import org.springframework.context.annotation.Scope;
-import org.apache.log4j.Logger;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 身份验证
@@ -63,13 +60,28 @@ public class WebLoginController {
     private IUserRoleRelaService userRoleRelaService;
     @Resource(name = "userAccessLogService")
     private IUserAccessLogService userAccessLogService;
+    @Resource(name = "sysUserService")
+	private ISysUserService loginerService;
     
 
     //登录页
     @RequestMapping(value = "/" )
-    public String index() {
-        return "redirect:/home/main";
+    public String index(HttpServletRequest request,HttpServletResponse response) {
+    	 String rid = QCookie.getValue(request, "sbd.role");
+    	 WebLoginUser loginer = null;
+    	 if(null == rid || "".equals(rid)){
+    		  loginer = loadCASUserInfo(request,response);
+    		  rid =  String.valueOf(loginer.getRole_id());
+    	 }
+       	 //平台用户:1:app;2:sys;公服用户:1:app
+    	 String flag = getSysUrlByUserGlobalID(loginer.getUser_global_id(),rid);
+		 if(SYS_MENU_FLAG.equals(flag) || SYS_MENU_FLAG.equals(flag)){
+    		 return "redirect:/mainframe";
+		 }else{
+    		 return "redirect:/home/main"; 
+		 } 
     }
+    
 
     @RequestMapping(value = "/home/login")
     public String login(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
@@ -106,13 +118,9 @@ public class WebLoginController {
            List<Map<String,Object>> roles = userRoleRelaService.select(parm);
            saveSession(loginUser,roles, request, response);
            userAccessLogService.saveLog(request, UserAccessLogConstants.SYS_LOG_TYPE_ID, UserAccessLogConstants.LOGIN_USER_OP_TYPE,1,loginUser.getUser_real_name() + "登录成功");
-           //平台用户
-           if(null == loginUser.getUser_global_id() || "".equals(loginUser.getUser_global_id())){
-        	   flag = "2";
-        	 //公服用户
-           }else{
-        	   flag = "1";
-           }
+           String rid = QCookie.getValue(request, "sbd.role");
+           // 平台用户:1:app;2:sys;公服用户:1:app
+           flag = getSysUrlByUserGlobalID(loginUser.getUser_global_id(),rid);
        } catch (Exception e) {
             e.printStackTrace();
             return  e.getMessage();
@@ -147,4 +155,51 @@ public class WebLoginController {
         QCookie.set(response, "sbd.user", loginUser.getUser_name(), 4*3600);
         QCookie.set(response, "sbd.role", ids, 4*3600);
     }
+    
+    public WebLoginUser loadCASUserInfo(HttpServletRequest request,HttpServletResponse response){
+		if (request.getRemoteUser() != null) {
+			Map<String, Object> parm = new HashMap<>();
+			parm.put("user_name", request.getRemoteUser());
+			Map<String, Object> u = loginerService.selectMap(parm);
+			WebLoginUser user = new WebLoginUser();
+			user.setRole_id( Integer.valueOf(WebLoginUitls.getVal(u, "role_id")) );
+			user.setUser_real_name(WebLoginUitls.getVal(u, "user_real_name"));
+			user.setUser_id(Integer.valueOf(WebLoginUitls.getVal(u, "user_id")));
+			user.saveSession(request, response);//保存至本地
+			return user;
+		}
+		return null;
+	}
+    
+    
+    /*
+     * 平台用户:1:app;2:sys
+     * 公服用户:1:app
+     * 1:app;2:sys
+     */
+
+    public String getSysUrlByUserGlobalID(String userGlobalID,String rid){
+    	String flag = APP_MENU_FLAG;
+    	//平台用户
+    	if(null == userGlobalID || "".equals(userGlobalID)){
+     	   if(ADMINISTRATOR_ROLE.equals(rid) || PORTAL_ADMINISTRATOR_ROLE.equals(rid)){
+         	   flag = SYS_MENU_FLAG;
+            }else{
+         	   flag = APP_MENU_FLAG;
+            }
+     	 //公服用户
+        }else{
+     	   flag = APP_MENU_FLAG;
+        }
+    	return flag;
+    }
+  
+    
+    
+    public final static String ADMINISTRATOR_USER = "admin" ;
+    public final static String ADMINISTRATOR_ROLE = "1" ;
+    public final static String PORTAL_ADMINISTRATOR_ROLE = "100" ;
+    
+    public final static String SYS_MENU_FLAG = "2" ;
+    public final static String APP_MENU_FLAG = "1" ;
 }

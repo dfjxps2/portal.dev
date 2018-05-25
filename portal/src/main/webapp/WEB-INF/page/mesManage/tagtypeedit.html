@@ -64,7 +64,7 @@
         var mode = $.request.queryString["mode"];
         var sysid = $.request.queryString["tag_type_id"];
         if (sysid) {
-            $('#pagename').html("内容标签类型编辑");
+            $('#pagename').html("标签类型编辑");
             $("input,textarea").attr("placeholder", "");
             $(".hidefield").show();
             $.post(quick.serverUrl + '/getEditTag?tagTypeId=' + sysid + "&i=" + Math.random(), function (data) {
@@ -87,7 +87,7 @@
                 $("#super_type_id").append("<option selected hidden value=''>选择标签类型</option><option value=''>选择标签类型</option> ");
                 for (var i = 0; i < data.length; i++) {
                     var item = data[i];
-                    $("#super_type_id").append("<option  value=" +item.tagTypeId+ ">"+item.tagTypeId+"  "+  item.tagTypeName+"</option>");
+                    $("#super_type_id").append("<option  value=" +item.tagTypeId+ "> "+  item.tagTypeName+"</option>");
                 }
             }
         });

@@ -67,8 +67,8 @@
                         return "<input id=\"tags"+rec.tag_type_id+"\" title=\"tags\" class=\"ck_qx\" type=\"checkbox\" name=\"tag\" value=\"" + rec.tag_type_id+ "\" >";
                     }  },
                 { field: 'tag_type_id',  title:'标签类型ID'},
-                { field: 'superTypeName', title: '上级标签类型名称', width: 90  },
-                { field: 'tag_type_name', title: '标签类型名称', width: 100  }
+                { field: 'superTypeName', title: '上级标签类型', width: 90  },
+                { field: 'tag_type_name', title: '标签类型', width: 100  }
             ],onPageChange:function(number, size){
                 pageNum=number;
                 pageSize=size;

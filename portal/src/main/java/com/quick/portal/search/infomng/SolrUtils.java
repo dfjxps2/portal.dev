@@ -30,14 +30,14 @@ public class SolrUtils {
 	/**
 	 * 添加文档 用solrJ创建索引
 	 */
-	public static void addSolrInfo(String id, String content, String type) {
+	public static void addSolrInfo(String id, String content, String type,String title) {
 		SolrInputDocument doc = new SolrInputDocument();
 		doc.addField("id", id);
 		doc.addField("content",content);
 		doc.addField("_text_", content);
 		doc.addField("create_time", DateTime.Now().getTime());
 		doc.addField("portal_doc_class", type);
-
+		doc.addField("portal_doc_title", title);
 		try {
 			HttpSolrClient server = InitSolrServer.initServer(SolrInfoConstants.PORTAL_DOC_URL);
 			UpdateResponse response = server.add(doc);
@@ -72,7 +72,7 @@ public class SolrUtils {
 	/**
 	 * 多个id 的list集合 删除索引
 	 */
-	public static void DeleteBatchSolrList(ArrayList<String> ids) throws Exception {
+	public static void deleteBatchSolrList(ArrayList<String> ids) throws Exception {
 		// [1]获取连接
 		HttpSolrClient server = InitSolrServer.initServer(SolrInfoConstants.PORTAL_DOC_URL);
 		// [2]通过id删除
@@ -124,10 +124,8 @@ public class SolrUtils {
 			cid = data.get("MSG_CONTENT").toString();
 			for (SolrDocument doc : docList) {
 				System.out.println("#######未查阅数据 id : " + doc.get("id")
-						+ "  title : " + doc.get("title")
-						+ "  portal_doc_class : " + doc.get("portal_doc_class")
-						+ "  author_name : " + doc.get("author_str")
-						+ "  create_time : " + doc.get("last_modified"));
+						+ "  title : " + doc.get("portal_doc_title")
+						+ "  portal_doc_class : " + doc.get("portal_doc_class"));
 				id = doc.get("id") == null ? "" : doc.get("id").toString();
 				if (null != cid && cid.equals(id)) {
 					docList.remove(doc);
@@ -146,20 +144,16 @@ public class SolrUtils {
 		System.out.println("####### 总共 ： " + docList.size() + "条记录");
 		for (SolrDocument doc : docList) {
 			System.out.println("####### id : " + doc.get("id") + "  title : "
-					+ doc.get("title") + "  portal_doc_class : "
-					+ doc.get("portal_doc_class") + "  author_name : "
-					+ doc.get("author_str") + "  create_time : "
-					+ doc.get("last_modified"));
+					+ doc.get("portal_doc_title") + "  portal_doc_class : "
+					+ doc.get("portal_doc_class") );
 			id = doc.get("id") == null ? "" : doc.get("id").toString();
 			dataMap = new HashMap();
 			dataMap.put("status", SolrInfoConstants.UNREAD_STATUS);
 			dataMap.put("id", id);
 			dataMap.put("title",
-					doc.get("title") == null ? "" : doc.get("title"));
-			dataMap.put("author_name",
-					doc.get("author_str") == null ? "" : doc.get("author_str"));
-			dataMap.put("create_time", doc.get("last_modified") == null ? ""
-					: doc.get("last_modified"));
+					doc.get("portal_doc_title") == null ? "" : doc.get("portal_doc_title"));
+			dataMap.put("portal_doc_class",
+					doc.get("portal_doc_class") == null ? "" : doc.get("portal_doc_class"));
 			dataList.add(dataMap);
 		}
 		Integer count = dataList.size();
@@ -173,7 +167,7 @@ public class SolrUtils {
 	 * 
 	 */
 	public static SolrQuery getAllSolrQuery(Map<String, Object> m,PageBounds page,String type){
-		String queryStr = m.get("title").toString();
+		String queryStr = m.get("keyword").toString();
 		SolrQuery query = new SolrQuery(queryStr);
 		query.setStart(page.getStartRow() == 1 ? 0 : page.getStartRow() - 1);
 		query.setRows(page.getPageSize());
@@ -252,25 +246,20 @@ public class SolrUtils {
 			dataMap = new HashMap();
 			for (SolrDocument doc : docList) {
 				System.out.println("####### 查询数据id : " + doc.get("id")
-						+ "  title : " + doc.get("title")
-						+ "  portal_doc_class : " + doc.get("portal_doc_class")
-						+ "  author_name : " + doc.get("author_str")
-						+ "  create_time : " + doc.get("last_modified"));
+						+ "  title : " + doc.get("portal_doc_title")
+						+ "  portal_doc_class : " + doc.get("portal_doc_class"));
 				id = doc.get("id") == null ? "" : doc.get("id").toString();
 				if (null != cid && cid.equals(id)) {
 					// status:1表示已阅
 					dataMap.put("status", SolrInfoConstants.READ_STATUS);
 					dataMap.put("id", id);
 					dataMap.put("title",
-							doc.get("title") == null ? "" : doc.get("title"));
+							doc.get("portal_doc_title") == null ? "" : doc.get("portal_doc_title"));
 					dataMap.put(
-							"author_name",
-							doc.get("author_str") == null ? "" : doc
-									.get("author_str"));
-					dataMap.put(
-							"create_time",
-							doc.get("last_modified") == null ? "" : doc
-									.get("last_modified"));
+							"portal_doc_class",
+							doc.get("portal_doc_class") == null ? "" : doc
+									.get("portal_doc_class"));
+					
 					dataList.add(dataMap);
 					break;
 				}
@@ -309,10 +298,8 @@ public class SolrUtils {
 		String id = null;
 		for (SolrDocument doc : docList) {
 			System.out.println("####### id : " + doc.get("id")
-					+ "  title : " + doc.get("title")
-					+ "  portal_doc_class : " + doc.get("portal_doc_class")
-					+ "  author_name : " + doc.get("author_str")
-					+ "  create_time : " + doc.get("last_modified"));
+					+ "  title : " + doc.get("portal_doc_title")
+					+ "  portal_doc_class : " + doc.get("portal_doc_class"));
 			id = doc.get("id") == null ? "" : doc.get("id").toString();
 			dataMap = new HashMap();
 			dataMap.put("status",  SolrInfoConstants.UNREAD_STATUS);
@@ -326,13 +313,10 @@ public class SolrUtils {
 			}
 			dataMap.put("id", id);
 			dataMap.put("title",
-					doc.get("title") == null ? "" : doc.get("title"));
-			dataMap.put("author_name", doc.get("author_str") == null ? ""
-					: doc.get("author_str"));
-			dataMap.put(
-					"create_time",
-					doc.get("last_modified") == null ? "" : doc
-							.get("last_modified"));
+					doc.get("portal_doc_title") == null ? "" : doc.get("portal_doc_title"));
+			dataMap.put("portal_doc_class", doc.get("portal_doc_class") == null ? ""
+					: doc.get("portal_doc_class"));
+			
 			dataList.add(dataMap);
 		}
 		restList.add(count);

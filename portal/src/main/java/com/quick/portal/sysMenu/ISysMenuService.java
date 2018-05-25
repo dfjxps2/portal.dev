@@ -31,7 +31,9 @@ public interface ISysMenuService extends ISysBaseService<SysMenuDO> {
 
 	DataStore deletes(List<String> menu_id, int state);
 	
-	  List<Map<String,Object>> listAllMenu();
+	List<Map<String,Object>> listAllMenu();
 
 	List<Map<String,Object>> getApp();
+	
+	public String getIsAppMenuByID(int menuID);
 }

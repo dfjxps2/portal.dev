@@ -21,6 +21,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -33,6 +34,7 @@ import com.quick.core.base.ISysBaseService;
 import com.quick.core.base.SysBaseController;
 import com.quick.core.util.common.JsonUtil;
 import com.quick.core.util.web.WebUtil;
+import com.quick.portal.sysMenu.ISysMenuService;
 import com.quick.portal.userAccessLog.IUserAccessLogService;
 import com.quick.portal.userAccessLog.UserAccessLogConstants;
 
@@ -57,6 +59,9 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
     
     @Resource(name = "userAccessLogService")
     private IUserAccessLogService userAccessLogService;
+    
+    @Resource(name = "sysMenuService")
+    private ISysMenuService sysMenuService;
     
     
     /*
@@ -131,5 +136,13 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
     	}catch(Exception e){
     		throw new Exception("记录日志异常："+e.getMessage());
     	}
+    }
+    
+    //
+    @RequestMapping(value = "/getIsAppMenuByID", method = RequestMethod.POST)
+    @ResponseBody
+    public void getIsAppMenuByID(HttpServletResponse res,int menuId) throws Exception {
+    	String	flag = sysMenuService.getIsAppMenuByID(menuId);
+        res.getWriter().write(flag);
     }
 }

@@ -82,5 +82,21 @@
 		 WHERE USER_ID = #{user_id} AND KEYWORD =#{keyword}
 		 ]]> 
 	</update>
+	
+	<!-- 按热点搜索信息查询 -->
+	<select id="getHotSearchInfo" parameterType="int" resultType="map">
+		<![CDATA[ 
+			SELECT KEYWORD, MAX(SEARCH_TIMES) AS TM FROM SEARCH_KEYWORDS GROUP BY KEYWORD ORDER BY TM DESC LIMIT 0,10
+		]]> 
+	</select>
+	
+	
+	<!-- 按习惯搜索信息查询-->
+	<select id="getPersonalHabitsInfo" parameterType="map" resultType="map">
+		<![CDATA[ 
+			SELECT KEYWORD, MAX(SEARCH_TIMES) AS TM FROM SEARCH_KEYWORDS WHERE USER_ID = #{user_id}  GROUP BY KEYWORD ORDER BY TM DESC LIMIT 0,10
+		]]> 
+	</select>
+	
 
 </mapper>

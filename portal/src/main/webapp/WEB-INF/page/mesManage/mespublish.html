@@ -50,10 +50,10 @@
                 </div>
             </div>
             <div class="ibox ">
-                <div class="ibox-content ibox-content-ad" style="margin-top: -5px;height: 420px;width:900px">
+                <div class="ibox-content ibox-content-ad" style="margin-left:5px;margin-top: -30px;height:500px;width:1000px">
                     <form id="pubform" name="pubform" method="post"  enctype="multipart/form-data" >
                         <div class="row" style="margin-top:20px">
-                            <div class="row">
+                            <!--<div class="row">-->
                             <div class="col-sm-6 form_ipt_botm">
                                 <div class="form-group">
                                     <label class="col-xs-3 lable_top"><span class="span_require">*</span>标题</label>
@@ -77,7 +77,7 @@
 
                             <div class="col-sm-6 form_ipt_botm">
                                 <div class="form-group">
-                                    <label class="col-xs-4 lable_top"><span></span>标签类型</label>
+                                    <label class="col-xs-4 lable_top"><span></span>标签</label>
                                     <div class="col-xs-8"><div class="input-group"><input type="text" id="tag_text" readOnly="readOnly" class="form-control required"/><span class="input-group-btn"><button class="btn btn-default" type="button" onclick="chosebox('tag_text', '${G.serverUrl}/mespubtag','tagId');">...</button></span></div></div>
                                 </div>
                             </div>
@@ -95,7 +95,7 @@
                                         　<input id="upload"  onchange="uploadFiles();"  type="file" name="file"  onmousedown="fileOnMouseDown()" onmouseup="fileOnMouseUp()" />
                                     </div>
                                 </li>
-                            </div>
+                            <!--</div>-->
 
                             <div ibox-toolbars hidefield  style="margin-bottom: 15px">
                                 <li class="li_bom" style="margin-bottom: -5px;">
@@ -138,8 +138,6 @@
     window.onload = function() {
         $('#pagename').html("内容发布申请");
     }
-
-
         function  SelectMsgCs() {
         $.ajax({
             type:"get",
@@ -150,20 +148,16 @@
                 $("#msg_class_id").append("<option selected hidden value=''>密级</option><option value= ''>密级</option>");
                 for(var i=0;i<data.length;i++){
                     var item = data[i];
-                    $("#msg_class_id").append("<option value="+item.msg_class_id+">"+item.msg_class_id+" "+item.msg_class_name+"</option>")
+                    $("#msg_class_id").append("<option value="+item.msg_class_id+"> "+item.msg_class_name+"</option>")
                 }
             }
         });
     }
     SelectMsgCs();
-
     var user_id = $.request.queryString["user_id"];
     function formCommit(){
         $("#pub_user_id").val(user_id);
         $("#appr_user_id").val(user_id);
-//        if(!($("#pubform").valid())){
-//            return false;
-//        }
         $(".btn_text").html("正在处理您的请求，请稍后...");
         $("#pubform").ajaxSubmit({
             type:'post',
@@ -249,7 +243,6 @@
         var uploadValue = $("#upload").val();
         if (uploadValue != "" && uploadValue != null) {
             $(".btn").click(function () {
-                $("#upload").attr("disabled", "true");
                 $("#btn_select").removeClass().addClass("button_disabled");
                 $("#uploadFile").removeClass("uploadFile_n").addClass("uploadFile_b");
             });

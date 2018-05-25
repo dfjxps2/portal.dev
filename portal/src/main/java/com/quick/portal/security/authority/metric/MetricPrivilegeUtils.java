@@ -1,9 +1,12 @@
 package com.quick.portal.security.authority.metric;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
@@ -62,5 +65,58 @@ public class MetricPrivilegeUtils {
         return map;
     }
     
+    
+	private static Map<String,Object> timekey = new HashMap<String,Object>();//time主属性 用于存放 需要保存的字段
+	private static Map<String,Long> keytime = new HashMap<String,Long>();//time主属性 用于存放 需要保存的字段
+	private static final long EXPIRATIONTIME=1000*60*120;//1个半小时
+//	private static final long EXPIRATIONTIME=1000*60*2;//测试用120秒
+	public static void put(String key,Object vale){
+		timekey.put(key, vale);
+		keytime.put(key, new Date().getTime());
+	}
+	
+	public static Object get(String key){
+		return timekey.get(key);
+	}
+	
+	/*
+	 * action :true
+	 * no ation :flase
+	 * 
+	 */
+	public static boolean isExpriationTime(String userID){
+		boolean bool = false;
+		boolean isUserID = false;
+		long nd = new Date().getTime();//获取系统时间
+		Iterator<Entry<String, Long>> entries = keytime.entrySet().iterator(); 
+		if(entries.hasNext()){
+			while (entries.hasNext()) {  
+				Map.Entry<String,Object> entry = (Map.Entry) entries.next();   
+				String key = (String)entry.getKey(); //获取key  
+				long value = (Long)entry.getValue(); //获取value
+				long rt = nd - value;//获取当前时间跟存入时间的差值
+				if(key != null && userID.equals(key)){
+					isUserID = true;
+					if( rt>EXPIRATIONTIME){
+						bool = true;
+						return bool;
+					}else{
+						bool = false;
+						return bool;
+					}
+				}
+			}
+			//用户不存在MAP中
+			if(!isUserID){
+				put(userID,userID);
+				bool = true;
+			}
+		}else {
+			//no
+			put(userID,userID);
+			bool = true;
+		}
+		return bool;
+	}
     
 }

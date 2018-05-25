@@ -35,8 +35,6 @@ public interface IInfoMngService extends ISysBaseService<InfoMngDO> {
 	 
 	 //记录搜索信息
 	 public void saveSearchTermsInfo(Map<String, Object> param,String userID);
-	 //按热点搜索信息查询
-	 public String getHotSearchInfo();
 	 
 	//按热点搜索信息查询
 	public String getPersonalHabitsInfo(String userID);
