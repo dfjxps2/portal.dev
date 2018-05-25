@@ -18,94 +18,15 @@
  */
 package com.quick.portal.userRole;
 
-import java.util.Date;
-
-
 public class Role  implements java.io.Serializable {
 	
     private static final long serialVersionUID = 1L;
-	
-    private String  IDS_ROLEID;   	//主键
-    private String  IDS_ROLENAME; 	//角色名称
-    private String  IDS_ROLECODE; //角色编码
-    private String  IDS_ROLEREMARK;//描述
-    private Date  IDS_ROLEDATE;      	//创建时间
 
-    //add by SongChaoqun 20180414 为了避免当前系统旧认证出现问题，保留上面旧的变量。将新增角色变量追加到当前BEAN
     private String role_id;
     private String role_name;
     private String role_state;
     private String cre_time;
     private String upd_time;
-
-    /**
-     * 主键  get方法
-     * @return 
-     */
-    public String getIDS_ROLEID() {
-        return this.IDS_ROLEID;
-    }
-
-    /**
-     * 主键  set方法
-     * @return
-     */
-    public void setIDS_ROLEID(String IDS_ROLEID) {
-        this.IDS_ROLEID = IDS_ROLEID;
-    }
-    /**
-     * 角色名称 get方法
-     * @return 
-     */
-    public String getIDS_ROLENAME() {
-        return this.IDS_ROLENAME;
-    }
-    /**
-     * 角色名称 set方法
-     * @return
-     */
-    public void setIDS_ROLENAME(String IDS_ROLENAME) {
-        this.IDS_ROLENAME = IDS_ROLENAME;
-    }
-
-    /**
-     * 角色编码  get方法
-     * @return
-     */
-    public String getIDS_ROLECODE() {        return IDS_ROLECODE;    }
-    /**
-     * 角色编码  set方法
-     * @return
-     */
-    public void setIDS_ROLECODE(String IDS_ROLECODE) {        this.IDS_ROLECODE = IDS_ROLECODE;    }
-    /**
-     * 描述 get方法
-     * @return
-     */
-    public String getIDS_ROLEREMARK() {
-        return IDS_ROLEREMARK;
-    }
-    /**
-     * 描述 set方法
-     * @return
-     */
-    public void setIDS_ROLEREMARK(String IDS_ROLEREMARK) {
-        this.IDS_ROLEREMARK = IDS_ROLEREMARK;
-    }
-    /**
-     * 创建时间 get方法
-     * @return
-     */
-    public Date getIDS_ROLEDATE() {
-        return IDS_ROLEDATE;
-    }
-    /**
-     * 创建时间 set方法
-     * @return
-     */
-    public void setIDS_ROLEDATE(Date IDS_ROLEDATE) {
-        this.IDS_ROLEDATE = IDS_ROLEDATE;
-    }
 
     public String getRole_id() {
         return role_id;
