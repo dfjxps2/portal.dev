@@ -3,7 +3,6 @@
 <head>
     <#include "/WEB-INF/include/resedit.html" />
     <link href="${G.host}/res/js/ztree/zTreeStyle/zTreeStyle.css" rel="stylesheet">
-    <!--<link href="http://localhost:8080/console/res/layer/skin/default/layer.css" rel="stylesheet">-->
     <script src="${G.host}/res/js/ztree/jquery.ztree.all.min.js" ></script>
     <style type="text/css">
         .sotxt{width:40px;}
@@ -29,6 +28,8 @@
                         <ul class="nav nav-tabs">
                             <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true">权限信息</a>
                             </li>
+                            <li><a data-toggle="tab" href="#tab-2" aria-expanded="true">应用初始化</a>
+                            </li>
                         </ul>
                         <div class="tab-content">
                             <div id="tab-1" class="tab-pane active">
@@ -38,14 +39,23 @@
                                             <div class="col-sm-6 form_ipt_botm">
                                                 <div class="form-group">
                                                     <ul id="treeDemo" class="ztree"></ul>
-
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
+                            <div id="tab-2" class="tab-pane">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-sm-6 form_ipt_botm">
+                                            <div class="form-group">
+                                                <ul id="appTree" class="ztree"></ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -55,11 +65,13 @@
         </div>
     </div>
 </div>
-
+</body>
+</html>
 <script>
-    var zTreeObj;
+    var zTreeObj, appTree;
     $(document).ready(function(){
         listAllMenu();
+        listAllApp();
     });
 
     function listAllMenu(){
@@ -73,7 +85,6 @@
                 }
             },
             view: {
-                addDiyDom: addDiyDom
                 // fontCss : {color:"#ff0011",fontSize:20,fontWeight:"bold"}
             }
         };
@@ -114,7 +125,6 @@
                 if(data!=null&&data.length>0){
                     $.each(data,function(i,checkMenu){
                         var menu_id_checked = checkMenu.menu_id;
-                        console.log(menu_id_checked);
                         var hasCheckNode = zTreeObj.getNodesByParam("id",menu_id_checked);
                         if(hasCheckNode!=null&&hasCheckNode.length>0)
                             zTreeObj.checkNode(hasCheckNode[0], true, false);
@@ -128,14 +138,15 @@
     function saveRoleAuth(){
         var realCheckNode = new Array();
         var allCheckedNodes = zTreeObj.getCheckedNodes(true);
+        mergeNodes(allCheckedNodes);
         if(allCheckedNodes!=null&&allCheckedNodes.length>0){
-             $.each(allCheckedNodes,function(i,checkNode){
-                 //id,show_on_init,show_order
-                 var si = $("#si_"+checkNode.id).val() ||  '';
-                 var so = $("#so_"+checkNode.id).val() ||  '';
-            	 realCheckNode.push(checkNode.id+"|"+si+"|"+so);
-            }); 
-        } 
+            $.each(allCheckedNodes,function(i,checkNode){
+                //id,show_on_init,show_order
+                var si = checkNode.show_on_init ||  '';
+                var so = checkNode.show_order ||  '';
+                realCheckNode.push(checkNode.id+"|"+si+"|"+so);
+            });
+        }
         var role_id = $.request.queryString["role_id"];
         var IpageNum = $.request.queryString["IpageNum"];
         var IpageSize = $.request.queryString["IpageSize"];
@@ -145,7 +156,6 @@
         });
     }
 
-    
     function cancel(){
         var IpageNum = $.request.queryString["IpageNum"];
         var IpageSize = $.request.queryString["IpageSize"];
@@ -156,7 +166,7 @@
     function addDiyDom(treeId, treeNode) {
         var aObj = $("#" + treeNode.tId + IDMark_A);
         if(treeNode.app_id==1){
-            var editStr = "<label for='so_" +treeNode.id+ "'>（展示排序：<input id='so_" +treeNode.id+ "' class='sotxt' type='number' value='"+treeNode.show_order+"' /><input id='si_" +treeNode.id+ "' type='hidden' value='"+treeNode.show_on_init+"' />）</label> ";
+            var editStr = "<label for='so_" +treeNode.id+ "'>（排序：<input id='so_" +treeNode.id+ "' class='sotxt' type='number' value='"+treeNode.show_order+"' /><input id='si_" +treeNode.id+ "' type='hidden' value='"+treeNode.show_on_init+"' />）</label> ";
             aObj.after(editStr);
             var btn = $("#so_"+treeNode.id);
             if (btn) btn.bind("change", function(){
@@ -165,5 +175,127 @@
             });
         }
     }
+    function listAllApp(){
+        var role_id = $.request.queryString["role_id"];
+        appTree = null;
+        var ztreeSetting = {
+            check: {enable: true},
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            },
+            view: {
+                addDiyDom: addDiyDom
+                // fontCss : {color:"#ff0011",fontSize:20,fontWeight:"bold"}
+            },
+            callback: {
+                onCheck: onAppCheck
+            }
+        };
+        $.ajax({
+            type: "get",
+            url: "listAllApp?role_id="+role_id,
+            dataType: "json",
+            success: function(data){
+                var ztreeNodes = [], addMap = {}, tmpMap = {}, appNodes = [];
+                if(data!=null&&data.length>0){
+                    $.each(data,function(i,dataNode){
+                        var menu_id = dataNode.menu_id;
+                        var super_menu_id = dataNode.super_menu_id;
+                        var menu_cn_name = dataNode.menu_cn_name;
+                        var show_on_init = dataNode.show_on_init || '';
+                        var show_order = dataNode.show_order || '';
+                        var is_app = dataNode.app_id ? 1 : 0;
+                        var menu_url = dataNode.menu_url || '';
+                        var node = {"id":menu_id, "pId":super_menu_id, "name":menu_cn_name, "menu_url":menu_url, "app_id":is_app, "show_order": show_order, "show_on_init":show_on_init};
+                        if(is_app == 0){
+                            tmpMap[menu_id] = node;
+                            return true;
+                        }
+                        appNodes.push(node);
+                        loadParentNode(appNodes, node, tmpMap, addMap);
+                    });
+                    for(var i = 0; i < appNodes.length; i++)
+                        ztreeNodes.push(appNodes[i]);
+                }
+                appTree = $.fn.zTree.init($("#appTree"), ztreeSetting, ztreeNodes);
+                checkAppPri();
+            }
+        });
+    }
+    function loadParentNode(nodes, curr, mapper,adds){
+        var n = curr.pId;
+        if(mapper[n]){
+            if(mapper[n].pId == null && adds[n] == null){
+                nodes.push(mapper[n]);
+                adds[n] = mapper[n];
+            }else{
+                if(adds[n] == null){
+                    nodes.push(mapper[n]);
+                    adds[n] = mapper[n];
+                }
+                loadParentNode(nodes, mapper[n], mapper,adds);
+            }
+        }
+    }
+    function checkAppPri(){
+        var role_id = $.request.queryString["role_id"];
+        $.ajax({
+            type: "get",
+            url: "listMenuPri",
+            async:false,
+            data:{role_id:role_id},
+            dataType: "json",
+            success: function(data){
+                if(data!=null&&data.length>0){
+                    $.each(data,function(i,node){
+                        var menu_id_checked = node.menu_id ;
+                        var hasCheckNode = appTree.getNodesByParam("id",menu_id_checked);
+                        if(hasCheckNode!=null&&hasCheckNode.length>0){
+                            appTree.checkNode(hasCheckNode[0], true, false);
+                        }
+                    });
+                }
+
+            }
+        });
+    }
+    function onAppCheck(e, treeId, treeNode){
+        $("#si_"+treeNode.id).val(1);
+        var so = $("#so_"+treeNode.id).val() ||  '';
+        var x = 1;
+        if(so == ''){
+            $(".sotxt").each(function(){
+                var v = parseInt(this.value);
+                console.log(v);
+                if(v >= x)
+                    x = v + 1;
+            });
+        }
+        $("#so_"+treeNode.id).val(x);
+    }
+    function mergeNodes(nodes){
+        var appNodes = appTree.getCheckedNodes(true);
+        for(var i = 0; i < appNodes.length; i++){
+            var b = false, si, so;
+            for(var j = 0; j < nodes.length; j++){
+                if(appNodes[i].id == nodes[j].id){
+                    si = $("#si_"+appNodes[i].id).val() ||  '';
+                    so = $("#so_"+appNodes[i].id).val() ||  '';
+                    nodes[j].show_on_init = 1;
+                    nodes[j].show_order = so;
+                    b = true;
+                    break;
+                }
+            }
+            if(!b){
+                si = $("#si_"+appNodes[i].id).val() ||  '';
+                so = $("#so_"+appNodes[i].id).val() ||  '';
+                appNodes[i].show_on_init = 1;
+                appNodes[i].show_order = so;
+                nodes.push(appNodes[i]);
+            }
+        }
+    }
 </script>
-</html>

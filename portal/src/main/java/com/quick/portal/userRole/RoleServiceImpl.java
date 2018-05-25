@@ -54,7 +54,6 @@ public class RoleServiceImpl extends SysBaseService<Role> implements RoleService
         return dao;
     }
 
-
     //新增角色
     @Override
     public int insert(Role role) {
@@ -64,112 +63,6 @@ public class RoleServiceImpl extends SysBaseService<Role> implements RoleService
     @Override
     public int update(Role role) {
         return dao.update(role);
-    }
-
-    //获取全部的集成系统
-    @Override
-    public List<Map<String, Object>> getAllInteSystem(Map<String, Object> m) {
-        return dao.getAllInteSystem(m);
-    }
-    //获取集成系统的所有角色
-    @Override
-    public List<Map<String, Object>> getAllInteSystemRole(Map<String, Object> m) {
-        return dao.getAllInteSystemRole(m);
-    }
-    //新增 ids角色授权
-    @Override
-    public int setIdsRoleAuthorize(Map<String, Object> m) {
-        return dao.setIdsRoleAuthorize(m);
-    }
-    //获取 ids角色授权列表信息
-    @Override
-    public List<Map<String, Object>> getIdsRoleAuthorizeList(Map<String, Object> m) {
-        return dao.getIdsRoleAuthorizeList(m);
-    }
-
-    //删除 ids角色授权
-    @Override
-    public int delIdsRoleAuthorize(Map<String, Object> m) {
-        return dao.delIdsRoleAuthorize(m);
-    }
-
-
-
-    //获取 ids用户信息
-    @Override
-    public List<Map<String, Object>> getIdsUserList(Map<String, Object> m) {
-        return dao.getIdsUserList(m);
-    }
-
-    @Override
-    public List<Map<String, Object>> getIdsUserListOne(Map<String, Object> m) {
-        return dao.getIdsUserListOne(m);
-    }
-
-    //获取 ids角色与ids用户关系
-    @Override
-    public List<Map<String, Object>> getIdsRoleAndUserRelationList(Map<String, Object> m) {
-        return dao.getIdsRoleAndUserRelationList(m);
-    }
-    //新增  ids用户授权 ids角色
-    @Override
-    public int insertIdsUsrRoleRelation(Map<String, Object> m) {
-        return dao.insertIdsUsrRoleRelation(m);
-    }
-    //删除  ids用户授权 ids角色
-    @Override
-    public int delIdsUsrRoleRelation(Map<String, Object> m) {
-        return dao.delIdsUsrRoleRelation(m);
-    }
-
-    // 获取第三方集成系统的用户列表
-    @Override
-    public List<Map<String, Object>> getSysUserList(Map<String, Object> m) {
-        return dao.getSysUserList(m);
-    }
-
-    //新增 ids用户与第三方用户
-    @Override
-    public int insertIdsAcctRelation(Map<String, Object> m) {
-        return dao.insertIdsAcctRelation(m);
-    }
-    //删除  ids用户与第三方用户授权
-    @Override
-    public int delIdsAcctRelation(Map<String, Object> m) {
-        return dao.delIdsAcctRelation(m);
-    }
-    // 获取ids用户与第三方用户列表
-    @Override
-    public List<Map<String, Object>> getIdsAcctrelationList(Map<String, Object> m) {
-        return dao.getIdsAcctrelationList(m);
-    }
-
-    //角色授权---获取集成列表
-    @Override
-    public List<Map<String, Object>> getIdsRoleauthsysList(Map<String, Object> m) {
-        return dao.getIdsRoleauthsysList(m);
-    }
-
-    //新增 ids角色授权 的集成系统表 ids_roleauthsys
-    @Override
-    public int setIdsRoleauthsys(Map<String, Object> m) {
-        return dao.setIdsRoleauthsys(m);
-    }
-    //删除 ids角色授权 的集成系统关系列表
-    @Override
-    public int delIdsRoleauthsys(Map<String, Object> m) {
-        return dao.delIdsRoleauthsys(m);
-    }
-
-    //获取ids账号总数
-    @Override
-    public int idsCount(Map<String, Object> m) {
-        return dao.idsCount(m);
-    }
-   //获取集成系统账号总数
-    @Override
-    public int sysUsrCount(Map<String, Object> m) {
-        return dao.sysUsrCount(m);
     }
 
     @Override
@@ -230,9 +123,15 @@ public class RoleServiceImpl extends SysBaseService<Role> implements RoleService
         List<Map<String,Object>> result = dao.listMenuPri(role_id);
         return result;
     }
-    /*
-       * 根据姓名精确查找*/
+    /* 根据姓名精确查找*/
+    @Override
     public Role selectObjByName(Map<String,Object> map){
         return dao.selectObjByName(map);
+    }
+
+    @Override
+    public List<Map<String, Object>> listAllApp(Map<String, Object> m) {
+        List<Map<String,Object>> result = dao.listAllApp(m);
+        return result;
     }
 }
