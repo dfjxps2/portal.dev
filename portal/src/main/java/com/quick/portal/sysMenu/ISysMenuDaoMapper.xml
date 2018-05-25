@@ -183,5 +183,7 @@
 		</where>
 	</select>
 	
-    
+    <select id="getIsAppMenuByID" parameterType="com.quick.portal.sysMenu.SysMenuDO" resultType="int">
+		select count(*) from sys_menu where super_menu_id=15 and menu_state=1 and menu_id =${menu_id}
+	</select>
 </mapper>

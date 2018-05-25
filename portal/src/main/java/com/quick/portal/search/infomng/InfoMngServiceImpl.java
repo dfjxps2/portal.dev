@@ -235,7 +235,11 @@ public class InfoMngServiceImpl extends SysBaseService<InfoMngDO> implements IIn
 	 */
 	@Override
 	public String getPersonalHabitsInfo(String userID) {
-		List<Map<String, Object>> personalDataList = dao.getPersonalHabitsInfo(userID);
+		int uid = 0;
+		if(null != userID && !"".equals(userID)){
+			uid = Integer.valueOf(userID);
+		}
+		List<Map<String, Object>> personalDataList = dao.getPersonalHabitsInfo(uid);
 		//按热点搜索信息查询
 		List<Map<String, Object>> hotDataList = getHotSearchInfo();
 		String retStr = InfoMngUtils.formatPersonalHabitsInfo2String(personalDataList,hotDataList);

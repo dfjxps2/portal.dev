@@ -84,7 +84,7 @@
 	</update>
 	
 	<!-- 按热点搜索信息查询 -->
-	<select id="getHotSearchInfo" parameterType="map" resultType="map">
+	<select id="getHotSearchInfo" parameterType="int" resultType="map">
 		<![CDATA[ 
 			SELECT KEYWORD, MAX(SEARCH_TIMES) AS TM FROM SEARCH_KEYWORDS GROUP BY KEYWORD ORDER BY TM DESC LIMIT 0,10
 		]]> 

@@ -128,4 +128,18 @@ public class SysMenuServiceImpl extends SysBaseService<SysMenuDO> implements ISy
         // TODO Auto-generated method stub
         return daos.select(null);
     }
+    
+    @Override
+	public String getIsAppMenuByID(int menuID) {
+		String flag = "0";
+		SysMenuDO menu = new SysMenuDO();
+		menu.setMenu_id(menuID);
+		int count = dao.getIsAppMenuByID(menu);
+		if(count >0){
+			flag = "1";
+		}else{
+			flag = "0";
+		}
+		return flag;
+	}
 }

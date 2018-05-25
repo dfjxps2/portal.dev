@@ -52,18 +52,16 @@ public class InfoMngUtils  {
 	
 	
 	public static String formatPersonalHabitsInfo2String(List<Map<String, Object>> dataList,List<Map<String, Object>>  hotDataList){
-		String str = null;
+		StringBuffer sb = new StringBuffer();
+		sb.append("<div id =\"div_data\"  style=\"z-index:99999;display:none;\"> ");
+		sb.append("<ul class=\"dropdown clearfix\"  style=\"width:580px;\">");
 		if(null == hotDataList || hotDataList.size()==0){
-			return str;
+			  sb.append("</ul></div>");
 		}else{
-			StringBuffer sb = new StringBuffer();
-			sb.append("<div id =\"div_data\"  style=\"z-index:99999;display:none;\"> ");
-				sb.append("<ul class=\"dropdown clearfix\"  style=\"width:580px;\">");
 				  sb.append("<li class=\"tit_filter\" style=\"width:560px;\">热点搜索</li>");
 				  for(Map<String,Object> mp:hotDataList){
 					  sb.append(" <li style=\"line-height: 20px; margin-right: 15px; float: left;\"> <label class=\"radio-inline\"><input type=\"radio\" name=\"radio\" id=\"r1\" value=\""+mp.get("KEYWORD")+"\" checked=\"checked\" onclick=\"click_event(this)\" /><label for=\"radio\"></label><span>"+mp.get("KEYWORD")+"</span></label></li>");
 					}
-				  
 			  if(null == dataList || dataList.size()==0){
 				  sb.append("</ul></div");
 			  }else{
@@ -73,10 +71,8 @@ public class InfoMngUtils  {
 					}
 				  sb.append("</ul></div>");
 			  }
-			  str = sb.toString();
 		}
-		
-		
+		String str = sb.toString();
 		return str;
 	}
 	

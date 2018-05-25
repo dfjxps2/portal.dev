@@ -18,27 +18,29 @@
  */
 package com.quick.portal.userRole;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.quick.core.base.ISysBaseService;
-import com.quick.core.base.SysBaseController;
-import com.quick.core.base.model.DataStore;
-import com.quick.core.base.model.JsonDataGrid;
-import com.quick.core.base.model.PageBounds;
-import com.quick.core.util.common.DateTime;
-import com.quick.core.util.common.JsonUtil;
-import com.quick.core.util.common.QRequest;
-import com.quick.core.util.common.ReflectUtil;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.Resource;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.*;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.quick.core.base.ISysBaseService;
+import com.quick.core.base.SysBaseController;
+import com.quick.core.base.model.DataStore;
+import com.quick.core.util.common.DateTime;
+import com.quick.core.util.common.ReflectUtil;
+import com.quick.portal.security.authority.metric.MetricPrivilegeConstants;
 
 /**
  * 请求类
@@ -183,6 +185,7 @@ public class RoleController extends SysBaseController<Role> {
     
     @RequestMapping
     public String metricAuth(ModelMap model) {
+    	model.addAttribute("METRIC_URL", MetricPrivilegeConstants.GET_METRIC_INFO_URL);
         return "page/role/metricAuth";
     }
 
