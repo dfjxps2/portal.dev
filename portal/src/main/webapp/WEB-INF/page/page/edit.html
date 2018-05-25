@@ -324,7 +324,7 @@
     }
     
     
-    function remove(data,dx){ 
+    function removeList(data,dx){ 
         if(isNaN(dx)||dx>data.length){return false;} 
         for(var i=0,n=0;i<data.length;i++) 
         { 
@@ -347,17 +347,16 @@
     			ar[i]["section_id"] = o.dataset.no;
             var rem = [];
             var ss = [];
-            for (var k = 0; k < ar.length; k++) {
+            var ss = [];
 				if (metricInfo.length>0) {
 					for (var j = 0; j < metricInfo.length; j++) {
-						if (ar[k].section_id!=metricInfo[j].section_id) {
-							//remove(metricInfo,j);
+						if (ar[0].section_id!=metricInfo[j].section_id) {
+							//removeList(metricInfo,j);
 							ss.push(metricInfo[j]);
 						}
 					}
 				}
-			}
-            metricInfo = ss;
+				metricInfo = ss;
             var metric_name = [];
             for (var n = 0; n < ar.length; n++) {
                 metricInfo.push(ar[n]);

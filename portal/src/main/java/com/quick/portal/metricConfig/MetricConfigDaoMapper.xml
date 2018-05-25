@@ -58,7 +58,7 @@
     
 	<!-- 删除 -->
 	<delete id="delete" parameterType="String">
-		delete from sec_metric_config where config_id = #{config_id}
+		delete from sec_metric_config where sec_metric_id = #{sec_metric_id}
 	</delete>
     
     <!--查询-->
