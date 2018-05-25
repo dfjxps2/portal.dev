@@ -182,6 +182,7 @@ function pie(data,settingData,name){
 
 //获取图形数据
 function dataType(data,typeData){
+	//alert(JSON.stringify(typeData));
 	var series = [];
 	var series1 = [];
 	var series2 = [];
@@ -704,38 +705,6 @@ function bar_echart(data,name,id){
 	 myChart.setOption (option);
 }
 
-//数组去重方法
-function onlyData(ary){
-	for(var i=0;i<ary.length;i++){
-		  for(var j=i+1;j<ary.length;j++){
-		    if(ary[i]===ary[j]){
-		      ary.splice(i,1);
-		      i--;
-		    }
-		  }
-		}
-	return ary;
-}
-
-
-//向页面添加图表方法  data--指标数据   name--栏目名称       typeData--栏目图表信息   id--栏目的div的id
-function add(data,name,typeData,sectionData){
-	//alert(JSON.stringify(typeData));
-	var id = "";
-	for (var i = 0; i < sectionData.length; i++) {
-		var dat = [];
-		for (var j = 0; j < typeData.length; j++) {
-			if (sectionData[i].no == typeData[j].section_id) {
-				id = sectionData[i].sid;
-				dat.push(typeData[j]);
-			}
-		}
-		if (dat.length>0) {
-			addEchart(data,name,dat,id);	
-		}
-	}
-}
-
 //生成表格方法
 function add_table(data,name){
 	var times = [];
@@ -800,6 +769,27 @@ function add_table(data,name){
 	str =  str +'</table>';
 	return str;
 }
+
+
+
+//向页面添加图表方法  data--指标数据   name--栏目名称       typeData--栏目图表信息   id--栏目的div的id
+function add(data,name,typeData,sectionData){
+	//alert(JSON.stringify(typeData));
+	var id = "";
+	for (var i = 0; i < sectionData.length; i++) {
+		var dat = [];
+		for (var j = 0; j < typeData.length; j++) {
+			if (sectionData[i].no == typeData[j].section_id) {
+				id = sectionData[i].sid;
+				dat.push(typeData[j]);
+			}
+		}
+		if (dat.length>0) {
+			addEchart(data,name,dat,id);	
+		}
+	}
+}
+
 
 function addEchart(data,name,typeData,id){
 	var typ = [];
@@ -1022,6 +1012,19 @@ function JsonDown(json,key){
     return json;
 }
 
+
+//数组去重方法
+function onlyData(ary){
+	for(var i=0;i<ary.length;i++){
+		  for(var j=i+1;j<ary.length;j++){
+		    if(ary[i]===ary[j]){
+		      ary.splice(i,1);
+		      i--;
+		    }
+		  }
+		}
+	return ary;
+}
 
 //柱状折线图排序方法
 function changeData(data,num){
