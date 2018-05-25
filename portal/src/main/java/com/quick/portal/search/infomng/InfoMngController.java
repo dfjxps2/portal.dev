@@ -19,6 +19,8 @@
 package com.quick.portal.search.infomng;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,6 +44,7 @@ import com.quick.core.base.model.JsonDataGrid;
 import com.quick.core.base.model.PageBounds;
 import com.quick.core.util.common.QCookie;
 import com.quick.core.util.common.QRequest;
+import com.quick.portal.security.authority.metric.MetricPrivilegeConstants;
 
 /**
  * sys_user请求类
@@ -148,6 +151,14 @@ public class InfoMngController extends SysBaseController<InfoMngDO> {
 				HttpServletResponse response) throws Exception {
 	    	 String type = request.getParameter("type");	
 	    	 String filePath = request.getParameter("id");
+	    	 
+	    	 try {
+	    		 filePath = URLDecoder.decode(filePath, MetricPrivilegeConstants.LANGUAGE_CODE_UTF);
+	 		} catch (UnsupportedEncodingException e) {
+	 			// TODO Auto-generated catch block
+	 			throw new Exception("指标转义异常："+e.getLocalizedMessage());
+	 		}
+	    	 
 	     		if(filePath == null || "".equals(filePath)){
 	     			System.out.println("文件路径名称:"+filePath+ ",filePath不能为空");
 	     			throw new Exception("查询文件路径异常: " + "文件路径:"+filePath+ ",filePath不能为空");
