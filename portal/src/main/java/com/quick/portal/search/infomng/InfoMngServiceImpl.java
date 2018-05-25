@@ -1,5 +1,5 @@
 /**
- * <h3>标题 : potal统一门户-sys_user </h3>
+ * <h3>标题 : potal统一门户-InfoMngServiceImpl </h3>
  * <h3>描述 : sys_user服务实现类</h3>
  * <h3>日期 : 2018-04-13</h3>
  * <h3>版权 : Copyright (C) 北京东方金信科技有限公司</h3>
@@ -62,8 +62,8 @@ public class InfoMngServiceImpl extends SysBaseService<InfoMngDO> implements IIn
 	public List<Map<String, Object>> getSolrInfo(Map<String, Object> m,
 			PageBounds page,String userID,String type) {
 		List<Map<String, Object>> dataList = new ArrayList<>();
-    	String title = m.get("title").toString();
-        if(null == title || "".equals(title)){
+    	String keyword = m.get("keyword").toString();
+        if(null == keyword || "".equals(keyword)){
         	return dataList;
         }else{
         	Integer uid = Integer.valueOf(userID);
@@ -171,7 +171,7 @@ public class InfoMngServiceImpl extends SysBaseService<InfoMngDO> implements IIn
 		}else{
 			info.setUser_id(uid);
 		}
-		String keyword = param.get("title").toString();
+		String keyword = param.get("keyword").toString();
 		info.setKeyword(keyword);
 		
 		boolean bool = isExitsSearchTermsInfo(info);
@@ -220,45 +220,13 @@ public class InfoMngServiceImpl extends SysBaseService<InfoMngDO> implements IIn
 	 * (non-Javadoc)
 	 * @see com.quick.portal.search.infomng.IInfoMngService#getHotSearchInfo()
 	 */
-	@Override
-	public String getHotSearchInfo() {
+	
+	public List<Map<String, Object>> getHotSearchInfo() {
 		List<Map<String, Object>> dataList = dao.getHotSearchInfo();
-		String retStr = formatHotInfo2String(dataList);
-		return retStr;
+		return dataList;
 	}
 
 
-	public String formatHotInfo2String(List<Map<String, Object>> dataList){
-		String str = null;
-		if(null == dataList || dataList.size()==0){
-			return str;
-		}else{
-			StringBuffer sb = new StringBuffer();
-			sb.append("<div class=\"wrap\"> ");
-			sb.append(" <table>");
-			sb.append("    <thead>");
-			sb.append("     	<tr>");
-			sb.append("     		<th>");
-			sb.append("     			<input type=\"checkbox\" id=\"j_cbAll\" />");
-			sb.append("     		</th>");
-			sb.append("     		<th>关键字</th>");
-			sb.append("     	</tr>");
-			sb.append("     </thead>");
-			sb.append("     	<tbody id=\"j_tb\">");
-			for(Map<String,Object> mp:dataList){
-				sb.append("     <tr>");
-				sb.append("     	<td> <input type=\"checkbox\" /></td>");
-				sb.append("     	<td> "+mp.get("NAME")+"</td>");
-				sb.append("     </tr>");
-			}
-			sb.append("    </tbody>");
-			sb.append(" </table>");
-			sb.append("</div>");
-			str = sb.toString();
-		}
-
-		return str;
-	}
 	
 	/*
 	 * 按热点搜索信息查询
@@ -267,41 +235,14 @@ public class InfoMngServiceImpl extends SysBaseService<InfoMngDO> implements IIn
 	 */
 	@Override
 	public String getPersonalHabitsInfo(String userID) {
-		List<Map<String, Object>> dataList = dao.getPersonalHabitsInfo(userID);
-		String retStr = formatPersonalHabitsInfo2String(dataList);
+		List<Map<String, Object>> personalDataList = dao.getPersonalHabitsInfo(userID);
+		//按热点搜索信息查询
+		List<Map<String, Object>> hotDataList = getHotSearchInfo();
+		String retStr = InfoMngUtils.formatPersonalHabitsInfo2String(personalDataList,hotDataList);
 		return retStr;
 	}
 	
 	
 	
-	public String formatPersonalHabitsInfo2String(List<Map<String, Object>> dataList){
-		String str = null;
-		if(null == dataList || dataList.size()==0){
-			return str;
-		}else{
-			StringBuffer sb = new StringBuffer();
-			sb.append("<div class=\"wrap\"> ");
-			sb.append(" <table>");
-			sb.append("    <thead>");
-			sb.append("     	<tr>");
-			sb.append("     		<th>");
-			sb.append("     			<input type=\"checkbox\" id=\"j_cbAll\" />");
-			sb.append("     		</th>");
-			sb.append("     		<th>关键字</th>");
-			sb.append("     	</tr>");
-			sb.append("     </thead>");
-			sb.append("     	<tbody id=\"j_tb\">");
-			for(Map<String,Object> mp:dataList){
-				sb.append("     <tr>");
-				sb.append("     	<td> <input type=\"checkbox\" /></td>");
-				sb.append("     	<td> "+mp.get("NAME")+"</td>");
-				sb.append("     </tr>");
-			}
-			sb.append("    </tbody>");
-			sb.append(" </table>");
-			sb.append("</div>");
-			str = sb.toString();
-		}
-		return str;
-	}
+	
 }

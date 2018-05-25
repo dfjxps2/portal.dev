@@ -36,26 +36,12 @@ public class InfoMngUtils  {
 			return str;
 		}else{
 			StringBuffer sb = new StringBuffer();
-			sb.append("<div class=\"wrap\"> ");
-			sb.append(" <table>");
-			sb.append("    <thead>");
-			sb.append("     	<tr>");
-			sb.append("     		<th>");
-			sb.append("     			<input type=\"checkbox\" id=\"j_cbAll\" />");
-			sb.append("     		</th>");
-			sb.append("     		<th>关键字</th>");
-			sb.append("     	</tr>");
-			sb.append("     </thead>");
-			sb.append("     	<tbody id=\"j_tb\">");
+			sb.append("<ul class=\"dropdown clearfix\" id=\"ul_hot\" style=\"width:480px;display:none;\"> ");
+			sb.append(" <li id =\"li_hot\" class=\"tit_filter\">确定</li> ");
+			sb.append(" <li><input type=\"checkbox\" id=\"all_hot\"  value=\"\" /><label for=\"all\"><strong>所有分类</strong></label></li> ");
 			for(Map<String,Object> mp:dataList){
-				sb.append("     <tr>");
-				sb.append("     	<td> <input type=\"checkbox\" /></td>");
-				sb.append("     	<td> "+mp.get("NAME")+"</td>");
-				sb.append("     </tr>");
+				sb.append("     <li><input type=\"checkbox\"  value=\""+mp.get("KEYWORD")+"\"/><label>"+mp.get("KEYWORD")+"</label></li>");
 			}
-			sb.append("    </tbody>");
-			sb.append(" </table>");
-			sb.append("</div>");
 			str = sb.toString();
 		}
 
@@ -65,34 +51,32 @@ public class InfoMngUtils  {
 
 	
 	
-	public static String formatPersonalHabitsInfo2String(List<Map<String, Object>> dataList){
+	public static String formatPersonalHabitsInfo2String(List<Map<String, Object>> dataList,List<Map<String, Object>>  hotDataList){
 		String str = null;
-		if(null == dataList || dataList.size()==0){
+		if(null == hotDataList || hotDataList.size()==0){
 			return str;
 		}else{
 			StringBuffer sb = new StringBuffer();
-			sb.append("<div class=\"wrap\"> ");
-			sb.append(" <table>");
-			sb.append("    <thead>");
-			sb.append("     	<tr>");
-			sb.append("     		<th>");
-			sb.append("     			<input type=\"checkbox\" id=\"j_cbAll\" />");
-			sb.append("     		</th>");
-			sb.append("     		<th>关键字</th>");
-			sb.append("     	</tr>");
-			sb.append("     </thead>");
-			sb.append("     	<tbody id=\"j_tb\">");
-			for(Map<String,Object> mp:dataList){
-				sb.append("     <tr>");
-				sb.append("     	<td> <input type=\"checkbox\" /></td>");
-				sb.append("     	<td> "+mp.get("NAME")+"</td>");
-				sb.append("     </tr>");
-			}
-			sb.append("    </tbody>");
-			sb.append(" </table>");
-			sb.append("</div>");
-			str = sb.toString();
+			sb.append("<div id =\"div_data\"  style=\"z-index:99999;display:none;\"> ");
+				sb.append("<ul class=\"dropdown clearfix\"  style=\"width:580px;\">");
+				  sb.append("<li class=\"tit_filter\" style=\"width:560px;\">热点搜索</li>");
+				  for(Map<String,Object> mp:hotDataList){
+					  sb.append(" <li style=\"line-height: 20px; margin-right: 15px; float: left;\"> <label class=\"radio-inline\"><input type=\"radio\" name=\"radio\" id=\"r1\" value=\""+mp.get("KEYWORD")+"\" checked=\"checked\" onclick=\"click_event(this)\" /><label for=\"radio\"></label><span>"+mp.get("KEYWORD")+"</span></label></li>");
+					}
+				  
+			  if(null == dataList || dataList.size()==0){
+				  sb.append("</ul></div");
+			  }else{
+				  sb.append("<li class=\"tit_filter\" style=\"width:560px;\">个人喜好搜索</li>"); 
+				  for(Map<String,Object> m:dataList){
+					  sb.append(" <li style=\"line-height: 20px; margin-right: 15px; float: left;\"> <label class=\"radio-inline\"><input type=\"radio\" name=\"radio\" id=\"r1\" value=\""+m.get("KEYWORD")+"\" checked=\"checked\" onclick=\"click_event(this)\" /><label for=\"radio\"></label><span>"+m.get("KEYWORD")+"</span></label></li>");
+					}
+				  sb.append("</ul></div>");
+			  }
+			  str = sb.toString();
 		}
+		
+		
 		return str;
 	}
 	

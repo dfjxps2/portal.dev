@@ -24,7 +24,7 @@ public class SolrInfoConstants {
 
 	public static final String USER_MSG_URL = "http://10.1.3.193:8983/solr/user_msg";
 	
-	public static final String INDEX_TITLE = "title";
+	public static final String INDEX_TITLE = "KEYWORD";
 	
 	public static final int CONNECTION_TIMEOUT = 10000;
 	
