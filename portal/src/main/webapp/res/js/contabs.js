@@ -141,24 +141,39 @@ $(function () {
 
             // 添加选项卡对应的iframe
             var str1 = '<iframe class="J_iframe" name="iframe' + dataIndex + '" width="100%" height="100%" src="' + dataUrl + '" frameborder="0" data-id="' + dataUrl + '" seamless></iframe>';
-            $('.J_mainContent').find('iframe.J_iframe').hide().parents('.J_mainContent').append(str1);
-
-            //显示loading提示
-//            var loading = layer.load();
-//
-//            $('.J_mainContent iframe:visible').load(function () {
-//                //iframe加载完成后隐藏loading提示
-//                layer.close(loading);
-//            });
-            // 添加选项卡
-            $('.J_menuTabs .page-tabs-content').append(str);
-            scrollToTab($('.J_menuTab.active'));
+//            $('.J_mainContent').find('iframe.J_iframe').hide().parents('.J_mainContent').append(str1);
+            var isFlag  = isApp(mId);
+            if(isFlag=="1"){
+            	var targetOrigin = dataUrl;
+            	window.open(targetOrigin,'_blank');
+            }else{
+            	$('.J_mainContent').find('iframe.J_iframe').hide().parents('.J_mainContent').append(str1);
+            	// 添加选项卡
+            	$('.J_menuTabs .page-tabs-content').append(str);
+            	scrollToTab($('.J_menuTab.active'));
+            }
             sendLog(mId,menuName);
         }
         return false;
     }
     
     
+
+	
+	function isApp(id){
+		var bool;
+		 $.ajax({
+			  type: "post",
+			  async:false,
+			  url:  'getIsAppMenuByID?T='+Math.random(),
+			  data:{menuId:id},
+			  success: function(data){
+				  bool = data;
+			  }
+		  });
+		return bool;	
+	}
+	    
     function sendLog(id,mn){
 		  $.ajax({
 			  type: "post",
