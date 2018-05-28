@@ -5,6 +5,7 @@ import com.quick.core.base.SysBaseController;
 import com.quick.core.base.model.DataStore;
 import com.quick.core.base.model.JsonDataGrid;
 import com.quick.core.base.model.PageBounds;
+import com.quick.core.util.common.QCookie;
 import com.quick.core.util.common.QRequest;
 import com.quick.portal.search.infomng.SolrInfoConstants;
 import com.quick.portal.search.infomng.SolrUtils;
@@ -36,6 +37,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.xml.sax.SAXException;
 
 import javax.annotation.Resource;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -186,18 +188,24 @@ public class MesManageController extends SysBaseController<MesManageDO> {
        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
        MultipartFile file = multipartRequest.getFile("file");
        String title = mesManageDO.getMsg_title();
-       String attName = file.getOriginalFilename(); //附件文件名
+       String attName = null;
+       File fa =null;
+       if (file!=null && !file.isEmpty()){
+            attName = file.getOriginalFilename(); //附件文件名
+            fa = createFile(path,attName);
+           file.transferTo(fa);
+           mesManageDO.setMsg_attachment(path+attName);//上传附件存放路径
+       }
+
        String contentName = title+".txt"; //发布信息内容文件名
+       String id = path+contentName;
        File fc = createFile(path,contentName);
-       File fa = createFile(path,attName);
        FileOutputStream fos = null;
-       file.transferTo(fa);
        contentFile(fos,fc,mesManageDO);
        try{
            if(fos != null){
                          fos.close();
            }
-           mesManageDO.setMsg_attachment(path+attName);//上传附件存放路径
            mesManageDO.setMsg_content(path+contentName); //上传信息内容存放路径
            mesManageDO.setMsg_src_id(MesInfoConstants.PLATFORM_SOURCE_ID);
            mesManageDO.setMsg_type_id(MesInfoConstants.PLATFORM_MES_TYPE);
@@ -205,7 +213,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
            Date date1 =date.getTime();
            mesManageDO.setPub_time(date1);
            mesManageDO.setAppr_time(date1);
-            String id = path+contentName;
+
            String content = combinFile(fa,mesManageDO);
            String type = SolrInfoConstants.MSG_OBJ_TYPE;
            Map<String,Object> map = new HashMap<>();
@@ -215,14 +223,18 @@ public class MesManageController extends SysBaseController<MesManageDO> {
            if(lab ==1){
                deleteFile(path+contentName);
                deleteFile(path+attName);
+               SolrUtils.deleteSolrInfo(id);
                response.getWriter().write("2");
                response.getWriter().flush();
-               return;
-           }
+
+           }else {
            mesManageDO.setAppr_state(MesInfoConstants.AUTOMATIC_APPROVAL);
+           String userId = QCookie.getValue(request,"ids");
+           mesManageDO.setPub_user_id(Integer.parseInt(userId));
            mesManageDao.insert(mesManageDO);
            map.clear();
-           map.put("appr_time",mesManageDO.getAppr_time());
+           String time = format.format(mesManageDO.getAppr_time());
+           map.put("appr_time",time);
            List<Map<String,Object>> result = mesManageDao.selectMes(map);
            String msgId = result.get(0).get("msg_id").toString();
            String[] tags = tagId[0].split(",");
@@ -234,13 +246,14 @@ public class MesManageController extends SysBaseController<MesManageDO> {
            }
            response.getWriter().write("1");
            response.getWriter().flush();
+           }
                  }catch (Exception e){
                      e.printStackTrace();
                  }
    }
 
-   //生成文件路径
-    public String createPath(){
+     //生成文件路径
+    public  String createPath(){
         Calendar date = Calendar.getInstance();
         String year = String.valueOf(date.get(Calendar.YEAR));
         String month = String.valueOf(date.get(Calendar.MONTH)+1);
@@ -251,8 +264,8 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         }
       String url =  request.getSession().getServletContext().getRealPath("/");
         String path = url+"upload"+"\\mesPublish"+"\\"+year+month+day+"\\";
-        return  path;
-   }
+        return  path.replaceAll("\\\\","/");
+    }
 
     //生成文件
     public File createFile(String path,String name) throws IOException {
@@ -269,6 +282,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         }
         return fa;
     }
+
     //将信息内容生成本地文件保存
     public void contentFile(FileOutputStream fos,File file,MesManageDO mesManageDO) throws IOException {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -310,7 +324,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         fos.flush();
     }
 
-    //将附件和信息各内容合并生成文件
+    //将附件和信息各内容合并生成新的内容
     public  String  combinFile(File fa,MesManageDO mesManageDO) throws IOException {
         String nei = null;
         if(fa!=null ){
@@ -326,6 +340,38 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         }
         String content =   mesManageDO.getMsg_title()+  mesManageDO.getMsg_digest()+mesManageDO.getMsgcontent()+nei;
         return content;
+    }
+
+    //将一个文件复制到另一个目录下
+    public  static  void  copyFile(String oldpath,String newpath){
+        try
+        {
+            File fOldFile = new File(oldpath);
+            if (fOldFile.exists())
+            {
+                int bytesum = 0;
+                int byteread = 0;
+                InputStream inputStream = new FileInputStream(fOldFile);
+                FileOutputStream fileOutputStream = new FileOutputStream(newpath);
+                byte[] buffer = new byte[1444];
+                while ( (byteread = inputStream.read(buffer)) != -1)
+                {
+                    bytesum += byteread; //这一行是记录文件大小的，可以删去
+                    fileOutputStream.write(buffer, 0, byteread);//三个参数，第一个参数是写的内容，
+                    //第二个参数是从什么地方开始写，第三个参数是需要写的大小
+                }
+                inputStream.close();
+                fileOutputStream.close();
+            }
+        }
+        catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            System.out.println("复制单个文件出错");
+            e.printStackTrace();
+        }
     }
 
     //删除指定路径下的文件
@@ -357,6 +403,8 @@ public class MesManageController extends SysBaseController<MesManageDO> {
               }
           return handler.toString();
       }
+
+      //将一个目录下的文件保存到另一个文件下
 
     //内容删除
     @RequestMapping(value = "deleteMsg")
@@ -395,14 +443,41 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         MultipartFile file = multipartRequest.getFile("file");
         String title = mesManageDO.getMsg_title();
-        Map<String,Object> map = new HashMap<>();
-        map.put("msg_id",mesManageDO.getMsg_id());
         String path = createPath();
+        String newpath = null;
+        String oldattachment = null;
+        if(mesManageDO.getMsg_content()!= null && !mesManageDO.getMsg_content().equals("undefined") && !"null".equals(mesManageDO.getMsg_content())){
+            String oldpath = mesManageDO.getMsg_content();
+             newpath = path+"ori"+mesManageDO.getMsg_title();
+            copyFile(oldpath,newpath);
+        }
+        Map<String,Object> map = new HashMap<>();
+        if(mesManageDO.getMsg_id()!= null && !mesManageDO.getMsg_id().equals("undefined") && !"null".equals(mesManageDO.getMsg_id())){
+            map.put("msg_id",mesManageDO.getMsg_id());
+        }
+        if(mesManageDO.getMsg_attachment()!= null && !mesManageDO.getMsg_attachment().equals("undefined") && !"null".equals(mesManageDO.getMsg_attachment())){
+            map.put("msg_attachement",mesManageDO.getMsg_attachment());
+            String attpath = mesManageDO.getMsg_attachment();
+             String [] att = attpath.split(".");
+             oldattachment = att[0]+"edit"+att[1];
+        }
+        if(mesManageDO.getMsg_title()!= null && !mesManageDO.getMsg_title().equals("undefined") && !"null".equals(mesManageDO.getMsg_title())){
+            map.put("msg_title",mesManageDO.getMsg_title());
+        }
+        if(mesManageDO.getMsg_digest()!= null && !mesManageDO.getMsg_digest().equals("undefined") && !"null".equals(mesManageDO.getMsg_digest())){
+            map.put("msg_digest",mesManageDO.getMsg_digest());
+        }
+        if(mesManageDO.getMsg_class_id()!= null && !mesManageDO.getMsg_class_id().equals("undefined") && !"null".equals(mesManageDO.getMsg_class_id())){
+            map.put("msg_class_id",mesManageDO.getMsg_class_id());
+        }
+        String userId = QCookie.getValue(request,"ids");
+        map.put("pub_user_id",Integer.parseInt(userId)) ;
+        map.put("msg_id",mesManageDO.getMsg_id());
         File fa = null;
         //附件保存
         if( file!= null  && !file.isEmpty() ){
-            deleteFile(mesManageDO.getMsg_attachment());
             String attName = file.getOriginalFilename(); //附件文件名
+            copyFile(mesManageDO.getMsg_attachment(),oldattachment);
             fa = createFile(path,attName);
             file.transferTo(fa);
             map.put("msg_attachment",path+attName);
@@ -439,30 +514,21 @@ public class MesManageController extends SysBaseController<MesManageDO> {
             if(lab ==1){
                 deleteFile(path+contentName);
                 deleteFile(map.get("msg_attachment").toString());
+                map.put("msg_attachment",oldattachment);
+                copyFile(newpath,path+contentName);
                 response.getWriter().write("2");
                 response.getWriter().flush();
                 return;
+            }else {
+                map.put("appr_state",MesInfoConstants.AUTOMATIC_APPROVAL);
+                deleteFile(newpath);
+                deleteFile(oldattachment);
+                Date date = new Date();
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-HH hh:mm:ss");
+                map.put("appr_time",format.format(date.getTime()));
+                mesManageDao.msgedit(map);
             }
-            map.put("appr_state",MesInfoConstants.AUTOMATIC_APPROVAL);
-        if(mesManageDO.getMsg_id()!= null && !mesManageDO.getMsg_id().equals("undefined") && !"null".equals(mesManageDO.getMsg_id())){
-            map.put("msg_id",mesManageDO.getMsg_id());
-        }
-        if(mesManageDO.getMsg_attachment()!= null && !mesManageDO.getMsg_attachment().equals("undefined") && !"null".equals(mesManageDO.getMsg_attachment())){
-            map.put("msg_attachement",mesManageDO.getMsg_attachment());
-        }
-        if(mesManageDO.getMsg_title()!= null && !mesManageDO.getMsg_title().equals("undefined") && !"null".equals(mesManageDO.getMsg_title())){
-            map.put("msg_title",mesManageDO.getMsg_title());
-        }
-        if(mesManageDO.getMsg_digest()!= null && !mesManageDO.getMsg_digest().equals("undefined") && !"null".equals(mesManageDO.getMsg_digest())){
-            map.put("msg_digest",mesManageDO.getMsg_digest());
-        }
-        if(mesManageDO.getMsg_class_id()!= null && !mesManageDO.getMsg_class_id().equals("undefined") && !"null".equals(mesManageDO.getMsg_class_id())){
-            map.put("msg_class_id",mesManageDO.getMsg_class_id());
-        }
-        Date date = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-HH hh:mm:ss");
-        map.put("appr_time",format.format(date.getTime()));
-        mesManageDao.msgedit(map);
+
         try {
             response.getWriter().write("1");
             response.getWriter().flush();

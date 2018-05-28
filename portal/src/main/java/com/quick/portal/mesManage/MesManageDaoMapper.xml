@@ -30,7 +30,7 @@
            <![CDATA[AND DATE_FORMAT(pub_time,'%Y-%m-%d')= DATE_FORMAT(#{pub_time},'%Y-%m-%d') ]]>
         </if>
         <if test="appr_time!=null">
-            <![CDATA[AND appr_time= #{appr_time} ]]>
+            <![CDATA[AND DATE_FORMAT(appr_time,'%Y-%m-%d %H:%i:%s ')= DATE_FORMAT(#{appr_time},'%Y-%m-%d %H:%i:%s')]]>
         </if>
        <if test="_sql_where != null and _sql_where != '' "> <![CDATA[
             and ${_sql_where}
@@ -86,6 +86,7 @@
          msg_content,
          msg_attachment,
          appr_state,
+         pub_user_id,
          pub_time,
          appr_time
         )VALUES (
@@ -99,6 +100,7 @@
         #{msg_content},
         #{msg_attachment},
         #{appr_state},
+       #{pub_user_id},
         #{pub_time},
         #{appr_time}
         )
@@ -145,14 +147,14 @@
     <update id="msgedit" parameterType="map" >
         UPDATE portaldb.message
         SET
-        msg_title= #{msg_title},
         msg_class_id= #{msg_class_id},
         msg_digest=  #{msg_digest},
         msg_content= #{msg_content},
         msg_attachment= #{msg_attachment},
         pub_time= #{pub_time},
         appr_state= #{appr_state},
-        appr_time= #{appr_time}
+        appr_time= #{appr_time},
+        pub_user_id=#{pub_user_id}
         WHERE msg_id=#{msg_id}
     </update>
 
