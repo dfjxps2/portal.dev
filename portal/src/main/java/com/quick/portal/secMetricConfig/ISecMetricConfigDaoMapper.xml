@@ -73,7 +73,7 @@
 	</select>
 	
 	 <!-- 新增metric -->
-	<insert id="insert" parameterType="com.quick.portal.metricConfig.MetricConfigDO">
+	<insert id="insert" parameterType="com.quick.portal.sectionMetric.SectionMetricDO">
 		insert into sec_metric_config (
     		  user_id,
     		  sec_metric_id,
