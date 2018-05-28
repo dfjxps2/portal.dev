@@ -24,6 +24,8 @@ import com.quick.core.util.common.DateTime;
  * solr-solrj 使用的是5.0.0
  */
 public class SolrUtils {
+	
+	private HttpSolrClient server = null;
 
 	
 
@@ -45,7 +47,6 @@ public class SolrUtils {
 			UpdateResponse response = server.add(doc);
 			// 提交
 			server.commit();
-			server.close();
 			System.out.println("########## Query Time :" + response.getQTime());
 			System.out.println("########## Elapsed Time :"
 					+ response.getElapsedTime());
@@ -53,14 +54,7 @@ public class SolrUtils {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally{
-				   try {
-					server.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					System.out.println("添加文档 用solrJ创建索引异常："+e.getLocalizedMessage());	
-			   }
-			}
+		}
 	}
 
 	/**
@@ -73,8 +67,6 @@ public class SolrUtils {
 		server.deleteById(id);
 		// [3]提交
 		server.commit();
-		// [4]关闭资源
-		server.close();
 	}
 	
 
@@ -91,8 +83,6 @@ public class SolrUtils {
 		}
 		// [3]提交
 		server.commit();
-		// [4]关闭资源
-		server.close();
 	}
 	
 	/*
@@ -347,15 +337,20 @@ public class SolrUtils {
 //		st.deleteSolrInfo(id);
 		String content = "测试文档";
 		String type="1";
-//		st.addSolrInfo( id,  content, type);
+//		int i =0;
+		String path ="C:/Users/cxh/Desktop/test/";
+		for(int i=30;i<200;i++){
+			id = path.concat(content).concat(i+"").concat("docx");
+			st.addSolrInfo( id,  content, type,content);
+		}
 		
-		List<Integer> itList = new ArrayList();
+/*		List<Integer> itList = new ArrayList();
 		int j =10;
 		for(int i =0;i<10;i++){
 			itList.add(i);
 		}
 		List ret = itList.subList(0, 8);
 		List ret1 = itList.subList(1, 10);
-		
+		*/
 	}
 }
