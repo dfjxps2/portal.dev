@@ -199,10 +199,10 @@ a, img {
 			   height: $(document.body).height()-50,
 			   toolbar:"#formSearch",
 			   columns: [
-				   {  checkbox: true },
-				   { field: 'title', title: '文件名称', width: 100  },
-				   { field: 'id', title: '文件路径', width: 100  },
-				   { field: 'portal_doc_class', title: '文件类别', width: 80 , formatter:function(value,row,index){
+//				   {  checkbox: true },
+				   { field: 'title', title: '信息名称', width: 100  },
+				   /* { field: 'id', title: '信息路径', width: 100  }, */
+				   { field: 'portal_doc_class', title: '信息类别', width: 80 , formatter:function(value,row,index){
 			    	   var doc_class = '<span style="color:#9ACD32">其它</span>';  
                 	   if (row.portal_doc_class=="1") {
                 		   doc_class = '<span style="color:#9ACD32">指标</span>';  
@@ -222,15 +222,13 @@ a, img {
                 	   return state;
                    }},
 				   { field: 'CZ',  title: '操作',width: '15%', formatter:function(value,row,index){
-					   var down ; 
 					   if (row.portal_doc_class=="1") {
-					     down = '<span style="color:#9ACD32"></span>';  
+						return down = '<span style="color:#9ACD32"></span>';  
                 	   }else{
-                	    down = "<button type='button' class='btn_el' onclick='down(\""+row.id+"\",\""+row.objtype+"\")'>下载</button>";
+//                		   var url ="D:/00-software/luna/eclipse/ws_git/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/portal/upload/mesPublish/20180525/test内容申请.txt";
+                	   return down = "<button type='button' class='btn_el' onclick='downClick(\""+row.id+"\",\""+row.portal_doc_class+"\")'>下载</button>";
                 	   }
-					   return down;
-			
-				   }}
+				   }} 
 			   ],onPageChange:function(number, size){
                    $("#IDS_PAGESIZE").val(size);
                    $("#IDS_PAGENUM").val(number);
@@ -253,19 +251,17 @@ a, img {
    
     
 	//查看详细信息
-	var id = "";
-	function down(id,type){
+	function downClick(id,type){
 		if(id ==null ||id =="" || id=="undefined"){
 			$. layer.msg("文件路径不对，请联系管理员",{icon:1,time: 1000,skin: 'layer-ext-moon'}); 
 			return false ;
 		}
 //	  id= 'D:/upload/测试5.txt';
 	  id = encodeURI(id);
-	  type = 1;
 	  var param ='?type='+type+'&id='+id;	  
 	  var url =quick.serverUrl+'/download';
 	  url = url +param;
-	  alert(url)
+	  url = encodeURI(url);
 	  window.location.href= url; 
 	}
 
