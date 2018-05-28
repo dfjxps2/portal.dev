@@ -20,7 +20,6 @@ package com.quick.portal.page;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,8 +36,8 @@ import com.quick.core.util.common.QCommon;
 import com.quick.portal.appPage.AppPageDO;
 import com.quick.portal.appPage.IAppPageDao;
 import com.quick.portal.metric.IMetricDao;
-import com.quick.portal.metricConfig.MetricConfigDO;
-import com.quick.portal.metricConfig.IMetricConfigDao;
+import com.quick.portal.secMetricConfig.ISecMetricConfigDao;
+import com.quick.portal.secMetricConfig.SecMetricConfigDo;
 import com.quick.portal.section.ISectionDao;
 import com.quick.portal.section.SectionDO;
 import com.quick.portal.sectionMetric.ISectionMetricDao;
@@ -74,7 +73,7 @@ public class PageServiceImpl extends SysBaseService<PageDO> implements IPageServ
     private ISectionMetricDao sectionMetricDao;
     
     @Autowired
-    private IMetricConfigDao metricConfigDao;
+    private ISecMetricConfigDao metricConfigDao;
     
     @Autowired
     private IMetricDao metricDao;
@@ -155,7 +154,7 @@ public class PageServiceImpl extends SysBaseService<PageDO> implements IPageServ
     			}
 		}
             sectionMetricDao.delete(String.valueOf(section_id));
-            MetricConfigDO con = null;
+            SecMetricConfigDo con = null;
             for (int j = 0; j < metric.size(); j++) {
             	SectionMetricDO sectionMetricDO = new SectionMetricDO();
             	List<Map<String, Object>> das = new ArrayList<Map<String,Object>>();
@@ -167,12 +166,12 @@ public class PageServiceImpl extends SysBaseService<PageDO> implements IPageServ
                     String[] paramKeys = new String[]{"", "metric_id","category_id","dimension","charts","numb","measure_name"};
 					if (a>0) {
                         for(int x = 1; x < paramKeys.length; x++){
-                            con =  new MetricConfigDO();
+                            con =  new SecMetricConfigDo();
                             con.setUser_id(1);
                             con.setSec_metric_id(sectionMetricDO.getSec_metric_id());
                             con.setParam_id(x);
                             con.setParam_value(metric.get(j).get(paramKeys[x]).toString());
-                            con.setValid_time(now);
+                            con.setCre_time(now);
                             metricConfigDao.insert(con);
                         }
 					}
