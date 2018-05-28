@@ -18,7 +18,11 @@
             url:"http://portal-server:8082/services/reMeaSys",
             type:'get',
             success:function(res){
-            	addInfo(res); 
+            	if (res.length>0) {
+                	addInfo(res); 
+				}else{
+					alert('查询结果异常！');
+				}
             }
         });
     }

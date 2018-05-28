@@ -42,7 +42,13 @@ var name = "";
             data:{meaId:metricList,to:2017,from:2016},
             type:'get',
             success:function(res){
-            	add(res.measure,name,co,_layout);
+            	if (res.return_code=='0') {
+                	add(res.measure,name,co,_layout);
+				}else if (res.return_code=='-2') {
+					alert('查询数据为空！');
+				}else{
+					alert('查询数据失败！');
+				}
             }
         });
     }
