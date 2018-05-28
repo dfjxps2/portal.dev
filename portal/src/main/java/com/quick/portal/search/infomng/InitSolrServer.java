@@ -1,16 +1,10 @@
 package com.quick.portal.search.infomng;
 
-import java.net.MalformedURLException;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 //import org.junit.Before;
-
-import com.quick.core.base.model.JsonDataGrid;
-import com.quick.core.util.common.QRequest;
 
 public class InitSolrServer {
 
