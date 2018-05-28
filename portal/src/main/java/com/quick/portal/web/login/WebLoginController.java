@@ -69,12 +69,14 @@ public class WebLoginController {
     public String index(HttpServletRequest request,HttpServletResponse response) {
     	 String rid = QCookie.getValue(request, "sbd.role");
     	 WebLoginUser loginer = null;
+    	 String userGlobalID = null;
     	 if(null == rid || "".equals(rid)){
     		  loginer = loadCASUserInfo(request,response);
     		  rid =  String.valueOf(loginer.getRole_id());
+    		  userGlobalID = loginer.getUser_global_id();
     	 }
        	 //平台用户:1:app;2:sys;公服用户:1:app
-    	 String flag = getSysUrlByUserGlobalID(loginer.getUser_global_id(),rid);
+    	 String flag = getSysUrlByUserGlobalID(userGlobalID,rid);
 		 if(SYS_MENU_FLAG.equals(flag) || SYS_MENU_FLAG.equals(flag)){
     		 return "redirect:/mainframe";
 		 }else{
