@@ -71,6 +71,24 @@
 		select count(*) from user_config_version a
 	    where a.config_id = #{config_id}
 	</select>
+	
+	 <!-- 新增metric -->
+	<insert id="insert" parameterType="com.quick.portal.metricConfig.MetricConfigDO">
+		insert into sec_metric_config (
+    		  user_id,
+    		  sec_metric_id,
+    		  param_id,
+    		  param_value,
+    		  cre_time
+		)values(
+			 #{user_id},
+			 #{sec_metric_id},
+			 #{param_id},
+			 #{param_value},
+			 #{cre_time}
+			)
+	</insert>
+	
 	<!--新增用户激活配置表-->
 	<insert id="insertUAC" parameterType="map" >
 		insert into user_config_version (
