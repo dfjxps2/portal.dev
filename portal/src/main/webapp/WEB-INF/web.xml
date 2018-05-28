@@ -116,7 +116,7 @@
     </filter-mapping>
 
     <!-- CAS融合 配置 Start -->
-    <!--
+    <!--  -->
     <filter>
         <filter-name>CAS Single Sign Out Filter</filter-name>
         <filter-class>org.jasig.cas.client.session.SingleSignOutFilter</filter-class>
@@ -139,7 +139,7 @@
         </init-param>
         <init-param>
             <param-name>serverName</param-name>
-            <param-value>http://localhost:8080/portal</param-value>
+            <param-value>http://portal-server:8080/portal</param-value>
         </init-param>
     </filter>
 
@@ -152,7 +152,7 @@
         </init-param>
         <init-param>
             <param-name>serverName</param-name>
-            <param-value>http://localhost:8080/portal/</param-value>
+            <param-value>http://portal-server:8080/portal/</param-value>
         </init-param>
         <init-param>
             <param-name>redirectAfterValidation</param-name>
@@ -192,7 +192,7 @@
         <filter-name>CAS HttpServletRequest Wrapper Filter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-    -->
+  
     <!-- CAS融合 配置 End -->
     <!--
     <filter-mapping>
