@@ -167,7 +167,7 @@ public class SolrUtils {
 	 * 
 	 */
 	public static SolrQuery getAllSolrQuery(Map<String, Object> m,PageBounds page,String type){
-		String queryStr = m.get("keyword").toString();
+		String queryStr = m.get(SolrInfoConstants.INDEX_KEYWORD).toString();
 		SolrQuery query = new SolrQuery(queryStr);
 		query.setStart(page.getStartRow() == 1 ? 0 : page.getStartRow() - 1);
 		query.setRows(page.getPageSize());
@@ -189,7 +189,7 @@ public class SolrUtils {
 	 * 
 	 */
 	public static SolrQuery getSolrQueryByCond(Map<String, Object> m){
-		String queryStr = m.get(SolrInfoConstants.INDEX_TITLE).toString();
+		String queryStr = m.get(SolrInfoConstants.INDEX_KEYWORD).toString();
 		SolrQuery query = new SolrQuery(queryStr);
 		query.setStart(SolrInfoConstants.PAGE_START);
 		query.setRows(SolrInfoConstants.PAGE_ROWS);

@@ -97,7 +97,7 @@ public class InfoMngController extends SysBaseController<InfoMngDO> {
 			Map<String, Object> queryMap = getQueryMap(request, null,
 					null, null, null);
 			Map<String, Object> mp = new HashMap();
-			String keyword = queryMap.get("keyword").toString();
+			String keyword = queryMap.get(SolrInfoConstants.INDEX_KEYWORD).toString();
 	        if(null == keyword || "".equals(keyword)){
 	        	mp = new HashMap();
 	 			mp.put("rows", 0);

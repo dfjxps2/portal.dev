@@ -9,6 +9,28 @@ import org.apache.solr.client.solrj.impl.HttpSolrClient;
 public class InitSolrServer {
 
 	private static InitSolrServer solrServer = null;
+	
+	/*private static InitSolrServer instance ;
+	
+	
+  
+	private static void instance() {
+	}
+
+	public static InitSolrServer getInstance() {
+		if (instance == null) {
+			synchronized (InitSolrServer.class) {
+				InitSolrServer temp = instance;
+				if (temp == null) {
+					synchronized (InitSolrServer.class) {
+						temp = new InitSolrServer();
+					}
+					instance = temp;
+				}
+			}
+		}
+		return instance;
+	}*/
     
     public static synchronized InitSolrServer getInstance() {
         if (solrServer == null){
