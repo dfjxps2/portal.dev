@@ -86,13 +86,13 @@
 		left JOIN  log_type c on a.log_type_id=c.log_type_id
 		left JOIN sys_menu d on a.menu_id=d.menu_id
 
-
 		<where>
 			<include refid="where" />
 		</where>
-        <if test="_sql_order != null and _sql_order != ''">
+        <!--<if test="_sql_order != null and _sql_order != ''">
             order by ${_sql_order}
-        </if>
+        </if>-->
+		order by log_time DESC
 	</select>
 	<!--<select id="select" parameterType="map" resultType="map">
 		select * from user_access_log
