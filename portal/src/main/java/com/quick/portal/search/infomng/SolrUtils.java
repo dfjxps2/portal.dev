@@ -339,10 +339,23 @@ public class SolrUtils {
 		String type="1";
 //		int i =0;
 		String path ="C:/Users/cxh/Desktop/test/";
-		for(int i=30;i<200;i++){
+/*		for(int i=30;i<200;i++){
 			id = path.concat(content).concat(i+"").concat("docx");
 			st.addSolrInfo( id,  content, type,content);
+		}*/
+		
+		ArrayList<String> ids = new ArrayList();
+		SolrQuery sq = getSolrQueryNoCond();
+		SolrDocumentList docList = getSolrInfoDataByTitle(sq);
+		if(docList.size()>0){
+			for(SolrDocument sot:docList){
+				ids.add(sot.get("id").toString());
+				
+			}
 		}
+		System.out.println("---="+ids.size());
+		
+		deleteBatchSolrList(ids);
 		
 /*		List<Integer> itList = new ArrayList();
 		int j =10;
@@ -352,5 +365,14 @@ public class SolrUtils {
 		List ret = itList.subList(0, 8);
 		List ret1 = itList.subList(1, 10);
 		*/
+	}
+	
+	
+	public static SolrQuery getSolrQueryNoCond(){
+		SolrQuery query = new SolrQuery();  
+	    query.setQuery("*:*"); 
+	    query.setStart(SolrInfoConstants.PAGE_START);
+		query.setRows(SolrInfoConstants.PAGE_ROWS);
+		return query;
 	}
 }
