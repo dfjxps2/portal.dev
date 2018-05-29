@@ -7,8 +7,13 @@ import javax.jws.WebService;
 public interface IDataSynchronizedWsdl {
 	
 	//同步单个用户数据
-	public String getUsersDataByIDOrName(@WebParam(name = "userName") String userName);
+	public String getUsersDataByUserID(@WebParam(name = "userID") String userID);
 	
 	//同步批量用户数据
 	public String getAllUserData(); 
+	
+	//同步菜单权限数据
+	public String getMenuPrivilegeByUserID(String userID);
+	
+
 }

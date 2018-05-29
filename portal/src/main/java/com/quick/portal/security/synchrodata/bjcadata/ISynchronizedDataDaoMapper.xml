@@ -2,20 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.quick.portal.security.synchrodata.bjcadata.ISynchronizedDataDao">
 	
-	<!-- 用户返回MAP -->
-<!-- 	<resultMap id="UserResultMap" type="com.quick.portal.sysUser.SysUserDO">
-        <result property="user_id" column="USER_ID" />
-        <result property="user_name" column="USER_NAME" />
-        <result property="user_password" column="USER_PASSWORD" />
-        <result property="user_real_name" column="USER_REAL_NAME" />
-        <result property="user_state" column="USER_STATE" />
-        <result property="job_id" column="JOB_ID" />
-        <result property="job_name" column="JOB_NAME" />
-        <result property="user_addr" column="USER_ADDR" />
-        <result property="user_tel" column="USER_TEL" />
-        <result property="cre_time" column="CRE_TIME" />
-        <result property="upd_time" column="UPD_TIME" />
-    </resultMap> -->
 	
     <!-- 同步角色信息开始 -->
     <!-- 新增  user_role_tmp-->
@@ -207,33 +193,23 @@
 	<!-- 下发CAS用户到集成系统,下发批量用户数据 -->
 	<select id="getAllUsersData" parameterType="String" resultType="map">
 		<![CDATA[ 
-		SELECT U.USER_ID,U.USER_NAME,U.USER_PASSWORD,
-    		   U.USER_REAL_NAME,U.USER_STATE,U.JOB_ID,B.JOB_NAME,
-    		   U.USER_ADDR,
-    		   U.USER_TEL,
-    		   U.CRE_TIME,
-    		   U.UPD_TIME
-		FROM SYS_USER U,USER_JOB B 
-		WHERE  U.JOB_ID=B.JOB_ID
-		AND U.USER_STATE =1 AND U.USER_GLOBAL_ID IS NULL 
+		SELECT U.USER_ID,U.USER_NAME,
+    		   U.USER_REAL_NAME,U.USER_STATE
+		FROM SYS_USER U
+		WHERE U.USER_STATE =1 AND U.USER_GLOBAL_ID IS NULL 
 		 
 		]]> 
 	</select>
 	<!-- 下发单个用户数据 -->
-	<select id="getUsersDataByIDOrName" parameterType="String" resultType="map">
+	<select id="getUsersDataByUserID" parameterType="String" resultType="map">
 		<![CDATA[ 
-		SELECT U.USER_ID,U.USER_NAME,U.USER_PASSWORD,
-    		   U.USER_REAL_NAME,U.USER_STATE,U.JOB_ID,B.JOB_NAME,
-    		   U.USER_ADDR,
-    		   U.USER_TEL,
-    		   U.CRE_TIME,
-    		   U.UPD_TIME
-		FROM SYS_USER U,USER_JOB B 
-		WHERE  U.JOB_ID=B.JOB_ID
-		AND U.USER_STATE =1 AND U.USER_GLOBAL_ID IS NULL 	]]> 
+		SELECT U.USER_ID,U.USER_NAME,
+    		   U.USER_REAL_NAME,U.USER_STATE
+		FROM SYS_USER U
+		WHERE  U.USER_STATE =1 AND U.USER_GLOBAL_ID IS NULL 	]]> 
 		<if test="_parameter != null and _parameter != ''">
 			<![CDATA[ 
-	       		AND ( USER_NAME = #{_parameter}  OR USER_REAL_NAME = #{_parameter})
+	       		AND  U.USER_NAME = #{_parameter}  
 	    	]]>
 	    </if>  
 		 
@@ -308,5 +284,34 @@
 	<!-- 同步用户与部门关系信息结束 -->
     
     
+    
+    
+    
+    
+    
+	<!-- 下发CAS用户到集成系统,下发菜单权限数据 -->
+	<select id="getMenuPrivilegeByUserID" parameterType="String" resultType="map">
+		<![CDATA[ 
+				SELECT S.USER_REAL_NAME,S.USER_NAME,MENU_CN_NAME,IFNULL(U.MENU_NAME,'') AS MENU_NAME
+				FROM USER_ROLE R
+				INNER JOIN USER_ROLE_RELA A 
+				ON R.ROLE_ID= A.ROLE_ID
+				INNER JOIN  SYS_USER S
+				ON S.USER_ID = A.USER_ID
+				AND S.USER_STATE=1
+				INNER JOIN MENU_PRIVILEGE E
+				ON R.ROLE_ID =E.ROLE_ID
+				INNER JOIN SYS_MENU U
+				ON E.MENU_ID =U.MENU_ID
+				AND U.MENU_STATE=1
+				WHERE  R.ROLE_STATE =1  
+		]]> 
+		
+		<if test="_parameter != null and _parameter != ''">
+			<![CDATA[ 
+	       		 AND  USER_NAME = #{_parameter}
+	    	]]>
+	    </if>  
+	</select>
     
 </mapper>

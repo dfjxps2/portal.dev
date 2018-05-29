@@ -57,7 +57,7 @@ public class CxfClientTest {
         factory.setAddress("http://127.0.0.1:6080/portal/UserDataSync");    
         IDataSynchronizedWsdl service = (IDataSynchronizedWsdl)factory.create();    
         System.out.println("开始调用webservice...");    
-        String result = service.getUsersDataByIDOrName("米饭");
+        String result = service.getUsersDataByUserID("米饭");
         System.out.println("------------="+result);  
   
     }  

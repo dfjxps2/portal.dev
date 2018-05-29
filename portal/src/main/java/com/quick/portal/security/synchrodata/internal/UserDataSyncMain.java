@@ -15,7 +15,7 @@ public class UserDataSyncMain {
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(
 				new String[] { "/spring/app-webclient.xml" });
 		IDataSynchronizedWsdl client = (IDataSynchronizedWsdl) context.getBean("client");
-		String response = client.getUsersDataByIDOrName(userName);
+		String response = client.getUsersDataByUserID(userName);
 		System.out.println("Response: test  " + response);
 		System.exit(0);
 	}

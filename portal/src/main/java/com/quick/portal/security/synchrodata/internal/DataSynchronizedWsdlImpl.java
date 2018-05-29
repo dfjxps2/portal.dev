@@ -19,12 +19,12 @@ public class DataSynchronizedWsdlImpl implements IDataSynchronizedWsdl {
 	 * 同步单个用户数据
 	 */
 	@Override
-	public String getUsersDataByIDOrName(@WebParam(name = "userName") String userName) {
+	public String getUsersDataByUserID(@WebParam(name = "userID") String userID) {
 		String str = null;
-		if(null == userName || "".equals(userName)){
+		if(null == userID || "".equals(userID)){
 			str = Dom4jUtil.creatErrXmlFile(SynchronizedDataConstants.FAIL_STATUS,SynchronizedDataConstants.PARAM_ISNULL_FAIL_MSG);
 		}else{
-			str = userDataSyncService.getUsersDataByIDOrName(userName);
+			str = userDataSyncService.getUsersDataByUserID(userID);
 		}
 		return str;
 	}
@@ -36,6 +36,23 @@ public class DataSynchronizedWsdlImpl implements IDataSynchronizedWsdl {
 	@Override
 	public String getAllUserData() {
 		String str = userDataSyncService.getAllUserData();
+		return str;
+	}
+
+	
+	/*
+	 * 同步菜单权限数据
+	 * (non-Javadoc)
+	 * @see com.quick.portal.security.synchrodata.internal.IDataSynchronizedWsdl#getMenuPrivilegeByUserID(java.lang.String)
+	 */
+	@Override
+	public String getMenuPrivilegeByUserID(String userID) {
+		String str = null;
+		if(null == userID || "".equals(userID)){
+			str = Dom4jUtil.creatErrXmlFile(SynchronizedDataConstants.FAIL_STATUS,SynchronizedDataConstants.USERID_PARAM_ISNULL_FAIL_MSG);
+		}else{
+			str = userDataSyncService.getMenuPrivilegeByUserID(userID);
+		}
 		return str;
 	}
 

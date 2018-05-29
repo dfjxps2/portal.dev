@@ -30,7 +30,7 @@ public class UserDataSyncClientTest {
 		//获取服务实现类
 		IDataSynchronizedWsdl wsSoap = service.getPort(IDataSynchronizedWsdl.class);
 		//调用查询方法
-		String result = wsSoap.getUsersDataByIDOrName("World");
+		String result = wsSoap.getUsersDataByUserID("World");
 		System.out.println("----------="+result);
 	}
 }

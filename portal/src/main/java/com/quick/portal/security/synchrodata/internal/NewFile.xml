@@ -3,16 +3,8 @@
 	<body>
 		<status>1</status>
 		<msg></msg>
-		<total>5</total>
+		<total>6</total>
 		<items>
-			<fieldinfo>
-				<fieldname>JOB_ID</fieldname>
-				<fieldvale>1</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>USER_PASSWORD</fieldname>
-				<fieldvale>12345</fieldvale>
-			</fieldinfo>
 			<fieldinfo>
 				<fieldname>USER_ID</fieldname>
 				<fieldvale>1</fieldvale>
@@ -29,24 +21,8 @@
 				<fieldname>USER_REAL_NAME</fieldname>
 				<fieldvale>管理员</fieldvale>
 			</fieldinfo>
-			<fieldinfo>
-				<fieldname>JOB_NAME</fieldname>
-				<fieldvale>市委书记</fieldvale>
-			</fieldinfo>
 		</items>
 		<items>
-			<fieldinfo>
-				<fieldname>USER_TEL</fieldname>
-				<fieldvale>123567</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>JOB_ID</fieldname>
-				<fieldvale>3</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>USER_PASSWORD</fieldname>
-				<fieldvale>24c9e15e52afc47c225b757e7bee1f9d</fieldvale>
-			</fieldinfo>
 			<fieldinfo>
 				<fieldname>USER_ID</fieldname>
 				<fieldvale>2</fieldvale>
@@ -54,10 +30,6 @@
 			<fieldinfo>
 				<fieldname>USER_STATE</fieldname>
 				<fieldvale>1</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>USER_ADDR</fieldname>
-				<fieldvale>uuuuuuu</fieldvale>
 			</fieldinfo>
 			<fieldinfo>
 				<fieldname>USER_NAME</fieldname>
@@ -67,24 +39,8 @@
 				<fieldname>USER_REAL_NAME</fieldname>
 				<fieldvale>用户1</fieldvale>
 			</fieldinfo>
-			<fieldinfo>
-				<fieldname>JOB_NAME</fieldname>
-				<fieldvale>副市长</fieldvale>
-			</fieldinfo>
 		</items>
 		<items>
-			<fieldinfo>
-				<fieldname>USER_TEL</fieldname>
-				<fieldvale>123567</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>JOB_ID</fieldname>
-				<fieldvale>4</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>USER_PASSWORD</fieldname>
-				<fieldvale>7e58d63b60197ceb55a1c487989a3720</fieldvale>
-			</fieldinfo>
 			<fieldinfo>
 				<fieldname>USER_ID</fieldname>
 				<fieldvale>3</fieldvale>
@@ -94,10 +50,6 @@
 				<fieldvale>1</fieldvale>
 			</fieldinfo>
 			<fieldinfo>
-				<fieldname>USER_ADDR</fieldname>
-				<fieldvale>wwww</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
 				<fieldname>USER_NAME</fieldname>
 				<fieldvale>user2</fieldvale>
 			</fieldinfo>
@@ -105,42 +57,32 @@
 				<fieldname>USER_REAL_NAME</fieldname>
 				<fieldvale>用户2</fieldvale>
 			</fieldinfo>
-			<fieldinfo>
-				<fieldname>JOB_NAME</fieldname>
-				<fieldvale>局长</fieldvale>
-			</fieldinfo>
 		</items>
 		<items>
 			<fieldinfo>
-				<fieldname>USER_TEL</fieldname>
-				<fieldvale>123</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>JOB_ID</fieldname>
-				<fieldvale>2</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>UPD_TIME</fieldname>
-				<fieldvale>2018-04-20 14:20:51.0</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>USER_PASSWORD</fieldname>
-				<fieldvale>21232f297a57a5a743894a0e4a801fc3</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>CRE_TIME</fieldname>
-				<fieldvale>2018-04-20 14:20:51.0</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
 				<fieldname>USER_ID</fieldname>
-				<fieldvale>26</fieldvale>
+				<fieldvale>10</fieldvale>
 			</fieldinfo>
 			<fieldinfo>
 				<fieldname>USER_STATE</fieldname>
 				<fieldvale>1</fieldvale>
 			</fieldinfo>
 			<fieldinfo>
-				<fieldname>USER_ADDR</fieldname>
+				<fieldname>USER_NAME</fieldname>
+				<fieldvale>admin1</fieldvale>
+			</fieldinfo>
+			<fieldinfo>
+				<fieldname>USER_REAL_NAME</fieldname>
+				<fieldvale>管理员1</fieldvale>
+			</fieldinfo>
+		</items>
+		<items>
+			<fieldinfo>
+				<fieldname>USER_ID</fieldname>
+				<fieldvale>26</fieldvale>
+			</fieldinfo>
+			<fieldinfo>
+				<fieldname>USER_STATE</fieldname>
 				<fieldvale>1</fieldvale>
 			</fieldinfo>
 			<fieldinfo>
@@ -151,32 +93,8 @@
 				<fieldname>USER_REAL_NAME</fieldname>
 				<fieldvale>eeee</fieldvale>
 			</fieldinfo>
-			<fieldinfo>
-				<fieldname>JOB_NAME</fieldname>
-				<fieldvale>市长</fieldvale>
-			</fieldinfo>
 		</items>
 		<items>
-			<fieldinfo>
-				<fieldname>USER_TEL</fieldname>
-				<fieldvale>123</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>JOB_ID</fieldname>
-				<fieldvale>16</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>UPD_TIME</fieldname>
-				<fieldvale>2018-04-23 11:17:31.0</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>USER_PASSWORD</fieldname>
-				<fieldvale>21232f297a57a5a743894a0e4a801fc3</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>CRE_TIME</fieldname>
-				<fieldvale>2018-04-23 11:17:31.0</fieldvale>
-			</fieldinfo>
 			<fieldinfo>
 				<fieldname>USER_ID</fieldname>
 				<fieldvale>31</fieldvale>
@@ -193,11 +111,8 @@
 				<fieldname>USER_REAL_NAME</fieldname>
 				<fieldvale>user3</fieldvale>
 			</fieldinfo>
-			<fieldinfo>
-				<fieldname>JOB_NAME</fieldname>
-				<fieldvale>科员</fieldvale>
-			</fieldinfo>
 		</items>
 	</body>
 </response>
+
       

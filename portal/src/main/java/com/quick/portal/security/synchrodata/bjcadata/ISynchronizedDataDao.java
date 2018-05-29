@@ -102,10 +102,12 @@ public interface ISynchronizedDataDao<DepartmentInformation> extends ISysBaseDao
 	/*
 	 * 下发单个用户数据
 	 */
-	public List<Map<String, Object>> getUsersDataByIDOrName(String userID);
+	public List<Map<String, Object>> getUsersDataByUserID(String userID);
 	
 	/*
 	 * 下发批量用户数据
 	 */
 	public List<Map<String, Object>> getAllUsersData();
+	//下发CAS用户到集成系统,下发菜单权限数据
+	public List<Map<String, Object>> getMenuPrivilegeByUserID(String userID);
 }

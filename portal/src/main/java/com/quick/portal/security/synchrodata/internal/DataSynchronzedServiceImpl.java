@@ -26,9 +26,9 @@ public class DataSynchronzedServiceImpl implements IDataSynchronizedService {
 	/*
 	 * 同步单个用户数据
 	 */
-	public String getUsersDataByIDOrName(String userName){
+	public String getUsersDataByUserID(String userID){
 		String xml = null;
-		List<Map<String, Object>> retList = userDataSyncDao.getUsersDataByIDOrName(userName);
+		List<Map<String, Object>> retList = userDataSyncDao.getUsersDataByUserID(userID);
 		if(retList.isEmpty() || retList.size()==0){
 			xml = Dom4jUtil.creatErrXmlFile(SynchronizedDataConstants.FAIL_STATUS,SynchronizedDataConstants.DATA_ISNULL_FAIL_MSG);
 		}else{
@@ -60,6 +60,31 @@ public class DataSynchronzedServiceImpl implements IDataSynchronizedService {
 			} catch (IOException e) {
 				xml = Dom4jUtil.creatErrXmlFile(SynchronizedDataConstants.FAIL_STATUS,e.getLocalizedMessage());
 			} catch (DocumentException e) {
+				xml = Dom4jUtil.creatErrXmlFile(SynchronizedDataConstants.FAIL_STATUS,e.getLocalizedMessage());
+			}
+		}
+		return xml;
+	}
+	
+	/*
+	 *  同步菜单权限数据
+	 * (non-Javadoc)
+	 * @see com.quick.portal.security.synchrodata.internal.IDataSynchronizedService#getMenuPrivilegeByUserID(java.lang.String)
+	 */
+	@Override
+	public String getMenuPrivilegeByUserID(String userID) {
+		String xml = null;
+		List<Map<String, Object>> retList = userDataSyncDao.getMenuPrivilegeByUserID(userID);
+		if(retList.isEmpty() || retList.size()==0){
+			xml = Dom4jUtil.creatErrXmlFile(SynchronizedDataConstants.FAIL_STATUS,SynchronizedDataConstants.DATA_ISNULL_FAIL_MSG);
+		}else{
+			try {
+				xml = Dom4jUtil.writeFormatXML(retList);
+			} catch (IOException e) {
+				xml = Dom4jUtil.creatErrXmlFile(SynchronizedDataConstants.FAIL_STATUS,e.getLocalizedMessage());
+				// TODO Auto-generated catch block
+			} catch (DocumentException e) {
+				// TODO Auto-generated catch block
 				xml = Dom4jUtil.creatErrXmlFile(SynchronizedDataConstants.FAIL_STATUS,e.getLocalizedMessage());
 			}
 		}
