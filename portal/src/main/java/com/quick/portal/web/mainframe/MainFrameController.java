@@ -127,7 +127,7 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
     
     
     //添加用户
-    @RequestMapping(value = "/sendLog", method = RequestMethod.POST)
+    @RequestMapping(value = "/sendLog")
     @ResponseBody
     public void sendLog(HttpServletRequest request, int menuId,String menuNm) throws Exception {
     	//记录日志
@@ -139,7 +139,7 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
     }
     
     //
-    @RequestMapping(value = "/getIsAppMenuByID", method = RequestMethod.POST)
+    @RequestMapping(value = "/getIsAppMenuByID")
     @ResponseBody
     public void getIsAppMenuByID(HttpServletResponse res,int menuId) throws Exception {
     	String	flag = sysMenuService.getIsAppMenuByID(menuId);
