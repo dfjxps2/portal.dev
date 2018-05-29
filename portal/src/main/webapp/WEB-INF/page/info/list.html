@@ -207,9 +207,9 @@ a, img {
                 	   if (row.portal_doc_class=="1") {
                 		   doc_class = '<span style="color:#9ACD32">指标</span>';  
                 	   }else if(row.portal_doc_class=="2"){
-                		   doc_class = '<span style="color:#F8F8F8">消息</span>';
+                		   doc_class = '<span style="color:#9ACD32">消息</span>';
                 	   }else if(row.portal_doc_class=="3"){
-                		   doc_class = '<span style="color:#CFCFCF">应用</span>';
+                		   doc_class = '<span style="color:#9ACD32">应用</span>';
                 	   }
                 	   return doc_class;
                    }},
@@ -319,5 +319,10 @@ a, img {
 		document.getElementById("keyword").value=str;
 		$ui.find('.arrowUp').addClass('arrowDown').removeClass('arrowUp').andSelf().find('.dropdown').slideUp(10);
 	}
+	
+	$ui.bind('mouseleave',function(){
+		$ui.find('.arrowUp').addClass('arrowDown').removeClass('arrowUp').andSelf().find('.dropdown').slideUp(500);
+	});
+
 	
   </script>
