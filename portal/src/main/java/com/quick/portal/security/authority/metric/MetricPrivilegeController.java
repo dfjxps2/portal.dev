@@ -73,7 +73,7 @@ public class MetricPrivilegeController extends SysBaseController<MetricPrivilege
      *保存指标权限 
      */
     
-    @RequestMapping(value = "/saveMetricData",method = RequestMethod.POST)
+    @RequestMapping(value = "/saveMetricData")
     @ResponseBody
     public String saveMetricData(String metricData) throws Exception {
     	String flag = "1";
