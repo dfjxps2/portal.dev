@@ -109,5 +109,5 @@ public interface ISynchronizedDataDao<DepartmentInformation> extends ISysBaseDao
 	 */
 	public List<Map<String, Object>> getAllUsersData();
 	//下发CAS用户到集成系统,下发菜单权限数据
-	public List<Map<String, Object>> getMenuPrivilegeByUserID(String userID);
+	public List<Map<String, Object>> getFunPrivilegeByUserID(String userID);
 }

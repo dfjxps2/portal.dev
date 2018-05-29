@@ -8,7 +8,7 @@ public interface IDataSynchronizedService {
 	public String getAllUserData();
 		
 	//同步菜单权限数据
-	public String getMenuPrivilegeByUserID(String userID);
+	public String getFunPrivilegeByUserID(String userID);
 		
    
 }

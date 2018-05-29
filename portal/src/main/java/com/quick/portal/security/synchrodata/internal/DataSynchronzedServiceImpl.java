@@ -72,9 +72,9 @@ public class DataSynchronzedServiceImpl implements IDataSynchronizedService {
 	 * @see com.quick.portal.security.synchrodata.internal.IDataSynchronizedService#getMenuPrivilegeByUserID(java.lang.String)
 	 */
 	@Override
-	public String getMenuPrivilegeByUserID(String userID) {
+	public String getFunPrivilegeByUserID(String userID) {
 		String xml = null;
-		List<Map<String, Object>> retList = userDataSyncDao.getMenuPrivilegeByUserID(userID);
+		List<Map<String, Object>> retList = userDataSyncDao.getFunPrivilegeByUserID(userID);
 		if(retList.isEmpty() || retList.size()==0){
 			xml = Dom4jUtil.creatErrXmlFile(SynchronizedDataConstants.FAIL_STATUS,SynchronizedDataConstants.DATA_ISNULL_FAIL_MSG);
 		}else{

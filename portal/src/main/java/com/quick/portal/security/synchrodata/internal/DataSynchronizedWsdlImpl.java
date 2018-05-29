@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.quick.portal.security.synchrodata.bjcadata.SynchronizedDataConstants;
 
 
-@WebService(serviceName = "UserDataSync")
+@WebService(serviceName = "intlDataSynchronizedService")
 public class DataSynchronizedWsdlImpl implements IDataSynchronizedWsdl {
 	
 	@Autowired
@@ -46,12 +46,12 @@ public class DataSynchronizedWsdlImpl implements IDataSynchronizedWsdl {
 	 * @see com.quick.portal.security.synchrodata.internal.IDataSynchronizedWsdl#getMenuPrivilegeByUserID(java.lang.String)
 	 */
 	@Override
-	public String getMenuPrivilegeByUserID(String userID) {
+	public String getFunPrivilegeByUserID(String userID) {
 		String str = null;
 		if(null == userID || "".equals(userID)){
 			str = Dom4jUtil.creatErrXmlFile(SynchronizedDataConstants.FAIL_STATUS,SynchronizedDataConstants.USERID_PARAM_ISNULL_FAIL_MSG);
 		}else{
-			str = userDataSyncService.getMenuPrivilegeByUserID(userID);
+			str = userDataSyncService.getFunPrivilegeByUserID(userID);
 		}
 		return str;
 	}

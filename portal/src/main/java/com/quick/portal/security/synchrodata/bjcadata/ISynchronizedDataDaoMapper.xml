@@ -290,9 +290,9 @@
     
     
 	<!-- 下发CAS用户到集成系统,下发菜单权限数据 -->
-	<select id="getMenuPrivilegeByUserID" parameterType="String" resultType="map">
+	<select id="getFunPrivilegeByUserID" parameterType="String" resultType="map">
 		<![CDATA[ 
-				SELECT S.USER_REAL_NAME,S.USER_NAME,MENU_CN_NAME,IFNULL(U.MENU_NAME,'') AS MENU_NAME
+				SELECT S.USER_REAL_NAME,S.USER_NAME,U.MENU_CN_NAME AS FUN_CN_NAME,IFNULL(U.MENU_NAME,'') AS FUN_NAME,U.APP_ID
 				FROM USER_ROLE R
 				INNER JOIN USER_ROLE_RELA A 
 				ON R.ROLE_ID= A.ROLE_ID
@@ -303,6 +303,7 @@
 				ON R.ROLE_ID =E.ROLE_ID
 				INNER JOIN SYS_MENU U
 				ON E.MENU_ID =U.MENU_ID
+				AND U.APP_ID IS NOT NULL
 				AND U.MENU_STATE=1
 				WHERE  R.ROLE_STATE =1  
 		]]> 
