@@ -22,7 +22,7 @@
             padding:5px;
         }
         .section {
-            width:975px;
+            width:1025px;
             float:left;
             padding:5px;
         }
@@ -41,17 +41,8 @@
     <div class="col-sm-12">
             <div class="ibox ibox-x">
                 <div class="ibox-content ibox-content-x">
-                    <div class="other">
-                        <div class="zong">
-                            <div class="firstdiv">
-                                <h3>内容标签</h3>
-                            </div>
-                            <div class="nav">
-                                    <ul id="treeDemo" class="ztree" style="float: left"></ul>
-                           </div>
-                        </div>
                             <form id="formSearch" class="form-inline">
-                                <div class="form-group" style="padding-left: 5px;width:80px;">
+                                <div class="form-group" style="padding-left: 5px;width:110px;">
                                     <select name="appr_state" class="input-group form-control form-control-green select_change" id="appr_state">
                                         <option value="">审核状态</option>
                                         <option value="1">人工审核通过</option>
@@ -60,32 +51,30 @@
                                         <option value="4">审核未通过</option>
                                     </select>
                                 </div>
-                                <div class="form-group" style="padding-left: 5px;width:100px;">
-                                    <select class="form-control form-control-green select_change" id="msg_class_id" name="msg_class_id">
+                                <div class="form-group" style="padding-left: 5px;width:110px;">
+                                  <select class="form-control form-control-green select_change" id="msg_class_id" name="msg_class_id">
                                     </select>
                                 </div>
-                                <div class="form-group" style="padding-left: 5px;width:100px;">
+                                <div class="form-group" style="padding-left: 5px;width:110px;">
                                     <input id="pub_time" name="pub_time" class="input-sm form-control" type="text" placeholder="发布日期"/>
                                 </div>
-                                <div class="form-group" style="padding-left: 0px;width: 90px;">
+                                <div class="form-group" style="padding-left: 5px;width: 90px;">
                                     <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="query();"> 查询</button> </span>
                                 </div>
-                                <div class="form-group" style="padding-left:0px;width: 90px;">
+                                <div class="form-group" style="padding-left:5px;width: 90px;">
                                     <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="deleteMes();">删除内容</button> </span>
                                 </div>
-                                <div class="form-group" style="padding-left:0px;width: 90px;">
-                                    <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="mesIssueRe();">内容发布申请</button> </span>
+                                <div class="form-group" style="padding-left:5px;width: 110px;">
+                                    <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="mesIssueRe();">发布内容</button> </span>
                                 </div>
-                                <div class="form-group" style="padding-left:0px;width: 90px;">
-                                    <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="mesChange();">内容修改</button> </span>
+                                <div class="form-group" style="width:1050px;padding-top: 4px;display: inline-block;padding-left: 6px;position: relative ">
+                                        <div style="position:absolute;right:70px;cursor:pointer;display:none;padding-top: 8px" align="center"  class="input_clear">
+                                            <button type="button" class="close" data-dismiss="modal" style="text-align: center" aria-hidden="true" >×</button></div>
+                                    <div class="input-group" style="margin-right: -3px"><span class="input-group-btn" style="width: 20px">
+                                        <button class="btn btn-default" type="button" onclick="chosebox('tag_text', '${G.serverUrl}/mespubtags','tags');">...</button></span></div>
+                                        <input style="left: auto;width: 966px" type="text" id="tag_text" placeholder="标签"  class=" form-control required" name="keyword"/>
                                 </div>
-                                <div  class="form-group" style="padding-left:0px;width: 90px;">
-                                    <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="apprRules();">审核管理</button> </span>
-                                </div>
-                                <div class="form-group" style="padding-left:0px;width: 90px;right: auto">
-                                    <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="mesTag();">内容标签管理</button> </span>
-                                </div>
-                                <div class="col-xs-9"><input type="hidden" id="tag_text" name="tag_text" class="form-control" /></div>
+                                <input type="hidden" id="tags" name="tags" class="form-control" />
                             </form>
                         <div class="section">
                             <div style ="margin:5px;">
@@ -103,58 +92,9 @@
     var queryParm = '';
     var flag=true;
     var pageFlag=0;
-    var isChekTagFlag=false;
     var tag_checked_val=null;
     var tags = null;
 
-    //内容查询--左侧标签树
-    var zTreeObj;
-    $(document).ready(function(){
-        listAllTag();
-    });
-
-    function listAllTag(){
-        zTreeObj = null;
-        var ztreeSetting = {
-            check: {enable: true},
-            data: {
-                simpleData: {
-                    enable: true
-                }
-            },
-            view: { }
-        };
-        $.ajax({
-            type: "get",
-            url: "listAllTag",
-            async:false,
-            dataType: "json",
-            success: function(data){
-                console.log(JSON.stringify(data));
-                var ztreeNodes = new Array();
-                if(data!=null&&data.length>0){
-                    $.each(data,function(i,dataNode){
-                        var tag_type_id = dataNode.tag_type_id;
-                        var super_type_id = dataNode.super_type_id;
-                        var tag_type_name = dataNode.tag_type_name;
-                        ztreeNodes.push({"id":tag_type_id, "pId":super_type_id, "name":tag_type_name});
-                    });
-                }
-                zTreeObj = $.fn.zTree.init($("#treeDemo"), ztreeSetting, ztreeNodes);
-            }
-        });
-    }
-
-    //获取树中选中的标签值
-    function nodes(){
-        var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
-        var  node=  treeObj.getCheckedNodes(true);
-        var v ="";
-        for(var i=0;i<node.length;i++){
-            v+=node[i].id + ",";
-        }
-        return v;
-    }
 
     //初始化表格
     function  config(){
@@ -186,7 +126,6 @@
                         var temp ='<a href= "${G.serverUrl}/mesdetail?msg_id='+row.msg_id+'">'+row.msg_title+'</a>';
                         return temp;
                     }},
-                { field: 'msg_digest', title: '摘要', width: '10%'  },
                 { field: 'msg_src_name', title: '来源', width: '5%'  },
                 { field: 'pub_time',title: '发布日期', width: '8%'},
                 { field: 'appr_state', title: '状态', width: '10%' ,formatter:function (value,rec) {
@@ -199,7 +138,10 @@
                 { field: 'msg_class_name', title: '密级', width: '8%'  },
                 { field: 'msgtext',title: '标签', width: '15%'},
                 { field: 'apprname', title: '审核人', width: '8%'  },
-                { field: 'appr_time',title: '审核时间', width: '10%'}
+                { field: 'appr_time',title: '审核时间', width: '10%'},
+                { field: 'CZ',  title: '操作',width: '10%', formatter:function(value,row,index){
+                    return "<button type='button' class='btn_el' onclick='mesChange(\""+row.msg_id+"\")'>编辑</button>";
+                }}
             ],onPageChange:function(number, size){
                 pageNum=number;
                 pageSize=size;
@@ -207,11 +149,7 @@
             },onClickRow:function (row,e) {
                 tag_checked_val=row.tag_id;
 
-            },onClickCell:function () {
-
-
-            }
-            ,onPostBody:function(data){
+            },onPostBody:function(data){
                 if(queryParm=='' &&　(data == null || data.length == 0)){
                     $(".no-records-found td").html('您还没有添加相关信息，请点击<a onclick="add();" href="javascript:void(0);">添加</a>');
                 }
@@ -225,15 +163,63 @@
         }
     }
 
-    function formatOperat(value,row,index){
-
-    }
-    function query(){
-        tags = nodes();
-        if(tags == "undefined"){
-            tags = null;
+    //文本框删除按钮
+    //当通过鼠标点击选中元素或通过 tab 键定位到元素时，该元素就会获得焦点
+    $("input").focus(function () {
+        $(this).parent().children(".input_clear").show();
+    });
+    //当元素失去焦点时发生 blur 事件。
+    $("input").blur(function(){
+        if($(this).val()=='')
+        {
+            $(this).parent().children(".input_clear").hide();
         }
-        $("#tag_text").val(tags);
+    });
+    $(".input_clear").click(function(){
+        var a = null;
+        $(this).parent().find('input').val(a);
+        $("#tags").val(null);
+        $(this).hide();
+    });
+
+function chosebox(nid, url,id, fn){
+        if(!layer.values)
+            layer.values = {};
+        var val = $("#"+id).val();
+        layer.open({
+            type: 2 //此处以iframe举例
+            ,title: '选择记录'
+            ,area: ['680px', '500px']
+            ,shade: 0
+            ,maxmin: true
+            ,content: url + "?rid=" + val
+            ,btn: ['确认', '关闭'] //只是为了演示
+            ,yes: function(index, layero){
+                var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                if(!iframeWin._chosenId){
+                    alert('您还未选择记录，请点击要选择的行');
+                    return;
+                }
+                if(id){
+                    $("#"+nid).val(iframeWin._chosenName);
+                    $("#"+id).val(iframeWin._chosenAllId);
+                }
+                if(fn){
+                    var gd = iframeWin._gd["list"];
+                    var dt = gd.getSelect();
+                    fn(dt || [], iframeWin);
+                }
+                layer.closeAll();
+            }
+            ,btn2: function(){
+                layer.closeAll();
+            }
+        });
+    }
+
+
+
+    function query(){
         _gd['list'].refresh();
     }
 
@@ -277,28 +263,9 @@
             });
     }
 
-    //内容标签管理
-    function mesTag() {
-        window.location.href=quick.serverUrl+"/taglist";
-    }
     //内容修改
-    function mesChange() {
-        var json = document.getElementsByName("msg");
-        var check_val = [];
-        for (var i = 0; i < json.length; i++) {
-            if (json[i].checked) {
-                check_val.push(json[i].value);
-            }
-        }
-        if (check_val.length <= 0) {
-            layer.msg('请选择需要编辑的标签', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
-            return;
-        } else if (check_val.length > 1) {
-            layer.msg('只能编辑一条', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
-            return;
-        } else {
-            window.location.href = quick.serverUrl + "/mesedit?msg_id=" + check_val[0] + getDetailParm();
-        }
+    function mesChange(id) {
+        window.location.href = quick.serverUrl + "/mesedit?msg_id=" + id + getDetailParm();
     }
 
     function getDetailParm(){
@@ -306,14 +273,22 @@
         return s;
     }
 
+    //获取选中的值
+    function checkedVal(name){
+        var json = document.getElementsByName(name)  ;
+        var check_val = [];
+        for(var i=0;i<json.length;i++) {
+            if (json[i].checked) {
+                check_val.push(json[i].value);
+            }
+        }
+        var vals = check_val.join(',');
+        return vals;
+    }
+
     //内容发布申请
     function mesIssueRe() {
        window.location.href=quick.serverUrl+"/mespublish" ;
-    }
-
-    //内容审核管理
-    function apprRules() {
-        window.location.href=quick.serverUrl+"/mesappr";
     }
 
     //内容管理查询--密级下拉框

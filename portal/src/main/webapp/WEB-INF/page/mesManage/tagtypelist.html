@@ -14,14 +14,11 @@
                             <div class="form-group" style="left:50px;width:90px;">
                                 <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="addTagType();"> 新增标签类型</button> </span>
                             </div>
-                            <div class="form-group" style="left:auto;width:90px;">
-                                <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="editTagType();"> 编辑标签类型</button> </span>
-                            </div>
-                            <div class="form-group" style="left:auto;width:90px;">
+                            <div  class="form-group" style="left:auto;width:90px;">
                                 <span class="input-group-btn" style="display:inline-block;"><button id="tag_delete"  class="btn btn-primary " type="button" onclick="deleteTagType();"  > 删除标签类型</button> </span>
                             </div>
                             <div class="form-group" style="left:auto;width:90px;">
-                                    <button type="button" class="btn btn-primary" onclick="cancel();">返回</button>
+                                <button type="button" class="btn btn-primary" onclick="cancel();">返回</button>
                             </div>
                         </form>
 
@@ -62,13 +59,16 @@
             clickToSelect:true,
             columns: [
                 //{  checkbox: true,title:'选择' },
-                {  field: 'TAGSELECT', title: '选择', align: 'center',
+                {  field: 'TAGSELECT', title: '选择',width:'10%', align: 'center',
                     formatter:function(value,rec){
                         return "<input id=\"tags"+rec.tag_type_id+"\" title=\"tags\" class=\"ck_qx\" type=\"checkbox\" name=\"tag\" value=\"" + rec.tag_type_id+ "\" >";
                     }  },
-                { field: 'tag_type_id',  title:'标签类型ID'},
-                { field: 'superTypeName', title: '上级标签类型', width: 90  },
-                { field: 'tag_type_name', title: '标签类型', width: 100  }
+                { field: 'tag_type_id',  title:'标签类型ID',width:'10%'},
+                { field: 'superTypeName', title: '上级标签类型', width: '35%'  },
+                { field: 'tag_type_name', title: '标签类型', width: '35%'  },
+                { field: 'CZ',  title: '操作',width: '10%', formatter:function(value,row,index){
+                    return "<button type='button' class='btn_el' onclick='editTagType(\""+row.tag_type_id+"\")'>编辑</button>";
+                }},
             ],onPageChange:function(number, size){
                 pageNum=number;
                 pageSize=size;
@@ -140,23 +140,8 @@
         menuGoto(quick.editUrl);
     }
 
-    function editTagType() {
-        var json = document.getElementsByName("tag");
-        var check_val = [];
-        for (var i = 0; i < json.length; i++) {
-            if (json[i].checked) {
-                check_val.push(json[i].value);
-            }
-        }
-        if (check_val.length <= 0) {
-            layer.msg('请选择需要编辑的标签', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
-            return;
-        } else if (check_val.length > 1) {
-            layer.msg('只能编辑一条', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
-            return;
-        } else {
-            window.location.href = quick.serverUrl + "/tagtypeedit?tag_type_id=" + check_val[0] + getDetailParm();
-        }
+    function editTagType(id) {
+            window.location.href = quick.serverUrl + "/tagtypeedit?tag_type_id=" + id + getDetailParm();
     }
     //新增标签类型
     function addTagType() {
@@ -183,11 +168,11 @@
         var s= queryParm + "&IpageNum="+pageNum+"&IpageSize="+pageSize;
         return s;
     }
+
     function cancel(){
-        var url = quick.serverUrl+"/taglist" + urlDel(location.search, 'mode','tag_id') + '&RFlag=1';
+        var url = quick.serverUrl+"/taglist" ;
         window.location.href = url;
     }
-
 </script>
 
 </html>

@@ -78,7 +78,7 @@
                                 <div class="col-sm-6 form_ipt_botm">
                                     <div class="form-group">
                                         <label class="col-xs-4 lable_top"><span></span>标签</label>
-                                        <div class="col-xs-8"><div class="input-group"><input type="text" id="tag_text" readOnly="readOnly" class="form-control required"/><span class="input-group-btn"><button class="btn btn-default" type="button" onclick="chosebox('tag_text', '${G.serverUrl}/mespubtag','tagId');">...</button></span></div></div>
+                                        <div class="col-xs-8"><div class="input-group"><input type="text" id="tag_text" name="tag_text" class="form-control required"/><span class="input-group-btn"><button class="btn btn-default" type="button" onclick="chosebox('tag_text', '${G.serverUrl}/mespubtag','tagId');">...</button></span></div></div>
                                     </div>
                                 </div>
 
@@ -90,7 +90,7 @@
                                 </div>
                                 <li class="li_file"  >
                                     <div class="uploader white" >
-                                        <input type="text" class="filename"  readonly="readonly">
+                                        <input id="msg_attachment" type="text" class="filename"  name="msg_attachment" readonly="readonly">
                                         <input id="btn_select" type="button" name="file" class="button_normal"  value="选择附件">
                                         　<input id="upload"  onchange="uploadFiles();"  type="file" name="file"  onmousedown="fileOnMouseDown()" onmouseup="fileOnMouseUp()" />
                                     </div>
@@ -100,7 +100,7 @@
                                 <input id="submit-form" type="button" class="pull-right btn btn-primary" onclick="formCommit()" value="保存">
                                 <input type="hidden" id="msg_id" name="msg_id" class="form-control" />
                                 <input type="hidden" id="msg_content" name="msg_content" class="form-control" />
-                                <input type="hidden" id="msg_attachment" name="msg_attachment" class="form-control" />
+                                <input type="hidden" id="msgattachment" name="msg_attachment" class="form-control"/>
                                 <input type="hidden" id="tagId" name="tagId" class="form-control" />
                                 <input type="hidden" id="msg_src_name" name="msg_src_name" class="form-control" />
                                 <input type="hidden" id="msg_class_name" name="msg_class_name" class="form-control" />
@@ -148,6 +148,7 @@
         }
     };
 
+
     //内容管理查询--密级下拉框
     function  SelectMsgCs() {
         $.ajax({
@@ -177,11 +178,11 @@
             dataType:'json',
             success:function(data){
                 if(data=="1"){
-                    layer.msg('内容修改成功，正在等待审核！', {icon:1,time: 1000,skin: 'layer-ext-moon'},function(){
+                    layer.msg('内容修改成功！', {icon:1,time: 1000,skin: 'layer-ext-moon'},function(){
                         window.location.href = quick.serverUrl+"/list";
                     });
                 }else{
-                    layer.msg('内容修改失败！', {icon:1,time: 1000,skin: 'layer-ext-moon'});
+                    layer.msg('内容修改失败，内容审核未通过！', {icon:1,time: 1000,skin: 'layer-ext-moon'});
                 }
             },
             error:function () {

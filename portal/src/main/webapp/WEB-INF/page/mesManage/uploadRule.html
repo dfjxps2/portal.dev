@@ -118,7 +118,6 @@
             return;
         }
 
-        //$("#errorAret").text("(这里为错误信息提示信息的地方)");
         var uploadValue = $("#upload").val();
         if(uploadValue!="" && uploadValue!=null){
             $("#fat-btn").removeAttr("disabled");
@@ -153,7 +152,7 @@
                     $("#errorMsg").html(data.msg).show();
                 else {
                     $("#errorMsg").html("").hide();
-                    layer.msg('处理完成', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+                    layer.msg('上传完成', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
                 }
             }});}
 </script>

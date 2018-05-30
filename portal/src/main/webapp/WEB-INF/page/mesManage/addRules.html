@@ -24,14 +24,14 @@
                         <div class="row">
                             <div class="col-sm-6 form_ipt_botm">
                                 <div class="form-group">
-                                   <select id="rule_id" name="rule_id" class="form-control form-control-green select_change" readonly="readonly"/>
+                                    <select id="rule_id" name="rule_id" class="form-control form-control-green select_change" readonly="readonly"></select>
                                 </div>
                             </div>
 
                             <div class="col-sm-6 form_ipt_botm">
                                 <div class="form-group">
                                     <label class="col-xs-3 lable_top"><span></span>规则参数值</label>
-                                    <div class="col-xs-9"><input class="form-control" id="param_value" name="param_n" />
+                                    <div class="col-xs-9"><input type="text" class="form-control" id="param_value" name="param_value" />
                                     </div>
                                 </div>
                             </div>
@@ -80,7 +80,7 @@
             success: function(data){
                 if(data=="1"){
                     layer.msg('保存成功！', {icon:1,time: 1000,skin: 'layer-ext-moon'},function(){
-                        window.location.href = quick.serverUrl+"/list";
+                        window.location.href = quick.serverUrl+"/contentrule";
                     });
                 }else{
                     layer.msg('保存失败！', {icon:1,time: 1000,skin: 'layer-ext-moon'});
@@ -93,7 +93,7 @@
     })
 
     function cancel(){
-        var url = quick.listUrl + urlDel(location.search, 'mode','rule_id') + '&RFlag=1';
+        var url = quick.serverUrl+"/contentrule";
         window.location.href = url;
     }
    function SelectRule(){
@@ -103,7 +103,7 @@
             asyn:false,
             dataType:"json",
             success:function (data) {
-                $("#rule_id").append("<option selected hidden value=''>规则类型 参数名称</option><option value=''>选择规则</option> ");
+                $("#rule_id").append("<option selected hidden value=''>规则类型 参数名称</option><option value=''>选择规则</option>");
               for(var i=0;i<data.length;i++){
                   var item = data[i];
                   $("#rule_id").append("<option value="+item.rule_id+""+item.rule_type_name+">"+item.rule_type_name+" "+item.param_name+"</option>")

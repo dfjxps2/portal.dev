@@ -71,7 +71,7 @@
                             <div class="col-sm-6 form_ipt_botm">
                                 <div class="form-group">
                                     <label class="col-xs-3 lable_top"><span class="span_require">*</span>密级</label>
-                                    <div class="col-xs-9"> <select class="form-control required select_change" id="msg_class_id" name="msg_class_id"></select></div>
+                                    <div class="col-xs-9"> <select class="form-control required select_change" id="msg_class_name" name="msg_class_name"></select></div>
                                 </div>
                             </div>
 
@@ -145,10 +145,10 @@
             async:false,
             dataType:"json",
             success:function (data) {
-                $("#msg_class_id").append("<option selected hidden value=''>密级</option><option value= ''>密级</option>");
+                $("#msg_class_name").append("<option selected hidden value=''>密级</option><option value= ''>密级</option>");
                 for(var i=0;i<data.length;i++){
                     var item = data[i];
-                    $("#msg_class_id").append("<option value="+item.msg_class_id+"> "+item.msg_class_name+"</option>")
+                    $("#msg_class_name").append("<option value="+item.msg_class_name+","+item.msg_class_id+"> "+item.msg_class_name+"</option>")
                 }
             }
         });
@@ -169,7 +169,7 @@
             success:function(data){
                 $(".btn_text").html("");
                 if(data=="1"){
-                        layer.msg('内容创建成功，正在等待审核！', {icon:1,time: 1000,skin: 'layer-ext-moon'},function(){
+                        layer.msg('内容已创建成功！', {icon:1,time: 1000,skin: 'layer-ext-moon'},function(){
                             window.location.href = quick.serverUrl+"/list";
                         });
                     }else{

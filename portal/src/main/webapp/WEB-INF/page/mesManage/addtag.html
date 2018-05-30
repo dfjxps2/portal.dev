@@ -86,7 +86,7 @@
             success: function(data){
                 if(data=="1"){
                     layer.msg('保存成功！', {icon:1,time: 1000,skin: 'layer-ext-moon'},function(){
-                        window.location.href = quick.serverUrl+"/list";
+                        window.location.href = quick.serverUrl+"/taglist";
                     });
                 }else{
                     layer.msg('保存失败！', {icon:1,time: 1000,skin: 'layer-ext-moon'});
@@ -99,7 +99,7 @@
     })
 
     function cancel(){
-        var url = quick.listUrl + urlDel(location.search, 'mode','tag_id') + '&RFlag=1';
+        var url = quick.serverUrl+"/taglist" ;
         window.location.href = url;
     }
     function chosebox(nid, url,id, fn){
