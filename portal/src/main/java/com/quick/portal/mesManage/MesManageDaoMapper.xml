@@ -33,7 +33,7 @@
             <![CDATA[AND DATE_FORMAT(appr_time,'%Y-%m-%d %H:%i:%s ')= DATE_FORMAT(#{appr_time},'%Y-%m-%d %H:%i:%s')]]>
         </if>
        <if test="_sql_where != null and _sql_where != '' "> <![CDATA[
-            and ${_sql_where}
+             ${_sql_where}
         ]]> </if>
     </sql>
 
@@ -49,7 +49,7 @@
             AND  tag_type_id =#{tagTypeId}
         </if>
     <if test="_sql_where != null and _sql_where != ''"> <![CDATA[
-            and ${_sql_where}
+             ${_sql_where}
         ]]> </if>
     </sql>
 
@@ -123,10 +123,10 @@
     </select>
 
     <!--内容管理初始化和查询,根据标签查询-->
-    <select id="selectMesByTag" parameterType="map" resultType="map">
-        SELECT mt.msg_id FROM portaldb.msg_tag mt
+    <select id="selectMesByTag" parameterType="java.util.List" resultType="String">
+        SELECT mt.tag_id FROM portaldb.msg_tag mt
         WHERE
-        <foreach collection="tag" item="mesId" open=" " close=" " separator="OR">
+        <foreach collection="list" item="mesId" open=" " close=" " separator="OR">
             msg_id = #{mesId}
         </foreach>
     </select>
@@ -149,7 +149,6 @@
         SET
         msg_class_id= #{msg_class_id},
         msg_digest=  #{msg_digest},
-        msg_content= #{msg_content},
         msg_attachment= #{msg_attachment},
         pub_time= #{pub_time},
         appr_state= #{appr_state},
@@ -182,9 +181,8 @@
 
     <!--内容标签-->
     <select id="selectTagsTree" resultType="map">
-        SELECT e.tag_type_id,e.super_type_id,e.tag_type_name FROM tag_type e
-        UNION
-       SELECT s.tag_id,s.tag_type_id,s.tag_text FROM tags s
+        SELECT b.tag_type_id,b.tag_type_name,GROUP_CONCAT(tag_id,':',tag_text) tag_text  FROM (SELECT DISTINCT t.*,tt.tag_type_name
+        FROM tags t LEFT JOIN tag_type tt on t.tag_type_id=tt.tag_type_id ) b GROUP BY b.tag_type_name;
     </select>
 
     <!--根据标签查询msgid-->
@@ -349,6 +347,9 @@
         </if>
         <if test="tagTypeId!=null and tagTypeId !='' and !'null'.equals(tagTypeId)">
             AND  tm.tag_type_id =#{tagTypeId}
+        </if>
+        <if test="tagId!=null and tagId !='' and !'null'.equals(tagId)">
+            AND  tm.tag_id =#{tagId}
         </if>
         <if test="_sql_where != null and _sql_where != ''"> <![CDATA[
             and ${_sql_where}

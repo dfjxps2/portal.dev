@@ -82,5 +82,7 @@ public interface MesManageDao<MesManageDO> extends ISysBaseDao<MesManageDO> {
     int insertTag(Map<String,Object> tag);
     //增加新标签类型
     int insertTagType(Map<String,Object> tagType);
+    //根据消息ID查对应的标签id
+    List<Map<String,Object>> selectMesByTag(List<Integer> tag);
 
 }
