@@ -1,0 +1,9 @@
+@charset "utf-8";
+
+html, body, ul, li { margin: 0; padding: 6px; line-height: 1.2em;}
+br {line-height:8px; margin:0px;}
+
+h1, h2, ul, li, p { margin: 0; padding: 0; }
+html, body {font-family:georgia, verdana, tahoma, arial, sans-serif; font-size: 0.625em/1.5em; background:#f2f2f2; }
+a {color:#1c769a; text-decoration:none; font-size:1.1em;}
+a:hover {text-decoration:underline;}
