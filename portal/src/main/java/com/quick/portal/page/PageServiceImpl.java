@@ -160,20 +160,22 @@ public class PageServiceImpl extends SysBaseService<PageDO> implements IPageServ
             	List<Map<String, Object>> das = new ArrayList<Map<String,Object>>();
 				if (section_na.equals(metric.get(j).get("section_id"))) {
 					List<Map<String, Object>> id =metricDao.getMetricId(metric.get(j).get("metric_id").toString());
-					sectionMetricDO.setMetric_id(Integer.parseInt(id.get(0).get("metric_id").toString()));
-					sectionMetricDO.setSection_id(section_id);
-					int a=sectionMetricDao.insert(sectionMetricDO);
-                    String[] paramKeys = new String[]{"", "metric_id","category_id","dimension","charts","numb","measure_name"};
-					if (a>0) {
-                        for(int x = 1; x < paramKeys.length; x++){
-                            con =  new SecMetricConfigDo();
-                            con.setUser_id(1);
-                            con.setSec_metric_id(sectionMetricDO.getSec_metric_id());
-                            con.setParam_id(x);
-                            con.setParam_value(metric.get(j).get(paramKeys[x]).toString());
-                            con.setCre_time(now);
-                            metricConfigDao.insert(con);
-                        }
+					if (id.size()>0) {
+						sectionMetricDO.setMetric_id(Integer.parseInt(id.get(0).get("metric_id").toString()));
+						sectionMetricDO.setSection_id(section_id);
+						int a=sectionMetricDao.insert(sectionMetricDO);
+	                    String[] paramKeys = new String[]{"", "metric_id","category_id","dimension","charts","numb","measure_name","time_dim"};
+						if (a>0) {
+	                        for(int x = 1; x < paramKeys.length; x++){
+	                            con =  new SecMetricConfigDo();
+	                            con.setUser_id(1);
+	                            con.setSec_metric_id(sectionMetricDO.getSec_metric_id());
+	                            con.setParam_id(x);
+	                            con.setParam_value(metric.get(j).get(paramKeys[x]).toString());
+	                            con.setCre_time(now);
+	                            metricConfigDao.insert(con);
+	                        }
+						}
 					}
 				}
 			}

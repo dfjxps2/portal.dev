@@ -158,6 +158,7 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
                         + "," + findSubMetricConfig(smid, "4", "charts", config)
                         + "," + findSubMetricConfig(smid, "5", "numb", config)
                         + "," + findSubMetricConfig(smid, "6", "measure_name", config)
+                        + "," + findSubMetricConfig(smid, "7", "time_dim", config)
                         + "}";
                 json += "," + json2;
             }
@@ -175,6 +176,7 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
                 + "," + findSubMetricConfig(sid, "4", "charts", config)
                 + "," + findSubMetricConfig(sid, "5", "numb", config)
                 + "," + findSubMetricConfig(sid, "6", "measure_name", config)
+                + "," + findSubMetricConfig(sid, "7", "time_dim", config)
                 + "}";
         return json;
     }
