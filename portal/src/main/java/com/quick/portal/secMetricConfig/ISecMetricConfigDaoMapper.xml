@@ -22,15 +22,13 @@
             and ${_sql_where}
         ]]> </if>
 	</sql>
-
-    
 	<!-- 删除 -->
 	<delete id="delete" parameterType="String">
 		delete from sec_metric_config where config_id = #{config_id}
 	</delete>
     
     <!--查询-->
-	<select id="select" parameterType="map" resultType="map">
+	<!--<select id="select" parameterType="map" resultType="map">
 		select a.config_id config_id,a.user_id user_id,c.version_num version_num,
 		concat('  指标栏目：',a.sec_metric_id,'  参数：',a.param_id,'  参数值：',a.param_value ) as details,
 		/*a.sec_metric_id sec_metric_id,a.param_value param_value,*/
@@ -44,20 +42,20 @@
 			<include refid="where" />
 		</where>
 		order by a.cre_time DESC
-
-		<!--<if test="_sql_order != null and _sql_order != ''">
-            order by ${_sql_order} DESC
-        </if>-->
-	</select>
-	<!--<select id="select" parameterType="map" resultType="map">
-		select * from user_access_log
+	</select>-->
+	<select id="select" parameterType="map" resultType="map">
+		select a.config_id config_id,a.user_id user_id,c.version_num version_num,
+		GROUP_CONCAT(a.param_value  ORDER BY a.config_id)  as details,
+		 c.is_active as is_active ,
+		a.cre_time cre_time
+		from sec_metric_config a
+		left join sys_user b on a.user_id=b.user_id
+		left join user_config_version c on a.cre_time=c.cre_time
 		<where>
 			<include refid="where" />
 		</where>
-		<if test="_sql_order != null and _sql_order != ''">
-			order by ${_sql_order}
-		</if>
-	</select>-->
+    GROUP BY a.cre_time order by a.cre_time DESC
+	</select>
 	
 	<!-- 查询总记录数 -->
 	<select id="count" parameterType="map" resultType="int">
@@ -69,7 +67,7 @@
 <!--查询用户激活配置表-->
 	<select id="selectUAC" parameterType="map" resultType="int">
 		select count(*) from user_config_version a
-	    where a.config_id = #{config_id}
+	    where a.user_id = #{user_id} and a.term_type_id=#{term_type_id} and a.cre_time=#{cre_time}
 	</select>
 	
 	 <!-- 新增metric -->
@@ -92,14 +90,14 @@
 	<!--新增用户激活配置表-->
 	<insert id="insertUAC" parameterType="map" >
 		insert into user_config_version (
-		config_id,
+
 		user_id,
 		term_type_id,
 		cre_time,
 		version_num,
 		is_active
 		)values(
-		#{config_id},
+
 		#{user_id},
 		#{term_type_id},
 		#{cre_time},
@@ -109,10 +107,14 @@
 	</insert>
 	<insert id="insertUAC_Version" parameterType="map" >
 		insert into user_config_version (
-		config_id,
+		user_id,
+		term_type_id,
+		cre_time,
 		version_num
 		)values(
-		#{config_id},
+		#{user_id},
+		#{term_type_id},
+		#{cre_time},
 		#{version_num}
 		)
 	</insert>
@@ -120,15 +122,18 @@
 	<update id="updateUAC_Active" parameterType="map" >
 		update user_config_version
 		set
-		is_active=#{is_active}  /*0 未激活  1 激活*/
+
+	      is_active=#{is_active}
+
+		/*0 未激活  1 激活*/
 		where
-		config_id=#{config_id}
+		user_id = #{user_id} and term_type_id=#{term_type_id} and cre_time=#{cre_time}
 	</update>
 	<update id="updateUAC_Version" parameterType="map" >
 		update user_config_version
 		set
 		version_num=#{version_num}
 		where
-		config_id=#{config_id}
+		user_id = #{user_id} and term_type_id=#{term_type_id} and cre_time=#{cre_time}
 	</update>
 </mapper>

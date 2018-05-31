@@ -26,17 +26,17 @@
 			   height: $(document.body).height()-50,
 			   toolbar:"#formSearch",
 			   columns: [
-				   { field: 'config_id', title: '配置id', width: 40  },
+				   { field: 'config_id', title: '配置id', width: 30  },
 /*
                    { field: 'user_id', title: '用户id',type:"hidden" , width: 60   },
 */
-				   { field: 'version_num', title: '版本号', width: 40   },
+				   { field: 'version_num', title: '版本号', width: 30   },
 
                    { field: 'cre_time', title: '配置修改时间', width: 80  },
 
-				   { field: 'details', title: '指标配置详情', width: 120   },
+				   { field: 'details', title: '指标配置详情', width: 170   },
 
-				   { field: 'is_active', title: '生效状态', width: 60 ,formatter:function(value,row,index){
+				   { field: 'is_active', title: '生效状态', width: 30 ,formatter:function(value,row,index){
 					   var state = '<span style="color:#CFCFCF">未生效</span>';
 					   if (row.is_active==1) {
 						   state = '<span style="color:#9ACD32">已生效</span>';
@@ -48,13 +48,13 @@
 
 				   { field: 'cz', align:'center', title: '操作',width: 90, formatter:function(value,row,index){
 					   var state= "<button type='button' class='btn_el' onclick='use(\""+row.config_id+"\",\""+row.user_id+"\",\""+row.cre_time+"\")'>启用</button>| "
-					          +"<button type='button' class='btn_el' onclick='edit(\""+row.config_id+"\",\""+row.version_num+"\")'>编辑版本号</button> "
+					          +"<button type='button' class='btn_el' onclick='edit(\""+row.cre_id+"\",\""+row.version_num+"\",\""+row.cre_time+"\")'>编辑版本号</button> "
 
 							  // +"<button type='button' class='btn_el' onclick='del(\""+row.config_id+"\",\""+row.config_id+"\")'>删除</button>";
 					   ;
 					   if(row.is_active==1){
 						   state= "<button type='button' class='btn_el' onclick='use(\""+row.config_id+"\",\""+row.user_id+"\",\""+row.cre_time+"\",\""+row.is_active+"\")'>禁用</button>| "
-								   +"<button type='button' class='btn_el' onclick='edit(\""+row.config_id+"\",\""+row.version_num+"\")'>编辑版本号</button> ";
+								   +"<button type='button' class='btn_el' onclick='edit(\""+row.cre_id+"\",\""+row.version_num+"\",\""+row.cre_time+"\")'>编辑版本号</button> ";
 
 					   }
 					   return state;
@@ -125,8 +125,8 @@
 	   }
 	//查看详细信息
 
-	function edit(id,version_num){
-		//alert(id);
+	function edit(id,version_num,time){
+		//alert(time);
 		//alert(version_num);
 		layer.open({
 			type: 1,
@@ -134,15 +134,15 @@
 			shift: 7,
 			shadeClose: true,
 			content: "<div style='width:350px;'><div style='width:320px;margin-left: 3%;' class='form-group has-feedback'><p>请输入版本号</p><input id='version_num' class='form-control' type='text' name='version_num' placeholder='"+version_num+"'/></div>" +
-			"<button style='margin-top:5%;' type='button' class='btn btn-block btn-success btn-lg' onclick='updateVerNa("+id+")'>提交</button></div>"
+			"<button style='margin-top:5%;' type='button' class='btn btn-block btn-success btn-lg' onclick='updateVerNa(\""+id+"\",\""+time+"\")'>提交</button></div>"
 			//"<button style='margin-top:5%;' type='button' class='btn btn-block btn-success btn-lg' onclick='updateVerNa(\""+id+"\",\""+$("#version_name").val()+"\")'>提交</button></div>"
 
 		})
        /* navAppend("编辑集成系统");/!*获取父页面元素并动态赋值父页面title*!/
 	    window.location.href=quick.editUrl + "?log_id="+id + getDetailParm();//跳转到另一个页面，并且还在当前框架*/
 	}
-	   function updateVerNa(id){
-		  // alert(id);
+	   function updateVerNa(id,time){
+		  // alert(time);
 		   //alert($("#version_num").val());
 		   var version_num=$("#version_num").val();
 			   $.ajax({
@@ -151,6 +151,7 @@
 				   dataType:'json',
 				   data: {
 					   "config_id":id,
+					   "cre_time":time,
 					   "version_num":version_num
 				   },
 				   success: function(data){

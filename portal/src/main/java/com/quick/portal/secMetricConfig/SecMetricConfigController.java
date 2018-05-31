@@ -183,6 +183,11 @@ public class SecMetricConfigController extends SysBaseController<SecMetricConfig
     @ResponseBody
     public Object updateVerNa() throws Exception {
         Map<String, Object> queryMap = getQueryMap(request);
+        String userId = QCookie.getValue(request, "ids");//获取当前用户id
+        int user_id=Integer.parseInt(userId);
+        int term_type_id = 0;//获取终端设备类型id  0 电脑 1手机 2 pad 9 全部
+        queryMap.put("user_id",user_id);
+        queryMap.put("term_type_id",term_type_id);//参数列表增加设备终端id
         int count=secMetricConfigService.selectUAC(queryMap);
         int result;
         if(count==0){
