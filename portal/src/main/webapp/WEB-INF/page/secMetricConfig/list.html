@@ -126,8 +126,8 @@
 	//查看详细信息
 
 	function edit(id,version_num,time){
-		alert(time);
-		alert(version_num);
+		//alert(time);
+		//alert(version_num);
 		layer.open({
 			type: 1,
 			closeBtn: true,
@@ -142,7 +142,7 @@
 	    window.location.href=quick.editUrl + "?log_id="+id + getDetailParm();//跳转到另一个页面，并且还在当前框架*/
 	}
 	   function updateVerNa(id,time){
-		   alert(time);
+		  // alert(time);
 		   //alert($("#version_num").val());
 		   var version_num=$("#version_num").val();
 			   $.ajax({
