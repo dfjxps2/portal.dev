@@ -1,50 +1,17 @@
 var colo = ['rgb(255,0,0)','rgb(0,128,0)','rgb(255,140,0)','rgb(0,0,255)','rgb(128,0,128)','rgb(255,0,255)','rgb(0,255,255)'];
 var ba = 0;
 
-function setData(data,dimension){
-	var list = [];
-	if (dimension == 'obj') {
-		for (var i = 0; i < data.length; i++) {
-			list.push(data[i].object_name);
-		}
-	}else {
-		for (var j = 0; j < data.length; j++) {
-			list.push(data[j].month_id);
-		}
-	}
-	list = onlyData(list);
-	var ls = [];
-	var tmp = {};
-	for (var k = 0; k < list.length; k++) {
-		tmp = {};
-		var sum = 0;
-		for (var a = 0; a < data.length; a++) {
-			if (dimension == 'obj') {
-				if (list[k] == data[a].object_name) {
-					sum = (sum*1 + data[a].value*1).toFixed(2);
-				}	
-			}else {
-				if (list[k] == data[a].month_id) {
-					sum = (sum*1 + data[a].value*1).toFixed(2);
-				}	
-			}
-		}
-		tmp.value = sum;
-		tmp.object_name = list[k];
-		ls.push(tmp);
-	}
-	return ls;
-}
-
 //添加柱状图
 function bar(data,settingData,name,num,dimension){
 	data = setData(data,dimension);
-	//alert(JSON.stringify(data));
+	//获取颜色
 	if (ba>6) {
 		ba = 0;
 	}
 	var color = colo[ba];//settingData.color;
 	ba++;
+	
+	//添加数据
 	var datas = [];
 	for (var i = 0; i < data.length; i++) {
 		datas.push(data[i].value);
@@ -68,6 +35,7 @@ function bar(data,settingData,name,num,dimension){
 	return bars;
 }
 
+//给rgb颜色添加透明度
 function changeColor(color,num){
 color = color.substr(0,3)+'a'+color.substr(3);
 color = color.substr(0,color.length-1)+','+num+color.substr(color.length-1);
@@ -82,6 +50,7 @@ function line(data,settingData,typeData,name,num,dimension){
 	}
 	var color = colo[ba];//settingData.color;
 	ba++;
+	
 	var datas = [];
 	for (var i = 0; i < data.length; i++) {
 		datas.push(data[i].value);
@@ -133,22 +102,16 @@ function pie(data,settingData,name,dimension){
 	var tmp = {};
 	var tmp1 = {};
 	var sum = 0;
+	//添加数据
 	for (var i = 0; i < data.length; i++) {
 		tmp = {};
-		//if (i<8) {
-			tmp.value=data[i].value;
-			tmp.name=data[i].object_name;
-			datas.push(tmp);	
-		/*}else {
-			sum = sum +data[i].value;
-		}*/
+		tmp.value=data[i].value;
+		tmp.name=data[i].object_name;
+		datas.push(tmp);
 	}
-	/*tmp1.value=sum;
-	tmp1.name='其它';
-	if (sum>0) {
-		datas.push(tmp1);
-	}*/
+//	对数据进行排序
 	datas = JsonDown(datas,'value');
+	//控制生成饼图还是环图
 	var radius1 = '55%';
 	if (type=="ringPie"||type=="ringRose") {
 		radius1 = ['30%', '55%'];
@@ -172,7 +135,8 @@ function pie(data,settingData,name,dimension){
                 		return name;
                 	},*/
                 	 textStyle: {			   
-	  		  		      color: '#fff'
+	  		  		      color: '#fff',
+	  		  		      fontSize:8
 	  		                }
                 },
                 emphasis: {
@@ -207,7 +171,8 @@ function pie(data,settingData,name,dimension){
 	                		return name;
 	                	},*/
 	                	 textStyle: {			   
-		  		  		      color: '#fff'
+		  		  		      color: '#fff',
+		  		  		      fontSize:16
 		  		                }
 	                },
 	                emphasis: {
@@ -236,7 +201,6 @@ function dataType(data,typeData){
 	var xAxis = [];
 	var tmp = {};
 	
-	
 	var tt = [];
 	var tmm = {};
 	for (var i = 0; i < data.length; i++) {
@@ -253,21 +217,24 @@ function dataType(data,typeData){
 				} else if (typeData[j].charts!="line"&&typeData[j].charts!="bar") {
 					if (typeData[j].charts=="table") {
 						tmp = {};
-						tmp.value = add_table(data[i].measures,data[i].measure_name);
+						tmp.value = add_table(data[i].measures,data[i].measure_name,typeData[j].dimension);
 						tmp.name = data[i].measure_name;
 						tmp.type = 'table';
+						tmp.dimension = typeData[j].dimension;
 						series2.push(tmp);
 					}else if (typeData[j].charts=="gauge") {
 						tmp = {};
 						tmp.value = data[i].measures
 						tmp.name = data[i].measure_name;
 						tmp.type = 'gauge';
+						tmp.dimension = typeData[j].dimension;
 						series2.push(tmp);
 					}else {
 						tmp = {};
 						tmp.value = chartType(data[i].measures,typeData[j],typeData,data[i].measure_name,i,typeData[j].dimension);
 						tmp.name = data[i].measure_name;
 						tmp.type = 'pie';
+						tmp.dimension = typeData[j].dimension;
 						series2.push(tmp);
 					}
 				}
@@ -284,6 +251,7 @@ function dataType(data,typeData){
 	dim = onlyData(dim);
 	var all = [];
 	var tmpp = {};
+	//同纬度同类别指标的归类
 	for (var b = 0; b < cat.length; b++) {
 		for (var c = 0; c < dim.length; c++) {
 			series1 = [];
@@ -303,6 +271,7 @@ function dataType(data,typeData){
 			}
 		}
 	}
+	//将整个栏目的图表数据分类
 	var em1 = {};
 	if (all.length>0) {
 		em1.value =all;
@@ -363,8 +332,11 @@ function getLegend(data){
 
 //获取生成x轴
 function getxAxis(data,dimension){
+	//将数据按维度提取
 	data = setData(data,dimension);
+//	获取x轴数据
 	var xData = getXData(data);
+	//生成x轴
 	var xAxis = [ {
 		type: 'category',
 		margin: 12,
@@ -374,7 +346,7 @@ function getxAxis(data,dimension){
 				color:'#87CEFF'
 				//width:8,//这里是为了突出显示加上的，可以去掉
 			}
-		},
+		},    
 		axisLabel : {
 			nterval: 0,//标签设置为全部显示
 			margin: 12,
@@ -398,10 +370,12 @@ function getxAxis(data,dimension){
 //获取生成y轴
 function getyAxis(data){
 	var typs = [];
+//	判断图标中柱状图和折线图的个数
 	for (var j = 0; j < data.length; j++) {
 		typs.push(data[j].type);
 	}
 	typs = onlyData(typs);
+	//只有一种生成一个y轴
 	var yAxis = [{
     	splitLine:{show: false},//去除网格线
         type: 'value',
@@ -424,6 +398,7 @@ function getyAxis(data){
               }
           }
     }];
+	//两种都有生成两个y轴
 	if (typs.length>1) {
 		yAxis = [{
 	    	splitLine:{show: false},//去除网格线
@@ -472,14 +447,55 @@ function getyAxis(data){
 	return yAxis;
 }
 
+
 //生成仪表盘
-function gauge(data,name,id){
+function gauge(data,name,id,dimension){
+	//将数据按维度提取
+	data = setData(data,dimension);
+	var divwid= getPX(id,'width'); //宽度
+	var divhei= getPX(id,'height'); //高度
+	//根据容器的高度调整仪表盘中文字的大小
+	var txtSize = Math.floor((divhei-80)/20+6);
+	if (txtSize>22) {
+		txtSize = 22;
+	}
+	if (txtSize<6) {
+		txtSize = 6;
+	}
+	//调整标题的文字大小
+	var titleSize =txtSize*1+2;
+	//调整标题的上下位置
+	var top = '-3%';
+	if (divhei<228) {
+		 top =-5+Math.floor((divhei-228)/8)+'%';
+	}else if (divhei>400) {
+		top =Math.floor((divhei-420)/10)+'%';
+		if (Math.floor((divhei-420)/10)>7) {
+			top = '6%';
+		}
+	}
+	var ifNumber = 0;
+	//判断对象为年份，按年份降序排序
+	var reg = /^[0-9]+.?[0-9]*$/;
+	//判断是否位数字
+	for (var m = 0; m < data.length; m++) {
+		if (reg.test(data[m].object_name)) {
+			ifNumber = ifNumber +1;
+		}
+	}
+	if (ifNumber == data.length) {
+		data = JsonDown(data,'object_name');
+	}
+	//将数据按图表要求生成
 	var dx = [];
 	var xAxisData = [];
 	for (var i = 0; i < data.length; i++) {
+		//时间轴数据
 		xAxisData.push(data[i].object_name);
+		//仪表盘值数据
 		dx.push(data[i].value);
 	}
+//	获取值数据的最大值调整仪表盘的最大值
 	var max = Math.max.apply(null, dx);
 	var formatter = '{value}';
 	if (Math.max.apply(null, dx)<100) {
@@ -548,6 +564,7 @@ function gauge(data,name,id){
 
 		    }]
 		};*/
+	//仪表盘数据的动态加载
 	var os = [];
 	for (var i = 0; i < dx.length; i++) {
     var series = [];
@@ -576,11 +593,11 @@ var option = {
         },
         //color: ['#019aba'],
         title: {
-            text: name,
-            top:'3%',
+            subtext: name,
+            top:top,
 	        left:'center',
-            textStyle: {
-                fontSize: 14,
+            subtextStyle: {
+                fontSize: titleSize,
                color:'#fff'
             }
         },
@@ -599,6 +616,12 @@ var option = {
                 lineStyle: {       // 属性lineStyle控制线条样式
                     color: [[0.5, '#00EFC9'],[1, '#00BCF2']], 
                     width: 10
+                }
+            },
+            axisLabel: {
+                show: true,
+                textStyle: {
+                    fontSize: txtSize-4
                 }
             },
             axisTick: {            // 坐标轴小标记
@@ -626,7 +649,7 @@ var option = {
             title : {
             	offsetCenter: [0, '80%'],
                 textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-                    fontSize:12,
+                    fontSize:txtSize,
                     color: '#fff',
                     shadowColor : '#fff', //默认透明
                     shadowBlur: 10
@@ -635,7 +658,7 @@ var option = {
             detail: {
                 formatter: formatter,
                 textStyle: {
-                    fontSize: 12,
+                    fontSize: txtSize,
                     fontWeight: "",
                     color: '#fff', 
                 }
@@ -651,15 +674,37 @@ var option = {
 
 //生成饼图方法
 function pie_echart(series,name,id){
+	//label.normal.textStyle.fontSize/labelLine.normal.show/label.normal.show
+	var wid= getPX(id,'width'); //宽度
+	var hei= getPX(id,'height'); //高度
+	var top = '0%';
+	//根据容器宽高控制饼图提示的现实和隐藏当容器过于小时 提示信息隐藏
+	if ((hei<wid&&hei<100)||(wid<hei)&&wid<110) {
+		series[0].labelLine.normal.show = false;
+		series[0].label.normal.show = false;
+	}
+	var wh = wid;
+	if (wid>hei) {
+		wh = hei;
+	}
+	//标题位置调整
+	if (hei<200&&hei>120) {
+		top = '-10%';
+	}else if (hei<160) {
+		top = '-30%';
+	}
+	//修改饼图提示信息的字体大小
+	var size = Math.floor((wh-180)/26+10);
+	 series[0].label.normal.textStyle.fontSize = size;
 	var myChart = echarts.init(document.getElementById(id));	
 	option = {
 			title: [{
-		        text:name,
-		        top:'5%',
+		        subtext:name,
+		        top:top,
 		        left:'center',
-		        textStyle: {			   
+		        subtextStyle: {			   
 		  		      color: '#fff',
-		  		      fontSize:12
+		  		      fontSize:size+2
 		        }
 		  	 }],
 		    tooltip : {
@@ -675,18 +720,41 @@ function pie_echart(series,name,id){
 
 //生成柱状图和折线图方法
 function bar_echart(data,name,id){
+//	每次生成图标后将颜色初始化
 	ba = 0;
-	var o = document.getElementById(id);
-	var wid= o.offsetWidth; //宽度
+	var wid= getPX(id,'width'); //宽度
+	var divhei= getPX(id,'height'); //高度
+	//根据容器高度自动调整x轴和y轴字体大小
+	var txtSize = Math.floor((divhei - 160)/40)+8
+	if (txtSize>16) {
+		txtSize = 15;
+	}
+	//根据容器大小自动调整标注的位置和显示隐藏
+	var show = true;
+	var top = '17%';
+	if (wid<100) {
+		top = '10%';
+		show = false;
+	}
+	if (divhei<100) {
+		top = '10%';
+		show = false;
+	}
 	var legendData = [];
 	var series = data.series;
 	var xAxis = data.xAxis;
+	//修改x轴字体大小
+	xAxis[0].axisLabel.textStyle.fontSize = txtSize;
 	var yAxis = data.yAxis;
+	//修改y轴字体大小
+	for (var y = 0; y < yAxis.length; y++) {
+		yAxis[y].axisLabel.textStyle.fontSize = txtSize;
+	}
 	var colList = ['#FFFF00','#00FFFF','#00FF00','#8A2BE2','#FF0000'];
-	var k = 0;
 	var list = [];
 	var lt = [];
 	var tnp = [];
+	//将数据转变为可排序的数据格式
 	for (var j = 0; j < (xAxis[0].data).length; j++) {
 		tnp = [];
 		tnp.push((xAxis[0].data)[j]);
@@ -699,6 +767,7 @@ function bar_echart(data,name,id){
 	if (data.dimension == 'time') {
 		ih = 0;
 	}
+	//对数据进行不同维度排序
 	var newData = changeData(list,ih);
 	for (var c = 0; c < (series.length)+1; c++) {
 		var sd = [];
@@ -711,6 +780,8 @@ function bar_echart(data,name,id){
 			series[c-1].data = sd;
 		}
 	}
+	var k = 0;
+	//控制柱状图各自对应的y轴
 	for (var i = 0; i < series.length; i++) {
 		legendData.push(series[i].name);
 		if (series[i].type=="bar") {
@@ -725,6 +796,7 @@ function bar_echart(data,name,id){
 			}
 		}
 	}
+	//控制柱状图的主体的宽度
 	if (series.length>1) {
 		var w = parseInt(70/series.length)+'%';
 		for (var s = 0; s < series.length; s++) {
@@ -733,8 +805,10 @@ function bar_echart(data,name,id){
 	}
 	var bottom = '4%';
 	var dataZoom = [];
+	var end = 0;
+	//控制是否显示公洞条  以及初始显示的对象个数
 	if (wid/series[0].data.length<18) {
-		var end =  parseInt((wid/30)/series[0].data.length*90);
+		end =  parseInt((wid/30)/series[0].data.length*90);
 		bottom = '10%';
 		dataZoom = [{
 	    	show:'true',
@@ -770,6 +844,24 @@ function bar_echart(data,name,id){
 	    }
 	    ];
 	}
+	//根据x轴的文字长度以及容器宽度判断x轴文字是横向显示还是纵向缩略显示
+	var le = 0;
+	//获取x轴位子的最大长度
+	for (var z = 0; z < xAxis[0].data.length; z++) {
+		if (xAxis[0].data[z].length>le) {
+			le = xAxis[0].data[z].length;
+		}
+	}
+	//当x轴字段组的个数小于可显示最大个数end是end等于x轴字段个数
+	if (end == 0) {
+		end = xAxis[0].data.length;
+	}
+	//当x轴的分割宽度大于字段的占用宽度时 地段横向全部展示
+	if (wid/(end+1)>xAxis[0].axisLabel.textStyle.fontSize*1*le) {
+		xAxis[0].axisLabel.formatter = function(value){
+					return value;
+				};
+	}
 	
 	var myChart = echarts.init(document.getElementById(id));
 	option = {
@@ -789,18 +881,19 @@ function bar_echart(data,name,id){
 		         }
 		    },
 		    legend: {
+		    	  show:show,
 		    	  data:legendData,
-		    	  top:'0%',
-		    	  right:'4%',
+		    	  top:'3%',
+		    	  right:'6%',
 		    	  textStyle: {			   
 		  		      color: '#fff',
-		  		      fontSize:10
+		  		      fontSize:txtSize
 		        }
 		   },
 		   grid: {
 		        left:'2%',
 		        right:'4%',
-		        top:'17%',
+		        top:top,
 		        bottom: bottom,
 		        containLabel: true
 		    },
@@ -813,7 +906,8 @@ function bar_echart(data,name,id){
 }
 
 //生成表格方法
-function add_table(data,name){
+function add_table(data,name,dimension){
+	//data = setData(data, dimension);/
 	var times = [];
 	var names = [];
 	for (var i = 0; i < data.length; i++) {
@@ -823,6 +917,7 @@ function add_table(data,name){
 		times.push(data[i].month_id);
 	}
 	times = onlyData(times);
+	//对日期进行降序排序
 	var compare = function (x, y) {//降序排序
 		 if (x < y) {
 		        return 1;
@@ -1073,7 +1168,7 @@ function addEchart(data,name,typeData,id){
 					var tables=window.document.getElementById(ids);
 					tables.innerHTML = pieData[j].value;
 				}else if (pieData[j].type=='gauge'){
-					gauge(pieData[j].value,pieData[j].name,ids);
+					gauge(pieData[j].value,pieData[j].name,ids,pieData[j].dimension);
 				}
 			}
 		}else{
@@ -1083,7 +1178,7 @@ function addEchart(data,name,typeData,id){
 				var table1=window.document.getElementById(divs);
 				table1.innerHTML = pieData[0].value;
 			}else if (pieData[0].type=='gauge'){
-				gauge(pieData[0].value,pieData[0].name,divs);
+				gauge(pieData[0].value,pieData[0].name,divs,pieData[0].dimension);
 			}
 		}
 	}else if ((a==true&&c==false)||(a==false&&c==true)) {
@@ -1151,7 +1246,7 @@ function addEchart(data,name,typeData,id){
 						var tables=window.document.getElementById(ids2);
 						tables.innerHTML = pieData[j].value;
 					}else if (pieData[j].type=='gauge'){
-						gauge(pieData[j].value,pieData[j].name,ids2);
+						gauge(pieData[j].value,pieData[j].name,ids2,pieData[j].dimension);
 					}
 				}
 			}else{
@@ -1164,7 +1259,7 @@ function addEchart(data,name,typeData,id){
 					var table1=window.document.getElementById(div3);
 					table1.innerHTML = pieData[0].value;
 				}else if (pieData[0].type=='gauge'){
-					gauge(pieData[0].value,pieData[0].name,div3);
+					gauge(pieData[0].value,pieData[0].name,div3,pieData[0].dimension);
 				}
 			}
 		}else{
@@ -1308,6 +1403,55 @@ function JsonDown(json,key){
     return json;
 }
 
+//获取容器的高度和宽度
+function getPX(id,type){
+	var divo = document.getElementById(id);
+	var divwid= divo.offsetWidth; //宽度
+	var divhei= divo.offsetHeight; //高度
+	if (type=='height') {
+		return divhei;
+	}else if(type=='width'){
+		return divwid;
+	}
+}
+
+//将数据按维度进行提取
+function setData(data,dimension){
+	var list = [];
+	if (dimension == 'obj') {
+		for (var i = 0; i < data.length; i++) {
+			list.push(data[i].object_name);
+		}
+	}else if(dimension == 'time'){
+		for (var j = 0; j < data.length; j++) {
+			list.push(data[j].month_id);
+		}
+	}else{
+		return data;
+	}
+	list = onlyData(list);
+	var ls = [];
+	var tmp = {};
+	for (var k = 0; k < list.length; k++) {
+		tmp = {};
+		var sum = 0;
+		for (var a = 0; a < data.length; a++) {
+			if (dimension == 'obj') {
+				if (list[k] == data[a].object_name) {
+					sum = (sum*1 + data[a].value*1).toFixed(2);
+				}	
+			}else {
+				if (list[k] == data[a].month_id) {
+					sum = (sum*1 + data[a].value*1).toFixed(2);
+				}	
+			}
+		}
+		tmp.value = sum;
+		tmp.object_name = list[k];
+		ls.push(tmp);
+	}
+	return ls;
+}
 
 //数组去重方法
 function onlyData(ary){
