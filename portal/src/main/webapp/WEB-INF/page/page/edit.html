@@ -287,11 +287,13 @@
             };
 
             this.delete_widget = function (item) {
+            	var dd = [];
             	for (var i = 0; i < metricInfo.length; i++) {
-					if (item.no==metricInfo[i].section_id) {
-						remove(metricInfo,i);
+					if (item.no!=metricInfo[i].section_id) {
+						dd.push(metricInfo[i]);
 					}
 				}
+            	metricInfo = dd;
                 self.widgets.remove(item);
             };
         };

@@ -39,7 +39,7 @@ var name = "";
     function getMetricData(metricList){
     	$.ajax({
             url:"http://portal-server:8082/services/measures",
-            data:{meaId:metricList,to:2017,from:2016},
+            data:{meaId:metricList,to:2017,from:1990},
             type:'get',
             success:function(res){
             	if (res.return_code=='0') {

@@ -1,7 +1,45 @@
 var colo = ['rgb(255,0,0)','rgb(0,128,0)','rgb(255,140,0)','rgb(0,0,255)','rgb(128,0,128)','rgb(255,0,255)','rgb(0,255,255)'];
 var ba = 0;
+
+function setData(data,dimension){
+	var list = [];
+	if (dimension == 'obj') {
+		for (var i = 0; i < data.length; i++) {
+			list.push(data[i].object_name);
+		}
+	}else {
+		for (var j = 0; j < data.length; j++) {
+			list.push(data[j].month_id);
+		}
+	}
+	list = onlyData(list);
+	var ls = [];
+	var tmp = {};
+	for (var k = 0; k < list.length; k++) {
+		tmp = {};
+		var sum = 0;
+		for (var a = 0; a < data.length; a++) {
+			if (dimension == 'obj') {
+				if (list[k] == data[a].object_name) {
+					sum = (sum*1 + data[a].value*1).toFixed(2);
+				}	
+			}else {
+				if (list[k] == data[a].month_id) {
+					sum = (sum*1 + data[a].value*1).toFixed(2);
+				}	
+			}
+		}
+		tmp.value = sum;
+		tmp.object_name = list[k];
+		ls.push(tmp);
+	}
+	return ls;
+}
+
 //添加柱状图
-function bar(data,settingData,name,num){
+function bar(data,settingData,name,num,dimension){
+	data = setData(data,dimension);
+	//alert(JSON.stringify(data));
 	if (ba>6) {
 		ba = 0;
 	}
@@ -37,7 +75,8 @@ return color;
 }
 
 //添加折线图
-function line(data,settingData,typeData,name,num){
+function line(data,settingData,typeData,name,num,dimension){
+	data = setData(data,dimension);
 	if (ba>6) {
 		ba = 0;
 	}
@@ -87,7 +126,8 @@ function line(data,settingData,typeData,name,num){
 }
 
 //添加饼图
-function pie(data,settingData,name){
+function pie(data,settingData,name,dimension){
+	data = setData(data,dimension);
 	var type = settingData.charts;
 	var datas = [];
 	var tmp = {};
@@ -205,8 +245,8 @@ function dataType(data,typeData){
 				if (typeData[j].charts=="bar"||typeData[j].charts=="line") {
 					tmm = {};
 					//series1.push(chartType(data[i].measures,typeData[j],typeData,data[i].measure_name,i));
-					tmm.value = getxAxis(data[i].measures);
-					tmm.data = chartType(data[i].measures,typeData[j],typeData,data[i].measure_name,i);
+					tmm.value = getxAxis(data[i].measures,typeData[j].dimension);
+					tmm.data = chartType(data[i].measures,typeData[j],typeData,data[i].measure_name,i,typeData[j].dimension);
 					tmm.category_id = typeData[j].category_id;
 					tmm.dimension = typeData[j].dimension;
 					tt.push(tmm);
@@ -225,7 +265,7 @@ function dataType(data,typeData){
 						series2.push(tmp);
 					}else {
 						tmp = {};
-						tmp.value = chartType(data[i].measures,typeData[j],typeData,data[i].measure_name,i);
+						tmp.value = chartType(data[i].measures,typeData[j],typeData,data[i].measure_name,i,typeData[j].dimension);
 						tmp.name = data[i].measure_name;
 						tmp.type = 'pie';
 						series2.push(tmp);
@@ -258,6 +298,7 @@ function dataType(data,typeData){
 				tmpp.xAxis = xAxis;
 				tmpp.yAxis = getyAxis(series1);
 				tmpp.series = series1;
+				tmpp.dimension = dim[c];
 				all.push(tmpp);
 			}
 		}
@@ -279,15 +320,15 @@ function dataType(data,typeData){
 
 
 //判断图形类型
-function chartType(data,settingData,typeData,name,i){
+function chartType(data,settingData,typeData,name,i,dimension){
 	var type = settingData.charts;
 	var str = {};
 		if (type=="bar") {
-			str =bar(data,settingData,name,i);
+			str =bar(data,settingData,name,i,dimension);
 		}else if (type=="line") {
-			str =line(data,settingData,typeData,name,i);
+			str =line(data,settingData,typeData,name,i,dimension);
 		}else{
-			str =pie(data,settingData,name);
+			str =pie(data,settingData,name,dimension);
 		}
 		return str;
 }
@@ -321,7 +362,8 @@ function getLegend(data){
 
 
 //获取生成x轴
-function getxAxis(data){
+function getxAxis(data,dimension){
+	data = setData(data,dimension);
 	var xData = getXData(data);
 	var xAxis = [ {
 		type: 'category',
@@ -432,132 +474,59 @@ function getyAxis(data){
 
 //生成仪表盘
 function gauge(data,name,id){
-	var dat = [];
-	var tmp = {};
-	var timeData = [];
+	var dx = [];
+	var xAxisData = [];
 	for (var i = 0; i < data.length; i++) {
-		tmp = {};
-		tmp.value = data[i].value;
-		tmp.name = data[i].object_name;
-		timeData.push(data[i].object_name);
-		dat.push(tmp);
+		xAxisData.push(data[i].object_name);
+		dx.push(data[i].value);
+	}
+	var max = Math.max.apply(null, dx);
+	var formatter = '{value}';
+	if (Math.max.apply(null, dx)<100) {
+		max = 100;
+		formatter = '{value}%';
 	}
 	var myChart = echarts.init(document.getElementById(id));
 	
-	option = {
-		    timeline: {
-		        axisType: 'category',
-		        show: true,
-		        autoPlay: false,
-		        playInterval: 1000,
-		        data: timeData
-		    },
-		    options: [{
-			    color: ["#37A2DA", "#32C5E9", "#67E0E3"],
-			    series: [{
-			        name: timeData[0],
-			        type: 'gauge',
-			        detail: {
-			            formatter: '{value}%'
-			        },
-			        axisLine:{
-		                lineStyle:{
-		                  width:1  
-		                }
-		                },
-		            splitLine:{
-		                show:true,
-		                length:5,
-		                lineStyle:{
-		                  width:1
-		                }
-		            },
-		            axisTick:{
-		                splitNumber:5,
-		                length:2
-		             },
-		             axisLabel: {
-		                 show: true,
-		                 textStyle: {
-		                     fontSize: 6
-		                 }
-		             },
-		             pointer:{
-		                 width:2
-		             },
-		             title:{
-		            	 textStyle: {
-		            		 color:'red',
-		                     fontSize: 8
-		                 }
-		             },
-			        axisLine: {
-			            show: true,
-			            lineStyle: {
-			                width: 3,
-			                shadowBlur: 0,
-			                color: [
-			                    [0.3, '#67e0e3'],
-			                    [0.7, '#37a2da'],
-			                    [1, '#fd666d']
-			                ]
-			            }
-			        },
-			        detail: {
-			        	formatter:'{value}%',
-		                textStyle: {
-			                     fontSize: 8
-			                 }
-		            },
-			        data: dat[0]
-			    }]
-			}]
-		};
-	/*for (var n = 0; n < timeData.length; n++) {
-	    option.timeline.data.push(timeData[n]);
-	    option.options.push({
+	/*option = {
 		    color: ["#37A2DA", "#32C5E9", "#67E0E3"],
 		    series: [{
-		        name: timeData[n],
+		        name: '业务指标',
+		        center : ['50%', '60%'],
 		        type: 'gauge',
 		        detail: {
 		            formatter: '{value}%'
 		        },
-		        axisLine:{
-	                lineStyle:{
-	                  width:1  
-	                }
-	                },
-	            splitLine:{
+		        splitLine:{
 	                show:true,
-	                length:5,
+	                length:16,
 	                lineStyle:{
 	                  width:1
 	                }
 	            },
 	            axisTick:{
 	                splitNumber:5,
-	                length:2
+	                length:6
 	             },
 	             axisLabel: {
 	                 show: true,
 	                 textStyle: {
-	                     fontSize: 6
+	                     fontSize: 10
 	                 }
 	             },
 	             pointer:{
-	                 width:2
+	                 width:10
 	             },
 	             title:{
 	            	 textStyle: {
 	            		 color:'red',
-	                     fontSize: 8
+	                     fontSize: 16
 	                 }
 	             },
 		        axisLine: {
 		            show: true,
 		            lineStyle: {
-		                width: 3,
+		                width: 15,
 		                shadowBlur: 0,
 		                color: [
 		                    [0.3, '#67e0e3'],
@@ -569,15 +538,113 @@ function gauge(data,name,id){
 		        detail: {
 		        	formatter:'{value}%',
 	                textStyle: {
-		                     fontSize: 8
+		                     fontSize: 16
 		                 }
 	            },
-		        data: dat[n]
-		    }]
-		});
-	}*/
+		        data: [{
+		            value: 50,
+		            name: '完成率',
+		        }]
 
-	
+		    }]
+		};*/
+	var os = [];
+	for (var i = 0; i < dx.length; i++) {
+    var series = [];
+    series.push({
+        data: [{
+            value: dx[i],
+            name: xAxisData[i]
+        }]
+    });
+    
+    os.push({
+        series: series
+    });
+}
+
+var option = {
+    baseOption: {
+        timeline: {
+        	show:false,
+            axisType: 'category',
+            autoPlay: true,
+            bottom: 10,
+            left:3,
+            right:3,
+            data: xAxisData
+        },
+        //color: ['#019aba'],
+        title: {
+            text: name,
+            top:'3%',
+	        left:'center',
+            textStyle: {
+                fontSize: 14,
+               color:'#fff'
+            }
+        },
+        series: [{
+            type: 'gauge',
+            center: ['50%', '60%'],
+            radius : '80%',
+            max:max,
+            label: {
+                normal: {
+                    position: 'center'
+                }
+            },
+            axisLine: {            // 坐标轴线
+                show: true,        // 默认显示，属性show控制显示与否
+                lineStyle: {       // 属性lineStyle控制线条样式
+                    color: [[0.5, '#00EFC9'],[1, '#00BCF2']], 
+                    width: 10
+                }
+            },
+            axisTick: {            // 坐标轴小标记
+                show: true,        // 属性show控制显示与否，默认不显示
+                splitNumber: 10,    // 每份split细分多少段
+                length:3,         // 属性length控制线长
+                lineStyle: {       // 属性lineStyle控制线条样式
+                    color: '#fff',
+                    width: 1,
+                    type: 'solid'
+                }
+            },
+            splitLine: {           // 分隔线
+                show: true,        // 默认显示，属性show控制显示与否
+                length:15,         // 属性length控制线长
+                lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                    color: '#fff',
+                    width: 1,
+                    type: 'solid'
+                }
+            },
+            pointer: {
+                width:5
+            },
+            title : {
+            	offsetCenter: [0, '80%'],
+                textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                    fontSize:12,
+                    color: '#fff',
+                    shadowColor : '#fff', //默认透明
+                    shadowBlur: 10
+                }
+            },
+            detail: {
+                formatter: formatter,
+                textStyle: {
+                    fontSize: 12,
+                    fontWeight: "",
+                    color: '#fff', 
+                }
+            },
+           
+        }]
+    	},
+    	options: os
+	};
 	 myChart.setOption (option);
 }
 
@@ -628,7 +695,11 @@ function bar_echart(data,name,id){
 		}
 		list.push(tnp);
 	}
-	var newData = changeData(list,1);
+	var ih = 1;
+	if (data.dimension == 'time') {
+		ih = 0;
+	}
+	var newData = changeData(list,ih);
 	for (var c = 0; c < (series.length)+1; c++) {
 		var sd = [];
 		for (var d = 0; d < newData.length; d++) {
@@ -662,8 +733,8 @@ function bar_echart(data,name,id){
 	}
 	var bottom = '4%';
 	var dataZoom = [];
-	if (wid/series[0].data.length<13) {
-		var end =  parseInt((wid/15)/series[0].data.length*90);
+	if (wid/series[0].data.length<18) {
+		var end =  parseInt((wid/30)/series[0].data.length*90);
 		bottom = '10%';
 		dataZoom = [{
 	    	show:'true',
@@ -827,6 +898,7 @@ function add(data,name,typeData,sectionData){
 
 
 function addEchart(data,name,typeData,id){
+	
 	var typ = [];
 	for (var i = 0; i < typeData.length; i++) {
 		typ.push(typeData[i].charts);
@@ -867,23 +939,68 @@ function addEchart(data,name,typeData,id){
 	if ((a==true&&c==true)) {
 		var div1 = id+'chart1';
 		var div2 = id+'chart2';
-		str='<div id = "'+div1+'" style="width: 49%;height:100%;float: left;">'+
-		'</div>'+
-		'<div id = "'+div2+'div" style="width: 50%;height:100%;float: left;">'+
-		'</div>';
+		var divo = document.getElementById(id);
+		var divwid= divo.offsetWidth; //宽度
+		var divhei= divo.offsetHeight; //高度
+		if (divwid>divhei) {
+			str='<div id = "'+div1+'" style="width: 49%;height:100%;float: left;">'+
+			'</div>'+
+			'<div id = "'+div2+'div" style="width: 50%;height:100%;float: left;">'+
+			'</div>';
+		}else{
+			str='<div id = "'+div1+'" style="width: 99%;height:49%;float: top;">'+
+			'</div>'+
+			'<div id = "'+div2+'div" style="width: 99%;height:50%;float: top;">'+
+			'</div>';
+		}
+		
 		tbody.innerHTML = str;
 		//添加柱状和折线图
 		if (barData.length>1) {
+			var o = document.getElementById(div1);
+			var wid= o.offsetWidth; //宽度
+			var hei= o.offsetHeight; //高度
 			var barDiv=window.document.getElementById(div1);
 			var bar1 = '<table id = "'+div1+'bar" style="width: 100%;height:99%;">';
 			var heights = 99/Math.ceil(barData.length/2);
-			for (var v = 0; v < Math.ceil(barData.length/2); v++) {
-				var barId1 = id+'bar'+(2*v);
-				var barId2 = id+'bar'+(2*v+1);
-				bar1 = bar1 + '<tr style="height:'+heights+'%;">'+
-				'<td id = "'+barId1+'" style="width:50%;"></td>'+
-				'<td id = "'+barId2+'" style="width:50%;"></td>'+
-			'</tr>';
+			if ((wid/hei<1&&barData.length<=Math.ceil(hei/wid))||(hei/wid<=1&&barData.length<=Math.ceil(hei/wid))) {
+				if (wid/hei<1) {
+					for (var v1 = 0; v1 < barData.length; v1++) {
+						var bId1 = id+'bar'+v1;
+						bar1 = bar1 + '<tr style="height:'+100/barData.length+'%;">'+
+						'<td id = "'+bId1+'" style="width:100%;"></td>'+
+					'</tr>';
+					}
+				}else{
+					bar1 = bar1 + '<tr style="height:100%;">';
+					for (var v2 = 0; v2 < barData.length; v2++) {
+						var bId2 = id+'bar'+v2;
+						bar1 = bar1 + '<td id = "'+bId2+'" style="width:'+100/barData.length+'%;"></td>';
+					}
+					bar1 = bar1 + '</tr>';
+				}
+			}else{
+				for (var v = 0; v < Math.ceil(barData.length/2); v++) {
+					var barId1 = id+'bar'+(2*v);
+					var barId2 = id+'bar'+(2*v+1);
+					if (v>Math.ceil(barData.length/2)-2) {
+						if (Math.ceil(barData.length/2)*2>barData.length) {
+							bar1 = bar1 + '<tr style="height:'+heights+'%;">'+
+							'<td id = "'+barId1+'" colspan="2" style="width:100%;"></td>'+
+						'</tr>';
+						}else{
+							bar1 = bar1 + '<tr style="height:'+heights+'%;">'+
+							'<td id = "'+barId1+'" style="width:50%;"></td>'+
+							'<td id = "'+barId2+'" style="width:50%;"></td>'+
+						'</tr>';
+						}
+					}else{
+						bar1 = bar1 + '<tr style="height:'+heights+'%;">'+
+						'<td id = "'+barId1+'" style="width:50%;"></td>'+
+						'<td id = "'+barId2+'" style="width:50%;"></td>'+
+					'</tr>';
+					}
+				}
 			}
 			bar1 = bar1 +'</table>';
 			barDiv.innerHTML = bar1;
@@ -901,17 +1018,52 @@ function addEchart(data,name,typeData,id){
 			var tabs1 = '<table id = "'+div2+'" style="width: 100%;height:99%;">'+
 			'</table>';
 			tab1.innerHTML = tabs1;
-			
+
+			var op = document.getElementById(div2);
+			var wid1= op.offsetWidth; //宽度
+			var hei1= op.offsetHeight; //高度
 			var st = "";
 			var tab2=window.document.getElementById(div2);
-			for (var k = 0; k < ma; k++) {
-				var id1 = id+(2*k);
-				var id2 = id+(2*k+1);
-				st = st + '<tr style="height:'+height+'%;">'+
-				'<td id = "'+id1+'" style="width:50%;"></td>'+
-				'<td id = "'+id2+'" style="width:50%;"></td>'+
-			'</tr>';
+			if ((wid1/hei1<1&&pieData.length<=Math.ceil(hei1/wid1))||(hei1/wid1<=1&&pieData.length<=Math.ceil(hei1/wid1))) {
+				if (wid1/hei1<1) {
+					for (var m1 = 0; m1 < pieData.length; m1++) {
+						var pId1 = id+m1;
+						st = st + '<tr style="height:'+100/pieData.length+'%;">'+
+						'<td id = "'+pId1+'" style="width:100%;"></td>'+
+					'</tr>';
+					}
+				}else{
+					st = st + '<tr style="height:100%;">';
+					for (var m2 = 0; m2 < pieData.length; m2++) {
+						var pId2 = id+m2;
+						st = st + '<td id = "'+pId2+'" style="width:'+100/pieData.length+'%;"></td>';
+					}
+					st = st + '</tr>';
+				}
+			}else{
+				for (var k = 0; k < ma; k++) {
+					var id1 = id+(2*k);
+					var id2 = id+(2*k+1);
+					if (k>ma-2) {
+						if (2*ma>pieData.length) {
+							st = st + '<tr style="height:'+height+'%;">'+
+							'<td id = "'+id1+'" colspan="2" style="width:100%;"></td>'+
+						'</tr>';
+						}else{
+							st = st + '<tr style="height:'+height+'%;">'+
+							'<td id = "'+id1+'" style="width:50%;"></td>'+
+							'<td id = "'+id2+'" style="width:50%;"></td>'+
+						'</tr>';
+						}
+					}else{
+						st = st + '<tr style="height:'+height+'%;">'+
+						'<td id = "'+id1+'" style="width:50%;"></td>'+
+						'<td id = "'+id2+'" style="width:50%;"></td>'+
+					'</tr>';
+					}
+				}
 			}
+			
 			tab2.innerHTML = st;
 			for (var j = 0; j < pieData.length; j++) {
 				var ids = id+j;
@@ -946,15 +1098,49 @@ function addEchart(data,name,typeData,id){
 				'</div>';
 				tbody.innerHTML = strs;
 				
+				var op1 = document.getElementById(div3);
+				var wid2= op1.offsetWidth; //宽度
+				var hei2= op1.offsetHeight; //高度
 				var sts = "";
 				var tabs=window.document.getElementById(div3);
-				for (var k = 0; k < ma; k++) {
-					var id1 = id+(2*k);
-					var id2 = id+(2*k+1);
-					sts = sts + '<tr style="height:'+height+'%;">'+
-					'<td id = "'+id1+'" style="width:50%;"></td>'+
-					'<td id = "'+id2+'" style="width:50%;"></td>'+
-				'</tr>';
+				if ((wid2/hei2<1&&pieData.length<=Math.ceil(hei2/wid2))||(hei2/wid2<=1&&pieData.length<=Math.ceil(hei2/wid2))) {
+					if (wid2/hei2<1) {
+						for (var m2 = 0; m2 < pieData.length; m2++) {
+							var pId3 = id+m2;
+							sts = sts + '<tr style="height:'+100/pieData.length+'%;">'+
+							'<td id = "'+pId3+'" style="width:100%;"></td>'+
+						'</tr>';
+						}
+					}else{
+						sts = sts + '<tr style="height:100%;">';
+						for (var m3 = 0; m3 < pieData.length; m3++) {
+							var pId4 = id+m3;
+							sts = sts + '<td id = "'+pId4+'" style="width:'+100/pieData.length+'%;"></td>';
+						}
+						sts = sts + '</tr>';
+					}
+				}else{
+					for (var k = 0; k < ma; k++) {
+						var id1 = id+(2*k);
+						var id2 = id+(2*k+1);
+						if (k>ma-2) {
+							if (2*ma>pieData.length) {
+								sts = sts + '<tr style="height:'+height+'%;">'+
+								'<td id = "'+id1+'" colspan="2" style="width:100%;"></td>'+
+							'</tr>';
+							}else{
+								sts = sts + '<tr style="height:'+height+'%;">'+
+								'<td id = "'+id1+'" style="width:50%;"></td>'+
+								'<td id = "'+id2+'" style="width:50%;"></td>'+
+							'</tr>';
+							}
+						}else{
+							sts = sts + '<tr style="height:'+height+'%;">'+
+							'<td id = "'+id1+'" style="width:50%;"></td>'+
+							'<td id = "'+id2+'" style="width:50%;"></td>'+
+						'</tr>';	
+						}
+					}
 				}
 				tabs.innerHTML = sts;
 				for (var j = 0; j < pieData.length; j++) {
@@ -989,13 +1175,48 @@ function addEchart(data,name,typeData,id){
 				var barDiv2=window.document.getElementById(div3);
 				var bar2 = '<table id = "'+div3+'bar" style="width: 100%;height:99%;">';
 				var height2 = 99/Math.ceil(barData.length/2);
-				for (var s = 0; s < Math.ceil(barData.length/2); s++) {
-					var barId4 = id+'bar'+(2*s);
-					var barId5 = id+'bar'+(2*s+1);
-					bar2 = bar2 + '<tr style="height:'+height2+'%;">'+
-					'<td id = "'+barId4+'" style="width:50%;"></td>'+
-					'<td id = "'+barId5+'" style="width:50%;"></td>'+
-				'</tr>';
+				var bo = document.getElementById(div3);
+				var bwid= bo.offsetWidth; //宽度
+				var bhei= bo.offsetHeight; //高度
+				if ((bwid/bhei<1&&barData.length<=Math.ceil(bhei/bwid))||(bhei/bwid<=1&&barData.length<=Math.ceil(bhei/bwid))) {
+					if (bwid/bhei<1) {
+						for (var vb1 = 0; vb1 < barData.length; vb1++) {
+							var bIds1 = id+'bar'+vb1;
+							bar2 = bar2 + '<tr style="height:'+100/barData.length+'%;">'+
+							'<td id = "'+bIds1+'" style="width:100%;"></td>'+
+						'</tr>';
+						}
+					}else{
+						bar2 = bar2 + '<tr style="height:100%;">';
+						for (var vb2 = 0; vb2 < barData.length; vb2++) {
+							var bIds2 = id+'bar'+vb2;
+							bar2 = bar2 + '<td id = "'+bIds2+'" style="width:'+100/barData.length+'%;"></td>';
+						}
+						bar2 = bar2 + '</tr>';
+					}
+				}else{
+					for (var s = 0; s < Math.ceil(barData.length/2); s++) {
+						var barId4 = id+'bar'+(2*s);
+						var barId5 = id+'bar'+(2*s+1);
+						if (s > Math.ceil(barData.length/2)-2) {
+							if (Math.ceil(barData.length/2)*2>barData.length) {
+								bar2 = bar2 + '<tr style="height:'+height2+'%;">'+
+								'<td id = "'+barId4+'" colspan="2" style="width:100%;"></td>'+
+								
+							'</tr>';	
+							}else{
+								bar2 = bar2 + '<tr style="height:'+height2+'%;">'+
+								'<td id = "'+barId4+'" style="width:50%;"></td>'+
+								'<td id = "'+barId5+'" style="width:50%;"></td>'+
+							'</tr>';
+							}	
+						}else {
+							bar2 = bar2 + '<tr style="height:'+height2+'%;">'+
+							'<td id = "'+barId4+'" style="width:50%;"></td>'+
+							'<td id = "'+barId5+'" style="width:50%;"></td>'+
+						'</tr>';
+						}
+					}
 				}
 				bar2 = bar2 +'</table>';
 				barDiv2.innerHTML = bar2;
@@ -1055,9 +1276,9 @@ function JsonUp(json,key){
     //console.log(json);
     for(var j=1,jl=json.length;j < jl;j++){
         var temp = json[j],
-            val  = temp[key],
+            val  = temp[key]*1,
             i    = j-1;
-        while(i >=0 && json[i][key]>val){
+        while(i >=0 && json[i][key]*1>val){
             json[i+1] = json[i];
             i = i-1;   
         }
@@ -1074,9 +1295,9 @@ function JsonDown(json,key){
     //console.log(json);
     for(var j=1,jl=json.length;j < jl;j++){
         var temp = json[j],
-            val  = temp[key],
+            val  = temp[key]*1,
             i    = j-1;
-        while(i >=0 && json[i][key]<val){
+        while(i >=0 && json[i][key]*1<val){
             json[i+1] = json[i];
             i = i-1;   
         }
@@ -1120,6 +1341,7 @@ function changeData(data,num){
 			}
 		}
 	}
+	
 	return ret;
 }
 
