@@ -287,13 +287,7 @@
             };
 
             this.delete_widget = function (item) {
-            	var dd = [];
-            	for (var i = 0; i < metricInfo.length; i++) {
-					if (item.no!=metricInfo[i].section_id) {
-						dd.push(metricInfo[i]);
-					}
-				}
-            	metricInfo = dd;
+            	metricInfo = deleteMetric(metricInfo,item.no);
                 self.widgets.remove(item);
             };
         };
@@ -339,26 +333,35 @@
         return data;
       } 
     var metricInfo = [];
+    
+    function deleteMetric(data,no){
+    	var ss = [];
+			for (var j = 0; j < data.length; j++) {
+				if (no!=data[j].section_id) {
+					//removeList(metricInfo,j);
+					ss.push(data[j]);
+				}
+			}
+		return ss;
+    }
+    
     function showsetting(o){
     	var ls = find_sec_metric(metricInfo,o.dataset.no);
    		 localStorage.metricInfo =JSON.stringify(ls);
     	settingbox('section_NAME', '${G.serverUrl}/setting?rid=' + o.dataset.id + "&rmt=" + o.dataset.metric,null, function(ar){
-    		if(ar == null || ar.length == 0)
-                return ;
-    		for(var i = 0; i < ar.length; i++)
-    			ar[i]["section_id"] = o.dataset.no;
-            var rem = [];
-            var ss = [];
-            var ss = [];
+    		if(ar == null || ar.length == 0){
+    			if (metricInfo.length>0) {
+    				metricInfo = deleteMetric(metricInfo,o.dataset.no);
+    				o.dataset.metric = '';
+    			}
+    		}else{
+	    		for(var i = 0; i < ar.length; i++)
+	    			ar[i]["section_id"] = o.dataset.no;
+	            var rem = [];
 				if (metricInfo.length>0) {
-					for (var j = 0; j < metricInfo.length; j++) {
-						if (ar[0].section_id!=metricInfo[j].section_id) {
-							//removeList(metricInfo,j);
-							ss.push(metricInfo[j]);
-						}
-					}
+					metricInfo = deleteMetric(metricInfo,ar[0].section_id);
 				}
-				metricInfo = ss;
+    		}
             var metric_name = [];
             for (var n = 0; n < ar.length; n++) {
                 metricInfo.push(ar[n]);

@@ -993,7 +993,6 @@ function add(data,name,typeData,sectionData){
 
 
 function addEchart(data,name,typeData,id){
-	
 	var typ = [];
 	for (var i = 0; i < typeData.length; i++) {
 		typ.push(typeData[i].charts);

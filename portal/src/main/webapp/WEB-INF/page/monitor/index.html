@@ -78,12 +78,17 @@
                 co.push(_layout[m].metric[n]);
             }
         }
-        var metricList = '';
+        var met = [];
         for (var j = 0; j < co.length; j++) {
-            if (j ==co.length-1) {
-                metricList= metricList+co[j].metric_id;
+			met.push(co[j].metric_id);
+		}
+		met = onlyData(met);
+        var metricList = '';
+        for (var j = 0; j < met.length; j++) {
+            if (j ==met.length-1) {
+                metricList= metricList+met[j];
             }else{
-                metricList= metricList+co[j].metric_id+',';
+                metricList= metricList+met[j]+',';
             }
         }
         getMetricData(metricList);
@@ -91,7 +96,7 @@
     function getMetricData(metricList){
         $.ajax({
             url:"http://portal-server:8082/services/measures",
-            data:{meaId:metricList,to:2018,from:2015},
+            data:{meaId:metricList,to:2017,from:1990},
             type:'get',
             success:function(res){
                 add(res.measure,name,co,_layout);
