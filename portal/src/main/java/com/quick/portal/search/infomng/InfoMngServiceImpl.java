@@ -92,7 +92,6 @@ public class InfoMngServiceImpl extends SysBaseService<InfoMngDO> implements IIn
 		}
 		info.setUser_id(userID);
 		info.setVisit_obj_id(ojbID);
-		
 		boolean bool = isExitsVisitInfo(info);
 		if(bool){
 			updExitsVisitInfo(info);
@@ -169,11 +168,10 @@ public class InfoMngServiceImpl extends SysBaseService<InfoMngDO> implements IIn
 		if(null == userID ||"".equals(userID)){
 			uid = uid;
 		}else{
-			info.setUser_id(uid);
+			info.setUser_id(Integer.valueOf(userID));
 		}
 		String keyword = param.get(SolrInfoConstants.INDEX_KEYWORD).toString();
 		info.setKeyword(keyword);
-		
 		boolean bool = isExitsSearchTermsInfo(info);
 		if(bool){
 			updSearchTermsInfo(info);
