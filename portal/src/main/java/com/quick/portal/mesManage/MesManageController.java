@@ -38,7 +38,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.xml.sax.SAXException;
 
 import javax.annotation.Resource;
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -113,6 +112,27 @@ public class MesManageController extends SysBaseController<MesManageDO> {
     @RequestMapping
     public String  mesdetail(Model view){return  view();}
 
+    @RequestMapping
+    public String  databaselist(Model view){return  view();}
+
+    @RequestMapping
+    public String  addDatum(Model view){return  view();}
+
+    @RequestMapping
+    public String  addSupClass(Model view){return  view();}
+
+    @RequestMapping
+    public String  datatype(Model view){return  view();}
+
+    @RequestMapping
+    public String  datumDetail(Model view){return  view();}
+
+    @RequestMapping
+    public String  datumEdit(Model view){return  view();}
+
+    @RequestMapping
+    public String  subclassedit(Model view){return  view();}
+
 
     //内容管理--查询
     @RequestMapping(value = "getMesData")
@@ -186,7 +206,8 @@ public class MesManageController extends SysBaseController<MesManageDO> {
    @RequestMapping(value="addMes",method={RequestMethod.GET,RequestMethod.POST})
    @ResponseBody
    public void publishMes(MesManageDO mesManageDO,String[] tagId,HttpServletRequest request,HttpServletResponse response,boolean MERGE) throws IOException {
-       String path = createPath();
+       String tyname = "mesPublish";
+       String path = createPath(tyname);
        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
        MultipartFile file = multipartRequest.getFile("file");
@@ -243,22 +264,23 @@ public class MesManageController extends SysBaseController<MesManageDO> {
            List<Map<String,Object>> result = mesManageDao.selectMes(map);
            String msgId = result.get(0).get("msg_id").toString();
            String[] tags = tagId[0].split(",");
+           map.clear();
            for(int i=0;i<tags.length;i++){
-               Map<String,Object> maptag = new HashMap<>();
-               maptag.put("msg_id",msgId);
-               maptag.put("tag_id",Integer.parseInt(tags[i]));
-               mesManageDao.insertMesTag(maptag);
+               map = new HashMap<>();
+               map.put("msg_id",msgId);
+               map.put("tag_id",Integer.parseInt(tags[i]));
+               mesManageDao.insertMesTag(map);
            }
            response.getWriter().write("1");
            response.getWriter().flush();
            }
-                 }catch (Exception e){
+       }catch (Exception e){
                      e.printStackTrace();
                  }
    }
 
      //生成文件路径
-    public  String createPath(){
+    public  String createPath(String tyname){
         Calendar date = Calendar.getInstance();
         String year = String.valueOf(date.get(Calendar.YEAR));
         String month = String.valueOf(date.get(Calendar.MONTH)+1);
@@ -268,7 +290,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
             month = "0"+month;
         }
       String url =  request.getSession().getServletContext().getRealPath("/");
-        String path = url+"upload"+"\\mesPublish"+"\\"+year+month+day+"\\";
+        String path = url+"upload"+"\\"+tyname+"\\"+year+month+day+"\\";
         return  path.replaceAll("\\\\","/");
     }
 
@@ -373,10 +395,8 @@ public class MesManageController extends SysBaseController<MesManageDO> {
             }
         }
         catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             System.out.println("复制单个文件出错");
             e.printStackTrace();
         }
@@ -413,7 +433,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
           return handler.toString();
       }
 
-      //将一个目录下的文件保存到另一个文件下
+
 
     //内容删除
     @RequestMapping(value = "deleteMsg")
@@ -456,6 +476,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
     @RequestMapping(value="editMes",method={RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
     public void editMes(MesManageDO mesManageDO,String[] tagId,HttpServletRequest request,HttpServletResponse response,boolean MERGE) throws Exception {
+        String tyname = "mesPublish";
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         MultipartFile file = multipartRequest.getFile("file");
 //        String msg_attachment = multipartRequest.getParameter("msg_attachment");
@@ -467,19 +488,20 @@ public class MesManageController extends SysBaseController<MesManageDO> {
             }
         }
 
-
         String title = mesManageDO.getMsg_title();
-        String path = createPath();
+        String path = createPath(tyname);
         String newpath = null;
         String newattachment =null;
         String id = null;
         //将源文件保存
+        Map<String,Object> map = new HashMap<>();
         if(mesManageDO.getMsg_content()!= null && !mesManageDO.getMsg_content().equals("undefined") && !"null".equals(mesManageDO.getMsg_content())){
             id = mesManageDO.getMsg_content();
              newpath = path+"content/"+"ori"+mesManageDO.getMsg_title();
             copyFile(id,newpath);
+            map.put("msg_content",id);
         }
-        Map<String,Object> map = new HashMap<>();
+
         if(mesManageDO.getMsg_id()!= null && !mesManageDO.getMsg_id().equals("undefined") && !"null".equals(mesManageDO.getMsg_id())){
             map.put("msg_id",mesManageDO.getMsg_id());
         }
@@ -998,11 +1020,8 @@ public class MesManageController extends SysBaseController<MesManageDO> {
                 e.printStackTrace();
             }
         }
-        for (int i = 0; i < tagsIdArr.length; i++) {
-            p.put("tagId", tagsIdArr[i]);
-            mesManageDao.deleteTags(p);
-            p.clear();
-        }
+          List list =  Arrays.asList(tagsIdArr);
+            mesManageDao.deleteTags(list);
         try {
             response.getWriter().write("1");
             response.getWriter().flush();
@@ -1297,6 +1316,412 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         }
         String str = TagsInfo.formatTagJoint(result);
         model.addAttribute("data",str);
-        return view();}
+        return view();
+    }
+
+    //资料管理
+    //标签管理初始化及查询
+    @RequestMapping(value = "getDataBase")
+    @ResponseBody
+    public String getDataBase(HttpServletResponse res){
+        String str="[]";
+        //分页参数
+        int pageSize= QRequest.getInteger(request,"pageSize",10);
+        int pageNo=QRequest.getInteger(request,"pageNo",1);
+        String keywords = QRequest.getString(request,"keywords");
+        //获取表名
+        String tableName = getTableName();
+
+        // 排序处理
+        String fieldOrder = getFieldOrder();
+        String whereStr = "ORDER BY pub_time DESC";
+        whereStr += getFilterCondition(); // 数据必须受限
+        String fieldShow = getFieldShow();
+
+        // 日期格式
+        String dateTimeFormat = QRequest.getString(request, "dateTimeFormat",
+                "yyyy-MM-dd HH:mm:ss");
+        response.setCharacterEncoding("utf-8");
+        response.setContentType(QRequest.getResponseType("json")); // 输出JS文件
+        // 默认O条数据
+        int recordCount = 0;
+        Map<String, Object> queryMap = getQueryMap(request, fieldShow,
+                tableName, whereStr, fieldOrder);
+        queryMap.put("msg_src_id",0);
+        PageBounds pager = new PageBounds(pageNo, pageSize);
+        if (keywords != null && !keywords.equals("")) {
+            String[]  keys = keywords.split(" ");
+            queryMap.put("list", keys);
+        }
+      List<Map<String,Object>> dt  = mesManageDao.selectDataMes(queryMap,pager);
+        List<Map<String,Object>> d = mesManageDao.selectDataMes(queryMap);
+
+        recordCount = mesManageDao.countData(queryMap);
+        int pageSize1 = pager.getPageSize();
+        int pageNo1 =Integer.parseInt(queryMap.get("page").toString()) ;
+        int num = (pageNo1-1)*pageSize1;
+        int a = num +1;
+        for (Map<String,Object> data : dt){
+            String  serialNum= String.format("%03d",a);
+            data.put("serialNum",serialNum);
+            a+=1;
+        }
+        str = new JsonDataGrid(recordCount, dt).toJson(dateTimeFormat);
+        try {
+            response.getWriter().print(str);
+            response.getWriter().flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    //标签类别
+    @RequestMapping(value = "getSubClassData")
+    @ResponseBody
+    public String getSubClassData(HttpServletResponse res){
+        String str="[]";
+        //分页参数
+        int pageSize= QRequest.getInteger(request,"pageSize",10);
+        int pageNo=QRequest.getInteger(request,"pageNo",1);
+        //获取表名
+        String tableName = getTableName();
+        // 排序处理
+        String fieldOrder = getFieldOrder();
+        String whereStr = getCondition();
+        whereStr += getFilterCondition(); // 数据必须受限
+        String fieldShow = getFieldShow();
+
+        // 日期格式
+        String dateTimeFormat = QRequest.getString(request, "dateTimeFormat",
+                "yyyy-MM-dd HH:mm:ss");
+        response.setCharacterEncoding("utf-8");
+        response.setContentType(QRequest.getResponseType("json")); // 输出JS文件
+        // 默认O条数据
+        int recordCount = 0;
+        Map<String, Object> queryMap = getQueryMap(request, fieldShow,
+                tableName, whereStr, fieldOrder);
+        PageBounds pager = new PageBounds(pageNo, pageSize);
+        List<Map<String,Object>> dt  = mesManageDao.selectSubClass(queryMap,pager);
+        recordCount = mesManageDao.countSubClass(queryMap);
+        int pageSize1 = pager.getPageSize();
+        int pageNo1 =Integer.parseInt(queryMap.get("page").toString()) ;
+        int num = (pageNo1-1)*pageSize1;
+        int a = num +1;
+        for (Map<String,Object> data : dt){
+            String  serialNum= String.format("%03d",a);
+            data.put("serialNum",serialNum);
+            a+=1;
+        }
+        str = new JsonDataGrid(recordCount, dt).toJson(dateTimeFormat);
+        try {
+            response.getWriter().print(str);
+            response.getWriter().flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @RequestMapping(value = "delSubClass")
+    @ResponseBody
+    public String delSubClass(){
+        String str="[]";
+        //需要删除的标签id
+        String msgTypeId= QRequest.getString(request,"msg_type_id");
+        Map<String, Object> p = new HashMap<String,Object>();
+        p.put("msg_type_id",msgTypeId);
+        mesManageDao.deleteMsgTy(p);
+        try {
+            response.getWriter().write("1");
+            response.getWriter().flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    //得到资料小类
+    @RequestMapping(value = "/getDataTy")
+    @ResponseBody
+    public void dataSubClass(HttpServletResponse res,String submtid,String supmtid) {
+        Map<String,Object> map = new HashMap<>();
+        List<Map<String,Object>> tagType = null;
+        if(submtid!=null && !submtid.equals(" ")){
+            map.put("msg_type_id",submtid);
+            tagType  = mesManageDao.selectSubClass(map);
+        }else if(supmtid!=null && !supmtid.equals(" ")){
+            map.put("sup_msg_type_id",supmtid);
+            tagType  = mesManageDao.selectSubClass(map);
+        }else{
+            tagType  = mesManageDao.selectSubClass(map);
+        }
+
+        String json = getSubClJsonString(tagType);
+        try {
+            res.getWriter().write(json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    //新增资料小类
+     @RequestMapping(value = "insertSupClass")
+     @ResponseBody
+    public void  insertSupClass(HttpServletResponse res,MesManageDO mesManageDO) throws IOException {
+        Map<String,Object> map = new HashMap<>();
+        if(mesManageDO.getSup_msg_type_id()!=null ){
+            map.put("sup_msg_type_id",mesManageDO.getSup_msg_type_id());
+        }
+        if(mesManageDO.getMsg_type_name()!=null && !mesManageDO.getMsg_type_name().equals("")){
+            map.put("msg_type_name",mesManageDO.getMsg_type_name());
+        }
+        mesManageDao.insertMsgTy(map);
+        res.getWriter().write("1");
+        res.getWriter().flush();
+    }
+
+    //编辑资料类别
+    @RequestMapping(value = "editSubClass")
+    @ResponseBody
+    public void editSubClass(HttpServletResponse response,MesManageDO mesManageDO) throws IOException {
+        Map<String,Object> map = new HashMap<>();
+        if(mesManageDO.getSup_msg_type_id()!=null ){
+            map.put("sup_msg_type_id",mesManageDO.getSup_msg_type_id());
+        }
+        if(mesManageDO.getMsg_type_name()!=null && !mesManageDO.getMsg_type_name().equals("")){
+            map.put("msg_type_name",mesManageDO.getMsg_type_name());
+        }
+        if(mesManageDO.getMsg_type_id()!=null && !mesManageDO.getMsg_type_id().equals("undefined")){
+            map.put("msg_type_id",mesManageDO.getMsg_type_id());
+        }
+         mesManageDao.updateMsgTy(map);
+        response.getWriter().write("1");
+        response.getWriter().flush();
+    }
+
+
+    public String getSubClJsonString(List<Map<String,Object>> map) {
+        JSONArray json = new JSONArray();
+        JSONObject jo = null;
+        for (Map subMap:map) {
+            jo = new JSONObject();
+            jo.put("msg_type_id",subMap.get("msg_type_id"));
+            jo.put("msg_type_name",subMap.get("msg_type_name"));
+            jo.put("sup_msg_type_id",subMap.get("sup_msg_type_id"));
+            jo.put("supTyName",subMap.get("supTyName"));
+            json.put(jo);
+        }
+        return json.toString();
+    }
+
+    //新增资料
+    @RequestMapping(value="addData",method={RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public void addDatum(MesManageDO mesManageDO,String keywords,HttpServletRequest request,HttpServletResponse response,boolean MERGE) throws IOException {
+        Integer msgId =null;
+        String tyname = "material";
+        try {
+         MultipartHttpServletRequest re = (MultipartHttpServletRequest) request;
+         Map<String, Object> map = new HashMap<>();
+         MultipartFile file = re.getFile("file");
+         String path = createPath(tyname) ;
+         String name = file.getOriginalFilename();
+         FileOutputStream fos = null;
+         File uploadFile = createFile(path, name);
+         file.transferTo(uploadFile);
+         Calendar calendar = Calendar.getInstance();
+         Date date = calendar.getTime();
+         mesManageDO.setPub_time(date);
+         mesManageDO.setAppr_time(date);
+         String title = null;
+         if (name != null && !name.equals("")) {
+             title = name.split("\\.")[0];
+         }
+         mesManageDO.setMsg_title(title);
+         mesManageDO.setMsg_content(path + name);
+         mesManageDO.setMsg_src_id(0);
+         String[] key = null;
+         if (keywords != null && !keywords.equals("")) {
+             key = keywords.split(" ");
+         }
+         if (mesManageDO.getMsg_type_id() == null ||!mesManageDO.getMsg_type_id().equals("")) {
+               mesManageDO.setMsg_type_id(mesManageDO.getSup_msg_type_id());
+            }
+         mesManageDao.insert(mesManageDO);
+         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+         String time = format.format(mesManageDO.getAppr_time());
+         map.put("appr_time", time);
+         List<Map<String, Object>> result = mesManageDao.selectMes(map);
+          msgId = (Integer) result.get(0).get("msg_id");
+            int tagId = mesManageDao.selectMaxTagId();
+            tagFilter(key,map,tagId,msgId);
+         response.getWriter().write("1");
+         response.getWriter().flush();
+     }catch (Exception e){
+         e.printStackTrace();
+     }
+    }
+    //编辑资料-获取编辑对象的数据
+    @RequestMapping(value = "/getEditDatum", method= RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> getEditDatum() throws Exception {
+        String msgId = QRequest.getString(request,"msg_id");
+        Map<String,Object> map = new HashMap<>();
+        map.put("msg_id",msgId);
+        List<Map<String,Object>> obj = mesManageDao.selectDataMes(map);
+        Map<String,Object> a =obj.get(0);
+        Integer typeId = (Integer) a.get("msg_type_id");
+        if(typeId<=3){
+            a.put("sup_msg_type_id",typeId);
+            a.put("msg_type_id",null);
+        }
+        return a;
+    }
+
+    @RequestMapping(value = "/editSubClassData", method= RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> editSubClassData() throws Exception {
+        String msgTyId = QRequest.getString(request,"msg_type_id");
+        Map<String,Object> map = new HashMap<>();
+        map.put("msg_type_id",msgTyId);
+        List<Map<String,Object>> obj = mesManageDao.selectSubClass(map);
+        Map<String,Object> a =obj.get(0);
+        return a;
+    }
+
+    //判断关键词插入
+    public  void tagFilter(String[] tags,Map<String,Object> map,Integer tagId,Integer msgId ){
+        int i =0;
+        for(String data:tags){
+            if(data!=null && !data.equals("")){
+                map = new HashMap<>();
+                map.put("tagId",tagId+1+i);
+                map.put("tagText",data);
+                mesManageDao.insertTag(map);
+                map.put("tag_id",tagId+1+i);
+                map.put("msg_id", msgId);
+                mesManageDao.insertMesTag(map);
+                i++;
+            }
+        }
+    }
+
+    //资料详情
+    @RequestMapping(value = "getDatumDetail", method= RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> getDatumDetail() throws IOException {
+        String msgcontent = QRequest.getString(request,"msg_content");
+        Map<String,Object> content = new HashMap<>();
+        String msgtext = null;
+        if(msgcontent!= null && !msgcontent.equals("undefined") && !"null".equals(msgcontent)){
+            msgtext = LoadContentByPath(msgcontent,0);
+        }
+        content.put("msg_content",msgtext);
+        return content;
+    }
+
+    //资料编辑
+    @RequestMapping(value="editDatum",method={RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public void editDatum(MesManageDO mesManageDO,String keywords,HttpServletRequest request,HttpServletResponse response,boolean MERGE) throws Exception {
+        String tyname = "material";
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+        MultipartFile file = multipartRequest.getFile("file");
+        String path = createPath(tyname) ;
+        Integer id = null;
+        List<Integer> list = new ArrayList<>();
+        Map<String,Object> map = new HashMap<>();
+        if(mesManageDO.getMsg_id()!= null && !mesManageDO.getMsg_id().equals("undefined") && !"null".equals(mesManageDO.getMsg_id())){
+          id = mesManageDO.getMsg_id();
+            map.put("msg_id",id);
+            list.add(id);
+        }
+        if(mesManageDO.getMsg_title()!= null && !mesManageDO.getMsg_title().equals("undefined") && !"null".equals(mesManageDO.getMsg_title())){
+            map.put("msg_title",mesManageDO.getMsg_title());
+        }
+        if(mesManageDO.getPub_time()!= null && !mesManageDO.getPub_time().equals("undefined") && !"null".equals(mesManageDO.getPub_time())){
+            map.put("pub_time",mesManageDO.getPub_time());
+        }
+
+        if(mesManageDO.getMsg_type_id()!= null && !mesManageDO.getMsg_type_id().equals("undefined") && !"null".equals(mesManageDO.getMsg_type_id())){
+            map.put("msg_type_id",mesManageDO.getMsg_type_id());
+        }
+
+        if(mesManageDO.getMsg_type_id()== null || mesManageDO.getMsg_type_id().equals("undefined")){
+            map.put("msg_type_id",mesManageDO.getSup_msg_type_id());
+        }
+        String msg_content = null;
+        if(mesManageDO.getMsg_content()!= null && !mesManageDO.getMsg_content().equals("undefined") && !"null".equals(mesManageDO.getMsg_content())){
+            String[]  msgatt = mesManageDO.getMsg_content().split(",");
+            if (msgatt.length>1){
+                msg_content = msgatt[1];
+                map.put("msg_content",msg_content);
+            }
+        }
+
+        File fa = null;
+        //附件保存
+        if( file!= null  && !file.isEmpty()  ){
+            String attName = file.getOriginalFilename(); //附件文件名
+            fa = createFile(path,attName);
+            file.transferTo(fa);
+            map.put("msg_content",path+attName);
+        }
+            Date date = new Date();
+            String useId = QCookie.getValue(request,"ids");
+            map.put("pub_user_id",Integer.parseInt(useId));
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-HH hh:mm:ss");
+            map.put("appr_time",format.format(date.getTime()));
+            mesManageDao.msgedit(map);
+
+        String[] key  = null;
+        if (keywords != null && !keywords.equals("")) {
+            key = keywords.split(" ");
+        }
+        List<Integer> tagid = mesManageDao.selectMesByTag(list);
+        if(tagid.size()>0){
+            mesManageDao.deleteTags(tagid);
+            mesManageDao.deleteMesTag(id);
+        }
+
+        int tagId = mesManageDao.selectMaxTagId();
+        tagFilter(key,map,tagId,id);
+        try {
+            response.getWriter().write("1");
+            response.getWriter().flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //删除资料
+    //内容删除
+    @RequestMapping(value = "delDatum")
+    @ResponseBody
+    public void  delDatum() throws Exception {
+        List<Integer> list = new ArrayList<>();
+        Integer msgId = QRequest.getInteger(request,"msg_id");
+        String content = QRequest.getString(request,"msg_content");
+        list.add(msgId);
+        List<Integer> tagid = mesManageDao.selectMesByTag(list);
+        if(tagid.size()>0){
+            mesManageDao.deleteTags(tagid);
+            mesManageDao.deleteMesTag(msgId);
+        }
+        mesManageDao.deleteMsg(msgId.toString());
+        if(content!=null && !content.equals("") && !content.equals("undefined")){
+                    deleteFile(content);
+                }
+        try {
+            response.getWriter().write("1");
+            response.getWriter().flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }
