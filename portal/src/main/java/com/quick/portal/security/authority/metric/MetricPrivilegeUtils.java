@@ -84,9 +84,9 @@ public class MetricPrivilegeUtils {
 	 * no ation :flase
 	 * 
 	 */
-	public static boolean isExpriationTime(String userID){
+	public static boolean isExpriationTime(String roleID){
 		boolean bool = false;
-		boolean isUserID = false;
+		boolean isRoleID = false;
 		long nd = new Date().getTime();//获取系统时间
 		Iterator<Entry<String, Long>> entries = keytime.entrySet().iterator(); 
 		if(entries.hasNext()){
@@ -95,9 +95,10 @@ public class MetricPrivilegeUtils {
 				String key = (String)entry.getKey(); //获取key  
 				long value = (Long)entry.getValue(); //获取value
 				long rt = nd - value;//获取当前时间跟存入时间的差值
-				if(key != null && userID.equals(key)){
-					isUserID = true;
+				if(key != null && roleID.equals(key)){
+					isRoleID = true;
 					if( rt>EXPIRATIONTIME){
+						//overtime
 						bool = true;
 						return bool;
 					}else{
@@ -107,13 +108,13 @@ public class MetricPrivilegeUtils {
 				}
 			}
 			//用户不存在MAP中
-			if(!isUserID){
-				put(userID,userID);
+			if(!isRoleID){
+				put(roleID,roleID);
 				bool = true;
 			}
 		}else {
 			//no
-			put(userID,userID);
+			put(roleID,roleID);
 			bool = true;
 		}
 		return bool;

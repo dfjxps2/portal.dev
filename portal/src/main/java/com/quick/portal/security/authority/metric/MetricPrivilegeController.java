@@ -29,7 +29,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONArray;
@@ -75,13 +74,14 @@ public class MetricPrivilegeController extends SysBaseController<MetricPrivilege
     
     @RequestMapping(value = "/saveMetricData")
     @ResponseBody
-    public String saveMetricData(String metricData) throws Exception {
+    public String saveMetricData(String roleID,String metricData) throws Exception {
     	String flag = "1";
     	//当前用户编号
-    	String userID = QCookie.getValue(request, "ids");
-    	boolean isSolr = MetricPrivilegeUtils.isExpriationTime(userID);
-    	if(! isSolr){
-    		 return flag;
+    	if(null != roleID && !"".equals(roleID)){
+    		boolean isSolr = MetricPrivilegeUtils.isExpriationTime(roleID);
+        	if(! isSolr){
+        		 return flag;
+        	}
     	}
     	try {
     		metricData = URLDecoder.decode(metricData, MetricPrivilegeConstants.LANGUAGE_CODE_UTF);
