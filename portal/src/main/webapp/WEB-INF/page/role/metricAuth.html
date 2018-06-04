@@ -57,12 +57,12 @@
     	getAllMetric();
        
     });
-    
-//    var mUrl ="http://10.1.3.193:8082/services/reMeaSys";
+//  var mUrl ="http://192.168.1.126:8082/services/reMeaSys";   
+//  var mUrl ="http://10.1.3.193:8082/services/reMeaSys";
     function getAllMetric(){
     	url = mUrl +"?T="+Math.random();
         $.ajax({
-            type: "get",
+            type: "post",
             url:url,
             async:false,
             dataType: "json",
@@ -80,7 +80,8 @@
     }
 	
     function sendData(data){
-    	 var url = "${G.host}/metricPrivilege/saveMetricData.do?metricData="+data;
+    	 var rid = $.request.queryString["role_id"];
+    	 var url = "${G.host}/metricPrivilege/saveMetricData.do?roleID="+rid+"&metricData="+data;
     	 url = encodeURI(encodeURI(url));
     	 $.ajax({
             type: "post",
@@ -110,7 +111,7 @@
             }
         };
         $.ajax({
-            type: "get",
+            type: "post",
             url: "${G.host}/metricPrivilege/listAllMetric.do",
             async:false,
             dataType: "json",
@@ -134,7 +135,7 @@
     function checkMetricPri(){
         var roleId = $.request.queryString["role_id"];
         $.ajax({
-            type: "get",
+            type: "post",
             url: "${G.host}/metricPrivilege/listMetricPrivilege.do",
             async:false,
             data:{roleId:roleId},
