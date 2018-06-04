@@ -18,17 +18,15 @@
  */
 package com.quick.portal.metric;
 
-import com.quick.core.base.ISysBaseService;
-import com.quick.core.base.SysBaseController;
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.quick.core.base.ISysBaseService;
+import com.quick.core.base.SysBaseController;
 
 /**
  * metric请求类
