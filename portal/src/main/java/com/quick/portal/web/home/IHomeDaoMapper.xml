@@ -14,6 +14,20 @@
 	    ]]></if>
 		order by convert(d.param_value, SIGNED)
 	</select>
+	<!-- 查询用户所有应用2 -->
+	<select id="queryUserAllApp" parameterType="map" resultType="map">
+		select a.app_id,a.app_name, c.app_class_name, m.menu_id, m.menu_icon_url,(case when aa.app_id is null then 0 else 1 end) is_add
+		  from application a
+		left join app_class_rela r on a.app_id=r.app_id
+		left join app_class c on r.app_class_id=c.app_class_id
+		left join sys_menu m on a.app_id=m.app_id
+		left join (select app_id from dashboard_app_config a1
+		               left join user_dashboard a2
+		                 on a1.dashboard_id=a2.dashboard_id
+		              where a2.user_id=#{user_id}) aa on a.app_id=aa.app_id
+		where a.app_state=1
+		  and m.menu_id in (select menu_id from menu_privilege mp where mp.role_id=#{role_id})
+	</select>
 
 	<!--添加角色默认应用至用户配置-->
 	<insert id="addDashboard" parameterType="map">
@@ -68,11 +82,13 @@
 		  left join app_class_rela r on a.app_id=r.app_id
 		  left join app_class c on r.app_class_id=c.app_class_id
 		  left join sys_menu m on a.app_id=m.app_id
-		  where a.app_state=1 and a.app_id not in (
-				  select a1.app_id from dashboard_app_config a1
-					left join user_dashboard a2 on a1.dashboard_id=a2.dashboard_id
-				  where a2.user_id=#{user_id}
-		  )
+		  where a.app_state=1
+		   and m.menu_id in (select menu_id from menu_privilege mp where mp.role_id=#{role_id})
+		   and a.app_id not in (
+		       select a1.app_id from dashboard_app_config a1
+		         left join user_dashboard a2 on a1.dashboard_id=a2.dashboard_id
+			    where a2.user_id=#{user_id}
+		   )
 	</select>
 
 	<!-- 查询登录用户 -->

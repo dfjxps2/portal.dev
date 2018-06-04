@@ -54,6 +54,17 @@ public class HomeServiceImpl extends SysBaseService<ApplicationDO> implements IH
     }
 
     /**
+     * 查询用户所有应用2
+     *
+     * @param m
+     * @return
+     */
+    @Override
+    public List<Map<String, Object>> queryUserAllApp(Map<String, Object> m) {
+        return dao.queryUserAllApp(m);
+    }
+
+    /**
      * 查询所有应用
      *
      * @param m

@@ -11,8 +11,8 @@
 		<if test="user_id != null and user_id != '' and user_id != 'null'"><![CDATA[ 
 	       and user_id = #{user_id}
 	    ]]></if>
-		<if test="cmt_state != null and cmt_state != '' and cmt_state != 'null'"><![CDATA[ 
-	       and cmt_state = #{cmt_state}
+		<if test="cmt_time != null and cmt_time != '' and cmt_time != 'null'"><![CDATA[
+	       and date(cmt_time) = #{cmt_time}
 	    ]]></if>
         <if test="_sql_where != null and _sql_where != ''"> <![CDATA[
             and ${_sql_where}

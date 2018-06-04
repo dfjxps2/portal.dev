@@ -20,11 +20,9 @@ package com.quick.portal.web.home;
 
 import com.quick.core.base.SysWebController;
 import com.quick.core.base.model.DataStore;
-import com.quick.core.util.common.DateTime;
 import com.quick.core.util.common.JsonUtil;
 import com.quick.core.util.common.QCommon;
 import com.quick.portal.menuPrivilege.IMenuPrivilegeService;
-import com.quick.portal.menuPrivilege.MenuPrivilegeDO;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,9 +31,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import javax.json.Json;
-import javax.swing.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -124,7 +119,10 @@ public class HomeController extends SysWebController {
             return ActionMsg.setError("请选择要添加的应用");
         String[] ids = id.split(",");
         Map<String, Object> p = new HashMap<>();
-        p.put("user_id", loginer.getUser_id());
+
+        String uid = rstr("u", loginer.getUser_id().toString());
+        p.put("user_id", uid);
+
         Map<String, Object> u = homeService.queryAppConfig(p);
         if(u == null)
             return ActionMsg.setError("读取用户桌面出错，请刷新页面");
@@ -153,8 +151,10 @@ public class HomeController extends SysWebController {
         String app_name = rstr("t");
         if(app_name.length() > 0)
             urlMap.put("app_name", app_name);
-        urlMap.put("user_id", loginer.getUser_id());
-        urlMap.put("role_id", loginer.getRole_id());
+
+        String uid = rstr("u", loginer.getUser_id().toString());
+        urlMap.put("user_id", uid);
+
         List<Map<String, Object>> list =  homeService.queryUserApp(urlMap);
         fixUrl(list);
         return list;
@@ -182,8 +182,28 @@ public class HomeController extends SysWebController {
     @PostMapping
     @ResponseBody
     public Object getApp(){
-        urlMap.put("user_id", loginer.getUser_id());
+        String uid = rstr("u", loginer.getUser_id().toString());
+        String role_id = rstr("r", loginer.getRole_id().toString());
+        urlMap.put("user_id", uid);
+        urlMap.put("role_id", role_id);
+
         List<Map<String, Object>> list =   homeService.queryApp(urlMap);
+        fixUrl(list);
+        return list;
+    }
+    /**
+     * 查询所有应用2
+     * @return
+     */
+    @PostMapping
+    @ResponseBody
+    public Object getAllApp(){
+        String uid = rstr("u", loginer.getUser_id().toString());
+        String role_id = rstr("r", loginer.getRole_id().toString());
+        urlMap.put("user_id", uid);
+        urlMap.put("role_id", role_id);
+
+        List<Map<String, Object>> list =   homeService.queryUserAllApp(urlMap);
         fixUrl(list);
         return list;
     }
