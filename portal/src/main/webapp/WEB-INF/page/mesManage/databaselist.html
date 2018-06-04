@@ -215,6 +215,17 @@
     //查询
     function query() {
         _gd["list"].refresh();
+        queryParm=getParm();
+    }
+
+    //获取查询框数据
+    function getParm(){
+        var s = '&I'+$("#formSearch").serialize().replace(/&/g, "&I");
+        return s;
+    }
+    function getDetailParm(){
+        var s= queryParm + "&IpageNum="+pageNum+"&IpageSize="+pageSize;
+        return s;
     }
 
 
