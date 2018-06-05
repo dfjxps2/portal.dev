@@ -2,8 +2,8 @@ var colo = ['rgb(255,0,0)','rgb(0,128,0)','rgb(255,140,0)','rgb(0,0,255)','rgb(1
 var ba = 0;
 
 //添加柱状图
-function bar(data,settingData,name,num,dimension){
-	data = setData(data,dimension);
+function bar(data,settingData,name,num,dimension,stateTime,endTime){
+	data = setData(data,dimension,settingData.time_dim,stateTime,endTime);
 	//获取颜色
 	if (ba>6) {
 		ba = 0;
@@ -43,8 +43,8 @@ return color;
 }
 
 //添加折线图
-function line(data,settingData,typeData,name,num,dimension){
-	data = setData(data,dimension);
+function line(data,settingData,typeData,name,num,dimension,stateTime,endTime){
+	data = setData(data,dimension,settingData.time_dim,stateTime,endTime);
 	if (ba>6) {
 		ba = 0;
 	}
@@ -95,8 +95,8 @@ function line(data,settingData,typeData,name,num,dimension){
 }
 
 //添加饼图
-function pie(data,settingData,name,dimension){
-	data = setData(data,dimension);
+function pie(data,settingData,name,dimension,stateTime,endTime){
+	data = setData(data,dimension,settingData.time_dim,stateTime,endTime);
 	var type = settingData.charts;
 	var datas = [];
 	var tmp = {};
@@ -192,7 +192,7 @@ function pie(data,settingData,name,dimension){
 }
 
 //获取图形数据
-function dataType(data,typeData){
+function dataType(data,typeData,stateTime,endTime){
 	//alert(JSON.stringify(typeData));
 	var series = [];
 	var series1 = [];
@@ -209,15 +209,15 @@ function dataType(data,typeData){
 				if (typeData[j].charts=="bar"||typeData[j].charts=="line") {
 					tmm = {};
 					//series1.push(chartType(data[i].measures,typeData[j],typeData,data[i].measure_name,i));
-					tmm.value = getxAxis(data[i].measures,typeData[j].dimension);
-					tmm.data = chartType(data[i].measures,typeData[j],typeData,data[i].measure_name,i,typeData[j].dimension);
+					tmm.value = getxAxis(data[i].measures,typeData[j].dimension,typeData[j].time_dim,stateTime,endTime);
+					tmm.data = chartType(data[i].measures,typeData[j],typeData,data[i].measure_name,i,typeData[j].dimension,stateTime,endTime);
 					tmm.category_id = typeData[j].category_id;
 					tmm.dimension = typeData[j].dimension;
 					tt.push(tmm);
 				} else if (typeData[j].charts!="line"&&typeData[j].charts!="bar") {
 					if (typeData[j].charts=="table") {
 						tmp = {};
-						tmp.value = add_table(data[i].measures,data[i].measure_name,typeData[j].dimension);
+						tmp.value = add_table(data[i].measures,data[i].measure_name,typeData[j].dimension,stateTime,endTime);
 						tmp.name = data[i].measure_name;
 						tmp.type = 'table';
 						tmp.dimension = typeData[j].dimension;
@@ -228,10 +228,11 @@ function dataType(data,typeData){
 						tmp.name = data[i].measure_name;
 						tmp.type = 'gauge';
 						tmp.dimension = typeData[j].dimension;
+						tmp.time_dim = typeData[j].time_dim;
 						series2.push(tmp);
 					}else {
 						tmp = {};
-						tmp.value = chartType(data[i].measures,typeData[j],typeData,data[i].measure_name,i,typeData[j].dimension);
+						tmp.value = chartType(data[i].measures,typeData[j],typeData,data[i].measure_name,i,typeData[j].dimension,stateTime,endTime);
 						tmp.name = data[i].measure_name;
 						tmp.type = 'pie';
 						tmp.dimension = typeData[j].dimension;
@@ -289,15 +290,15 @@ function dataType(data,typeData){
 
 
 //判断图形类型
-function chartType(data,settingData,typeData,name,i,dimension){
+function chartType(data,settingData,typeData,name,i,dimension,stateTime,endTime){
 	var type = settingData.charts;
 	var str = {};
 		if (type=="bar") {
-			str =bar(data,settingData,name,i,dimension);
+			str =bar(data,settingData,name,i,dimension,stateTime,endTime);
 		}else if (type=="line") {
-			str =line(data,settingData,typeData,name,i,dimension);
+			str =line(data,settingData,typeData,name,i,dimension,stateTime,endTime);
 		}else{
-			str =pie(data,settingData,name,dimension);
+			str =pie(data,settingData,name,dimension,stateTime,endTime);
 		}
 		return str;
 }
@@ -331,9 +332,9 @@ function getLegend(data){
 
 
 //获取生成x轴
-function getxAxis(data,dimension){
+function getxAxis(data,dimension,timeType,stateTime,endTime){
 	//将数据按维度提取
-	data = setData(data,dimension);
+	data = setData(data,dimension,timeType,stateTime,endTime);
 //	获取x轴数据
 	var xData = getXData(data);
 	//生成x轴
@@ -449,9 +450,9 @@ function getyAxis(data){
 
 
 //生成仪表盘
-function gauge(data,name,id,dimension){
+function gauge(data,name,id,dimension,timeType,stateTime,endTime){
 	//将数据按维度提取
-	data = setData(data,dimension);
+	data = setData(data,dimension,timeType,stateTime,endTime);
 	var divwid= getPX(id,'width'); //宽度
 	var divhei= getPX(id,'height'); //高度
 	//根据容器的高度调整仪表盘中文字的大小
@@ -975,7 +976,7 @@ function add_table(data,name,dimension){
 
 
 //向页面添加图表方法  data--指标数据   name--栏目名称       typeData--栏目图表信息   id--栏目的div的id
-function add(data,name,typeData,sectionData){
+function add(data,name,typeData,sectionData,stateTime,endTime){
 	var id = "";
 	for (var i = 0; i < sectionData.length; i++) {
 		var dat = [];
@@ -986,13 +987,13 @@ function add(data,name,typeData,sectionData){
 			}
 		}
 		if (dat.length>0) {
-			addEchart(data,name,dat,id);	
+			addEchart(data,name,dat,id,stateTime,endTime);	
 		}
 	}
 }
 
 
-function addEchart(data,name,typeData,id){
+function addEchart(data,name,typeData,id,stateTime,endTime){
 	var typ = [];
 	for (var i = 0; i < typeData.length; i++) {
 		typ.push(typeData[i].charts);
@@ -1010,7 +1011,7 @@ function addEchart(data,name,typeData,id){
 			c = true;
 		}
 	}
-	var  getData = dataType(data,typeData);
+	var  getData = dataType(data,typeData,stateTime,endTime);
 	var pieData = [];
 	var barData = [];
 	for (var t = 0; t < getData.length; t++) {
@@ -1167,7 +1168,7 @@ function addEchart(data,name,typeData,id){
 					var tables=window.document.getElementById(ids);
 					tables.innerHTML = pieData[j].value;
 				}else if (pieData[j].type=='gauge'){
-					gauge(pieData[j].value,pieData[j].name,ids,pieData[j].dimension);
+					gauge(pieData[j].value,pieData[j].name,ids,pieData[j].dimension,pieData[j].time_dim,stateTime,endTime);
 				}
 			}
 		}else{
@@ -1177,7 +1178,7 @@ function addEchart(data,name,typeData,id){
 				var table1=window.document.getElementById(divs);
 				table1.innerHTML = pieData[0].value;
 			}else if (pieData[0].type=='gauge'){
-				gauge(pieData[0].value,pieData[0].name,divs,pieData[0].dimension);
+				gauge(pieData[0].value,pieData[0].name,divs,pieData[0].dimension,pieData[0].time_dim,stateTime,endTime);
 			}
 		}
 	}else if ((a==true&&c==false)||(a==false&&c==true)) {
@@ -1245,7 +1246,7 @@ function addEchart(data,name,typeData,id){
 						var tables=window.document.getElementById(ids2);
 						tables.innerHTML = pieData[j].value;
 					}else if (pieData[j].type=='gauge'){
-						gauge(pieData[j].value,pieData[j].name,ids2,pieData[j].dimension);
+						gauge(pieData[j].value,pieData[j].name,ids2,pieData[j].dimension,pieData[j].time_dim,stateTime,endTime);
 					}
 				}
 			}else{
@@ -1258,7 +1259,7 @@ function addEchart(data,name,typeData,id){
 					var table1=window.document.getElementById(div3);
 					table1.innerHTML = pieData[0].value;
 				}else if (pieData[0].type=='gauge'){
-					gauge(pieData[0].value,pieData[0].name,div3,pieData[0].dimension);
+					gauge(pieData[0].value,pieData[0].name,div3,pieData[0].dimension,pieData[0].time_dim,stateTime,endTime);
 				}
 			}
 		}else{
@@ -1415,15 +1416,23 @@ function getPX(id,type){
 }
 
 //将数据按维度进行提取
-function setData(data,dimension){
+function setData(data,dimension,timeType,stateTime,endTime){
+	if (timeType=='year') {
+		stateTime = stateTime.substring(0,4);
+		endTime = endTime.substring(0,4);
+	}
 	var list = [];
 	if (dimension == 'obj') {
 		for (var i = 0; i < data.length; i++) {
-			list.push(data[i].object_name);
+			if (data[i].month_id*1>=stateTime*1&&data[i].month_id*1<=endTime*1) {
+				list.push(data[i].object_name);
+			}
 		}
 	}else if(dimension == 'time'){
 		for (var j = 0; j < data.length; j++) {
-			list.push(data[j].month_id);
+			if (data[j].month_id*1>=stateTime*1&&data[j].month_id*1<=endTime*1) {
+				list.push(data[j].month_id);
+			}
 		}
 	}else{
 		return data;
@@ -1436,13 +1445,17 @@ function setData(data,dimension){
 		var sum = 0;
 		for (var a = 0; a < data.length; a++) {
 			if (dimension == 'obj') {
-				if (list[k] == data[a].object_name) {
-					sum = (sum*1 + data[a].value*1).toFixed(2);
-				}	
+				if (data[a].month_id*1>=stateTime*1&&data[a].month_id*1<=endTime*1) {
+					if (list[k] == data[a].object_name) {
+						sum = (sum*1 + data[a].value*1).toFixed(2);
+					}
+				}
 			}else {
-				if (list[k] == data[a].month_id) {
-					sum = (sum*1 + data[a].value*1).toFixed(2);
-				}	
+				if (data[a].month_id*1>=stateTime*1&&data[a].month_id*1<=endTime*1) {
+					if (list[k] == data[a].month_id) {
+						sum = (sum*1 + data[a].value*1).toFixed(2);
+					}
+				}
 			}
 		}
 		tmp.value = sum;
