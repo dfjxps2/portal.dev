@@ -17,6 +17,7 @@
 <script src="${G.host}/res/script/home/gridstack.min.js" type="text/javascript"></script>
 <script src="${G.host}/res/js/echarts/echarts.js"></script>
 <script src="${G.host}/res/js/indexCharts/indexChart.js"></script>
+<script src="${G.host}/res/js/My97DatePicker/WdatePicker.js"></script>
 
 </head>
 
@@ -24,7 +25,14 @@
 <div class="qheader-title"><div class="qheader-title1">${app.app_name}</div><div class="qheader-title2">${pageList[0].page_name}</div></div>
 <div class="qheader"><div class="qmenu-ico" onclick="$('.qmenu').toggle();"><i class="fa fa-list-ul"></i></div></div>
 <div class="qpage animated fadeInRight">
-    <div class="row">
+    <div class="row"  style="margin-top: 5px">
+    	<div class="col-sm-12" style="color: #fff">
+    	<input id="submit-form" type="button"  value="查询" onclick="getByTime();"  style="float: right;margin-right: 50px;background-color: #337ab7;border: 1px solid #97FFFF;height:24px;">
+    	 <input class="input_date" id="enddate" name="enddate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyyMM'})" readonly="readonly" style="background-color: transparent;float: right;margin-right: 20px;width:85px;border: 1px solid #97FFFF;text-align: center;"/>
+         <label style="float: right;margin-right: 10px;">结束时间</label>
+          <input class="input_date" id="statedate" name="statedate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyyMM'})" readonly="readonly" style="background-color: transparent;float: right;margin-right:20px;width:85px;border: 1px solid #97FFFF;text-align: center;"/>
+         <label style="float: right;margin-right: 10px;">开始时间</label>
+        </div>
         <div class="col-sm-12">
             <div class="container-fluid qmain">
                 <div id="box" class="grid-stack qbox" data-bind="component: {name: 'dashboard-grid', params: $data}"></div>
@@ -38,6 +46,8 @@
 </html>
 <script>
     var _tmpls={},_layout = ${layout},co = [],name,_page=${pageJson};
+    var tData = [];
+    
     window.onload = function() {
         initLayout();
         initChart();
@@ -50,8 +60,9 @@
         var str = [];
         for(var i = 0; i < _layout.length; i++){
             var n = _layout[i];
+            var s =  _layout[i].no;
             str.push('<div class="grid-stack-item" data-gs-x="',n.x,'" data-gs-y="',n.y,'" data-gs-width="',n.width,'" data-gs-height="',n.height,'" data-gs-auto-position="true">');
-            str.push('<div class="grid-stack-item-content qsection"><div class="_qborder"></div><div id="', n.sid,'" class="_qbody"></div></div>');
+            str.push('<div class="grid-stack-item-content qsection" id = "qsection_s'+s+'" ondblclick ="lc('+s+');"><div class="_qborder"></div><div id="', n.sid,'" class="_qbody"></div></div>');
             str.push('</div>');
         }
         $("#box").html(str.join(''));
@@ -96,10 +107,13 @@
     function getMetricData(metricList){
         $.ajax({
             url:"http://portal-server:8082/services/measures",
-            data:{meaId:metricList,to:2017,from:1990},
+            data:{meaId:metricList,to:'2018',from:'1900'},
             type:'get',
             success:function(res){
-                add(res.measure,name,co,_layout);
+            	tData = res.measure;
+            	$('#statedate').val('199001');
+            	$('#enddate').val('201712');
+                add(res.measure,name,co,_layout,'199001','201712');
                 hideMask();
             },error:function(jqr){
                 hideMask();
@@ -119,5 +133,27 @@
     }
     function hideMask(){
         $("#qmask").hide();
+    }
+    var id_s = '';
+    function lc(q){
+    	var id = "#qsection_s"+q;
+    	if (id_s!='') {
+    		if (id_s == id) {
+    			id_s = ''
+    				$(id).css('border-color','#17397f');
+			}else {
+				$(id_s).css('border-color','#17397f');
+				id_s = id;
+				$(id).css('border-color','#fff');
+			}
+		}else {
+			id_s = id;
+			$(id).css('border-color','#fff');
+		}
+    	/* alert($(id).css('border-color'));
+    	$(id).css('border-color','#fff'); */
+    }
+    function getByTime(){
+    	add(tData,name,co,_layout,$('#statedate').val(),$('#enddate').val());
     }
 </script>
