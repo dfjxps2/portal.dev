@@ -3,8 +3,10 @@ package com.quick.portal.search.infomng;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
@@ -56,6 +58,9 @@ public class SolrUtils {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	
 
 	/**
 	 * 单个id 的删除索引
@@ -109,6 +114,8 @@ public class SolrUtils {
 	
 		return restList;
 	}
+	
+
 
 	/*
 	 * 未查阅数据
@@ -177,7 +184,11 @@ public class SolrUtils {
 			query.addFilterQuery("portal_doc_class:"+SolrInfoConstants.MSG_OBJ_TYPE+"");
 		} else if (SolrInfoConstants.APP_OBJ_TYPE.equals(type)) {
 			query.addFilterQuery("portal_doc_class:"+SolrInfoConstants.APP_OBJ_TYPE+"");
-		} 
+		}else if (SolrInfoConstants.DATA_OBJ_TYPE.equals(type)) {
+			query.addFilterQuery("portal_doc_class:"+SolrInfoConstants.DATA_OBJ_TYPE+"");
+			query.setStart(SolrInfoConstants.PAGE_START);
+			query.setRows(SolrInfoConstants.PAGE_ROWS);
+		}  
 		// query.addFilterQuery("description:演员");
 		// 排序 如果按照blogId 排序，那么将blogId desc(or asc) 改成 id desc(or asc)
 		query.addSort("create_time", ORDER.asc);
@@ -323,11 +334,35 @@ public class SolrUtils {
 		restList.add(dataList);
 		return restList;
 	}
+	
+	/*
+	 * 通过关键字查询资料数据
+	 */
+	public static List<String> getDataByKeyword(String keyword){
+		Map<String, Object> m = new HashMap();
+		m.put(SolrInfoConstants.INDEX_KEYWORD, keyword);
+		PageBounds page = new PageBounds();
+		List<String> retList = searchDataByCondition(m,page,SolrInfoConstants.DATA_OBJ_TYPE);
+		return retList;
+	}
+	
+	public static List<String>  searchDataByCondition(Map<String, Object> m,
+			PageBounds page, String type) {
+		SolrQuery query = getAllSolrQuery(m, page,type);
+		SolrDocumentList docList = getSolrInfoDataByTitle(query);
+		List<String> list = new ArrayList<String>();
+		String id = null;
+		for (SolrDocument doc : docList) {
+			id = doc.get("id") == null ? "" : doc.get("id").toString();
+			list.add(id);
+		}
+		return list;
+	}
 
 	public static void main(String[] args) throws Exception {
 		SolrUtils st = new SolrUtils();
 		// st.testQueryCondition();
-		Map<String, Object> m = new HashMap();
+/*		Map<String, Object> m = new HashMap();
 		m.put("title", "认证");
 		PageBounds page = null;
 		// List<Map<String, Object>> retList = searchInfoDataByCondition(m,
@@ -339,10 +374,10 @@ public class SolrUtils {
 		String type="1";
 //		int i =0;
 		String path ="C:/Users/cxh/Desktop/test/";
-/*		for(int i=30;i<200;i++){
+		for(int i=30;i<200;i++){
 			id = path.concat(content).concat(i+"").concat("docx");
 			st.addSolrInfo( id,  content, type,content);
-		}*/
+		}
 		
 		ArrayList<String> ids = new ArrayList();
 		SolrQuery sq = getSolrQueryNoCond();
@@ -355,8 +390,19 @@ public class SolrUtils {
 		}
 		System.out.println("---="+ids.size());
 		
-		deleteBatchSolrList(ids);
+		deleteBatchSolrList(ids);*/
+		String keyword = "测试";
 		
+		List<String> retList = getDataByKeyword(keyword);
+		 for (String key : retList) {  
+			   System.out.println("key= "+ key );  
+			  } 
+		
+	/*	 Iterator<Map.Entry<String, Object>> it = (Iterator<Entry<String, Object>>) getDataByKeyword(keyword);;  
+		  while (it.hasNext()) {  
+		   Map.Entry<String, Object> entry = it.next();  
+		   System.out.println("key= " + entry.getKey() + " and value= " + entry.getValue());  
+		  }  */
 /*		List<Integer> itList = new ArrayList();
 		int j =10;
 		for(int i =0;i<10;i++){
