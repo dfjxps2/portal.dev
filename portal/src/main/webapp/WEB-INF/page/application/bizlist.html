@@ -51,7 +51,8 @@
 				   return;
 			   }
 			   $("#list").bootstrapTable('check',0);
-			   queryPage(data[0].app_id);
+			   if(data[0])
+				   queryPage(data[0].app_id);
 		   }
 	   });
 
@@ -177,6 +178,10 @@
 		_gd["plist"].init();
 	}
 	function add_page(id){
+		if(id == ''){
+			layer.msg("您还未选择具体应用，请先点击相关应用");
+			return;
+		}
 		menuGoto('${G.host}/page/edit?app_id='+id);
 	}
 	function edit_page(id,name){

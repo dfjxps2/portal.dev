@@ -722,6 +722,9 @@ public abstract class SysBaseController<T> {
 	public String rstr(String name){
 		return QRequest.getString(request, name);
 	}
+	public String rstr(String name, String defValue){
+		return QRequest.getString(request, name, defValue);
+	}
 	public Integer rint(String name){
 		return QRequest.getInteger(request, name);
 	}

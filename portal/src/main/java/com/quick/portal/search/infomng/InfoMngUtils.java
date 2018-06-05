@@ -60,14 +60,18 @@ public class InfoMngUtils  {
 		}else{
 				  sb.append("<li class=\"tit_filter\" style=\"width:560px;\">热点搜索</li>");
 				  for(Map<String,Object> mp:hotDataList){
-					  sb.append(" <li style=\"line-height: 20px; margin-right: 15px; float: left;\"> <label class=\"radio-inline\"><input type=\"radio\" name=\"radio\" id=\"r1\" value=\""+mp.get("KEYWORD")+"\" checked=\"checked\" onclick=\"click_event(this)\" /><label for=\"radio\"></label><span>"+mp.get("KEYWORD")+"</span></label></li>");
+	//				  sb.append(" <li style=\"line-height: 20px; margin-right: 15px; float: left;\"> <label class=\"radio-inline\"><input type=\"radio\" name=\"radio\" id=\"r1\" value=\""+mp.get("KEYWORD")+"\" checked=\"checked\" onclick=\"click_event(this)\" /><label for=\"radio\"></label><span>"+mp.get("KEYWORD")+"</span></label></li>");
+	//				  sb.append(" <li style=\"line-height: 20px; margin-right: 15px; float: left;\"> <label class=\"radio-inline\"><input type=\"radio\" name=\"radio\" id=\"r1\" value=\""+mp.get("KEYWORD")+"\"  onclick=\"click_event(this)\" /><label for=\"radio\"></label><span>"+mp.get("KEYWORD")+"</span></label></li>");
+					  sb.append(" <li style=\"line-height: 20px; margin-right: 15px; float: left;\"> <label class=\"radio-inline\"><input type=\"radio\" name=\"radio\" id=\"r1\" value=\""+mp.get("KEYWORD")+"\"  onclick=\"click_event(this)\" /><span>"+mp.get("KEYWORD")+"</span></label></li>");
 					}
 			  if(null == dataList || dataList.size()==0){
 				  sb.append("</ul></div");
 			  }else{
 				  sb.append("<li class=\"tit_filter\" style=\"width:560px;\">个人喜好搜索</li>"); 
 				  for(Map<String,Object> m:dataList){
-					  sb.append(" <li style=\"line-height: 20px; margin-right: 15px; float: left;\"> <label class=\"radio-inline\"><input type=\"radio\" name=\"radio\" id=\"r1\" value=\""+m.get("KEYWORD")+"\" checked=\"checked\" onclick=\"click_event(this)\" /><label for=\"radio\"></label><span>"+m.get("KEYWORD")+"</span></label></li>");
+//					  sb.append(" <li style=\"line-height: 20px; margin-right: 15px; float: left;\"> <label class=\"radio-inline\"><input type=\"radio\" name=\"radio\" id=\"r1\" value=\""+m.get("KEYWORD")+"\"  onclick=\"click_event(this)\" /><label for=\"radio\"></label><span>"+m.get("KEYWORD")+"</span></label></li>");
+//					  sb.append(" <li style=\"line-height: 20px; margin-right: 15px; float: left;\"> <label class=\"radio-inline\"><input type=\"radio\" name=\"radio\" id=\"r1\" value=\""+m.get("KEYWORD")+"\" checked=\"checked\" onclick=\"click_event(this)\" /><label for=\"radio\"></label><span>"+m.get("KEYWORD")+"</span></label></li>");
+					  sb.append(" <li style=\"line-height: 20px; margin-right: 15px; float: left;\"> <label class=\"radio-inline\"><input type=\"radio\" name=\"radio\" id=\"r1\" value=\""+m.get("KEYWORD")+"\"  onclick=\"click_event(this)\" /><span>"+m.get("KEYWORD")+"</span></label></li>");
 					}
 				  sb.append("</ul></div>");
 			  }

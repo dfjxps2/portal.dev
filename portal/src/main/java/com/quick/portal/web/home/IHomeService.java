@@ -37,6 +37,13 @@ public interface IHomeService extends ISysBaseService<ApplicationDO> {
     List<Map<String, Object>> queryUserApp(Map<String, Object> m);
 
     /**
+     * 查询用户所有应用2
+     * @param m
+     * @return
+     */
+    List<Map<String, Object>> queryUserAllApp(Map<String, Object> m);
+
+    /**
      * 查询所有应用
      * @param m
      * @return

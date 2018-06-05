@@ -22,7 +22,7 @@
 </head>
 
 <body class="qbody">
-<div class="qheader-title"><div class="qheader-title1">${app.app_name}</div><div class="qheader-title2">${pageList[0].page_name}</div></div>
+<div class="qheader-title"><div class="qheader-title1">${app.app_name}</div><div class="qheader-title2"><#if (pageList?size>0)>${pageList[0].page_name}</#if></div></div>
 <div class="qheader"><div class="qmenu-ico" onclick="$('.qmenu').toggle();"><i class="fa fa-list-ul"></i></div></div>
 <div class="qpage animated fadeInRight">
     <div class="row"  style="margin-top: 5px">
@@ -105,6 +105,8 @@
         getMetricData(metricList);
     }
     function getMetricData(metricList){
+        if(metricList == null || metricList.length == 0)
+            return;
         $.ajax({
             url:"http://portal-server:8082/services/measures",
             data:{meaId:metricList,to:'2018',from:'1900'},

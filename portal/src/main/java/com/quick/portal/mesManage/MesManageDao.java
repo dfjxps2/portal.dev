@@ -50,6 +50,19 @@ public interface MesManageDao<MesManageDO> extends ISysBaseDao<MesManageDO> {
     List<Map<String,Object>> mesByTag(Integer tagId);
 
 
+    //资料管理
+    //资料小类
+    List<Map<String,Object>> selectSubClass(Map<String,Object> map,PageBounds pageBounds);
+    List<Map<String,Object>> selectSubClass(Map<String,Object> map);
+    List<Map<String,Object>> tagFilter(Map<String,Object> map);
+    int countSubClass(Map<String,Object> map);
+    int insertMsgTy(Map<String,Object> map);
+    int updateMsgTy(Map<String,Object> map);
+    int deleteMsgTy(Map<String,Object> map);
+    //初始化和查询
+    List<Map<String,Object>> selectDataMes(Map<String,Object>map,PageBounds pageBounds);
+    List<Map<String,Object>> selectDataMes(Map<String,Object>map);
+    int countData(Map<String,Object> map);
 
     //标签管理-初始化/查询
     List<Map<String,Object>> selectTagMes(Map<String,Object> tag, PageBounds page);
@@ -59,7 +72,7 @@ public interface MesManageDao<MesManageDO> extends ISysBaseDao<MesManageDO> {
     //内容标签数据
     List<Map<String,Object>> selectTagsTree();
     //删除选择的内容标签
-    int deleteTags(Map<String,Object> tag);
+    int deleteTags(List<Integer> tag);
     //删除选择的内容标签类型
     int deleteTagsType(Map<String,Object> tag);
     //编辑标签

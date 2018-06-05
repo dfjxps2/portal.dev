@@ -4,13 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
-//import org.junit.Before;
 
 public class InitSolrServer {
 
-	private static InitSolrServer solrServer = null;
 	
-	/*private static InitSolrServer instance ;
+	private static InitSolrServer instance ;
 	
 	
   
@@ -30,15 +28,7 @@ public class InitSolrServer {
 			}
 		}
 		return instance;
-	}*/
-    
-    public static synchronized InitSolrServer getInstance() {
-        if (solrServer == null){
-           solrServer =new InitSolrServer();
-        }
-        return solrServer;
-    }
-    
+	}
     private static HttpSolrClient docServer = null;
     private static HttpSolrClient metricServer = null;
     private static HttpSolrClient pMsgServer = null;

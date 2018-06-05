@@ -87,7 +87,7 @@ public class InfoMngController extends SysBaseController<InfoMngDO> {
 		 * 
 		 * @return
 		 */
-		@RequestMapping(value = "/getInfo")
+		@RequestMapping(value = "/getInfo", method=RequestMethod.POST)
 		@ResponseBody
 		public Object getInfo(String json) {
 			String str = "[]";
@@ -149,24 +149,26 @@ public class InfoMngController extends SysBaseController<InfoMngDO> {
 	    @RequestMapping(value = "/download")
 		public ModelAndView download(HttpServletRequest request,
 				HttpServletResponse response) throws Exception {
-	    	 String type = request.getParameter("type");	
-	    	 String filePath = request.getParameter("id");
-	    	 
-	    	 try {
-	    		 filePath = URLDecoder.decode(filePath, MetricPrivilegeConstants.LANGUAGE_CODE_UTF);
-	 		} catch (UnsupportedEncodingException e) {
-	 			// TODO Auto-generated catch block
-	 			throw new Exception("指标转义异常："+e.getLocalizedMessage());
-	 		}
-	    	 
-	     		if(filePath == null || "".equals(filePath)){
-	     			System.out.println("文件路径名称:"+filePath+ ",filePath不能为空");
-	     			throw new Exception("查询文件路径异常: " + "文件路径:"+filePath+ ",filePath不能为空");
-	     		}
-			String ids = QCookie.getValue(request, "ids");
-	     	infoMngService.saveVisitInfo(filePath,Integer.parseInt(type),Integer.parseInt(ids));
-			FileOperateUtils.download(request, response, filePath);
-			return null;
+		String type = request.getParameter("type");
+		String filePath = request.getParameter("id");
+		try {
+			filePath = URLDecoder.decode(filePath,
+					MetricPrivilegeConstants.LANGUAGE_CODE_UTF);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			throw new Exception("指标转义异常：" + e.getLocalizedMessage());
+		}
+
+		if (filePath == null || "".equals(filePath)) {
+			System.out.println("文件路径名称:" + filePath + ",filePath不能为空");
+			throw new Exception("查询文件路径异常: " + "文件路径:" + filePath
+					+ ",filePath不能为空");
+		}
+		String ids = QCookie.getValue(request, "ids");
+		infoMngService.saveVisitInfo(filePath, Integer.parseInt(type),
+				Integer.parseInt(ids));
+		FileOperateUtils.download(request, response, filePath);
+		return null;
 		}
 	    
 	    

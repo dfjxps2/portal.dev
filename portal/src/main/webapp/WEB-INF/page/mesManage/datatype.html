@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <#include "/WEB-INF/include/reslist.html" />
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content wrapper-content-x animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="col-sm-10">
+                <div class="col-sm-12">
+                    <label id="pagename" class="col-xs-8" style="text-align:center;font-size: 22px;color:blue;margin-left: 180px"></label>
+                </div>
+            </div>
+            <div class="ibox ">
+                <div class="ibox-content ibox-content-ad" style="margin-left:5px;margin-top: -30px;height:500px;width:1000px">
+                    <form id="pubform" name="pubform" method="post"  enctype="multipart/form-data" >
+                        <div class="row" style="margin-top:20px">
+                            <div class="form-group" style="width:220px;">
+                               <select type="button" name="sup_msg_type_id" class="input-group form-control form-control-green select_change" id="sup_msg_type_id" onchange="query()">
+                                   <option value="">请选择资料大类</option>
+                                   <option value="1">政府文件</option>
+                                   <option value="2">政府公文</option>
+                                   <option value="3">大数据平台报告</option>
+                               </select>
+                            </div>
+                            <div class="form-group" style="width:100%;height:40px;">
+                                <label class="col-xs-3 lable_top" style="width:120px;"><span class="span_require"></span>资料小类</label>
+                                <button class="pull-right btn btn-primary "  type="button" onclick="addData()" style="padding-left:10px;">新增</button>
+                            </div>
+                        </div>
+
+                    </form>
+                    <div style="margin:5px;">
+                        <table id="list" class="table-striped" style="table-layout:fixed"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="${G.host}/res/js/bootstrap.min.js?v=3.3.6"></script>
+<script src="${G.host}/res/js/content.min.js?v=1.0.0"></script>
+<script src="${G.host}/res/js/plugins/layer/layer.min.js"></script>
+<script src="${G.host}/res/js/plugins/staps/jquery.steps.min.js"></script>
+<script src="${G.host}/res/js/plugins/validate/jquery.validate.min.js"></script>
+<script src="${G.host}/res/js/plugins/validate/messages_zh.min.js"></script>
+<script src="${G.host}/res/plugin/jquery.form.js"></script>
+<script>
+    var pageNum = 10;
+    var pageSize = 1;
+    var queryParm = '';
+    function config() {
+        var RFlag=$.request.queryString["RFlag"];
+        quick.serverUrl = "${G.serverUrl}";
+        quick.objName = "${G.objName}";
+        quick.idField = "${G.idField}";
+        quick.listUrl = quick.serverUrl + "/list";
+        $("#list").bootstrapTable("destroy");
+        _gridPool["list"]= new BGrid("#list");
+        _gridPool["list"].config({
+            url:quick.serverUrl+"/getSubClassData?i="+Math.random(),
+            idField:quick.idField,
+            sortName:quick.idField,
+            cache:false,
+            height:$(document.body).height()-50,
+            toolbar:"#pubform",
+            clickToSelect:true,
+            columns:[
+                { field:'serialNum',title:'编号',width:'10%',align:'center'},
+                {field:'msg_type_name',title:'资料类别',width:'50%',align:'center'},
+                {field:'msg_type_id',visible:false},
+                {field: 'CZ',  title: '操作',width: '25%', formatter:function(value,row,index){
+                    return "<button type='button' class='btn_el' onclick='editData(\""+row.msg_type_id+",\")'>编辑</button>"
+                    +"<button type='button' class='btn_el' onclick='delData(\""+row.msg_type_id+"\")'>删除</button>";
+                }}
+            ],onPageChange:function(number, size){
+                pageNum=number;
+                pageSize=size;
+            },onPostBody:function(data){
+                if(queryParm=='' &&　(data == null || data.length == 0)){
+                    $(".no-records-found td").html('您还没有添加相关信息，请点击<a onclick="addData();" href="javascript:void(0);">添加</a>');
+                }
+            }
+        });
+        if(RFlag==1){
+            requery();
+        }else{
+            _gd["list"].init();
+        }
+    }
+
+    window.onload=function () {
+        $('#pagename').html("资料类别管理");
+    }
+
+    function  SelectDataType() {
+        $.ajax({
+            type:"get",
+            url:"getDataTy",
+            async:false,
+            dataType:"json",
+            success:function (data) {
+                $("#msg_type_id").append("<option selected hidden value=''>密级</option><option value= ''>密级</option>");
+                for(var i=0;i<data.length;i++){
+                    var item = data[i];
+                    $("#msg_type_id").append("<option value="+item.msg_type_id+","+item.msg_type_name+"> "+item.msg_type_name+"</option>")
+                }
+            }
+        });
+    }
+    SelectDataType();
+
+    function editData(id) {
+        window.location.href= quick.serverUrl+"/subclassedit?msg_type_id="+id;
+    }
+
+    function delData(id) {
+        layer.confirm(
+            "确认将删除吗？<br/>删除后，所有关联数据将一并删除，且删除后不可恢复",
+            {icon: 3, title: "删除记录", skin: 'layer-ext-moon'},
+        function () {
+            $.ajax( {
+                type:"post",
+                url:quick.serverUrl+"/delSubClass",
+                dataType:"json",
+                data:{
+                    msg_type_id:id
+                },
+                success :function (data) {
+                    if (data == 1) {
+                        layer.msg('删除记录成功', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+                        _gd["list"].refresh();
+                    } else {
+                        layer.msg('删除记录失败', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+
+                    }
+                },
+                error:function (err) {
+                    layer.msg('结果异常', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+                }
+            })
+        })
+    }
+
+    function addData() {
+        window.location.href=quick.serverUrl+"/addSupClass";
+    }
+
+    function query() {
+        _gd['list'].refresh();
+    }
+
+</script>
+
+</html>

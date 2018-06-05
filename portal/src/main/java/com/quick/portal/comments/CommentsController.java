@@ -21,30 +21,17 @@ package com.quick.portal.comments;
 import com.quick.core.base.ISysBaseService;
 import com.quick.core.base.SysBaseController;
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import com.quick.core.base.model.DataStore;
 import com.quick.core.util.common.QCommon;
 import com.quick.core.util.common.QUpload;
-import com.quick.core.util.type.IntegerTypeHandler;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
-import sun.misc.BASE64Decoder;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * comments请求类
  * @author 你自己的姓名

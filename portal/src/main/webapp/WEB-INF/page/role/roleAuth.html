@@ -262,13 +262,17 @@
         });
     }
     function onAppCheck(e, treeId, treeNode){
+        if(!treeNode.checked){
+            $("#si_"+treeNode.id).val(0);
+            $("#so_"+treeNode.id).val('');
+            return;
+        }
         $("#si_"+treeNode.id).val(1);
         var so = $("#so_"+treeNode.id).val() ||  '';
         var x = 1;
         if(so == ''){
             $(".sotxt").each(function(){
                 var v = parseInt(this.value);
-                console.log(v);
                 if(v >= x)
                     x = v + 1;
             });
@@ -295,6 +299,17 @@
                 appNodes[i].show_on_init = 1;
                 appNodes[i].show_order = so;
                 nodes.push(appNodes[i]);
+            }
+        }
+        var delNodes = appTree.getCheckedNodes(false);
+        for(var x = 0; x < delNodes.length; x++){
+            for(var y = 0; y < nodes.length; y++){
+                if(delNodes[x].id == nodes[y].id){
+                    nodes.splice(y,1);
+                    //nodes[y].show_on_init = 0;
+                    //nodes[y].show_order = '';
+                    break;
+                }
             }
         }
     }

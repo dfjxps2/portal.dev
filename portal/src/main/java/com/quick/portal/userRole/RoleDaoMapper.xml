@@ -112,8 +112,8 @@
 		   and menu_id=#{menu_id}
 	</update>
 	<delete id="deleteMenuPri" parameterType="map">
-		delete from menu_privilege
-		  where role_id=#{role_id} and menu_id=#{menu_id}
+		delete from menu_privilege where role_id=#{role_id} and menu_id=#{menu_id};
+		delete from dashboard_app_config where app_id in (select app_id from sys_menu where app_id is not null and  menu_id=#{menu_id});
 	</delete>
 
 	<select id="listMenuPri"  parameterType="String" resultType="map">

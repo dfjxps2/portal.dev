@@ -32,6 +32,11 @@ public class MesManageDO implements java.io.Serializable {
      * 信息类别ID
      */
     private  Integer msg_type_id;
+
+    /**
+     * 信息类别上级类别
+     */
+    private Integer sup_msg_type_id;
     /**
      * 信息重要程度ID
      */
@@ -103,6 +108,28 @@ public class MesManageDO implements java.io.Serializable {
      * @return
      */
     private  Integer appr_user_id;
+
+    /**
+     * 信息类型名
+     * @return
+     */
+    private String msg_type_name;
+
+    public String getMsg_type_name() {
+        return msg_type_name;
+    }
+
+    public void setMsg_type_name(String msg_type_name) {
+        this.msg_type_name = msg_type_name;
+    }
+
+    public Integer getSup_msg_type_id() {
+        return sup_msg_type_id;
+    }
+
+    public void setSup_msg_type_id(Integer sup_msg_type_id) {
+        this.sup_msg_type_id = sup_msg_type_id;
+    }
 
     public Integer getAppr_user_id() {
         return appr_user_id;
