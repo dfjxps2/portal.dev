@@ -69,7 +69,7 @@ public class SecMetricConfigServiceImpl extends SysBaseService<SecMetricConfigDo
         dao.delete(sysid);
         return ActionMsg.setOk("操作成功");
     }
-   public int selectUAC( Map<String, Object> queryMap ){
+    public int selectUAC( Map<String, Object> queryMap ){
         return dao.selectUAC(queryMap );
     }
     public int insertUAC( Map<String, Object> queryMap ){
