@@ -45,64 +45,63 @@
                 </div>
             </div>
             <div class="col-sm-2">
-                <div class="pull-right ibox-toolbars hidefield" style="margin-right: -14px;margin-top: 2px;">
+                <div class="pull-right ibox-toolbars hidefield" style="margin-right: -14px;margin-top: 30px;">
                     <button type="button" class=" btn btn-primary" onclick="cancel();">返回</button>
                 </div>
             </div>
-            <div class="ibox ">
-                <div class="ibox-content ibox-content-ad" style="margin-left:5px;margin-top: -30px;height:500px;width:1000px">
+            <div class="ibox " style="padding-right: 5px;">
+                <div class="ibox-content ibox-content-ad" style="margin-left:5px;margin-top: -30px;height:1000px;width:100%">
                     <form id="pubform" name="pubform" method="post"  enctype="multipart/form-data" >
                         <div class="row" style="margin-top:20px">
                             <!--<div class="row">-->
-                            <div class="col-sm-6 form_ipt_botm">
+                            <div class="col-sm-6 form_ipt_botm" style="width:100%;">
                                 <div class="form-group">
-                                    <label class="col-xs-3 lable_top"><span class="span_require">*</span>标题</label>
-                                    <div class="col-xs-9"><input maxlength="50" class="form-control required" id="msg_title" name="msg_title"  /></div>
+                                    <label class="col-xs-3 lable_top" style="width:100px;"><span class="span_require">*</span>标题</label>
+                                    <div class="col-xs-9"><input maxlength="50" style="width: 800px;" class="form-control required required" id="msg_title" name="msg_title"  /></div>
                                 </div>
                             </div>
 
-                            <div class="col-sm-6 form_ipt_botm">
+                            <div class="col-sm-6 form_ipt_botm" style="width:100%;">
                                 <div class="form-group">
-                                    <label class="col-xs-3 lable_top"><span></span>摘要</label>
-                                    <div class="col-xs-9"><textarea  class="form-control required" id="msg_digest" name="msg_digest"></textarea></div>
+                                    <label class="col-xs-3 lable_top" style="width:100px;"><span></span>摘要</label>
+                                    <div class="col-xs-9"><textarea style="height:72px;width:800px;" class="form-control required" id="msg_digest" name="msg_digest"></textarea></div>
                                 </div>
                             </div>
 
-                            <div class="col-sm-6 form_ipt_botm">
+                            <div class="col-sm-6 form_ipt_botm" style="width:270px;margin-left:35px;padding-right:2px;">
                                 <div class="form-group">
-                                    <label class="col-xs-3 lable_top"><span class="span_require">*</span>密级</label>
-                                    <div class="col-xs-9"> <select class="form-control required select_change" id="msg_class_name" name="msg_class_name"></select></div>
+                                    <label class="col-xs-3 lable_top" style="width:82px;"><span class="span_require">*</span>密级</label>
+                                    <div class="col-xs-9" style="padding-left:4px;"> <select class="form-control required select_change" id="msg_class_name" name="msg_class_name"></select></div>
                                 </div>
                             </div>
 
-                            <div class="col-sm-6 form_ipt_botm">
+                            <div class="col-sm-6 form_ipt_botm"style="padding-left:2px;width:300px;">
                                 <div class="form-group">
-                                    <label class="col-xs-4 lable_top"><span></span>标签</label>
-                                    <div class="col-xs-8"><div class="input-group"><input type="text" id="tag_text" readOnly="readOnly" class="form-control required"/><span class="input-group-btn"><button class="btn btn-default" type="button" onclick="chosebox('tag_text', '${G.serverUrl}/mespubtag','tagId');">...</button></span></div></div>
+                                    <label class="col-xs-4 lable_top" style="width:80px;"><span></span>标签</label>
+                                    <div class="col-xs-8" style="padding-left:2px;"><div class="input-group" style="width:187px;"><input type="text" style="width:170px;" id="tag_text" readOnly="readOnly" class="form-control required"/><span class="input-group-btn"><button class="btn btn-default" type="button" onclick="chosebox('tag_text', '${G.serverUrl}/mespubtag','tagId');">...</button></span></div></div>
                                 </div>
                             </div>
 
-                            <div class="col-sm-6 form_ipt_botm">
-                                <div class="form-group">
-                                    <label class="col-xs-3 lable_top"><span></span>内容</label>
-                                    <div class="col-xs-9"><textarea  class="form-control required" id="msgcontent" name="msgcontent"></textarea></div>
+                            <li class="li_file"  >
+                                <div class="uploader white"style="width:260px;" >
+                                    <input id="upload" style="width: 260px;" onchange="uploadFiles();"  type="file" name="file"  onmousedown="fileOnMouseDown()" onmouseup="fileOnMouseUp()" />
+                                    <input type="text" class="filename"  readonly="readonly" style="width:150px;">
+                                    <input id="btn_select" type="button" name="file" class="button_normal" style="padding-left:1px; width:80px;" value="选择附件">　
+                                </div>
+                            </li>
+
+                            <div class="col-sm-6 form_ipt_botm"style="width:870px;">
+                                <div class="form-group" style="width:820px;">
+                                    <label class="col-xs-3 lable_top" style="width:100px;"><span></span>内容</label>
+                                    <div class="col-xs-9"><textarea style="width:800px;padding-left:15px;height:600px;" class="form-control required" id="msgcontent" name="msgcontent"></textarea></div>
                                 </div>
                             </div>
-                                <li class="li_file"  >
-                                    <div class="uploader white" >
-                                        <input type="text" class="filename"  readonly="readonly">
-                                        <input id="btn_select" type="button" name="file" class="button_normal"  value="选择附件">
-                                        　<input id="upload"  onchange="uploadFiles();"  type="file" name="file"  onmousedown="fileOnMouseDown()" onmouseup="fileOnMouseUp()" />
-                                    </div>
-                                </li>
+
                             <!--</div>-->
 
-                            <div ibox-toolbars hidefield  style="margin-bottom: 15px">
-                                <li class="li_bom" style="margin-bottom: -5px;">
-                                    <input id="fat-btn" class="pull-right btn btn-primary"  type="button" onclick="formCommit()" value="上传"/>
-                                    <input  id="reset" type="button" class="pull-right btn btn-primary" value="重置">
-                                    <span style="vertical-align: middle;" class="btn_text"></span>
-                                </li>
+                            <div ibox-toolbars hidefield  style="margin-bottom: 15px;padding-top: 650px;padding-left:400px;">
+                                    <input id="fat-btn"  class=" btn btn-primary"  type="button" onclick="formCommit()" value="上传"/>
+                                    <input  id="reset" type="button" class=" btn btn-primary"  value="重置">
                                     <input type="hidden" id="tagId" name="tagId" class="form-control" />
                                     <input type="hidden" id="msg_content" name="msg_content" class="form-control" />
                                     <input type="hidden" id="msg_attachment" name="msg_attachment" class="form-control" />

@@ -72,7 +72,7 @@
                                             <button type="button" class="close" data-dismiss="modal" style="text-align: center" aria-hidden="true" >×</button></div>
                                     <div class="input-group" style="margin-right: -3px"><span class="input-group-btn" style="width: 20px">
                                         <button class="btn btn-default" type="button" onclick="chosebox('tag_text', '${G.serverUrl}/mespubtags','tags');">...</button></span></div>
-                                        <input style="left: auto;width: 966px" type="text" id="tag_text" placeholder="标签"  class=" form-control required" name="keyword"/>
+                                        <input style="left: auto;width: 966px" type="text" readonly="readonly" id="tag_text" placeholder="标签"  class=" form-control required" name="keyword"/>
                                 </div>
                                 <input type="hidden" id="tags" name="tags" class="form-control" />
                             </form>
@@ -182,7 +182,7 @@
         $(this).hide();
     });
 
-function chosebox(nid, url,id, fn){
+    function chosebox(nid, url,id, fn){
         if(!layer.values)
             layer.values = {};
         var val = $("#"+id).val();
