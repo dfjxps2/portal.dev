@@ -28,6 +28,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -205,6 +206,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
    //发布内容
    @RequestMapping(value="addMes",method={RequestMethod.GET,RequestMethod.POST})
    @ResponseBody
+   @Transactional
    public void publishMes(MesManageDO mesManageDO,String[] tagId,HttpServletRequest request,HttpServletResponse response,boolean MERGE) throws IOException {
        String tyname = "mesPublish";
        String path = createPath(tyname);
@@ -232,7 +234,6 @@ public class MesManageController extends SysBaseController<MesManageDO> {
        mesManageDO.setMsg_src_name("平台内部发布");
        contentFile(fos,fc,mesManageDO);
        try{
-
            mesManageDO.setMsg_content(id); //上传信息内容存放路径
            mesManageDO.setMsg_src_id(MesInfoConstants.PLATFORM_SOURCE_ID);
            mesManageDO.setMsg_type_id(MesInfoConstants.PLATFORM_MES_TYPE);
@@ -243,7 +244,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
            String content = combinFile(fa,mesManageDO);
            String type = SolrInfoConstants.MSG_OBJ_TYPE;
            Map<String,Object> map = new HashMap<>();
-         SolrUtils.addSolrInfo(id,content,type,title);
+           SolrUtils.addSolrInfo(id,content,type,title);
            List<Map<String,Object>> rules=  mesManageDao.selectRules(map);
            int lab = autoFilter(rules,id);
            if(lab ==1){
@@ -487,8 +488,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
                 msg_attachment = msgatt[1];
             }
         }
-
-        String title = mesManageDO.getMsg_title();
+        String title = null;
         String path = createPath(tyname);
         String newpath = null;
         String newattachment =null;
@@ -501,7 +501,6 @@ public class MesManageController extends SysBaseController<MesManageDO> {
             copyFile(id,newpath);
             map.put("msg_content",id);
         }
-
         if(mesManageDO.getMsg_id()!= null && !mesManageDO.getMsg_id().equals("undefined") && !"null".equals(mesManageDO.getMsg_id())){
             map.put("msg_id",mesManageDO.getMsg_id());
         }
@@ -513,6 +512,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         }
         if(mesManageDO.getMsg_title()!= null && !mesManageDO.getMsg_title().equals("undefined") && !"null".equals(mesManageDO.getMsg_title())){
             map.put("msg_title",mesManageDO.getMsg_title());
+            title = mesManageDO.getMsg_title();
         }
         if(mesManageDO.getMsg_digest()!= null && !mesManageDO.getMsg_digest().equals("undefined") && !"null".equals(mesManageDO.getMsg_digest())){
             map.put("msg_digest",mesManageDO.getMsg_digest());
@@ -528,6 +528,9 @@ public class MesManageController extends SysBaseController<MesManageDO> {
             String attName = file.getOriginalFilename(); //附件文件名
             fa = createFile(path+"attachment/",attName);
             file.transferTo(fa);
+            if (attName != null && !attName.equals("")) {
+                title = attName.split("\\.")[0];
+            }
             map.put("msg_attachment",path+"attachment/"+attName);
         }else if(newattachment!= null && !newattachment.equals(" ") && !"null".equals(newattachment)){
             fa = new File(msg_attachment);
@@ -633,7 +636,9 @@ public class MesManageController extends SysBaseController<MesManageDO> {
             map = new HashMap<>();
             map.put("tagId",data);
       List<Map<String,Object>> res = mesManageDao.selectTagMes(map);
-            tag_text= tag_text+res.get(0).get("tag_text").toString();
+            if (res.size()>0){
+                tag_text= tag_text+res.get(0).get("tag_text").toString();
+            }
         }
         a.put("tag_text",tag_text);
         if(msgcontent!= null && !msgcontent.equals("undefined") && !"null".equals(msgcontent)){
@@ -970,7 +975,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         String str="[]";
         //分页参数
        int pageSize= QRequest.getInteger(request,"pageSize",10);
-       int pageNo=QRequest.getInteger(request,"pageNo",1);
+       int pageNo=QRequest.getInteger(request,"page",1);
 
        //获取表名
        String tableName = getTableName();
@@ -1297,6 +1302,9 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         List<Map<String,Object>> result = new ArrayList<>();
         for (int i=0;i<data.size();i++){
             Map<String,Object> map= data.get(i);
+            if(map.get("tag_type_id")==null || map.get("tag_type_id").equals("") || "null".equals(map.get("tag_type_id"))){
+                continue;
+            }
             Map<String,Object> list = new HashMap<>();
             List<Map<String,Object>> res = new ArrayList<>();
             list.put("tag_type_name",map.get("tag_type_name"));
@@ -1348,14 +1356,27 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         Map<String, Object> queryMap = getQueryMap(request, fieldShow,
                 tableName, whereStr, fieldOrder);
         queryMap.put("msg_src_id",0);
-        PageBounds pager = new PageBounds(pageNo, pageSize);
-        if (keywords != null && !keywords.equals("")) {
-            String[]  keys = keywords.split(" ");
-            queryMap.put("list", keys);
+        Integer msgTypeId = QRequest.getInteger(request,"msg_type_id");
+        Integer supMsgTypeId = QRequest.getInteger(request,"sup_msg_type_id");
+        if( msgTypeId.equals(0) && supMsgTypeId !=null && !supMsgTypeId.equals("")){
+            queryMap.put("sup_msg_type_id",supMsgTypeId);
         }
-      List<Map<String,Object>> dt  = mesManageDao.selectDataMes(queryMap,pager);
-        List<Map<String,Object>> d = mesManageDao.selectDataMes(queryMap);
-
+        if( !msgTypeId.equals(0) && msgTypeId !=null && !msgTypeId.equals("")){
+            queryMap.put("msg_type_id",msgTypeId);
+        }
+        PageBounds pager = new PageBounds(pageNo, pageSize);
+        if(keywords!=null && !keywords.equals("undefined") && !keywords.equals("")){
+            String contents = "";
+            List<String> dataByKeyword = SolrUtils.getDataByKeyword(keywords);
+            for(String data : dataByKeyword){
+                contents += ("\'"+data+"\'"+",");
+            }
+            int index = contents.lastIndexOf(",");
+            contents = contents.substring(0,index);
+            queryMap.put("msg_content",contents);
+        }
+        List<Map<String,Object>> dt  = mesManageDao.selectDataMes(queryMap,pager);
+     //   List<Map<String,Object>> d = mesManageDao.selectDataMes(queryMap);
         recordCount = mesManageDao.countData(queryMap);
         int pageSize1 = pager.getPageSize();
         int pageNo1 =Integer.parseInt(queryMap.get("page").toString()) ;
@@ -1529,32 +1550,36 @@ public class MesManageController extends SysBaseController<MesManageDO> {
          MultipartFile file = re.getFile("file");
          String path = createPath(tyname) ;
          String name = file.getOriginalFilename();
-         FileOutputStream fos = null;
+            String title = null;
+            if (name != null && !name.equals("")) {
+                title = name.split("\\.")[0];
+            }
+         String content = path+name;
          File uploadFile = createFile(path, name);
          file.transferTo(uploadFile);
+            String datacontent = parseFile(uploadFile);
+            String[] key = null;
+            if (keywords != null && !keywords.equals("")) {
+                datacontent=datacontent+keywords;
+                key = keywords.split(" ");
+            }
+            String type = SolrInfoConstants.DATA_OBJ_TYPE;
+            SolrUtils.addSolrInfo(content,datacontent,type,title);
          Calendar calendar = Calendar.getInstance();
          Date date = calendar.getTime();
          mesManageDO.setPub_time(date);
          mesManageDO.setAppr_time(date);
-         String title = null;
-         if (name != null && !name.equals("")) {
-             title = name.split("\\.")[0];
-         }
          mesManageDO.setMsg_title(title);
-         mesManageDO.setMsg_content(path + name);
+         mesManageDO.setMsg_content(content);
          mesManageDO.setMsg_src_id(0);
-         String[] key = null;
-         if (keywords != null && !keywords.equals("")) {
-             key = keywords.split(" ");
-         }
-         if (mesManageDO.getMsg_type_id() == null ||!mesManageDO.getMsg_type_id().equals("")) {
+         if (mesManageDO.getMsg_type_id() == null ||mesManageDO.getMsg_type_id().equals("")) {
                mesManageDO.setMsg_type_id(mesManageDO.getSup_msg_type_id());
             }
          mesManageDao.insert(mesManageDO);
          SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
          String time = format.format(mesManageDO.getAppr_time());
          map.put("appr_time", time);
-         List<Map<String, Object>> result = mesManageDao.selectMes(map);
+         List<Map<String, Object>> result = mesManageDao.selectDataMes(map);
           msgId = (Integer) result.get(0).get("msg_id");
             int tagId = mesManageDao.selectMaxTagId();
             tagFilter(key,map,tagId,msgId);
@@ -1632,8 +1657,10 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         MultipartFile file = multipartRequest.getFile("file");
         String path = createPath(tyname) ;
         Integer id = null;
+        String msg_content = null;
         List<Integer> list = new ArrayList<>();
         Map<String,Object> map = new HashMap<>();
+        String title = null;
         if(mesManageDO.getMsg_id()!= null && !mesManageDO.getMsg_id().equals("undefined") && !"null".equals(mesManageDO.getMsg_id())){
           id = mesManageDO.getMsg_id();
             map.put("msg_id",id);
@@ -1641,6 +1668,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         }
         if(mesManageDO.getMsg_title()!= null && !mesManageDO.getMsg_title().equals("undefined") && !"null".equals(mesManageDO.getMsg_title())){
             map.put("msg_title",mesManageDO.getMsg_title());
+            title = mesManageDO.getMsg_title();
         }
         if(mesManageDO.getPub_time()!= null && !mesManageDO.getPub_time().equals("undefined") && !"null".equals(mesManageDO.getPub_time())){
             map.put("pub_time",mesManageDO.getPub_time());
@@ -1653,7 +1681,6 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         if(mesManageDO.getMsg_type_id()== null || mesManageDO.getMsg_type_id().equals("undefined")){
             map.put("msg_type_id",mesManageDO.getSup_msg_type_id());
         }
-        String msg_content = null;
         if(mesManageDO.getMsg_content()!= null && !mesManageDO.getMsg_content().equals("undefined") && !"null".equals(mesManageDO.getMsg_content())){
             String[]  msgatt = mesManageDO.getMsg_content().split(",");
             if (msgatt.length>1){
@@ -1661,14 +1688,32 @@ public class MesManageController extends SysBaseController<MesManageDO> {
                 map.put("msg_content",msg_content);
             }
         }
+        String content = null;
+        String datacontent = null;
+        String type = SolrInfoConstants.DATA_OBJ_TYPE;
 
+        String[] key  = null;
+        if (keywords != null && !keywords.equals("")) {
+            datacontent= keywords;
+            key = keywords.split(" ");
+        }
         File fa = null;
         //附件保存
         if( file!= null  && !file.isEmpty()  ){
             String attName = file.getOriginalFilename(); //附件文件名
             fa = createFile(path,attName);
             file.transferTo(fa);
-            map.put("msg_content",path+attName);
+           datacontent= parseFile(fa)+datacontent;
+           content = path+attName;
+            if (attName != null && !attName.equals("")) {
+                title = attName.split("\\.")[0];
+            }
+           SolrUtils.addSolrInfo(content,datacontent,type,title);
+            map.put("msg_content",content);
+        }else {
+            File fi = new File(msg_content);
+            datacontent = parseFile(fi)+datacontent;
+            SolrUtils.addSolrInfo(msg_content,datacontent,type,title);
         }
             Date date = new Date();
             String useId = QCookie.getValue(request,"ids");
@@ -1676,11 +1721,6 @@ public class MesManageController extends SysBaseController<MesManageDO> {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-HH hh:mm:ss");
             map.put("appr_time",format.format(date.getTime()));
             mesManageDao.msgedit(map);
-
-        String[] key  = null;
-        if (keywords != null && !keywords.equals("")) {
-            key = keywords.split(" ");
-        }
         List<Integer> tagid = mesManageDao.selectMesByTag(list);
         if(tagid.size()>0){
             mesManageDao.deleteTags(tagid);
@@ -1714,6 +1754,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         mesManageDao.deleteMsg(msgId.toString());
         if(content!=null && !content.equals("") && !content.equals("undefined")){
                     deleteFile(content);
+                    SolrUtils.deleteSolrInfo(content);
                 }
         try {
             response.getWriter().write("1");
@@ -1723,5 +1764,30 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         }
     }
 
+    //下载文件
+    @RequestMapping(value = "downloadFile")
+    public String downloadFile(HttpServletRequest res, HttpServletResponse response) throws IOException {
+       String path = QRequest.getString(res,"msg_content");
+       if(path==null || path.equals("undefined")){
+         return "page/mesManage/databaselist";
+       }
+       int indexname = path.lastIndexOf("/");
+       String name = path.substring(indexname+1);
+        InputStream in = new FileInputStream(path);
+        response.setContentLength(in.available());
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/force-download");
+        response.addHeader("Content-Disposition","attachment;filename="+name);
+        OutputStream out = response.getOutputStream();
+        byte[] b = new byte[1024];
+        int len = 0;
+        while((len = in.read(b))!=-1){
+            out.write(b, 0, len);
+        }
+        out.flush();
+        out.close();
+        in.close();
+        return "1";
+    }
 
 }

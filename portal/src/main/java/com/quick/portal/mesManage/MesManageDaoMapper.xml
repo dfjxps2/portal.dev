@@ -10,7 +10,7 @@
     </resultMap>
    <!--查询条件-->
     <sql id="where">
-        1=1
+        msg_src_id != 0
         <if test="msg_id!=null and msg_id !='' and !'null'.equals(msg_id)">
             AND  msg_id = #{msg_id}
         </if>
@@ -113,12 +113,15 @@
     </insert>
           <!--内容管理初始化和查询-->
    <select id="selectMes" parameterType="map" resultType="map">
-       SELECT met.*,su.user_name apprname FROM (SELECT mew.*,mc.msg_class_name
-      FROM (SELECT me.*,ms.msg_src_name,ms.msg_src_url   FROM message me LEFT join
-      msg_source ms on me.msg_src_id = ms.msg_src_id) mew LEFT JOIN
-      msg_classify mc on mew.msg_class_id = mc.msg_class_id)met LEFT JOIN
-      sys_user su on met.appr_user_id = su.user_id
-      <where>
+       SELECT met.msg_id,met.msg_title,met.src_msg_id,met.pub_user_id,met.pub_time,met.msg_type_id,met.msg_src_id,       met.msg_digest,met.msg_content,met.msg_class_id,met.appr_user_id,met.msg_attachment,met.appr_state,met.appr_time,met.msg_src_name,met.msg_src_url,met.msg_class_name,su.user_name apprname
+       FROM (SELECT mew.msg_id,mew.msg_title,mew.src_msg_id,mew.pub_user_id,mew.pub_time,mew.msg_type_id,mew.     msg_src_id,mew.msg_digest,mew.msg_content,mew.msg_class_id,mew.appr_user_id,mew.msg_attachment,mew.appr_state,mew.appr_time,mew.msg_src_name,mew.msg_src_url,mc.msg_class_name
+       FROM
+       (SELECT me.msg_id,me.msg_title,me.src_msg_id,me.pub_user_id,me.pub_time,me.msg_type_id,me.msg_src_id,me.msg_digest,me.msg_content,me.msg_class_id,me.appr_user_id,me.msg_attachment,me.appr_state,me.appr_time,ms.msg_src_name,ms.msg_src_url FROM  msg_source ms LEFT join
+       message me on me.msg_src_id = ms.msg_src_id )
+       mew LEFT JOIN
+       msg_classify mc ON mew.msg_class_id = mc.msg_class_id)met LEFT JOIN
+       sys_user su ON met.appr_user_id = su.user_id
+       <where>
           <include refid="where" />
       </where>
    </select>
@@ -153,6 +156,7 @@
     <update id="msgedit" parameterType="map" >
         UPDATE portaldb.message
         SET
+        msg_title= #{msg_title},
         msg_class_id= #{msg_class_id},
         msg_digest=  #{msg_digest},
         msg_content= #{msg_content},
@@ -189,15 +193,14 @@
 
     <!--内容标签-->
     <select id="selectTagsTree" resultType="map">
-        SELECT b.tag_type_id,b.tag_type_name,GROUP_CONCAT(tag_id,':',tag_text) tag_text  FROM (SELECT DISTINCT t.*,tt.tag_type_name
-        FROM tags t LEFT JOIN tag_type tt on t.tag_type_id=tt.tag_type_id ) b GROUP BY b.tag_type_name;
+        SELECT b.tag_type_id,b.tag_type_name,GROUP_CONCAT(tag_id,':',tag_text) tag_text  FROM (SELECT DISTINCT t.tag_type_id,t.tag_text,t.tag_id,tt.tag_type_name
+        FROM tags t LEFT JOIN tag_type tt on t.tag_type_id=tt.tag_type_id where t.tag_type_id !='' ) b GROUP BY b.tag_type_name
     </select>
 
     <!--根据标签查询msgid-->
     <select id="mesByTag" resultType="map">
         SELECT DISTINCT mt.msg_id  FROM portaldb.msg_tag mt WHERE tag_id =#{tag_id}
     </select>
-
 
     <!--自动审核规则管理-->
     <select id="selectRules" resultType="map">
@@ -320,56 +323,58 @@
     <!--根据资料类别查询-->
 
     <select id="selectDataMes"  parameterType="map" resultType="map">
-        SELECT DISTINCT msdata.msg_id,msdata.msg_type_id,msdata.sup_msg_type_id,  msdata.msg_title,msdata.msg_src_id,msdata.msg_content,msdata.pub_time,msdata.appr_time ,msdata.msg_type_name, keywords FROM
-        (SELECT mk.sup_msg_type_id,mk.msg_type_name,mk.msg_type_id,mk.msg_id,mk.msg_title,mk.msg_src_id,mk.msg_content,mk.pub_time,mk.appr_time ,GROUP_CONCAT(mty.tag_text) keywords FROM
-        (SELECT  mty.sup_msg_type_id,mty.msg_type_name,mty.msg_type_id,me.msg_id,me.msg_title,me.msg_src_id,me.msg_content,me.pub_time,me.appr_time  FROM msg_type mty LEFT JOIN message me ON mty.msg_type_id = me.msg_type_id
-        AND me.msg_src_id = 0 WHERE 1=1) mk LEFT JOIN (SELECT  mtt.tag_id,mtt.tag_text,mtt.msg_id,mes.msg_title,mes.msg_src_id,mes.msg_content,mes.pub_time,mes.appr_time,mes.msg_type_id FROM( SELECT mt.tag_id,mt.msg_id,ta.tag_text
-        FROM msg_tag mt LEFT JOIN tags ta ON mt.tag_id = ta.tag_id ) mtt LEFT JOIN message mes ON mtt.msg_id = mes.msg_id AND mes.msg_src_id = 0 WHERE 1=1) mty ON  mty.msg_id = mk.msg_id GROUP BY msg_id) msdata
+        SELECT DISTINCT msdata.msg_id,msdata.msg_type_id,msdata.sup_msg_type_id, msdata.msg_title,msdata.msg_content,msdata.pub_time,msdata.appr_time ,msdata.msg_type_name, keywords
+        FROM (SELECT mk.sup_msg_type_id,mk.msg_type_name,mk.msg_type_id,mk.msg_id,mk.msg_title,mk.msg_content,mk.pub_time,mk.appr_time,GROUP_CONCAT(mty.tag_text) keywords
+        FROM(SELECT mty.sup_msg_type_id,mty.msg_type_name,mty.msg_type_id,me.msg_id,me.msg_title,me.msg_src_id,me.msg_content,me.pub_time,me.appr_time FROM  message me LEFT JOIN msg_type mty
+        ON mty.msg_type_id = me.msg_type_id WHERE  me.msg_src_id = 0) mk LEFT JOIN (SELECT mtt.tag_id,mtt.tag_text,mtt.msg_id,mes.msg_title,mes.msg_content,mes.pub_time,mes.appr_time,mes.msg_type_id
+        FROM( SELECT mt.tag_id,mt.msg_id,ta.tag_text FROM msg_tag mt LEFT JOIN tags ta ON mt.tag_id = ta.tag_id ) mtt LEFT JOIN message mes ON mtt.msg_id =
+        mes.msg_id AND mes.msg_src_id = 0 WHERE 1=1) mty ON mty.msg_id = mk.msg_id GROUP BY msg_id) msdata
         WHERE 1=1
-        <if test="list != null">
-        AND
-            <foreach collection="list" index="index" item="item" open=" " separator="OR" close=" ">
-                keywords LIKE CONCAT(CONCAT('%',#{item}),'%')
-            </foreach>
+        <if test="msg_content!=null and msg_content !='' and !'null'.equals(msg_content)">
+          AND msg_content IN (${msg_content})
         </if>
-       <!--<if test="sup_msg_type_id!=null and sup_msg_type_id !='' and !'null'.equals(sup_msg_type_id)">-->
-         <!--AND  sup_msg_type_id = #{sup_msg_type_id}-->
-       <!--</if>-->
-        <!--<if test="msg_type_id!=null and msg_type_id !='' and !'null'.equals(msg_type_id)">-->
-            <!--AND  msg_type_id = #{msg_type_id}-->
-        <!--</if>-->
-        <!--<if test="msg_id!=null and msg_id !='' and !'null'.equals(msg_id)">-->
-            <!--AND  msg_id = #{msg_id}-->
-        <!--</if>-->
-        <!--<if test="_sql_where != null and _sql_where != '' "> <![CDATA[-->
-             <!--${_sql_where}-->
-        <!--]]> </if>-->
+        <if test="msg_type_id!=null and msg_type_id !='' and !'null'.equals(msg_type_id)">
+            AND  msg_type_id = #{msg_type_id}
+        </if>
+        <if test="sup_msg_type_id!=null and sup_msg_type_id !='' and !'null'.equals(sup_msg_type_id)">
+            AND  sup_msg_type_id = #{sup_msg_type_id}
+        </if>
+        <if test="msg_id!=null and msg_id !='' and !'null'.equals(msg_id)">
+            AND  msg_id = #{msg_id}
+        </if>
+        <if test="appr_time!=null">
+            <![CDATA[AND DATE_FORMAT(appr_time,'%Y-%m-%d %H:%i:%s ')= DATE_FORMAT(#{appr_time},'%Y-%m-%d %H:%i:%s')]]>
+        </if>
+        <if test="_sql_where != null and _sql_where != '' "> <![CDATA[
+             ${_sql_where}
+        ]]> </if>
 
     </select>
 
     <!--查询总数-->
     <select id="countData" parameterType="map" resultType="int">
-        select count(*) from( SELECT DISTINCT msdata.msg_id,msdata.msg_type_id,msdata.sup_msg_type_id,  msdata.msg_title,msdata.msg_src_id,msdata.msg_content,msdata.pub_time,msdata.appr_time ,msdata.msg_type_name, keywords FROM
-        (SELECT mk.sup_msg_type_id,mk.msg_type_name,mk.msg_type_id,mk.msg_id,mk.msg_title,mk.msg_src_id,mk.msg_content,mk.pub_time,mk.appr_time ,GROUP_CONCAT(mty.tag_text) keywords FROM
-        (SELECT  mty.sup_msg_type_id,mty.msg_type_name,mty.msg_type_id,me.msg_id,me.msg_title,me.msg_src_id,me.msg_content,me.pub_time,me.appr_time  FROM msg_type mty LEFT JOIN message me ON mty.msg_type_id = me.msg_type_id
-        AND me.msg_src_id = 0 WHERE 1=1) mk LEFT JOIN (SELECT  mtt.tag_id,mtt.tag_text,mtt.msg_id,mes.msg_title,mes.msg_src_id,mes.msg_content,mes.pub_time,mes.appr_time,mes.msg_type_id FROM( SELECT mt.tag_id,mt.msg_id,ta.tag_text
-        FROM msg_tag mt LEFT JOIN tags ta ON mt.tag_id = ta.tag_id ) mtt LEFT JOIN message mes ON mtt.msg_id = mes.msg_id AND mes.msg_src_id = 0 WHERE 1=1) mty ON  mty.msg_id = mk.msg_id GROUP BY msg_id) msdata
+        select count(*) from(  SELECT DISTINCT msdata.msg_id,msdata.msg_type_id,msdata.sup_msg_type_id, msdata.msg_title,msdata.msg_content,msdata.pub_time,msdata.appr_time ,msdata.msg_type_name, keywords
+        FROM (SELECT mk.sup_msg_type_id,mk.msg_type_name,mk.msg_type_id,mk.msg_id,mk.msg_title,mk.msg_content,mk.pub_time,mk.appr_time,GROUP_CONCAT(mty.tag_text) keywords
+        FROM(SELECT mty.sup_msg_type_id,mty.msg_type_name,mty.msg_type_id,me.msg_id,me.msg_title,me.msg_src_id,me.msg_content,me.pub_time,me.appr_time FROM  message me LEFT JOIN msg_type mty
+        ON mty.msg_type_id = me.msg_type_id WHERE  me.msg_src_id = 0) mk LEFT JOIN (SELECT mtt.tag_id,mtt.tag_text,mtt.msg_id,mes.msg_title,mes.msg_content,mes.pub_time,mes.appr_time,mes.msg_type_id
+        FROM( SELECT mt.tag_id,mt.msg_id,ta.tag_text FROM msg_tag mt LEFT JOIN tags ta ON mt.tag_id = ta.tag_id ) mtt LEFT JOIN message mes ON mtt.msg_id =
+        mes.msg_id AND mes.msg_src_id = 0 WHERE 1=1) mty ON mty.msg_id = mk.msg_id GROUP BY msg_id) msdata
         WHERE 1=1
-        <if test="list != null">
-            AND
-            <foreach collection="list" index="index" item="item" open=" " separator="OR" close=" ">
-                keywords LIKE CONCAT(CONCAT('%',#{item}),'%')
-            </foreach>
+        <if test="msg_content!=null and msg_content !='' and !'null'.equals(msg_content)">
+            AND msg_content IN (${msg_content})
         </if>
-        <!--<if test="sup_msg_type_id!=null and sup_msg_type_id !='' and !'null'.equals(sup_msg_type_id)">-->
-            <!--AND  sup_msg_type_id = #{sup_msg_type_id}-->
-        <!--</if>-->
-        <!--<if test="msg_type_id!=null and msg_type_id !='' and !'null'.equals(msg_type_id)">-->
-            <!--AND  msg_type_id = #{msg_type_id}-->
-        <!--</if>-->
-        <!--<if test="msg_id!=null and msg_id !='' and !'null'.equals(msg_id)">-->
-            <!--AND  msg_id = #{msg_id}-->
-        <!--</if>-->
+        <if test="msg_type_id!=null and msg_type_id !='' and !'null'.equals(msg_type_id)">
+            AND  msg_type_id = #{msg_type_id}
+        </if>
+        <if test="sup_msg_type_id!=null and sup_msg_type_id !='' and !'null'.equals(sup_msg_type_id)">
+            AND  sup_msg_type_id = #{sup_msg_type_id}
+        </if>
+        <if test="msg_id!=null and msg_id !='' and !'null'.equals(msg_id)">
+            AND  msg_id = #{msg_id}
+        </if>
+        <if test="appr_time!=null">
+            <![CDATA[AND DATE_FORMAT(appr_time,'%Y-%m-%d %H:%i:%s ')= DATE_FORMAT(#{appr_time},'%Y-%m-%d %H:%i:%s')]]>
+        </if>
         )mt
     </select>
 
@@ -528,10 +533,14 @@
 
     <!--标签总数的查询-->
     <select id="selectTagCount" parameterType="map" resultType="int">
-        SELECT COUNT(*) FROM tags
+        SELECT COUNT(*) FROM ( select tm.*,tty.tag_type_name superTypeName from (select
+        ta.tag_id,ta.tag_type_id,ta.tag_text,
+        tt.super_type_id,tt.tag_type_name from tags ta join tag_type tt on ta.tag_type_id = tt.tag_type_id WHERE 1=1 )
+        tm left join tag_type tty on tm.super_type_id = tty.tag_type_id
         <where>
             <include refid="tag"/>
         </where>
+        ) tag
 </select>
 
 </mapper>
