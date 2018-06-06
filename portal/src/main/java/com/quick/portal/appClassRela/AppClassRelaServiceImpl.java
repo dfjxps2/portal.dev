@@ -97,4 +97,9 @@ public class AppClassRelaServiceImpl extends SysBaseService<AppClassRelaDO> impl
     public List<Map<String, Object>> selectRela(Map<String, Object> m) {
         return dao.selectRela(m);
     }
+
+    @Override
+    public int deleteByAppId(String appId) {
+        return dao.deleteByAppId(appId);
+    }
 }

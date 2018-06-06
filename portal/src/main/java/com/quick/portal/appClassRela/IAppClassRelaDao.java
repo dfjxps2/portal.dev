@@ -33,4 +33,6 @@ public interface IAppClassRelaDao<AppClassRelaDO> extends ISysBaseDao<AppClassRe
      * @return
      */
     List<Map<String, Object>> selectRela(Map<String, Object> m);
+
+    int deleteByAppId(String appId);
 }
