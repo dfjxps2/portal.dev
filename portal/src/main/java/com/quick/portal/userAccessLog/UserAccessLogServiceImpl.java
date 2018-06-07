@@ -106,17 +106,19 @@ public class UserAccessLogServiceImpl extends SysBaseService<UserAccessLogDO> im
      */
 	@Override
 	public void saveLog(HttpServletRequest request,int logTypeId, int userOpType, int menuId,
-			String message) {
+			String message,String userID, String userNM) {
 		 //用户ID
 		 String userId = QCookie.getValue(request, "ids");
 		 int uid = 0 ;
 		 if(null != userId && !"".equals(userId)){
 			 uid = Integer.parseInt(userId);
+		 }else{
+			 uid = Integer.parseInt(userID);
 		 }
 		 //用户名
 		 String uname = QCookie.getValue(request, "sbd.user");
-		 if(null == uname || "".equals(uname)){
-			 uname = "";
+		 if(null == uname  || "".equals(uname)){
+			 uname = userNM;
 		 }
 		 UserAccessLogDO entity = new UserAccessLogDO();
 		 entity.setLog_time(DateTime.Now().getTime());
@@ -129,4 +131,6 @@ public class UserAccessLogServiceImpl extends SysBaseService<UserAccessLogDO> im
 		 entity.setLog_detail("用户名:".concat(uname).concat(",").concat(message));
 		 dao.insert(entity);
 	}
+
+
 }
