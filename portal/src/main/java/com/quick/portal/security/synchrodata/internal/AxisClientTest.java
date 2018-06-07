@@ -15,6 +15,7 @@ public class AxisClientTest {
 
 	public static void main(String[] args) throws ServiceException, RemoteException, MalformedURLException {  
 		 axisWebServiceTest();
+//		 axisWebServiceTest1();
 	      
 	}  
 	
@@ -34,14 +35,14 @@ public class AxisClientTest {
 	      String result = "";
 		try {
 			call = (Call) service.createCall();
-		      call.setTargetEndpointAddress(WSDL_URL);  
-		      QName qName = new QName(DOMAIN_NAME, METHOD_NAME);  
+		      call.setTargetEndpointAddress(SOAP_WSDL_ADDRESS);  
+		      QName qName = new QName(SOAP_TARGET_NAMESPACE, WSDL_SERVICE_NAME);  
 		      call.setOperationName(qName);  
 		      //这下面两行一定要加上，否则接收在服务器端收不到。  
 		      call.addParameter("xmlStr", XMLType.XSD_STRING, ParameterMode.IN);  
 		      call.setReturnType(XMLType.XSD_STRING);  
 		      try {
-				result = (String) call.invoke(new Object[] { xmlStr });
+				result = (String) call.invoke(new Object[] { "admin" });
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -57,20 +58,24 @@ public class AxisClientTest {
 	    //JSONArray array = JSONArray.fromObject(result);  
 	    //List<Album> list = JSONArray.toList(array,Album.class); 
 	 }
-	 private final static String METHOD_NAME = "UserDataSync";
-	 private final static String DOMAIN_NAME = "http://userdt.synchrodata.security.portal.quick.com/";
-	 private final static String WSDL_URL = "http://127.0.0.1:6080/portal/UserDataSync?wsdl";
+		private final static String SOAP_WSDL_ADDRESS = "http://127.0.0.1:18001/portal/intlDataSynchronizedService?wsdl";
+
+		private final static String SOAP_TARGET_NAMESPACE = "http://internal.synchrodata.security.portal.quick.com/";
+		
+		private final static String WSDL_SERVICE_NAME = "intlDataSynchronizedService";
+		
+		private final static String WSDL_OPERATION_NAME = "getUsersDataByUserID";
+			 
 	 
-	 
-	 /*private static void axisWebServiceTest1() {
+	/* private static void axisWebServiceTest1() {
 		 Call call;
 		 Object[] obj =new Object[]{20,50};
 		 try {
 		 Service service = new Service();
 		 call = (Call) service.createCall();
-		 call.setTargetEndpointAddress(WSDL_URL);//设置服务地址，指明远程调用的类
+		 call.setTargetEndpointAddress(SOAP_WSDL_ADDRESS);//设置服务地址，指明远程调用的类
 		 call.setEncodingStyle("utf-8");//设置传入服务端的字符集格式如utf-8等，注意：                                                          //  Integer,int,Date想要传递必须有此方法,
-		 call.setOperationName(METHOD_NAME);//设置远程调用类中的方法
+		 call.setOperationName(WSDL_OPERATION_NAME);//设置远程调用类中的方法
 		 //参数必须按照XSD中的顺序添加到Call中，否则则不能与Object数组的值对应，会报错。
 		 call.addParameter("arg0", XMLType.XSD_INT, ParameterMode.IN);//参数名，参数类                                                                                       //参数模式
 		 call.addParameter("arg1", XMLType.XSD_INT, ParameterMode.IN);//IN:输入参数，                                                                       //OUT输出参数，INOUT输入输出参数
@@ -83,7 +88,7 @@ public class AxisClientTest {
 		 e.printStackTrace();
 		 }
 		 
-	 }*/
-
+	 }
+*/
 
 }
