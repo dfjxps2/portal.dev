@@ -107,6 +107,12 @@ function playnext(){
 function query(){
 	var t = $("#txt").val();
 	$.post('getUserApp',{'t':t}, function(d){
+		if(d == null || d.length == 0){
+			$("#apps").html('');
+			loadpg(1);
+			play(1);
+			return;
+		}
 		loadapp('#apps',d);
 	});
 }

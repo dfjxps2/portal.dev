@@ -8,7 +8,7 @@
 		left join user_dashboard u on u.dashboard_id=d.dashboard_id
 		left join sys_menu m on d.app_id=m.app_id and m.menu_state=1
 		left join application a on a.app_id=d.app_id and a.app_state=1
-		where u.user_id=#{user_id} and d.param_id=1 and d.param_value !='0'
+		where u.user_id=#{user_id} and d.param_id=1 and d.param_value !='0' and a.app_id is not null
 		<if test="app_name != null and app_name != '' and app_name != 'null'"><![CDATA[
 	       and instr(a.app_name,#{app_name})>0
 	    ]]></if>

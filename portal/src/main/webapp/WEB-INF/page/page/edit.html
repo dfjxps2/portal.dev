@@ -178,6 +178,10 @@
         }
     }
     function save(){
+        var pn = $("#page_name").val();
+        if(pn == ''){
+            layer.alert("请先填写页面名称");
+        }
         if(!$("#form").valid()){
             return false;
         }
