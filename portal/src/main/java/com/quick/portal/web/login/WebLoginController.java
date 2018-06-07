@@ -68,12 +68,18 @@ public class WebLoginController {
     @RequestMapping(value = "/" )
     public String index(HttpServletRequest request,HttpServletResponse response) {
     	 String rid = QCookie.getValue(request, "sbd.role");
+    	 //判断公服用户直接访问home/login时，跳转APP_Menu
+    	 String gid = QCookie.getValue(request, "sbd.gid");
     	 WebLoginUser loginer = null;
     	 String userGlobalID = null;
-    	 if(null == rid || "".equals(rid)){
+    	 if((null == rid || "".equals(rid))&&(null == gid || "".equals(gid))){
     		  loginer = loadCASUserInfo(request,response);
-    		  rid =  String.valueOf(loginer.getRole_id());
-    		  userGlobalID = loginer.getUser_global_id();
+    		  if(null == loginer ){
+    			  return "redirect:"+LOGIN; 
+    		  }else{
+    			  rid =  String.valueOf(loginer.getRole_id());
+        		  userGlobalID = loginer.getUser_global_id();
+    		  }
     	 }
        	 //平台用户:1:app;2:sys;公服用户:1:app
     	 String flag = getSysUrlByUserGlobalID(userGlobalID,rid);
@@ -117,10 +123,16 @@ public class WebLoginController {
 	       //}
            parm.clear();
            parm.put("user_id", loginUser.getUser_id());
+          
            List<Map<String,Object>> roles = userRoleRelaService.select(parm);
            saveSession(loginUser,roles, request, response);
-           userAccessLogService.saveLog(request, UserAccessLogConstants.SYS_LOG_TYPE_ID, UserAccessLogConstants.LOGIN_USER_OP_TYPE,1,loginUser.getUser_real_name() + "登录成功");
-           String rid = QCookie.getValue(request, "sbd.role");
+           userAccessLogService.saveLog(request, UserAccessLogConstants.SYS_LOG_TYPE_ID, UserAccessLogConstants.LOGIN_USER_OP_TYPE,1,loginUser.getUser_real_name() + "登录成功",loginUser.getUser_id().toString(),username);
+           String rid = null;
+           if(null != loginUser.getRole_id() && !"".equals(loginUser.getRole_id())){
+        	    rid =  String.valueOf(loginUser.getRole_id());
+           }else{
+        	   return  "用户名角色为空";  
+           }
            // 平台用户:1:app;2:sys;公服用户:1:app
            flag = getSysUrlByUserGlobalID(loginUser.getUser_global_id(),rid);
        } catch (Exception e) {
@@ -135,12 +147,13 @@ public class WebLoginController {
         //记录日志
         String ids = QCookie.getValue(request, "ids");
         if(ids != null && ids.length() > 0)
-            userAccessLogService.saveLog(request, UserAccessLogConstants.SYS_LOG_TYPE_ID, UserAccessLogConstants.LOGOUT_USER_OP_TYPE,UserAccessLogConstants.FUN_MENU_ID, UserAccessLogConstants.LOGOUT_USER_OP_DESC);
+            userAccessLogService.saveLog(request, UserAccessLogConstants.SYS_LOG_TYPE_ID, UserAccessLogConstants.LOGOUT_USER_OP_TYPE,UserAccessLogConstants.FUN_MENU_ID, UserAccessLogConstants.LOGOUT_USER_OP_DESC,ids,"");
 
         QCookie.remove(response, request, AppResource.COOKIE_LOGINER );
         QCookie.remove(response, request, "ids" );
         QCookie.remove(response, request, "sbd.user" );
         QCookie.remove(response, request, "sbd.role" );
+        QCookie.remove(response, request, "sbd.gid" );
 
         String url = request.getScheme() + "://" + request.getServerName()
                 + ":" + request.getServerPort() + request.getContextPath()
@@ -156,6 +169,7 @@ public class WebLoginController {
         QCookie.set(response, "ids", loginUser.getUser_id().toString());
         QCookie.set(response, "sbd.user", loginUser.getUser_name(), 4*3600);
         QCookie.set(response, "sbd.role", ids, 4*3600);
+        QCookie.set(response, "sbd.gid", loginUser.getUser_global_id(), 4*3600);
     }
     
     public WebLoginUser loadCASUserInfo(HttpServletRequest request,HttpServletResponse response){
@@ -167,6 +181,7 @@ public class WebLoginController {
 			user.setRole_id( Integer.valueOf(WebLoginUitls.getVal(u, "role_id")) );
 			user.setUser_real_name(WebLoginUitls.getVal(u, "user_real_name"));
 			user.setUser_id(Integer.valueOf(WebLoginUitls.getVal(u, "user_id")));
+			user.setUser_global_id(WebLoginUitls.getVal(u, "user_global_id"));
 			user.saveSession(request, response);//保存至本地
 			return user;
 		}
