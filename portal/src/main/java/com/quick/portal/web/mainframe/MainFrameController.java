@@ -132,7 +132,7 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
     public void sendLog(HttpServletRequest request, int menuId,String menuNm) throws Exception {
     	//记录日志
     	try{
-    		 userAccessLogService.saveLog(request, UserAccessLogConstants.SYS_LOG_TYPE_ID, UserAccessLogConstants.OPER_MENU_USER_OP_TYPE,menuId,UserAccessLogConstants.OPER_MENU_USER_OP_DESC.concat(menuNm));
+    		 userAccessLogService.saveLog(request, UserAccessLogConstants.SYS_LOG_TYPE_ID, UserAccessLogConstants.OPER_MENU_USER_OP_TYPE,menuId,UserAccessLogConstants.OPER_MENU_USER_OP_DESC.concat(menuNm),null,"");
     	}catch(Exception e){
     		throw new Exception("记录日志异常："+e.getMessage());
     	}
