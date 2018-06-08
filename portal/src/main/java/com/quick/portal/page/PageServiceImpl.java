@@ -145,6 +145,7 @@ public class PageServiceImpl extends SysBaseService<PageDO> implements IPageServ
             //2.3指标配置保存
             String section_na = intval(secmap, i, "no", "1").toString();
             int section_id = sdo.getSection_id();
+            System.out.println("metric_json======================"+metric_json.toString());
             List<Map<String, Object>> metric = JsonUtil.fromJson(metric_json, List.class, Map.class);
             //删除原来的配置信息
             List<Map<String, Object>> sec_id = sectionMetricDao.getId(section_id);
@@ -164,8 +165,9 @@ public class PageServiceImpl extends SysBaseService<PageDO> implements IPageServ
 						sectionMetricDO.setMetric_id(Integer.parseInt(id.get(0).get("metric_id").toString()));
 						sectionMetricDO.setSection_id(section_id);
 						int a=sectionMetricDao.insert(sectionMetricDO);
-	                    String[] paramKeys = new String[]{"", "metric_id","category_id","dimension","charts","numb","measure_name","time_dim"};
-						if (a>0) {
+	                    String[] paramKeys = new String[]{"", "metric_id","category_id","dimension","charts","numb","measure_name","time_dim","unit"};
+						System.out.println("metric======================"+metric.toString());
+	                    if (a>0) {
 	                        for(int x = 1; x < paramKeys.length; x++){
 	                            con =  new SecMetricConfigDo();
 	                            con.setUser_id(1);
