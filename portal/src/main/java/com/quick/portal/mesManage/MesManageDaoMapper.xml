@@ -466,7 +466,7 @@
     </delete>
      <!--初始化及查询-->
     <select id="selectTagMes"  parameterType="map" resultType="map">
-        select tm.*,tty.tag_type_name superTypeName from (select ta.tag_id,ta.tag_type_id,ta.tag_text,
+        select tm.tag_id,tm.tag_type_id,tm.tag_text,tm.super_type_id,tm.tag_type_name,tty.tag_type_name superTypeName from (select ta.tag_id,ta.tag_type_id,ta.tag_text,
         tt.super_type_id,tt.tag_type_name from tags ta join tag_type tt on ta.tag_type_id = tt.tag_type_id WHERE 1=1 )
         tm left join tag_type tty on tm.super_type_id = tty.tag_type_id WHERE 1=1
         <if test="tagText!=null and tagText !='' and !'null'.equals(tagText)">
@@ -533,13 +533,19 @@
 
     <!--标签总数的查询-->
     <select id="selectTagCount" parameterType="map" resultType="int">
-        SELECT COUNT(*) FROM ( select tm.*,tty.tag_type_name superTypeName from (select
-        ta.tag_id,ta.tag_type_id,ta.tag_text,
+        SELECT COUNT(*) FROM (select tm.tag_id,tm.tag_type_id,tm.tag_text,
+        tm.super_type_id,tm.tag_type_name,tty.tag_type_name superTypeName from (select ta.tag_id,ta.tag_type_id,ta.tag_text,
         tt.super_type_id,tt.tag_type_name from tags ta join tag_type tt on ta.tag_type_id = tt.tag_type_id WHERE 1=1 )
-        tm left join tag_type tty on tm.super_type_id = tty.tag_type_id
-        <where>
-            <include refid="tag"/>
-        </where>
+        tm left join tag_type tty on tm.super_type_id = tty.tag_type_id WHERE 1=1
+        <if test="tagText!=null and tagText !='' and !'null'.equals(tagText)">
+            AND  tag_text=#{tagText}
+        </if>
+        <if test="tagTypeId!=null and tagTypeId !='' and !'null'.equals(tagTypeId)">
+            AND  tm.tag_type_id =#{tagTypeId}
+        </if>
+        <if test="tagId!=null and tagId !='' and !'null'.equals(tagId)">
+            AND  tm.tag_id =#{tagId}
+        </if>
         ) tag
 </select>
 

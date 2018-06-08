@@ -185,11 +185,11 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         int num = (pageNo1-1)*pageSize1;
         int a = num +1;
        for (Map<String,Object> data : dt){
-           String  serialNum= String.format("%03d",a);
+//           String  serialNum= String.format("%03d",a);
            String msgId  =  data.get("msg_id").toString();
        List<String> msgTag = mesManageDao.selectMesTag(msgId);
            data.put("msgtext", msgTag);
-           data.put("serialNum",serialNum);
+           data.put("serialNum",a);
             a+=1;
        }
        recordCount = mesManageDao.count(queryMap);
@@ -206,416 +206,23 @@ public class MesManageController extends SysBaseController<MesManageDO> {
    //发布内容
    @RequestMapping(value="addMes",method={RequestMethod.GET,RequestMethod.POST})
    @ResponseBody
-   @Transactional
-   public void publishMes(MesManageDO mesManageDO,String[] tagId,HttpServletRequest request,HttpServletResponse response,boolean MERGE) throws IOException {
-       String tyname = "mesPublish";
-       String path = createPath(tyname);
-       SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-       MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-       MultipartFile file = multipartRequest.getFile("file");
-       String title = mesManageDO.getMsg_title();
-       String attName = null;
-       File fa =null;
-       if(mesManageDO.getMsg_class_name()!= null && !mesManageDO.getMsg_class_name().equals("undefined") && !"null".equals(mesManageDO.getMsg_class_name())){
-          String[] str = mesManageDO.getMsg_class_name().split(",");
-          mesManageDO.setMsg_class_name(str[0]);
-          mesManageDO.setMsg_class_id(Integer.parseInt(str[1]));
-       }
-       if (file!=null && !file.isEmpty()){
-            attName = file.getOriginalFilename(); //附件文件名
-            fa = createFile(path+"attachment/",attName);
-           file.transferTo(fa);
-           mesManageDO.setMsg_attachment(path+"attachment/"+attName);//上传附件存放路径
-       }
-       String contentName = title+".txt"; //发布信息内容文件名
-       String id = path+"content/"+contentName;
-       File fc = createFile(path+"content/",contentName);
-       FileOutputStream fos = null;
-       mesManageDO.setMsg_src_name("平台内部发布");
-       contentFile(fos,fc,mesManageDO);
-       try{
-           mesManageDO.setMsg_content(id); //上传信息内容存放路径
-           mesManageDO.setMsg_src_id(MesInfoConstants.PLATFORM_SOURCE_ID);
-           mesManageDO.setMsg_type_id(MesInfoConstants.PLATFORM_MES_TYPE);
-           Calendar date = Calendar.getInstance();
-           Date date1 =date.getTime();
-           mesManageDO.setPub_time(date1);
-           mesManageDO.setAppr_time(date1);
-           String content = combinFile(fa,mesManageDO);
-           String type = SolrInfoConstants.MSG_OBJ_TYPE;
-           Map<String,Object> map = new HashMap<>();
-           SolrUtils.addSolrInfo(id,content,type,title);
-           List<Map<String,Object>> rules=  mesManageDao.selectRules(map);
-           int lab = autoFilter(rules,id);
-           if(lab ==1){
-               deleteFile(id);
-               deleteFile(path+"attachment/"+attName);
-               SolrUtils.deleteSolrInfo(id);
-               response.getWriter().write("2");
-               response.getWriter().flush();
-
-           }else {
-           mesManageDO.setAppr_state(MesInfoConstants.AUTOMATIC_APPROVAL);
-           String userId = QCookie.getValue(request,"ids");
-           mesManageDO.setPub_user_id(Integer.parseInt(userId));
-           mesManageDao.insert(mesManageDO);
-           map.clear();
-           String time = format.format(mesManageDO.getAppr_time());
-           map.put("appr_time",time);
-           List<Map<String,Object>> result = mesManageDao.selectMes(map);
-           String msgId = result.get(0).get("msg_id").toString();
-           String[] tags = tagId[0].split(",");
-           map.clear();
-           for(int i=0;i<tags.length;i++){
-               map = new HashMap<>();
-               map.put("msg_id",msgId);
-               map.put("tag_id",Integer.parseInt(tags[i]));
-               mesManageDao.insertMesTag(map);
-           }
-           response.getWriter().write("1");
-           response.getWriter().flush();
-           }
-       }catch (Exception e){
-                     e.printStackTrace();
-                 }
+   public void publishMes(MesManageDO mesManageDO,String[] tagId,HttpServletRequest request,HttpServletResponse response,boolean MERGE) throws Exception {
+      mesManageService.publishMes(mesManageDO,tagId,request,response,MERGE);
    }
-
-     //生成文件路径
-    public  String createPath(String tyname){
-        Calendar date = Calendar.getInstance();
-        String year = String.valueOf(date.get(Calendar.YEAR));
-        String month = String.valueOf(date.get(Calendar.MONTH)+1);
-        String day = String.valueOf(date.get(Calendar.DAY_OF_MONTH));
-        int mo = Integer.parseInt(month);
-        if(mo<=9){
-            month = "0"+month;
-        }
-      String url =  request.getSession().getServletContext().getRealPath("/");
-        String path = url+"upload"+"\\"+tyname+"\\"+year+month+day+"\\";
-        return  path.replaceAll("\\\\","/");
-    }
-
-    //生成文件
-    public File createFile(String path,String name) throws IOException {
-        File fa = new File(path,name);
-        if(!fa.getParentFile().exists()) {
-            //如果目标文件所在的目录不存在，则创建父目录
-            fa.getParentFile().mkdirs();
-        }
-        if (!fa.exists()) {//文件不存在则创建
-            fa.createNewFile();
-        }else{
-            fa.delete();
-            fa.createNewFile();
-        }
-        return fa;
-    }
-
-    //将信息内容生成本地文件保存
-    public void contentFile(FileOutputStream fos,File file,MesManageDO mesManageDO) throws IOException {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String currenttime = format.format(new Date());
-        String msgsource = mesManageDO.getMsg_src_name();
-        String msgclass = "密级："+mesManageDO.getMsg_class_name();
-        String msgapprstate = null;
-        String  appstate = null;
-        if(mesManageDO.getAppr_state() != null && !mesManageDO.getAppr_state().equals("")){
-            appstate = mesManageDO.getAppr_state().toString();
-       switch (appstate){
-            case "1":
-                msgapprstate = "人工审核通过";
-                break;
-            case "2":
-                msgapprstate = "人工审核拒绝";
-                break;
-           case "3":
-               msgapprstate = "审核通过";
-               break;
-           case "4":
-               msgapprstate = "审核拒绝";
-               break;
-       }}else {
-            msgapprstate="审核通过";
-        }
-        String msgappr = "审核状态："+ msgapprstate;
-       String secondrow = currenttime+"     "+msgsource+"           "+msgclass+"       "+msgappr;
-        StringBuffer buffer = new StringBuffer();
-        buffer.append(mesManageDO.getMsg_title());
-        buffer.append(System.getProperty("line.separator"));
-        buffer.append(secondrow);
-        buffer.append(System.getProperty("line.separator"));
-        buffer.append(mesManageDO.getMsg_digest());
-        buffer.append(System.getProperty("line.separator"));
-        buffer.append(mesManageDO.getMsgcontent());
-        fos = new FileOutputStream(file);
-        fos.write(buffer.toString().getBytes());
-        if(fos != null){
-            fos.close();
-        }
-        fos.flush();
-    }
-
-    //将附件和信息各内容合并生成新的内容
-    public  String  combinFile(File fa,MesManageDO mesManageDO) throws IOException {
-        String nei = null;
-        if(fa!=null ){
-            try {
-                nei = parseFile(fa);
-            } catch (TikaException e) {
-                e.printStackTrace();
-            } catch (SAXException e) {
-                e.printStackTrace();
-            }
-        }else{
-            nei = "";
-        }
-        String content =   mesManageDO.getMsg_title()+  mesManageDO.getMsg_digest()+mesManageDO.getMsgcontent()+nei;
-        return content;
-    }
-
-    //将一个文件复制到另一个目录下
-    public  static  void  copyFile(String oldpath,String newpath){
-        try
-        {
-            File fOldFile = new File(oldpath);
-            if (fOldFile.exists())
-            {
-                int bytesum = 0;
-                int byteread = 0;
-                InputStream inputStream = new FileInputStream(fOldFile);
-                FileOutputStream fileOutputStream = new FileOutputStream(newpath);
-                byte[] buffer = new byte[1444];
-                while ( (byteread = inputStream.read(buffer)) != -1)
-                {
-                    bytesum += byteread; //这一行是记录文件大小的，可以删去
-                    fileOutputStream.write(buffer, 0, byteread);//三个参数，第一个参数是写的内容，
-                    //第二个参数是从什么地方开始写，第三个参数是需要写的大小
-                }
-                inputStream.close();
-                fileOutputStream.close();
-            }
-        }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.out.println("复制单个文件出错");
-            e.printStackTrace();
-        }
-    }
-
-    //删除指定路径下的文件
-    public static  void deleteFile(String path){
-        File file = new File(path);
-        if(file.exists() && file.isFile()) {
-              file.delete();
-        }
-
-    }
-
-  //Tika解析文件工具类
-      public static String parseFile(File file) throws IOException, TikaException, SAXException {
-              InputStream input = null;
-            Metadata metadata = new Metadata();
-            metadata.set(Metadata.CONTENT_ENCODING, "UTF-8");
-            metadata.set(Metadata.RESOURCE_NAME_KEY, file.getName());
-              input = TikaInputStream.get(file);
-              BodyContentHandler handler = new BodyContentHandler();
-              AutoDetectParser parser = new AutoDetectParser();
-            ParseContext context = new ParseContext();
-            context.set(Parser.class, parser);
-            parser.parse(input, handler, metadata, context);
-          if (input != null) {
-                  try {
-                      input.close();
-                  } catch (IOException e) {
-                      e.printStackTrace();
-                  }
-              }
-          return handler.toString();
-      }
-
-
 
     //内容删除
     @RequestMapping(value = "deleteMsg")
     @ResponseBody
     public void  deleteMes() throws Exception {
-        String msgId = QRequest.getString(request,"MSG_PARAM_ID_LIST");
-        String[] msgs = msgId.split(",");
-        Map<String,Object> map = new HashMap<>();
-        for(int i=0;i<msgs.length;i++){
-                if(!msgs[i].equals("")&& msgs[i]!= null){
-                    map.put("msg_id",msgs[i]);
-                   List<Map<String,Object>> res = mesManageDao.selectMes(map);
-                    mesManageDao.deleteMsg(msgs[i]);
-                    mesManageDao.deleteMesTag(Integer.parseInt(msgs[i]));
-                    String msgc = res.get(0).get("msg_content").toString();
-                    Object msga = res.get(0).get("msg_attachment");
-                    if(msgc!=null && !msgc.equals("") && !msgc.equals("undefined")){
-                        SolrUtils.deleteSolrInfo(msgc);
-                        deleteFile(msgc);
-                    }
-                    if(msga!=null && !msga.equals("") && !msga.equals("undefined")){
-                       String ms = msga.toString();
-                        deleteFile(ms);
-                    }
-                }else {
-                    response.getWriter().write("0");
-                    response.getWriter().flush();
-                }}
-            try {
-                response.getWriter().write("1");
-                response.getWriter().flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        response.getWriter().write("");
+       mesManageService.deleteMes(request,response);
     }
 
     //内容管理-修改
     @RequestMapping(value="editMes",method={RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
     public void editMes(MesManageDO mesManageDO,String[] tagId,HttpServletRequest request,HttpServletResponse response,boolean MERGE) throws Exception {
-        String tyname = "mesPublish";
-        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-        MultipartFile file = multipartRequest.getFile("file");
-//        String msg_attachment = multipartRequest.getParameter("msg_attachment");
-        String msg_attachment = null;
-        if(mesManageDO.getMsg_attachment()!= null && !mesManageDO.getMsg_attachment().equals("undefined") && !"null".equals(mesManageDO.getMsg_attachment())){
-            String[]  msgatt = mesManageDO.getMsg_attachment().split(",");
-            if (msgatt.length>1){
-                msg_attachment = msgatt[1];
-            }
-        }
-        String title = null;
-        String path = createPath(tyname);
-        String newpath = null;
-        String newattachment =null;
-        String id = null;
-        //将源文件保存
-        Map<String,Object> map = new HashMap<>();
-        if(mesManageDO.getMsg_content()!= null && !mesManageDO.getMsg_content().equals("undefined") && !"null".equals(mesManageDO.getMsg_content())){
-            id = mesManageDO.getMsg_content();
-             newpath = path+"content/"+"ori"+mesManageDO.getMsg_title();
-            copyFile(id,newpath);
-            map.put("msg_content",id);
-        }
-        if(mesManageDO.getMsg_id()!= null && !mesManageDO.getMsg_id().equals("undefined") && !"null".equals(mesManageDO.getMsg_id())){
-            map.put("msg_id",mesManageDO.getMsg_id());
-        }
-        if(msg_attachment!= null && !msg_attachment.equals("") && !"null".equals(msg_attachment)){
-            int index = msg_attachment.lastIndexOf(".");
-            String att = msg_attachment.substring(0,index);
-            String at = msg_attachment.substring(index);
-             newattachment = att+"edit"+at;
-        }
-        if(mesManageDO.getMsg_title()!= null && !mesManageDO.getMsg_title().equals("undefined") && !"null".equals(mesManageDO.getMsg_title())){
-            map.put("msg_title",mesManageDO.getMsg_title());
-            title = mesManageDO.getMsg_title();
-        }
-        if(mesManageDO.getMsg_digest()!= null && !mesManageDO.getMsg_digest().equals("undefined") && !"null".equals(mesManageDO.getMsg_digest())){
-            map.put("msg_digest",mesManageDO.getMsg_digest());
-        }
-        if(mesManageDO.getMsg_class_id()!= null && !mesManageDO.getMsg_class_id().equals("undefined") && !"null".equals(mesManageDO.getMsg_class_id())){
-            map.put("msg_class_id",mesManageDO.getMsg_class_id());
-        }
-        String userId = QCookie.getValue(request,"ids");
-        map.put("pub_user_id",Integer.parseInt(userId)) ;
-        File fa = null;
-        //附件保存
-        if( file!= null  && !file.isEmpty()  ){
-            String attName = file.getOriginalFilename(); //附件文件名
-            fa = createFile(path+"attachment/",attName);
-            file.transferTo(fa);
-            if (attName != null && !attName.equals("")) {
-                title = attName.split("\\.")[0];
-            }
-            map.put("msg_attachment",path+"attachment/"+attName);
-        }else if(newattachment!= null && !newattachment.equals(" ") && !"null".equals(newattachment)){
-            fa = new File(msg_attachment);
-        }
-        //标签
-        String[] tags = tagId[0].split(",");
-        if(tagId[0]!=null && tags.length>0 && !tagId[0].equals("") ){
-            mesManageDao.deleteMesTag(mesManageDO.getMsg_id());
-            for(int i=0;i<tags.length;i++){
-                Map<String,Object> maptag = new HashMap<>();
-                maptag.put("msg_id",mesManageDO.getMsg_id());
-                maptag.put("tag_id",Integer.parseInt(tags[i]));
-                mesManageDao.insertMesTag(maptag);
-            }}
-        String contentName = mesManageDO.getMsg_title()+".txt"; //发布信息内容文件名
-        FileOutputStream fos = null;
-        //msg保存
-            File fc = createFile(path+"content/",contentName);
-            contentFile(fos,fc,mesManageDO);
-        //标题，摘要，内容，附件 文件
-            String type = SolrInfoConstants.MSG_OBJ_TYPE;
-            String content = combinFile(fa,mesManageDO);
-            SolrUtils.addSolrInfo(id,content,type,title);
-            Map<String,Object> mapone = new HashMap<>();
-            List<Map<String,Object>> rules=  mesManageDao.selectRules(mapone);
-            int lab = autoFilter(rules,id);
-             Object attpath = map.get("msg_attachment");
-            if(lab ==1){
-                deleteFile(id);
-                if(attpath!= null && !attpath.equals(" ") && !"null".equals(attpath)){
-                    deleteFile(attpath.toString());
-                }
-                copyFile(newpath,id);
-                deleteFile(newpath);
-                response.getWriter().write("2");
-                response.getWriter().flush();
-                return;
-            }else {
-                if(attpath == null || attpath.equals(" ") || "null".equals(attpath)){
-                   map.put("msg_attachment",msg_attachment);
-                }
-                if(attpath!= null && !attpath.equals(" ") && !"null".equals(attpath)&& msg_attachment!=null){
-                    deleteFile(msg_attachment);
-                }
-                map.put("appr_state",MesInfoConstants.AUTOMATIC_APPROVAL);
-                deleteFile(newpath);
-                Date date = new Date();
-                String useId = QCookie.getValue(request,"ids");
-               map.put("pub_user_id",Integer.parseInt(useId));
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-HH hh:mm:ss");
-                map.put("pub_time",format.format(date.getTime()));
-                map.put("appr_time",format.format(date.getTime()));
-                mesManageDao.msgedit(map);
-            }
-
-        try {
-            response.getWriter().write("1");
-            response.getWriter().flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+      mesManageService.editMes(mesManageDO,tagId,request,response,MERGE);
     }
-
-    //自动审核
-    public static int autoFilter(List<Map<String,Object>> rules,String id) throws Exception {
-        PageBounds pageBounds = new PageBounds();
-        pageBounds.setPageNo(1);
-        pageBounds.setPageSize(20);
-        int i=0;
-        while( i<rules.size()){
-            Map<String,Object> solr = new HashMap<>();
-            solr.put("keyword",rules.get(i).get("param_value"));
-            SolrQuery query = SolrUtils.getAllSolrQuery(solr, pageBounds,"2");
-            SolrDocumentList docList = SolrUtils.getSolrInfoDataByTitle(query);
-            if (docList.getNumFound() >0){
-                SolrUtils.deleteSolrInfo(id);
-                return 1;
-            }else {
-                i++;
-                continue;
-            }
-        }
-        return 0;
-    }
-
 
     //内容管理修改-获得初始数据
     @RequestMapping(value = "/getEditMes", method= RequestMethod.POST)
@@ -777,7 +384,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
            String[] data = null;
            Map<String,Object> map = new HashMap<>();
         if(contentRuleDo.getRuleValue()!=null && !contentRuleDo.getRuleValue().equals("undefined") && !"null".equals(contentRuleDo.getRuleValue())){
-            data= contentRuleDo.getRuleValue().split("");
+            data= contentRuleDo.getRuleValue().split(",");
             String rule_id = data[0];
             String param_name = data[1];
             map.put("rule_id",rule_id);
@@ -1541,53 +1148,8 @@ public class MesManageController extends SysBaseController<MesManageDO> {
     //新增资料
     @RequestMapping(value="addData",method={RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
-    public void addDatum(MesManageDO mesManageDO,String keywords,HttpServletRequest request,HttpServletResponse response,boolean MERGE) throws IOException {
-        Integer msgId =null;
-        String tyname = "material";
-        try {
-         MultipartHttpServletRequest re = (MultipartHttpServletRequest) request;
-         Map<String, Object> map = new HashMap<>();
-         MultipartFile file = re.getFile("file");
-         String path = createPath(tyname) ;
-         String name = file.getOriginalFilename();
-            String title = null;
-            if (name != null && !name.equals("")) {
-                title = name.split("\\.")[0];
-            }
-         String content = path+name;
-         File uploadFile = createFile(path, name);
-         file.transferTo(uploadFile);
-            String datacontent = parseFile(uploadFile);
-            String[] key = null;
-            if (keywords != null && !keywords.equals("")) {
-                datacontent=datacontent+keywords;
-                key = keywords.split(" ");
-            }
-            String type = SolrInfoConstants.DATA_OBJ_TYPE;
-            SolrUtils.addSolrInfo(content,datacontent,type,title);
-         Calendar calendar = Calendar.getInstance();
-         Date date = calendar.getTime();
-         mesManageDO.setPub_time(date);
-         mesManageDO.setAppr_time(date);
-         mesManageDO.setMsg_title(title);
-         mesManageDO.setMsg_content(content);
-         mesManageDO.setMsg_src_id(0);
-         if (mesManageDO.getMsg_type_id() == null ||mesManageDO.getMsg_type_id().equals("")) {
-               mesManageDO.setMsg_type_id(mesManageDO.getSup_msg_type_id());
-            }
-         mesManageDao.insert(mesManageDO);
-         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-         String time = format.format(mesManageDO.getAppr_time());
-         map.put("appr_time", time);
-         List<Map<String, Object>> result = mesManageDao.selectDataMes(map);
-          msgId = (Integer) result.get(0).get("msg_id");
-            int tagId = mesManageDao.selectMaxTagId();
-            tagFilter(key,map,tagId,msgId);
-         response.getWriter().write("1");
-         response.getWriter().flush();
-     }catch (Exception e){
-         e.printStackTrace();
-     }
+    public void addDatum(MesManageDO mesManageDO,String keywords,HttpServletRequest request,HttpServletResponse response,boolean MERGE) throws IOException, TikaException, SAXException {
+       mesManageService.addDatum(mesManageDO,keywords,request,response,MERGE);
     }
     //编辑资料-获取编辑对象的数据
     @RequestMapping(value = "/getEditDatum", method= RequestMethod.POST)
@@ -1617,22 +1179,6 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         return a;
     }
 
-    //判断关键词插入
-    public  void tagFilter(String[] tags,Map<String,Object> map,Integer tagId,Integer msgId ){
-        int i =0;
-        for(String data:tags){
-            if(data!=null && !data.equals("")){
-                map = new HashMap<>();
-                map.put("tagId",tagId+1+i);
-                map.put("tagText",data);
-                mesManageDao.insertTag(map);
-                map.put("tag_id",tagId+1+i);
-                map.put("msg_id", msgId);
-                mesManageDao.insertMesTag(map);
-                i++;
-            }
-        }
-    }
 
     //资料详情
     @RequestMapping(value = "getDatumDetail", method= RequestMethod.POST)
@@ -1652,89 +1198,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
     @RequestMapping(value="editDatum",method={RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
     public void editDatum(MesManageDO mesManageDO,String keywords,HttpServletRequest request,HttpServletResponse response,boolean MERGE) throws Exception {
-        String tyname = "material";
-        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-        MultipartFile file = multipartRequest.getFile("file");
-        String path = createPath(tyname) ;
-        Integer id = null;
-        String msg_content = null;
-        List<Integer> list = new ArrayList<>();
-        Map<String,Object> map = new HashMap<>();
-        String title = null;
-        if(mesManageDO.getMsg_id()!= null && !mesManageDO.getMsg_id().equals("undefined") && !"null".equals(mesManageDO.getMsg_id())){
-          id = mesManageDO.getMsg_id();
-            map.put("msg_id",id);
-            list.add(id);
-        }
-        if(mesManageDO.getMsg_title()!= null && !mesManageDO.getMsg_title().equals("undefined") && !"null".equals(mesManageDO.getMsg_title())){
-            map.put("msg_title",mesManageDO.getMsg_title());
-            title = mesManageDO.getMsg_title();
-        }
-        if(mesManageDO.getPub_time()!= null && !mesManageDO.getPub_time().equals("undefined") && !"null".equals(mesManageDO.getPub_time())){
-            map.put("pub_time",mesManageDO.getPub_time());
-        }
-
-        if(mesManageDO.getMsg_type_id()!= null && !mesManageDO.getMsg_type_id().equals("undefined") && !"null".equals(mesManageDO.getMsg_type_id())){
-            map.put("msg_type_id",mesManageDO.getMsg_type_id());
-        }
-
-        if(mesManageDO.getMsg_type_id()== null || mesManageDO.getMsg_type_id().equals("undefined")){
-            map.put("msg_type_id",mesManageDO.getSup_msg_type_id());
-        }
-        if(mesManageDO.getMsg_content()!= null && !mesManageDO.getMsg_content().equals("undefined") && !"null".equals(mesManageDO.getMsg_content())){
-            String[]  msgatt = mesManageDO.getMsg_content().split(",");
-            if (msgatt.length>1){
-                msg_content = msgatt[1];
-                map.put("msg_content",msg_content);
-            }
-        }
-        String content = null;
-        String datacontent = null;
-        String type = SolrInfoConstants.DATA_OBJ_TYPE;
-
-        String[] key  = null;
-        if (keywords != null && !keywords.equals("")) {
-            datacontent= keywords;
-            key = keywords.split(" ");
-        }
-        File fa = null;
-        //附件保存
-        if( file!= null  && !file.isEmpty()  ){
-            String attName = file.getOriginalFilename(); //附件文件名
-            fa = createFile(path,attName);
-            file.transferTo(fa);
-           datacontent= parseFile(fa)+datacontent;
-           content = path+attName;
-            if (attName != null && !attName.equals("")) {
-                title = attName.split("\\.")[0];
-            }
-           SolrUtils.addSolrInfo(content,datacontent,type,title);
-            map.put("msg_content",content);
-        }else {
-            File fi = new File(msg_content);
-            datacontent = parseFile(fi)+datacontent;
-            SolrUtils.addSolrInfo(msg_content,datacontent,type,title);
-        }
-            Date date = new Date();
-            String useId = QCookie.getValue(request,"ids");
-            map.put("pub_user_id",Integer.parseInt(useId));
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-HH hh:mm:ss");
-            map.put("appr_time",format.format(date.getTime()));
-            mesManageDao.msgedit(map);
-        List<Integer> tagid = mesManageDao.selectMesByTag(list);
-        if(tagid.size()>0){
-            mesManageDao.deleteTags(tagid);
-            mesManageDao.deleteMesTag(id);
-        }
-
-        int tagId = mesManageDao.selectMaxTagId();
-        tagFilter(key,map,tagId,id);
-        try {
-            response.getWriter().write("1");
-            response.getWriter().flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+       mesManageService.editDatum(mesManageDO,keywords,request,response,MERGE);
     }
 
     //删除资料
@@ -1742,26 +1206,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
     @RequestMapping(value = "delDatum")
     @ResponseBody
     public void  delDatum() throws Exception {
-        List<Integer> list = new ArrayList<>();
-        Integer msgId = QRequest.getInteger(request,"msg_id");
-        String content = QRequest.getString(request,"msg_content");
-        list.add(msgId);
-        List<Integer> tagid = mesManageDao.selectMesByTag(list);
-        if(tagid.size()>0){
-            mesManageDao.deleteTags(tagid);
-            mesManageDao.deleteMesTag(msgId);
-        }
-        mesManageDao.deleteMsg(msgId.toString());
-        if(content!=null && !content.equals("") && !content.equals("undefined")){
-                    deleteFile(content);
-                    SolrUtils.deleteSolrInfo(content);
-                }
-        try {
-            response.getWriter().write("1");
-            response.getWriter().flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        mesManageService.delDatum(request,response);
     }
 
     //下载文件
