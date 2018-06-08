@@ -185,6 +185,7 @@
 			    		'<div class="col-xs-6">'+
 			    		'<input class = "txt" type="text" readOnly="readOnly" data-toggle="tooltip" title="指标时间粒度：'+dateName+'" name="dateType" value="'+dateName+'" style="margin-left:16px;width:60%;margin-top:4px;text-align:center;">'+
 			    		'<input type="hidden" id = "date'+id+'_input'+i+'" value="'+dateValue+'" />'+
+			    		'<input type="hidden" id = "unit'+id+'_input'+i+'" value="'+data[i].measure_unit+'" />'+
 			    		'</div>'+
 			    	'</div>'+
 			    	'<div class="col-xs-3">'+
@@ -209,7 +210,8 @@
 			    		'</div>'+
 			    		'<div class="col-xs-6">'+
 			    		'<input class = "txt" type="text" readOnly="readOnly" data-toggle="tooltip" title="指标时间粒度：'+dateName+'" name="dateType" value="'+dateName+'" style="margin-left:16px;width:60%;margin-top:4px;text-align:center;">'+
-			    		'<input type="hidden" id = "date'+id+'_input'+i+'" class="form-control" value="'+dateValue+'" />'+
+			    		'<input type="hidden" id = "date'+id+'_input'+i+'" value="'+dateValue+'" />'+
+			    		'<input type="hidden" id = "unit'+id+'_input'+i+'" value="'+data[i].measure_unit+'" />'+
 			    		'</div>'+
 			    	'</div>'+
 			    	'<div class="col-xs-3">'+
@@ -326,6 +328,7 @@
 			var id4 = '#hid'+$(this).attr('id');
        	    var id5 = '#name_'+$(this).attr('id');
        	 	var id6 = '#date'+$(this).attr('id');
+       	 	var id7 =  '#unit'+$(this).attr('id');
 			var charts = $(id2).val();
 			var dimension = $(id1).val();
 			if (charts==1) {
@@ -342,6 +345,12 @@
 			tmp.numb = $(id3).val();
 			tmp.measure_name = $(id5).val();
 			tmp.time_dim = $(id6).val();
+			var unit = $(id7).val();
+			if (isNull(unit)||unit == ""||unit=="null") {
+				tmp.unit = '1';
+			}else {
+				tmp.unit = unit
+			}
 			param.push(tmp);
 			});
 	    _chosen = param;
