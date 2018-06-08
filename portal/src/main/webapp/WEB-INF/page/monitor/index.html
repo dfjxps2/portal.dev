@@ -26,12 +26,16 @@
 <div class="qheader"><div class="qmenu-ico" onclick="$('.qmenu').toggle();"><i class="fa fa-list-ul"></i></div></div>
 <div class="qpage animated fadeInRight">
     <div class="row"  style="margin-top: 5px">
-    	<div class="col-sm-12" style="color: #fff">
-    	<input id="submit-form" type="button"  value="查询" onclick="getByTime();"  style="float: right;margin-right: 50px;background-color: #337ab7;border: 1px solid #97FFFF;height:24px;">
-    	 <input class="input_date" id="enddate" name="enddate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyyMM'})" readonly="readonly" style="background-color: transparent;float: right;margin-right: 20px;width:85px;border: 1px solid #97FFFF;text-align: center;"/>
-         <label style="float: right;margin-right: 10px;">结束时间</label>
-          <input class="input_date" id="statedate" name="statedate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyyMM'})" readonly="readonly" style="background-color: transparent;float: right;margin-right:20px;width:85px;border: 1px solid #97FFFF;text-align: center;"/>
-         <label style="float: right;margin-right: 10px;">开始时间</label>
+    	<div class="col-sm-12"  style="color: #fff">
+    		<div id = "date_div" style = "display: none">
+				<input id="submit-form" type="button"  value="查询" onclick="getByTime();"  style="float: right;margin-right: 50px;background-color: #337ab7;border: 1px solid #97FFFF;height:24px;">
+			   	 <input class="input_date time1" id="enddate" name="enddate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyy'})" readonly="readonly" style="background-color: transparent;float: right;margin-right: 20px;width:85px;border: 1px solid #97FFFF;text-align: center;display: none"/>
+			   	 <input class="input_date time2" id="enddate" name="enddate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyyMM'})" readonly="readonly" style="background-color: transparent;float: right;margin-right: 20px;width:85px;border: 1px solid #97FFFF;text-align: center;display: none"/>
+			     <label style="float: right;margin-right: 10px;">结束时间</label>
+			     <input class="input_date time1" id="statedate" name="statedate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyy'})" readonly="readonly" style="background-color: transparent;float: right;margin-right:20px;width:85px;border: 1px solid #97FFFF;text-align: center;display: none"/>
+			     <input class="input_date time2" id="statedate" name="statedate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyyMM'})" readonly="readonly" style="background-color: transparent;float: right;margin-right:20px;width:85px;border: 1px solid #97FFFF;text-align: center;display: none"/>
+			     <label style="float: right;margin-right: 10px;">开始时间</label>
+	    	</div>
         </div>
         <div class="col-sm-12">
             <div class="container-fluid qmain">
@@ -115,7 +119,7 @@
             	tData = res.measure;
             	$('#statedate').val('199001');
             	$('#enddate').val('201712');
-                add(res.measure,name,co,_layout,'199001','201712');
+                add(res.measure,name,co,_layout,'1990','2017','');
                 hideMask();
             },error:function(jqr){
                 hideMask();
@@ -136,26 +140,60 @@
     function hideMask(){
         $("#qmask").hide();
     }
+    
     var id_s = '';
+    var sid = '';
     function lc(q){
+    	//alert(JSON.stringify(co));
     	var id = "#qsection_s"+q;
+    	var f = false;
+    	for (var i = 0; i < co.length; i++) {
+			if (q == co[i].section_id&&(co[i].time_dim == 'nonth'||co[i].time_dim == 'year,nonth')) {
+				f = true;
+			}
+		}
+    	$('.input_date').css('display','none');
     	if (id_s!='') {
     		if (id_s == id) {
     			id_s = ''
     				$(id).css('border-color','#17397f');
+    				$("#date_div").css('display','none');
 			}else {
 				$(id_s).css('border-color','#17397f');
 				id_s = id;
 				$(id).css('border-color','#fff');
+				$("#date_div").css('display','');
+				if (f == true) {
+					$('.time2').css('display','');
+            		$('#statedate').val('199001');
+                	$('#enddate').val('201712');
+				}else {
+					$('.time1').css('display','');
+            		$('#statedate').val('1990');
+                	$('#enddate').val('2017');
+				}
 			}
 		}else {
 			id_s = id;
 			$(id).css('border-color','#fff');
+			$("#date_div").css('display','');
+			if (f == true) {
+				$('.time2').css('display','');
+				$('#statedate').val('199001');
+            	$('#enddate').val('201712');
+			}else {
+				$('.time1').css('display','');
+				$('#statedate').val('1990');
+            	$('#enddate').val('2017');
+			}
 		}
-    	/* alert($(id).css('border-color'));
-    	$(id).css('border-color','#fff'); */
+    	sid = "s"+q;
     }
-    function getByTime(){
-    	add(tData,name,co,_layout,$('#statedate').val(),$('#enddate').val());
-    }
+  function getByTime(){
+	if (sid != '') {
+    	add(tData,name,co,_layout,$('#statedate').val(),$('#enddate').val(),sid);
+	}else {
+		alert('请先双击选中栏目！');
+	}
+  }
 </script>
