@@ -13,11 +13,11 @@
         .form-group{margin-right:0px;}
         .panel{min-height: 410px;}
         .tab-pane{min-height:300px;}
-        .lbox{padding:10px;min-height:410px;}
-        .lbox-title{height:60px;line-height:60px;width:100%;background-color:#fff;}
+        .lbox{padding:10px;min-height:410px;background: #fff;}
+        .lbox-title{height:60px;line-height:60px;width:100%;}
         .tmpl-active{border:1px solid #ff5354;background-color:#efefef;}
         #tmpl li{float:left;padding:0 15px 15px 0;width:30%;height:70px;line-height:70px;}
-        .grid-stack {background: #fff;cursor:move;}
+        .grid-stack {cursor:move;}
         .grid-stack-item-content {color: #2c3e50; background-color: #e5e6e7;position: relative;}
         .dgs-toolbar{width:100%;height:25px;line-height: 25px;text-align:right;position: absolute;top:0;z-index:2;}
         .dgs-ctx{width:100%;height:100%;line-height: 100%;text-align:center;display: flex;vertical-align: middle;  align-items: center;  justify-content: center;}
@@ -453,7 +453,7 @@
         if(d.metric)
             return '<i class="fa fa-pie-chart"></i>绑定：'+ d.metric+'</a>';
         else
-            return '<i class="fa fa-plus"></i>点击添加栏目</a>';
+            return '<i class="fa fa-plus"></i>点击配置栏目</a>';
     }
 
     function settingbox(nid, url,id, fn, opt){
