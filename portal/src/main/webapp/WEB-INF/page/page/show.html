@@ -20,11 +20,15 @@ var name = "";
 <div class="wrapper wrapper-content animated fadeInRight qpage">
 	<div class="row">
 		<div class="col-sm-12" style="color: #fff">
-    	<input id="submit-form" type="button"  value="查询" onclick="getByTime();"  style="float: right;margin-right: 50px;background-color: #337ab7;border: 1px solid #97FFFF;height:24px;">
-    	 <input class="input_date" id="enddate" name="enddate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyyMM'})" readonly="readonly" style="background-color: transparent;float: right;margin-right: 20px;width:85px;border: 1px solid #97FFFF;text-align: center;"/>
-         <label style="float: right;margin-right: 10px;">结束时间</label>
-          <input class="input_date" id="statedate" name="statedate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyyMM'})" readonly="readonly" style="background-color: transparent;float: right;margin-right:20px;width:85px;border: 1px solid #97FFFF;text-align: center;"/>
-         <label style="float: right;margin-right: 10px;">开始时间</label>
+			<div id = "date_div" style = "display: none">
+				<input id="submit-form" type="button"  value="查询" onclick="getByTime();"  style="float: right;margin-right: 50px;background-color: #337ab7;border: 1px solid #97FFFF;height:24px;">
+			   	 <input class="input_date time1" id="enddate" name="enddate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyy'})" readonly="readonly" style="background-color: transparent;float: right;margin-right: 20px;width:85px;border: 1px solid #97FFFF;text-align: center;display: none"/>
+			   	 <input class="input_date time2" id="enddate" name="enddate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyyMM'})" readonly="readonly" style="background-color: transparent;float: right;margin-right: 20px;width:85px;border: 1px solid #97FFFF;text-align: center;display: none"/>
+			     <label style="float: right;margin-right: 10px;">结束时间</label>
+			     <input class="input_date time1" id="statedate" name="statedate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyy'})" readonly="readonly" style="background-color: transparent;float: right;margin-right:20px;width:85px;border: 1px solid #97FFFF;text-align: center;display: none"/>
+			     <input class="input_date time2" id="statedate" name="statedate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyyMM'})" readonly="readonly" style="background-color: transparent;float: right;margin-right:20px;width:85px;border: 1px solid #97FFFF;text-align: center;display: none"/>
+			     <label style="float: right;margin-right: 10px;">开始时间</label>
+	    	</div>
         </div>
         <div class="col-sm-12">
             <div class="container-fluid qmain">
@@ -39,15 +43,13 @@ var name = "";
 	var tData = [];
 	var co = [];
     var _tmpls={},_layout = [],_ca;
+    
     function config() {
         quick.serverUrl = "${G.serverUrl}";
         quick.objName = "${G.objName}";
         quick.idField = "${G.idField}";
         quick.listUrl = quick.serverUrl + "/list";
         
-    }
-    function getByTime(){
-    	add(tData,name,co,_layout,$('#statedate').val(),$('#enddate').val());
     }
     function getMetricData(metricList){
     	$.ajax({
@@ -57,9 +59,7 @@ var name = "";
             success:function(res){
             	if (res.return_code=='0') {
             		tData = res.measure;
-            		$('#statedate').val('199001');
-                	$('#enddate').val('201712');
-                	add(res.measure,name,co,_layout,'1990','2017');
+                	add(res.measure,name,co,_layout,'1990','2017','');
 				}else if (res.return_code=='-2') {
 					alert('查询数据为空！');
 				}else{
@@ -117,7 +117,7 @@ var name = "";
                             var item = _.find(items, function (i) { return i.nodeType == 1 });
                             grid.add_widget(item);
 
-							add(data1,name,co,_layout);
+							add(data1,name,co,_layout,'1990','2017','');
                             ko.utils.domNodeDisposal.addDisposeCallback(item, function () {
                                 grid.remove_widget(item);
                             });
@@ -167,8 +167,9 @@ var name = "";
 		var str = [];
 		for(var i = 0; i < _layout.length; i++){
 			var n = _layout[i];
+			 var s =  _layout[i].no;
 			str.push('<div class="grid-stack-item" data-gs-x="',n.x,'" data-gs-y="',n.y,'" data-gs-width="',n.width,'" data-gs-height="',n.height,'" data-gs-auto-position="true">');
-				str.push('<div class="grid-stack-item-content qsection"><div id="', n.sid,'" class="_qbody"></div></div>');
+				str.push('<div class="grid-stack-item-content qsection" id = "qsection_s'+s+'" ondblclick ="lcd('+s+');"><div id="', n.sid,'" class="_qbody"></div></div>');
 			str.push('</div>');
 		}
 		$("#box").html(str.join(''));
@@ -198,5 +199,60 @@ var name = "";
         }
         return null;
     }
+    
+    var id_s = '';
+    var sid = '';
+    function lcd(q){
+    	var id = "#qsection_s"+q;
+    	var f = false;
+    	for (var i = 0; i < co.length; i++) {
+			if (q == co[i].section_id&&(co[i].time_dim == 'nonth'||co[i].time_dim == 'year,nonth')) {
+				f = true;
+			}
+		}
+    	$('.input_date').css('display','none');
+    	if (id_s!='') {
+    		if (id_s == id) {
+    			id_s = ''
+    				$(id).css('border-color','#17397f');
+    				$("#date_div").css('display','none');
+			}else {
+				$(id_s).css('border-color','#17397f');
+				id_s = id;
+				$(id).css('border-color','#fff');
+				$("#date_div").css('display','');
+				if (f == true) {
+					$('.time2').css('display','');
+            		$('#statedate').val('199001');
+                	$('#enddate').val('201712');
+				}else {
+					$('.time1').css('display','');
+            		$('#statedate').val('1990');
+                	$('#enddate').val('2017');
+				}
+			}
+		}else {
+			id_s = id;
+			$(id).css('border-color','#fff');
+			$("#date_div").css('display','');
+			if (f == true) {
+				$('.time2').css('display','');
+				$('#statedate').val('199001');
+            	$('#enddate').val('201712');
+			}else {
+				$('.time1').css('display','');
+				$('#statedate').val('1990');
+            	$('#enddate').val('2017');
+			}
+		}
+    	sid = "s"+q;
+    }
+  function getByTime(){
+	if (sid != '') {
+    	add(tData,name,co,_layout,$('#statedate').val(),$('#enddate').val(),sid);
+	}else {
+		alert('请先双击选中栏目！');
+	}
+  }
 </script>
 </html>
