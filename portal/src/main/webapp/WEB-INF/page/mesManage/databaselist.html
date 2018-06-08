@@ -80,7 +80,7 @@
                 {field:'serialNum',title:'资料编号',width:'10%',align:'center'},
                 {field:'msg_title',title:'资料标题',width:'40%',align:'center',
                     formatter:function (value,row) {
-                        var temp ='<a href= "${G.serverUrl}/datumDetail?msg_content='+row.msg_content+'">'+row.msg_title+'</a>';
+                        var temp ='<a href='+quick.serverUrl+'/downloadFile?msg_content='+row.msg_content+'>'+row.msg_title+'</a>';
                         return temp;
                     }},
                 {field:'pub_time',title:'入库日期',width:'15%',align:'center'},
@@ -112,6 +112,10 @@
     function supDatumTy(){
         var supdata = $("#sup_msg_type_id").val();
         var sudata = $("#msg_type_id").val();
+        if(supdata==""||supdata==null){
+            $("#msg_type_id").empty();
+            SelectDataType();
+        }
         if(supdata!=null && supdata !="" && sudata == ""){
             $("#msg_type_id").empty();
             $.ajax({
@@ -126,7 +130,7 @@
                     $("#msg_type_id").append("<option selected hidden value=''>资料小类</option><option value= ''>资料小类</option>");
                     for(var i=0;i<data.length;i++){
                         var item = data[i];
-                        $("#msg_type_id").append("<option value="+item.msg_type_id+","+item.msg_type_name+"> "+item.msg_type_name+"</option>")
+                        $("#msg_type_id").append("<option value="+item.msg_type_id+"> "+item.msg_type_name+"</option>")
                     }
                 }
             });
@@ -135,7 +139,15 @@
 
     function subClass() {
         var subdata = $("#msg_type_id").val();
-        if(subdata!=""&& subdata!=null ){
+        var supdata = $("#sup_msg_type_id").val();
+        if(subdata=="" && supdata==""){
+            $("#sup_msg_type_id").empty();
+            $("#sup_msg_type_id").append("<option selected hidden value=''>资料大类</option><option value= ''>资料大类</option>");
+            $("#sup_msg_type_id").append("<option value='1'>政府文件</option>");
+            $("#sup_msg_type_id").append("<option value='2'>政府公文</option>");
+            $("#sup_msg_type_id").append("<option value='3'>大数据平台报告</option>");
+        }
+        if(subdata!=""&& subdata!=null&&supdata==""){
             $("#sup_msg_type_id").empty();
             $.ajax({
                 type:"post",
@@ -148,6 +160,7 @@
                 success:function (data) {
                     for(var i=0;i<data.length;i++){
                         var item = data[i];
+                        $("#sup_msg_type_id").append("<option selected hidden value=''>资料大类</option><option value= ''>资料大类</option>");
                         $("#sup_msg_type_id").append("<option value="+item.sup_msg_type_id+"> "+item.supTyName+"</option>")
                     }
                 }
@@ -165,7 +178,7 @@
                 $("#msg_type_id").append("<option selected hidden value=''>资料小类</option><option value= ''>资料小类</option>");
                 for(var i=0;i<data.length;i++){
                     var item = data[i];
-                    $("#msg_type_id").append("<option value="+item.msg_type_id+","+item.msg_type_name+"> "+item.msg_type_name+"</option>")
+                    $("#msg_type_id").append("<option value="+item.msg_type_id+"> "+item.msg_type_name+"</option>")
                 }
             }
         });
@@ -199,7 +212,7 @@
                     success :function (data) {
                         if (data == 1) {
                             layer.msg('删除记录成功', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
-                            _gd["list"].refresh();
+                            window.location.href = quick.serverUrl+"/databaselist";
                         } else {
                             layer.msg('删除记录失败', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
 

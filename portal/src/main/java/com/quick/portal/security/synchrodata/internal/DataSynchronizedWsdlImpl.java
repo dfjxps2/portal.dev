@@ -1,6 +1,5 @@
 package com.quick.portal.security.synchrodata.internal;
 
-import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,7 @@ public class DataSynchronizedWsdlImpl implements IDataSynchronizedWsdl {
 	 * 同步单个用户数据
 	 */
 	@Override
-	public String getUsersDataByUserID(@WebParam(name = "userID") String userID) {
+	public String getUsersDataByUserID(String userID) {
 		String str = null;
 		if(null == userID || "".equals(userID)){
 			str = Dom4jUtil.creatErrXmlFile(SynchronizedDataConstants.FAIL_STATUS,SynchronizedDataConstants.PARAM_ISNULL_FAIL_MSG);
@@ -46,7 +45,7 @@ public class DataSynchronizedWsdlImpl implements IDataSynchronizedWsdl {
 	 * @see com.quick.portal.security.synchrodata.internal.IDataSynchronizedWsdl#getMenuPrivilegeByUserID(java.lang.String)
 	 */
 	@Override
-	public String getFunPrivilegeByUserID(String userID) {
+	public String getFunPrivilegeDataByUserID(String userID) {
 		String str = null;
 		if(null == userID || "".equals(userID)){
 			str = Dom4jUtil.creatErrXmlFile(SynchronizedDataConstants.FAIL_STATUS,SynchronizedDataConstants.USERID_PARAM_ISNULL_FAIL_MSG);

@@ -136,7 +136,13 @@
             $.post(quick.serverUrl + '/getObj?app_id=' + sysid + "&i=" + Math.random(), function(data){
                 setForm(data);
                 $.post('${G.host}/appClassRela/getRela?app_id='+sysid,function(ar){
-                    appClassRela_load(ar);
+                    if(ar == null) return;
+                    var db = [], ar = ar.rows || ar;
+                    for(var i = 0; i <ar.length; i++){
+                        if(ar[i].rel_id)
+                            db.push(ar[i]);
+                    }
+                    appClassRela_load(db);
                 });
 				if(mode == "browse"){
                     viewRead();
@@ -159,7 +165,7 @@
         quick.submit(function(data) {
             isdone=true;
             if(data.code != "1"){
-                layer.msg('保存失败,'+ data.msg,{icon:1,time: 3000,skin: 'layer-ext-moon'});
+                layer.alert('保存失败,'+ data.msg);
                 return;
             }
             layer.msg('保存成功',{icon:1,time: 1500,skin: 'layer-ext-moon'}, function(){

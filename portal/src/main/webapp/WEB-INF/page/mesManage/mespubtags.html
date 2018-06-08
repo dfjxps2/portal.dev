@@ -11,6 +11,11 @@
     </script>
     <link rel="stylesheet" type="text/css" href="${G.host}/res/css/base.css">
     <link rel="stylesheet" type="text/css" href="${G.host}/res/css/menu.css">
+    <style>
+        .me{
+           color:#0000FF;
+        }
+    </style>
 </head>
 <body class="gray-bg">
 <div id="divappend" class="row" ></div>
@@ -25,9 +30,21 @@
     var check_val = new Array();
     var check_name = new Array();
     function click_event(str){
-        var attr =str.split(",")
-        check_val.push(attr[0]);
-        check_name.push(attr[1]);
+        var attr =str.split(",");
+         if(check_val.length==0){
+             check_val.push(attr[0]);
+             check_name.push(attr[1]);
+         }else {
+             for (var i = 0; i < check_val.length; i++) {
+                 if (attr[0] == check_val[i]) {
+                     break;
+                 }
+                 if (i == check_val.length - 1) {
+                     check_val.push(attr[0]);
+                     check_name.push(attr[1]);
+                 } }
+         }
+
     }
     _chosenAllId=check_val;
     _chosenName=check_name;

@@ -32,5 +32,6 @@ public interface IUserAccessLogService extends ISysBaseService<UserAccessLogDO> 
     List<Map<String, Object>> selectTopUser(Map<String, Object> map);
     List<Map<String, Object>> selectTopTag(Map<String, Object> map);
     //日志采集
-	public void saveLog(HttpServletRequest request,int logTypeId, int userOpType, int menuId,String message);
+	public void saveLog(HttpServletRequest request,int logTypeId, int userOpType, int menuId,String message,String userID, String userNM);
+
 }

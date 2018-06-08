@@ -44,6 +44,9 @@
 		delete from app_class_rela where rel_id = #{rel_id}
 	</delete>
 
+	<delete id="deleteByAppId" parameterType="String">
+		delete from app_class_rela where app_id = #{app_id}
+	</delete>
 	<!-- 查询关联分类-->
 	<select id="selectRela" parameterType="map" resultType="map">
 		select c.app_class_name,c.app_class_id,r.rel_id from app_class c left join app_class_rela r on c.app_class_id=r.app_class_id and r.app_id=#{app_id}

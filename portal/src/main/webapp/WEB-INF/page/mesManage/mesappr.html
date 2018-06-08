@@ -76,7 +76,7 @@
                                     <button type="button" class="close" data-dismiss="modal" style="text-align: center" aria-hidden="true" >×</button></div>
                                 <div class="input-group" style="margin-right: -3px"><span class="input-group-btn" style="width: 20px">
                                         <button class="btn btn-default" type="button" onclick="chosebox('tag_text', '${G.serverUrl}/mespubtags','tags');">...</button></span></div>
-                                <input style="left: auto;width: 966px" type="text" id="tag_text" placeholder="标签"  class=" form-control required" name="keyword"/>
+                                <input style="left: auto;width: 966px" type="text" id="tag_text" placeholder="标签" readonly="readonly" class=" form-control required" name="keyword"/>
                             </div>
                             <input type="hidden" id="tags" name="tags" class="form-control" />
                         </form>
@@ -119,14 +119,13 @@
                 //{  checkbox: true,title:'选择' },
                 {  field: 'TAGSELECT', title: '选择',width: '8%', align: 'center',
                     formatter:function(value,rec){
-                        return "<input id=\"msgs"+rec.msg_id+"\" title=\"msgs\" class=\"ck_qx\" type=\"checkbox\" name=\"msg\" value=\"" + rec.msg_id+ "\" >";
+                        return "<input id=\"msgs"+rec.msg_id+"\" title=\"msgs\" class=\"ck_qx\" type=\"checkbox\" name=\"msg\" value=\"" + rec.msg_id+ "\" >"+"&nbsp;"+rec.serialNum;
                     }  },
-                {field:'serialNum',title:'序列号', width: '8%', align: 'center'},
+                {field:'serialNum',visible:false},
                 { field: 'msg_title', title: '标题', width: '10%' , formatter:function (value,row) {
                     var temp ='<a href= "${G.serverUrl}/mesdetail?msg_id='+row.msg_id+'">'+row.msg_title+'</a>';
                     return temp;
                 }},
-                { field: 'msg_digest', title: '摘要', width: '10%'  },
                 { field: 'msg_src_name', title: '来源', width: '5%'  },
                 { field: 'pub_time',title: '发布日期', width: '8%'},
                 { field: 'appr_state', title: '状态', width: '10%' ,formatter:function (value,rec) {
@@ -234,12 +233,12 @@
     function manualappr() {
         var checkedValue = checkedVal("msg");
         if(checkedValue.isEmpty()){
-            layer.msg("请选择标签",{icon:1,time: 1000,skin: 'layer-ext-moon'});
+            layer.msg("请选择要操作对象！",{icon:1,time: 1000,skin: 'layer-ext-moon'});
             return;
         };
         layer.confirm(
             "确认将通过吗？<br/>",
-            {icon: 3, title: "编辑信息", skin: 'layer-ext-moon'},
+            {icon: 3, title: "信息审核", skin: 'layer-ext-moon'},
             function() {
                 $.ajax({
                     type: "post",
@@ -252,15 +251,12 @@
                     },
                     success: function (data) {
                         if (data == 1) {
-                            layer.msg('编辑信息成功', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+                            layer.msg('人工审批完成！', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
                             window.location.href = quick.serverUrl + "/mesappr";
-                        } else {
-                            layer.msg('编辑信息失败', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
-
                         }
                     },
                     error: function (err) {
-                        layer.msg("结果异常", {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+                        layer.msg("人工审批异常", {icon: 1, time: 1000, skin: 'layer-ext-moon'});
                     }
                 })
             });}
@@ -270,12 +266,12 @@
     function manualreject() {
         var checkedValue = checkedVal("msg");
         if(checkedValue.isEmpty()){
-            layer.msg("请选择信息",{icon:1,time: 1000,skin: 'layer-ext-moon'});
+            layer.msg("请选择要操作对象！",{icon:1,time: 1000,skin: 'layer-ext-moon'});
             return;
         };
         layer.confirm(
                 "确认将拒绝吗？<br/>",
-                {icon: 3, title: "编辑信息", skin: 'layer-ext-moon'},
+                {icon: 3, title: "信息审核", skin: 'layer-ext-moon'},
                 function(){  $.ajax({
                     type: "post",
                     url: quick.serverUrl + '/editAppr',
@@ -287,15 +283,12 @@
                     },
                     success: function (data) {
                         if (data == 1) {
-                            layer.msg('编辑信息成功', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+                            layer.msg('人工审批完成', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
                             window.location.href=quick.serverUrl+"/mesappr";
-                        }else {
-                            layer.msg('编辑信息失败', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
-
                         }
                     },
                     error: function (err) {
-                        layer.msg("结果异常", {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+                        layer.msg("人工审批异常", {icon: 1, time: 1000, skin: 'layer-ext-moon'});
                     }
                 })
         }

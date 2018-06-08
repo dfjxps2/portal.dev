@@ -106,7 +106,7 @@
                 $("#rule_id").append("<option selected hidden value=''>规则类型 参数名称</option><option value=''>选择规则</option>");
               for(var i=0;i<data.length;i++){
                   var item = data[i];
-                  $("#rule_id").append("<option value="+item.rule_id+""+item.rule_type_name+">"+item.rule_type_name+" "+item.param_name+"</option>")
+                  $("#rule_id").append("<option value="+item.rule_id+","+item.param_name+"> "+item.param_name+"</option>")
               }
             }
         });

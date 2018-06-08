@@ -29,30 +29,29 @@
 		   toolbar:"#formSearch",
 		   columns: [
 			   {  checkbox: true },
-			   { field: 'app_name',  title: '应用系统名称' ,width: '12%',formatter:function(value,row,index){
-				   return "<a href='javascript:void(0)' onclick=\"goDetail(this);\" id='"+row.app_id+"'>"+row.app_name+"</a>";
-			   }},
-			   { field: 'dep_name', title: '部门', width: 90  },
-			   { field: 'CZ',  title: '操作',width: '15%', formatter:function(value,row,index){
+			   { field: 'app_name',  title: '应用系统名称' ,width: 100 },
+			   { field: 'dep_name', title: '部门', width: '20%'  },
+			   { field: 'CZ',  title: '操作',width: 60, align:'center', formatter:function(value,row,index){
 				   return "<button type='button' class='btn_el' onclick='edit(\""+row.app_id+"\",\""+row.app_name+"\")'>编辑</button>| "
 						   +"<button type='button' class='btn_el' onclick='del(\""+row.app_id+"\",\""+row.app_name+"\")'>删除</button>";
 				   ;
 			   }}
-		   ],onClickRow:function(row,e){
-			   queryPage(row.app_id);
+		   ],onCheck:function(row,$e) {
+			   queryPage(row.app_id, row.app_name);
+		   },onUncheck:function(row,$e) {
+			   $("#plist").bootstrapTable("destroy");
 		   },onPageChange:function(number, size){
-			   $("#IDS_PAGESIZE").val(size);
-			   $("#IDS_PAGENUM").val(number);
-			   pageNum=number;
-			   pageSize=size;
+				$("#IDS_PAGESIZE").val(size);
+				$("#IDS_PAGENUM").val(number);
+				pageNum=number;
+				pageSize=size;
 		   },onPostBody:function(data){
 			   if(queryParm=='' &&　(data == null || data.length == 0)){
 				   $(".no-records-found td").html('您还没有添加相关信息，请点击<a onclick="add();" href="javascript:void(0);">添加</a>');
 				   return;
 			   }
-			   $("#list").bootstrapTable('check',0);
 			   if(data[0])
-				   queryPage(data[0].app_id);
+				   $("#list").bootstrapTable('check',0);
 		   }
 	   });
 
@@ -148,8 +147,8 @@
 			}
 		});
 	}
-	function queryPage(app_id){
-		_appid = app_id;
+	function queryPage(app_id, app_name){
+		_appid = app_id, app_name = '['+app_name+']' || '';
 		$("#plist").bootstrapTable("destroy");
 		_gd["plist"]=new BGrid("#plist");
 		_gd["plist"].config({
@@ -161,10 +160,8 @@
 			pagination:false,
 			height: $(document.body).height()-50,
 			columns: [
-				{ field: 'page_name',  title: '页面名称' ,width: '55%',formatter:function(value,row,index){
-					return "<a href='javascript:void(0)' onclick=\"go_page(this);\" id='"+row.page_id+"'>"+row.page_name+"</a>";
-				}},
-				{ field: 'CZ',  title: '操作',width: '45%', formatter:function(value,row,index){
+				{ field: 'page_name',  title: '页面'+app_name ,width: '55%' },
+				{ field: 'CZ',  title: '操作',width: '45%', align:'center', formatter:function(value,row,index){
 					return "<button type='button' class='btn_el' onclick='edit_page(\""+row.page_id+"\",\""+row.page_name+"\")'>编辑</button>| "
 							+"<button type='button' class='btn_el' onclick='del_page(\""+row.page_id+"\",\""+row.page_name+"\")'>删除</button>";
 				}}

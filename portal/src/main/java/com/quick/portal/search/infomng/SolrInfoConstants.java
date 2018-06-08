@@ -22,23 +22,27 @@ public class SolrInfoConstants {
 
 	public static final String PORTAL_MSG_URL = "http://10.1.3.193:8983/solr/portal_msg";
 
-	public static final String USER_MSG_URL = "http://10.1.3.193:8983/solr/user_msg";
+	public static final String DATA_MSG_URL = "http://10.1.3.193:8983/solr/portal_data";
+	
+	public static final String USER_MSG_URL ="http://10.1.3.193:8983/solr/user_msg";
 	
 	public static final String INDEX_KEYWORD = "keyword";
+	
+//	public static final String INDEX_ID = "id";
 	
 	public static final int CONNECTION_TIMEOUT = 10000;
 	
 	public static final int SOCKET_TIMEOUT = 60000;
 	
 	
-	// 9：全部;4：未阅;5：已阅;1：指标;2：消息;3：应用
+	// 9：全部;4：未阅;5：已阅;1：指标;2：消息;3：应用;6：资料
 	public static final String ALL_OBJ_TYPE = "9";
 	public static final String UNREAD_OBJ_TYPE = "4";
 	public static final String READ_OBJ_TYPE = "5";
 	public static final String INDEX_OBJ_TYPE = "1";
 	public static final String MSG_OBJ_TYPE = "2";
 	public static final String APP_OBJ_TYPE = "3";
-	
+	public static final String DATA_OBJ_TYPE = "6";
 	
 	// status:1表示已阅;0表示未阅
 	public static final String READ_STATUS = "1";

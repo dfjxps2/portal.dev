@@ -75,6 +75,17 @@ public class InitSolrServer {
 	     return server;
     }
     
+    public static  HttpSolrClient getHttpSolrServer(String objType) {
+    	//资料索引库是独立
+    	HttpSolrClient solrcServer = null ;
+    	if(null != objType && SolrInfoConstants.DATA_OBJ_TYPE.equals(objType)){
+    		 solrcServer = initServer(SolrInfoConstants.DATA_MSG_URL);
+    	}else{
+    		 solrcServer = initServer(SolrInfoConstants.PORTAL_DOC_URL);
+    	}
+    	return solrcServer;
+    }
+    
     
     /*
      * 创建 server

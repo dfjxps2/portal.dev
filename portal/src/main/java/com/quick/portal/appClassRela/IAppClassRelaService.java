@@ -33,4 +33,6 @@ public interface IAppClassRelaService extends ISysBaseService<AppClassRelaDO> {
      * @return
      */
     List<Map<String, Object>> selectRela(Map<String, Object> m);
+
+    int deleteByAppId(String appId);
 }

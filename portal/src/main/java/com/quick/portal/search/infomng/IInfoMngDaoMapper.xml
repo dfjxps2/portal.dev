@@ -19,7 +19,7 @@
 		 ]]> 
 	</update>
 	
-	<!-- 新增  user_dept_tmp-->
+	<!-- 新增  VISIT_STATS-->
     <insert id="saveVisitInfo" parameterType="map">
 		<![CDATA[ INSERT INTO VISIT_STATS (
 			USER_ID,

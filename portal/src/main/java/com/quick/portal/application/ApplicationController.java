@@ -94,6 +94,7 @@ public class ApplicationController extends SysBaseController<ApplicationDO> {
         String acids = rstr("app_class_id");
         String rids = rstr("rel_id");
         if(!QCommon.isNullOrEmpty(acids)){
+            appClassRelaService.deleteByAppId(model.getApp_id().toString());
             String[] rel_ids = rids.split(",");
             String[] app_class_ids = acids.split(",");
             for(int i = 0; i < app_class_ids.length; i++){

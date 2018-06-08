@@ -159,6 +159,12 @@
 	
     /*完成*/
     var isdone = true;
+    $.ajaxSetup({
+        error: function(jq,txt){
+            layer.alert("服务异常，"+txt);
+            isdone = true;
+        }
+    });
     function thingOver(){
     	addMetricInfo();
         if(!isdone) {
@@ -172,14 +178,18 @@
         }
     }
     function save(){
+        var pn = $("#page_name").val();
+        if(pn == ''){
+            layer.alert("请先填写页面名称");
+        }
         if(!$("#form").valid()){
             return false;
         }
-        var tid = $("#template_id").val();
+        /*var tid = $("#template_id").val();
         if(tid == ''){
             layer.alert("请先选择模板");
             return false;
-        }
+        }*/
         var arr = getLayout();
         if(arr == null || arr.length == 0){
             layer.alert("栏目不能为空,请添加栏目");
@@ -198,6 +208,7 @@
                 cancel();
             });
         });
+
         return true;
     }
 	function cancel(){
@@ -379,8 +390,7 @@
                 if(no == o.dataset.no){
                     var item = _ca()[x];
                     item.metric = metric_name.join(',');
-                    _ca.remove(item);
-                    _ca.push(item);
+                    updateCA(item);
                 }
             }
 
@@ -484,6 +494,21 @@
             s += sp + ar[i][name];
         }
         return s.substr(1);
+    }
+    function updateCA(o){
+        var gd = getLayout();
+        for(var i = 0; i < gd.length; i++){
+            if(o.no == gd[i].no){
+                o.x = gd[i].x;
+                o.y = gd[i].y;
+                o.width = gd[i].width;
+                o.height = gd[i].height;
+                o.auto_position = false;
+                break;
+            }
+        }
+        _ca.remove(o);
+        _ca.push(o);
     }
 </script>
 </html>
