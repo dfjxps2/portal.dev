@@ -7,27 +7,8 @@
     <link href="${G.host}/res/js/ztree/zTreeStyle/zTreeStyle.css" rel="stylesheet">
     <script src="${G.host}/res/js/ztree/jquery.ztree.all.min.js" ></script>
     <style>
-        .other{
-            width:100%;
-        }
-        .zong{
-            width:100px;
-            padding:5px;
-        }
-
-        .nav {
-            height: 500px;
-            width:90px;
-            float:left;
-            padding:5px;
-        }
         .section {
             width:1025px;
-            float:left;
-            padding:5px;
-        }
-        .firstdiv {
-            width:90px;
             float:left;
             padding:5px;
         }
@@ -56,7 +37,7 @@
                                     </select>
                                 </div>
                                 <div class="form-group" style="padding-left: 5px;width:110px;">
-                                    <input id="pub_time" name="pub_time" class="input-sm form-control" type="text" placeholder="发布日期"/>
+                                    <input id="pub_time" name="pub_time" class="input-sm form-control" type="text" onfocus="(this.type='date')" placeholder="发布日期"/>
                                 </div>
                                 <div class="form-group" style="padding-left: 5px;width: 90px;">
                                     <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="query();"> 查询</button> </span>
@@ -69,9 +50,11 @@
                                 </div>
                                 <div class="form-group" style="width:1050px;padding-top: 4px;display: inline-block;padding-left: 6px;position: relative ">
                                         <div style="position:absolute;right:70px;cursor:pointer;display:none;padding-top: 8px" align="center"  class="input_clear">
-                                            <button type="button" class="close" data-dismiss="modal" style="text-align: center" aria-hidden="true" >×</button></div>
+                                            <button type="button" class="close" data-dismiss="modal" style="text-align: center" aria-hidden="true" >×</button>
+                                        </div>
                                     <div class="input-group" style="margin-right: -3px"><span class="input-group-btn" style="width: 20px">
-                                        <button class="btn btn-default" type="button" onclick="chosebox('tag_text', '${G.serverUrl}/mespubtags','tags');">...</button></span></div>
+                                        <button class="btn btn-default" type="button" onclick="chosebox('tag_text', '${G.serverUrl}/mespubtags','tags');">...</button></span>
+                                    </div>
                                         <input style="left: auto;width: 966px" type="text" readonly="readonly" id="tag_text" placeholder="标签"  class=" form-control required" name="keyword"/>
                                 </div>
                                 <input type="hidden" id="tags" name="tags" class="form-control" />
@@ -115,19 +98,19 @@
             toolbar:"#formSearch",
             clickToSelect:true,
             columns: [
-                {  field: 'TAGSELECT', title: '选择',width: '8%', align: 'center',
+                {  field: 'TAGSELECT', title: '选择',width: '5%', align: 'center',
                     formatter:function(value,rec){
-                        return "<input id=\"msgs"+rec.msg_id+"\" title=\"msgs\" class=\"ck_qx\" type=\"checkbox\" name=\"msg\" value=\"" + rec.msg_id+ "\" >";
+                        return "<input id=\"msgs"+rec.msg_id+"\" title=\"msgs\" class=\"ck_qx\" type=\"checkbox\" name=\"msg\" value=\"" + rec.msg_id+ "\" >"+"&nbsp;"+rec.serialNum;
                     }  },
                 {field:'msg_id',visible:false },
-                {field:'serialNum',title:'序列号', width: '8%', align: 'center'},
-                { field: 'msg_title', title: '标题', width: '10%' ,align: 'center',
+                {field:'serialNum',visible:false},
+                { field: 'msg_title', title: '标题', width: '15%' ,align: 'center',
                     formatter:function (value,row) {
                         var temp ='<a href= "${G.serverUrl}/mesdetail?msg_id='+row.msg_id+'">'+row.msg_title+'</a>';
                         return temp;
                     }},
-                { field: 'msg_src_name', title: '来源', width: '5%'  },
-                { field: 'pub_time',title: '发布日期', width: '8%'},
+                { field: 'msg_src_name', title: '来源', width: '10%'  },
+                { field: 'pub_time',title: '发布日期', width: '13%'},
                 { field: 'appr_state', title: '状态', width: '10%' ,formatter:function (value,rec) {
                     var apprstate = rec.appr_state;
                     if(apprstate=='1'){return '人工审核通过'};
@@ -135,9 +118,9 @@
                     if(apprstate=='3'){return '审核通过'};
                     if(apprstate=='4'){return '审核拒绝'};
                 } },
-                { field: 'msg_class_name', title: '密级', width: '8%'  },
+                { field: 'msg_class_name', title: '密级', width: '7%'  },
                 { field: 'msgtext',title: '标签', width: '15%'},
-                { field: 'apprname', title: '审核人', width: '8%'  },
+                { field: 'apprname', title: '审核人', width: '5%'  },
                 { field: 'appr_time',title: '审核时间', width: '10%'},
                 { field: 'CZ',  title: '操作',width: '10%', formatter:function(value,row,index){
                     return "<button type='button' class='btn_el' onclick='mesChange(\""+row.msg_id+"\")'>编辑</button>";
@@ -153,6 +136,8 @@
                 if(queryParm=='' &&　(data == null || data.length == 0)){
                     $(".no-records-found td").html('您还没有添加相关信息，请点击<a onclick="add();" href="javascript:void(0);">添加</a>');
                 }
+            },onClickCell:function () {
+                
             }
         });
 

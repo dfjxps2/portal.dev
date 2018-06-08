@@ -63,27 +63,35 @@
 
                             <div class="col-sm-6 form_ipt_botm" style="width:100%;">
                                 <div class="form-group">
-                                    <label class="col-xs-3 lable_top" style="width:100px;"><span></span>摘要</label>
+                                    <label class="col-xs-3 lable_top" style="width:100px;"><span class="span_require">*</span>摘要</label>
                                     <div class="col-xs-9"><textarea style="height:72px;width:800px;" class="form-control required" id="msg_digest" name="msg_digest"></textarea></div>
                                 </div>
                             </div>
 
-                            <div class="col-sm-6 form_ipt_botm" style="width:270px;margin-left:35px;padding-right:2px;">
-                                <div class="form-group">
-                                    <label class="col-xs-3 lable_top" style="width:82px;"><span class="span_require">*</span>密级</label>
-                                    <div class="col-xs-9" style="padding-left:4px;"> <select class="form-control required select_change" id="msg_class_name" name="msg_class_name"></select></div>
+                            <div class="col-sm-6 form_ipt_botm" style="width:300px;padding-right:2px;">
+                                <div class="form-group" style="width:300px;">
+                                    <label class="col-xs-3 lable_top" style="width:100px;"><span class="span_require">*</span>密级</label>
+                                    <div class="col-xs-9" style="padding-left:14px;"> <select class="form-control required select_change" id="msg_class_name" name="msg_class_name"></select></div>
                                 </div>
                             </div>
 
-                            <div class="col-sm-6 form_ipt_botm"style="padding-left:2px;width:300px;">
+                            <div class="col-sm-6 form_ipt_botm"style="padding-left:19px;width:300px;">
                                 <div class="form-group">
                                     <label class="col-xs-4 lable_top" style="width:80px;"><span></span>标签</label>
-                                    <div class="col-xs-8" style="padding-left:2px;"><div class="input-group" style="width:187px;"><input type="text" style="width:170px;" id="tag_text" readOnly="readOnly" class="form-control required"/><span class="input-group-btn"><button class="btn btn-default" type="button" onclick="chosebox('tag_text', '${G.serverUrl}/mespubtag','tagId');">...</button></span></div></div>
+                                    <div class="col-xs-8" style="padding-left:2px;">
+                                        <div style="position:absolute;cursor:pointer;display:none;left:50px;" align="center"  class="input_clear">
+                                            <button type="button" class="close" data-dismiss="modal" style="text-align: center" aria-hidden="true" >×</button>
+                                        </div>
+                                        <div class="input-group" style="width:187px;">
+                                            <input type="text" style="width:170px;"  placeholder="标签" id="tag_text" readOnly="readOnly" class="form-control required"/>
+                                            <span class="input-group-btn"><button class="btn btn-default" type="button" onclick="chosebox('tag_text', '${G.serverUrl}/mespubtags','tagId');">...</button></span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
                             <li class="li_file"  >
-                                <div class="uploader white"style="width:260px;" >
+                                <div class="uploader white"style="width:280px;padding-left:18px;" >
                                     <input id="upload" style="width: 260px;" onchange="uploadFiles();"  type="file" name="file"  onmousedown="fileOnMouseDown()" onmouseup="fileOnMouseUp()" />
                                     <input type="text" class="filename"  readonly="readonly" style="width:150px;">
                                     <input id="btn_select" type="button" name="file" class="button_normal" style="padding-left:1px; width:80px;" value="选择附件">　
@@ -92,7 +100,7 @@
 
                             <div class="col-sm-6 form_ipt_botm"style="width:870px;">
                                 <div class="form-group" style="width:820px;">
-                                    <label class="col-xs-3 lable_top" style="width:100px;"><span></span>内容</label>
+                                    <label class="col-xs-3 lable_top" style="width:100px;"><span class="span_require">*</span>内容</label>
                                     <div class="col-xs-9"><textarea style="width:800px;padding-left:15px;height:600px;" class="form-control required" id="msgcontent" name="msgcontent"></textarea></div>
                                 </div>
                             </div>
@@ -136,6 +144,12 @@
 
     window.onload = function() {
         $('#pagename').html("内容发布申请");
+        $("#pubform").validate({
+            errorPlacement: function(error, element) {
+                element.parent().append(error);
+            },
+            rules: {}
+        });
     }
         function  SelectMsgCs() {
         $.ajax({
@@ -155,6 +169,9 @@
     SelectMsgCs();
     var user_id = $.request.queryString["user_id"];
     function formCommit(){
+        if(!($("#pubform").valid())){
+            return false;
+        }
         $("#pub_user_id").val(user_id);
         $("#appr_user_id").val(user_id);
         $(".btn_text").html("正在处理您的请求，请稍后...");
@@ -191,6 +208,25 @@
         var url = quick.listUrl ;
         window.location.href = url;
     }
+
+    //文本框删除按钮
+    //当通过鼠标点击选中元素或通过 tab 键定位到元素时，该元素就会获得焦点
+    $("input").focus(function () {
+        $(this).parents(".col-xs-8").children(".input_clear").show();
+    });
+    //当元素失去焦点时发生 blur 事件。
+    $("input").blur(function(){
+        if($(this).val()=='')
+        {
+            $(this).parents(".col-xs-8").children(".input_clear").hide();
+        }
+    });
+    $(".input_clear").click(function(){
+        var a = null;
+        $(this).parent().find('input').val(a);
+        $("#tag_text").val(null);
+        $(this).hide();
+    });
 
     function chosebox(nid, url,id, fn){
         if(!layer.values)
