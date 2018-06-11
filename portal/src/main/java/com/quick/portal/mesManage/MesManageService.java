@@ -29,6 +29,7 @@ public interface MesManageService extends ISysBaseService<MesManageDO> {
     public void  deleteMes(HttpServletRequest request,HttpServletResponse response) throws Exception;
     public void editDatum(MesManageDO mesManageDO,String keywords,HttpServletRequest request,HttpServletResponse response,boolean MERGE) throws Exception;
     public void  delDatum(HttpServletRequest request,HttpServletResponse response) throws Exception;
-
+    public void  insertSupClass(HttpServletResponse res,MesManageDO mesManageDO) throws Exception;
+    public void editSubClass(HttpServletResponse response,MesManageDO mesManageDO) throws Exception;
 
 }

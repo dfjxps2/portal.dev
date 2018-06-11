@@ -130,7 +130,6 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
         } catch (IOException e) {
             e.printStackTrace();
         }
-
             mesManageDO.setMsg_content(id); //上传信息内容存放路径
             mesManageDO.setMsg_src_id(MesInfoConstants.PLATFORM_SOURCE_ID);
             mesManageDO.setMsg_type_id(MesInfoConstants.PLATFORM_MES_TYPE);
@@ -141,7 +140,8 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
             String content = combinFile(fa,mesManageDO);
             String type = SolrInfoConstants.MSG_OBJ_TYPE;
             Map<String,Object> map = new HashMap<>();
-            SolrUtils.addSolrInfo(id,content,type,title);
+            String attach = mesManageDO.getMsg_attachment();
+            SolrUtils.addSolrInfo(id,content,type,title,attach);
             List<Map<String,Object>> rules=  mesManageDao.selectRules(map);
             int lab = autoFilter(rules,id);
             if(lab ==1){
@@ -253,11 +253,17 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
         //标题，摘要，内容，附件 文件
         String type = SolrInfoConstants.MSG_OBJ_TYPE;
         String content = combinFile(fa,mesManageDO);
-        SolrUtils.addSolrInfo(id,content,type,title);
+        Object attpath = map.get("msg_attachment");
+        String attach = null;
+        if(attpath!= null && !attpath.equals(" ") && !"null".equals(attpath)&& msg_attachment!=null){
+            attach = attpath.toString();
+        }else{
+            attach = msg_attachment;
+        }
+        SolrUtils.addSolrInfo(id,content,type,title,attach);
         Map<String,Object> mapone = new HashMap<>();
         List<Map<String,Object>> rules=  mesManageDao.selectRules(mapone);
         int lab = autoFilter(rules,id);
-        Object attpath = map.get("msg_attachment");
         if(lab ==1){
             deleteFile(id);
             if(attpath!= null && !attpath.equals(" ") && !"null".equals(attpath)){
@@ -318,7 +324,6 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
                 key = keywords.split(" ");
             }
             String type = SolrInfoConstants.DATA_OBJ_TYPE;
-            SolrUtils.addSolrInfo(content,datacontent,type,title);
             Calendar calendar = Calendar.getInstance();
             Date date = calendar.getTime();
             mesManageDO.setPub_time(date);
@@ -337,6 +342,8 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
             msgId = (Integer) result.get(0).get("msg_id");
             int tagId = mesManageDao.selectMaxTagId();
             tagFilter(key,map,tagId,msgId);
+            String attach = null;
+             SolrUtils.addSolrInfo(content,datacontent,type,title,attach);
             response.getWriter().write("1");
             response.getWriter().flush();
     }
@@ -376,6 +383,7 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
     }
 
     @Override
+    @Transactional
     public void editDatum(MesManageDO mesManageDO, String keywords, HttpServletRequest request, HttpServletResponse response, boolean MERGE) throws Exception {
         String tyname = "material";
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
@@ -423,6 +431,7 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
             key = keywords.split(" ");
         }
         File fa = null;
+        String attach = null;
         //附件保存
         if( file!= null  && !file.isEmpty()  ){
             String attName = file.getOriginalFilename(); //附件文件名
@@ -433,12 +442,12 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
             if (attName != null && !attName.equals("")) {
                 title = attName.split("\\.")[0];
             }
-            SolrUtils.addSolrInfo(content,datacontent,type,title);
+            SolrUtils.addSolrInfo(content,datacontent,type,title,attach);
             map.put("msg_content",content);
         }else {
             File fi = new File(msg_content);
             datacontent = parseFile(fi)+datacontent;
-            SolrUtils.addSolrInfo(msg_content,datacontent,type,title);
+            SolrUtils.addSolrInfo(msg_content,datacontent,type,title,attach);
         }
         Date date = new Date();
         String useId = QCookie.getValue(request,"ids");
@@ -484,6 +493,39 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    @Transactional
+    public void insertSupClass(HttpServletResponse res, MesManageDO mesManageDO) throws IOException {
+        Map<String,Object> map = new HashMap<>();
+        if(mesManageDO.getSup_msg_type_id()!=null ){
+            map.put("sup_msg_type_id",mesManageDO.getSup_msg_type_id());
+        }
+        if(mesManageDO.getMsg_type_name()!=null && !mesManageDO.getMsg_type_name().equals("")){
+            map.put("msg_type_name",mesManageDO.getMsg_type_name());
+        }
+        mesManageDao.insertMsgTy(map);
+        res.getWriter().write("1");
+        res.getWriter().flush();
+    }
+
+    @Override
+    @Transactional
+    public void editSubClass(HttpServletResponse response, MesManageDO mesManageDO) throws Exception {
+        Map<String,Object> map = new HashMap<>();
+        if(mesManageDO.getSup_msg_type_id()!=null ){
+            map.put("sup_msg_type_id",mesManageDO.getSup_msg_type_id());
+        }
+        if(mesManageDO.getMsg_type_name()!=null && !mesManageDO.getMsg_type_name().equals("")){
+            map.put("msg_type_name",mesManageDO.getMsg_type_name());
+        }
+        if(mesManageDO.getMsg_type_id()!=null && !mesManageDO.getMsg_type_id().equals("undefined")){
+            map.put("msg_type_id",mesManageDO.getMsg_type_id());
+        }
+        mesManageDao.updateMsgTy(map);
+        response.getWriter().write("1");
+        response.getWriter().flush();
     }
 
     //判断关键词插入
@@ -570,7 +612,7 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
             msgapprstate="审核通过";
         }
         String msgappr = "审核状态："+ msgapprstate;
-        String secondrow = currenttime+"     "+msgsource+"           "+msgclass+"       "+msgappr;
+        String secondrow = "     "+currenttime+"     "+msgsource+"           "+msgclass+"       "+msgappr;
         StringBuffer buffer = new StringBuffer();
         buffer.append(mesManageDO.getMsg_title());
         buffer.append(System.getProperty("line.separator"));

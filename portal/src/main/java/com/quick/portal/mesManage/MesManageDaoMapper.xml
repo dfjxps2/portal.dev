@@ -204,7 +204,7 @@
 
     <!--自动审核规则管理-->
     <select id="selectRules" resultType="map">
-        SELECT DISTINCT crp.*,   crrt.rule_type_id,crrt.rule_type_name    FROM content_rule_param crp LEFT JOIN  ( SELECT  cr.*,crt.rule_type_name  FROM content_rule cr LEFT JOIN content_rule_type crt
+        SELECT DISTINCT crp.*,crrt.rule_type_id,crrt.rule_type_name    FROM content_rule_param crp LEFT JOIN  ( SELECT  cr.*,crt.rule_type_name  FROM content_rule cr LEFT JOIN content_rule_type crt
 		on cr.rule_type_id = crt.rule_type_id) crrt on crrt.rule_id = crp.rule_id
 		<where>
             1=1
@@ -219,6 +219,9 @@
             </if>
             <if test="param_name!=null and param_name !='' and !'null'.equals(param_name)">
                 AND  crp.param_name =#{param_name}
+            </if>
+            <if test="param_value!=null and param_value !='' and !'null'.equals(param_value)">
+                AND  crp.param_value =#{param_value}
             </if>
             <if test="_sql_where != null and _sql_where != ''"> <![CDATA[
             and ${_sql_where}
@@ -297,6 +300,9 @@
         </if>
         <if test="msg_type_id!=null and msg_type_id !='' and !'null'.equals(msg_type_id)">
             AND  msg_type_id=#{msg_type_id}
+        </if>
+        <if test="msg_type_name!=null and msg_type_name !='' and !'null'.equals(msg_type_name)">
+            AND  mt.msg_type_name=#{msg_type_name}
         </if>
     </select>
 
