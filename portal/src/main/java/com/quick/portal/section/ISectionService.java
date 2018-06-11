@@ -34,5 +34,5 @@ public interface ISectionService extends ISysBaseService<SectionDO> {
 
     String selectMetricJson(Integer page_id);
 
-    String selectLayoutJson(Integer page_id);
+    String selectLayoutJson(Integer page_id,Integer user_id);
 }

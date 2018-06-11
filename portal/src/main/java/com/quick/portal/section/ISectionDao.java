@@ -45,4 +45,8 @@ public interface ISectionDao<SectionDO> extends ISysBaseDao<SectionDO> {
     List<Map<String, Object>> selectPageMetricConfig(Integer page_id);
 
     List<Map<String, Object>> selectPageMsg(Integer page_id);
+    
+    List<Map<String, Object>> getMetricRoleByUserId(Integer user_id);
+    
+    int getIdByMetricId(String src_metric_id);
 }

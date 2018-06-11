@@ -21,12 +21,15 @@ package com.quick.portal.section;
 import com.quick.core.base.SysBaseService;
 import com.quick.core.base.ISysBaseDao;
 import com.quick.core.util.common.QCommon;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.quick.core.base.model.DataStore;
 import com.quick.core.util.common.DateTime;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -93,7 +96,7 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
         return dao.selectPageSection(page_id);
     }
     @Override
-    public String selectLayoutJson(Integer page_id){
+    public String selectLayoutJson(Integer page_id,Integer user_id){
         List<Map<String, Object>> ls = dao.selectPageSection(page_id);
         List<Map<String,Object>> metricls = dao.selectPageMetric(page_id);
         List<Map<String,Object>> mconfigls = dao.selectPageMetricConfig(page_id);
@@ -103,7 +106,7 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
         int i, l = ls.size();
         for(i = 0; i < l; i++){
             String j = getSectionConfig(ls.get(i));
-            String m = getMetricConfig(ls.get(i).get("section_id"),metricls, mconfigls);
+            String m = getMetricConfig(ls.get(i).get("section_id"),metricls, mconfigls,user_id);
             json += "," + j.substring(0, j.length() - 1) + ",metric:" + m + "}";
         }
         json = "[" + json.substring(1) + "]";
@@ -144,9 +147,13 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
             return "{}";
         return "{\"id\":" + m.get("section_id") + "," + json.substring(1);
     }
-    private String getMetricConfig(Object section_value, List<Map<String,Object>> metrics, List<Map<String,Object>> config){
+    private String getMetricConfig(Object section_value, List<Map<String,Object>> metrics, List<Map<String,Object>> config,Integer user_id){
         String section_id = section_value.toString();
         String json = "";
+        if (user_id.equals(1)==false) {
+        	List<Map<String,Object>> metric_role = dao.getMetricRoleByUserId(user_id);
+            config = setConfig("1",config, metric_role);
+		}
         for(Map<String,Object> m : metrics){
             String sid = m.get("section_id").toString();
             String smid = m.get("sec_metric_id").toString();
@@ -190,5 +197,28 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
                 return "\""+name+"\":\"" + m.get("param_value").toString() + "\"";
         }
         return "\""+name+"\":\"\"";
+    }
+    
+    private List<Map<String,Object>> setConfig(String name,List<Map<String,Object>> config,List<Map<String,Object>> metric_role){
+    	List<Map<String,Object>> list = new ArrayList<Map<String,Object>>(); 
+    	for (int i = 0; i < config.size(); i++) {
+    		if ((config.get(i).get("param_id").toString()).equals(name)) {
+        		Integer id = dao.getIdByMetricId((String) config.get(i).get("param_value"));
+        		String conId = "";
+        		for (int j = 0; j < metric_role.size(); j++) {
+    				if (id.equals(metric_role.get(j).get("metric_id"))) {
+    					conId=config.get(i).get("sec_metric_id").toString();
+    				}
+    			}
+        		if (conId.equals("")==false) {
+            		for (int k = 0; k < config.size(); k++) {
+    					if (config.get(k).get("sec_metric_id").toString().equals(conId)) {
+    						list.add(config.get(k));
+    					}
+    				}
+				}
+			}
+		}
+        return list;
     }
 }

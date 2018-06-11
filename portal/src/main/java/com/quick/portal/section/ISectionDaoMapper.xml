@@ -67,6 +67,20 @@
         </if>
 	</select>
 	
+	 <!--查询-->
+	<select id="getIdByMetricId" parameterType="map" resultType="int">
+		select metric_id from metric
+	where src_metric_id = #{src_metric_id}
+	</select>
+	
+	 <!--查询-->
+	<select id="getMetricRoleByUserId" parameterType="map" resultType="map">
+		select metric_id FROM role_metric_privilege
+	where role_id = (select role_id FROM user_role_rela
+	where user_id = #{user_id})
+	</select>
+	
+	
 	<!-- 查询总记录数 -->
 	<select id="count" parameterType="map" resultType="int">
 		select count(*) from section

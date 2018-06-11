@@ -21,11 +21,13 @@ package com.quick.portal.web.monitor;
 import com.quick.core.base.SysWebController;
 import com.quick.core.util.common.JsonUtil;
 import com.quick.core.util.common.QCommon;
+import com.quick.core.util.common.QCookie;
 import com.quick.core.util.type.TypeUtil;
 import com.quick.portal.application.ApplicationDO;
 import com.quick.portal.application.IApplicationService;
 import com.quick.portal.page.IPageService;
 import com.quick.portal.section.ISectionService;
+
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -88,9 +91,11 @@ public class MonitorController extends SysWebController {
     @PostMapping
     @ResponseBody
     public Object getLayout(Integer p){
+    	//获取当前用户id
+   	 	String user_id = QCookie.getValue(request, "ids");
         String layout = "[{id:0, no:1,x: 0, y: 0, width: 12, height: 6, metric:[]}]";
         if(p != null && p > 0){
-            String res = sectionService.selectLayoutJson(p);
+            String res = sectionService.selectLayoutJson(p,Integer.parseInt(user_id));
             if(!QCommon.isNullOrEmpty(res))
                 layout = res;
         }
