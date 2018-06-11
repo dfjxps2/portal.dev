@@ -35,7 +35,7 @@ public class SolrUtils {
 	 * 添加文档 用solrJ创建索引
 	 * @throws Exception 
 	 */
-	public static void addSolrInfo(String id, String content, String type,String title) {
+	public static void addSolrInfo(String id, String content, String type,String title,String attachID) {
 		SolrInputDocument doc = new SolrInputDocument();
 		doc.addField("id", id);
 		doc.addField("content",content);
@@ -43,6 +43,8 @@ public class SolrUtils {
 		doc.addField("create_time", DateTime.Now().getTime());
 		doc.addField("portal_doc_class", type);
 		doc.addField("portal_doc_title", title);
+		doc.addField("portal_attachment_id", attachID);
+		
 		HttpSolrClient server = null;
 		try {
 		    server = InitSolrServer.initServer(SolrInfoConstants.PORTAL_DOC_URL);
@@ -161,6 +163,9 @@ public class SolrUtils {
 					doc.get("portal_doc_title") == null ? "" : doc.get("portal_doc_title"));
 			dataMap.put("portal_doc_class",
 					doc.get("portal_doc_class") == null ? "" : doc.get("portal_doc_class"));
+			dataMap.put("portal_attachment_id",
+					doc.get("portal_attachment_id") == null ? "" : doc.get("portal_attachment_id"));
+			
 			dataList.add(dataMap);
 		}
 		Integer count = dataList.size();
@@ -270,7 +275,8 @@ public class SolrUtils {
 							"portal_doc_class",
 							doc.get("portal_doc_class") == null ? "" : doc
 									.get("portal_doc_class"));
-					
+					dataMap.put("portal_attachment_id",
+							doc.get("portal_attachment_id") == null ? "" : doc.get("portal_attachment_id"));
 					dataList.add(dataMap);
 					break;
 				}
@@ -327,7 +333,8 @@ public class SolrUtils {
 					doc.get("portal_doc_title") == null ? "" : doc.get("portal_doc_title"));
 			dataMap.put("portal_doc_class", doc.get("portal_doc_class") == null ? ""
 					: doc.get("portal_doc_class"));
-			
+			dataMap.put("portal_attachment_id",
+					doc.get("portal_attachment_id") == null ? "" : doc.get("portal_attachment_id"));
 			dataList.add(dataMap);
 		}
 		restList.add(count);
