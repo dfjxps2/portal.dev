@@ -18,7 +18,7 @@
             <div class="ibox ibox-x">
                 <div class="ibox-content ibox-content-x" style="margin-top: 50px">
                     <form id="formSearch" class="form-inline">
-                            <div class="form-group" >
+                            <div class="form-group" style="width:124px;">
                                 <select id="rule_id" name="rule_id" class="form-control form-control-green select_change" onchange="queryParm()" ></select>
                             </div>
                             <div class="form-group" style="left:auto;width:90px;">
@@ -160,7 +160,7 @@
                 asyn:false,
                 dataType:"json",
                 success:function (data) {
-                    $("#rule_id").append("<option selected hidden value=''>规则参数名称</option><option value='规则参数名称'>选择规则</option> ");
+                    $("#rule_id").append("<option selected hidden value=''>规则参数名称</option><option value=''>选择参数名称</option> ");
                     for(var i=0;i<data.length;i++){
                         var item = data[i];
                         $("#rule_id").append("<option value="+item.rule_id+","+item.param_name+">  "+item.param_name+"</option>")
@@ -170,10 +170,7 @@
         }
         SelectRule();
         function queryParm() {
-                if(!($("#formSearch").valid())){
-                    return false;
-                }
-                paramValue();
+            paramValue();
         }
     </script>
 </html>

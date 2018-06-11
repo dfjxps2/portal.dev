@@ -24,15 +24,15 @@
                         <div class="row">
                             <div class="col-sm-6 form_ipt_botm">
                                 <div class="form-group">
-                                    <label class="col-xs-4 lable_top"><span></span>标签类型</label>
-                                    <div class="col-xs-8"><div class="input-group"><input type="text" id="tag_type_name" readOnly="readOnly" class="form-control"/><span class="input-group-btn"><button class="btn btn-default" type="button" onclick="chosebox('tag_type_name', '${G.serverUrl}/tagchose','tag_type_id');">...</button></span></div></div>
+                                    <label class="col-xs-4 lable_top"><span class="span_require">*</span>标签类型</label>
+                                    <div class="col-xs-8"><div class="input-group"><input type="text" id="tag_type_name" readOnly="readOnly" class="form-control required"/><span class="input-group-btn"><button class="btn btn-default" type="button" onclick="chosebox('tag_type_name', '${G.serverUrl}/tagchose','tag_type_id');">...</button></span></div></div>
                                 </div>
                             </div>
 
                             <div class="col-sm-6 form_ipt_botm">
                                 <div class="form-group">
-                                    <label class="col-xs-3 lable_top"><span></span>标签名称</label>
-                                    <div class="col-xs-9"><textarea class="form-control" id="tag_text" name="tag_text"></textarea>
+                                    <label class="col-xs-3 lable_top"><span class="span_require">*</span>标签名称</label>
+                                    <div class="col-xs-9"><textarea class="form-control required" id="tag_text" name="tag_text"></textarea>
                                     </div>
                                 </div>
                             </div>

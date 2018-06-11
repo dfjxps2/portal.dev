@@ -84,7 +84,7 @@
                             <li class="li_file"  >
                                 <div class="uploader white"style="width:280px;padding-left:18px;" >
                                     <input id="upload" style="width: 260px;" onchange="uploadFiles();"  type="file" name="file"  onmousedown="fileOnMouseDown()" onmouseup="fileOnMouseUp()" />
-                                    <input type="text" class="filename"  readonly="readonly" style="width:150px;">
+                                    <input type="text" class="filename" name="msg_content" readonly="readonly" style="width:150px;">
                                     <input id="btn_select" type="button" name="file" class="button_normal" style="padding-left:1px; width:80px;" value="选择附件">　
                                 </div>
                             </li>
@@ -97,7 +97,7 @@
                             </div>
 
                             <div ibox-toolbars hidefield  style="margin-bottom: 15px;padding-top: 650px;padding-left:400px;">
-                                <input id="submit-form" type="button" class="pull-right btn btn-primary" onclick="formCommit()" value="保存">
+                                <input id="submit-form" type="button" class=" btn btn-primary" onclick="formCommit()" value="保存">
                                 <input type="hidden" id="msg_id" name="msg_id" class="form-control" />
                                 <input type="hidden" id="msg_content" name="msg_content" class="form-control" />
                                 <input type="hidden" id="msgattachment" name="msg_attachment" class="form-control"/>

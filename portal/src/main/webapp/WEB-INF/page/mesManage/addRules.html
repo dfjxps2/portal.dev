@@ -12,33 +12,29 @@
                     <label id="pagename" class="col-xs-8" style="text-align:center;font-size: 22px;color:blue;margin-left: 180px"></label>
                 </div>
             </div>
-            <div class="col-sm-2">
-                <div class="pull-right ibox-toolbars hidefield" style="margin-right: -14px;margin-top: 2px;">
-                    <button type="button" class="btn btn-primary" onclick="cancel();">返回</button>
-                </div>
-            </div>
-
             <div class="ibox">
                 <div class="ibox-content ibox-content-ad" style="margin-top: 25px;">
                     <form id="form" name="form" method="post" action="${G.serverUrl}/save" class="wizard-big addForm" enctype="multipart/form-data" accept="image/jpg, image/png">
                         <div class="row">
                             <div class="col-sm-6 form_ipt_botm">
                                 <div class="form-group">
-                                    <select id="rule_id" name="rule_id" class="form-control form-control-green select_change" readonly="readonly"></select>
+                                    <label class="col-xs-3 lable_top"><span class="span_require">*</span>规则</label>
+                                    <select id="rule_id" style="width:355px;" name="rule_id" class="form-control required form-control-green select_change" readonly="readonly"></select>
                                 </div>
                             </div>
 
                             <div class="col-sm-6 form_ipt_botm">
                                 <div class="form-group">
-                                    <label class="col-xs-3 lable_top"><span></span>规则参数值</label>
-                                    <div class="col-xs-9"><input type="text" class="form-control" id="param_value" name="param_value" />
+                                    <label class="col-xs-3 lable_top" style="width:123px;"><span class="span_require">*</span>规则参数值</label>
+                                    <div class="col-xs-9"><input type="text" class="form-control required" id="param_value" name="param_value" />
                                     </div>
                                 </div>
                             </div>
 
                             <div class="row">
-                                <div ibox-toolbars hidefield>
-                                    <input id="submit-form" type="button" class="pull-right btn btn-primary" value="保存">
+                                <div ibox-toolbars hidefield style="float:left;width:100%;height:80px;">
+                                    <span class="input-group-btn" style="width:50%;" > <input id="submit-form" type="button" class="pull-right btn btn-primary" value="保存"/></span>
+                                    <span class="input-group-btn" style="width:14%;"  > <button type="button" class="pull-right btn btn-primary" onclick="cancel();">返回</button></span>
                                 </div>
                             </div>
                         </div>
@@ -60,9 +56,44 @@
     }
 
     window.onload = function() {
-
         $('#pagename').html("新增规则参数值");
-    };
+        $("#form").validate({
+            errorPlacement: function(error, element) {
+                element.parent().append(error);
+            },
+            rules: {
+                param_value: {
+                    required: true,
+                    remote: {
+                        url: "${G.host}/mesManage/checkParamName",     //后台处理程序
+                        type: "post",               //数据发送方式
+                        dataType: "json",           //接受数据格式
+                        data: {                     //要传递的数据
+                            param_value: function() {
+                                return $("#param_value").val();
+                            },
+                            ruleValue: function() {
+                                return $("#rule_id").val();
+                            }
+                        },
+                        dataFilter: function (data, type) {//判断控制器返回的内容
+                            //console.log(data);
+                            if ( data =="false") {
+                                return true;
+                            }else{
+                                return false;
+                            }
+                        }
+                    }
+                } ,
+
+            },
+            messages:{
+                param_value : {
+                    remote:"该规则下已存在将要新增的参数值！"
+                }
+            }
+    });}
     // 保存
     $("#submit-form").click(function () {
         if(!($("#form").valid())){
@@ -103,7 +134,7 @@
             asyn:false,
             dataType:"json",
             success:function (data) {
-                $("#rule_id").append("<option selected hidden value=''>规则类型 参数名称</option><option value=''>选择规则</option>");
+                $("#rule_id").append("<option selected hidden value=''>选择规则</option><option value=''>选择规则</option>");
               for(var i=0;i<data.length;i++){
                   var item = data[i];
                   $("#rule_id").append("<option value="+item.rule_id+","+item.param_name+"> "+item.param_name+"</option>")

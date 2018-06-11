@@ -11,11 +11,6 @@
     </script>
     <link rel="stylesheet" type="text/css" href="${G.host}/res/css/base.css">
     <link rel="stylesheet" type="text/css" href="${G.host}/res/css/menu.css">
-    <style>
-        .me{
-           color:#0000FF;
-        }
-    </style>
 </head>
 <body class="gray-bg">
 <div id="divappend" class="row" ></div>
@@ -23,13 +18,14 @@
 <script>
  var data = "<div  class=\"menu\" style=\"width:500px;height: 500px\"> ${data} </div>";
   $('#divappend').after(data);
-    var _chosen = null;
+    var _chosen = false;
     var _chosenId = [];
     var _chosenName = null;
     var _chosenAllId = null;
     var check_val = new Array();
     var check_name = new Array();
-    function click_event(str){
+    function click_event(a,str){
+        $(a).css("color","blue");
         var attr =str.split(",");
          if(check_val.length==0){
              check_val.push(attr[0]);
@@ -37,12 +33,19 @@
          }else {
              for (var i = 0; i < check_val.length; i++) {
                  if (attr[0] == check_val[i]) {
-                     break;
+                     $(a).css("color","#8f9d4c");
+                     check_val.splice(i,1);
+                     check_name.splice(i,1);
+                     return check_val ,check_name;
                  }
                  if (i == check_val.length - 1) {
+                     _chosen = true;
+                 } }
+
+                 if(_chosen){
                      check_val.push(attr[0]);
                      check_name.push(attr[1]);
-                 } }
+                 }
          }
 
     }

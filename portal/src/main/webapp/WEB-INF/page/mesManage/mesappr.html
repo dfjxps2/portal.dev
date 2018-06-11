@@ -57,7 +57,7 @@
                             </div>
 
                             <div class="form-group" style="padding-left: 5px;width:100px;">
-                                <input id="pub_time" name="pub_time" class="input-sm form-control" type="text" placeholder="入库日期"/>
+                                <input id="pub_time" name="pub_time" class="input-sm form-control" type="text" onfocus="(this.type='date')" placeholder="发布日期"/>
                             </div>
                             <div class="form-group" style="padding-left: 0px;width: 90px;">
                                 <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="query();"> 查询</button> </span>
@@ -122,23 +122,23 @@
                         return "<input id=\"msgs"+rec.msg_id+"\" title=\"msgs\" class=\"ck_qx\" type=\"checkbox\" name=\"msg\" value=\"" + rec.msg_id+ "\" >"+"&nbsp;"+rec.serialNum;
                     }  },
                 {field:'serialNum',visible:false},
-                { field: 'msg_title', title: '标题', width: '10%' , formatter:function (value,row) {
+                { field: 'msg_title', title: '标题', width: '15%' ,align: 'center', formatter:function (value,row) {
                     var temp ='<a href= "${G.serverUrl}/mesdetail?msg_id='+row.msg_id+'">'+row.msg_title+'</a>';
                     return temp;
                 }},
-                { field: 'msg_src_name', title: '来源', width: '5%'  },
-                { field: 'pub_time',title: '发布日期', width: '8%'},
-                { field: 'appr_state', title: '状态', width: '10%' ,formatter:function (value,rec) {
+                { field: 'msg_src_name', title: '来源', width: '13%',align: 'center'  },
+                { field: 'pub_time',title: '发布日期', width: '10%',align: 'center'},
+                { field: 'appr_state', title: '状态', width: '13%',align: 'center' ,formatter:function (value,rec) {
                     var apprstate = rec.appr_state;
                     if(apprstate=='1'){return '人工审核通过'};
                     if(apprstate=='2'){return '人工审核拒绝'};
                     if(apprstate=='3'){return '审核通过'};
                     if(apprstate=='4'){return '审核拒绝'};
                 } },
-                { field: 'msg_class_name', title: '密级', width: '8%'  },
-                { field: 'msgtext',title: '标签', width: '15%'},
-                { field: 'apprname', title: '审核人', width: '8%'  },
-                { field: 'appr_time',title: '审核时间', width: '10%'}
+                { field: 'msg_class_name', title: '密级', width: '8%',align: 'center'  },
+                { field: 'msgtext',title: '标签', width: '15%',align: 'center'},
+                { field: 'apprname', title: '审核人', width: '8%',align: 'center'  },
+                { field: 'appr_time',title: '审核时间', width: '10%',align: 'center'}
             ],onPageChange:function(number, size){
                 pageNum=number;
                 pageSize=size;
@@ -150,7 +150,22 @@
                 if(queryParm=='' &&　(data == null || data.length == 0)){
                     $(".no-records-found td").html('您还没有添加相关信息，请点击<a onclick="add();" href="javascript:void(0);">添加</a>');
                 }
-            }
+            },onClickCell:function (field,value,row,e) {
+                if(value.length > 8){
+                    var data = "<div align='center' style='margin-top:15px;'>"+"<p style='font-size:16px;color:#0d509a'>"+value+"</p>"+"</div>";
+                    layer.open({
+                        type: 1//此处以iframe举例
+                        ,title:'详细信息'
+                        ,area: ['500px', '150px']
+                        ,shade: 0
+                        ,maxmin: true
+                        ,content:data
+                        ,btn: ['关闭'] //只是为了演示
+                        ,btn2: function(){
+                            layer.closeAll();
+                        }
+                    });
+                }}
         });
         if(RFlag==1){
             requery();
