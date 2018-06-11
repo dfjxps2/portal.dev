@@ -163,7 +163,7 @@ public class SolrUtils {
 					doc.get("portal_doc_title") == null ? "" : doc.get("portal_doc_title"));
 			dataMap.put("portal_doc_class",
 					doc.get("portal_doc_class") == null ? "" : doc.get("portal_doc_class"));
-			dataMap.put("portal_attachment_id",
+			dataMap.put("aid",
 					doc.get("portal_attachment_id") == null ? "" : doc.get("portal_attachment_id"));
 			
 			dataList.add(dataMap);
@@ -275,7 +275,7 @@ public class SolrUtils {
 							"portal_doc_class",
 							doc.get("portal_doc_class") == null ? "" : doc
 									.get("portal_doc_class"));
-					dataMap.put("portal_attachment_id",
+					dataMap.put("aid",
 							doc.get("portal_attachment_id") == null ? "" : doc.get("portal_attachment_id"));
 					dataList.add(dataMap);
 					break;
@@ -333,7 +333,7 @@ public class SolrUtils {
 					doc.get("portal_doc_title") == null ? "" : doc.get("portal_doc_title"));
 			dataMap.put("portal_doc_class", doc.get("portal_doc_class") == null ? ""
 					: doc.get("portal_doc_class"));
-			dataMap.put("portal_attachment_id",
+			dataMap.put("aid",
 					doc.get("portal_attachment_id") == null ? "" : doc.get("portal_attachment_id"));
 			dataList.add(dataMap);
 		}
