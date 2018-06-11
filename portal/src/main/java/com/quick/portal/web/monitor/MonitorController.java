@@ -85,6 +85,32 @@ public class MonitorController extends SysWebController {
     }
 
     /**
+     * 添加应用
+     * @param model
+     * @return
+     */
+    @RequestMapping
+    public String setting(Model model) {
+        Integer app_id = rint("t", 0);
+        Integer page_id = rint("p", 0);
+        List<Map<String, Object>> plist = getPage(app_id);
+        if(page_id == 0 && plist != null && plist.size() > 0){
+            page_id = (Integer)TypeUtil.parse(Integer.class, plist.get(0).get("page_id"));
+        }
+        ApplicationDO app = applicationService.selectObj(app_id.toString());
+
+        Object layoutJson = getPageJson(page_id);
+        Object metricJson = getMetricJson(page_id);
+
+        model.addAttribute("page_id", page_id);
+        model.addAttribute("app", app);
+        model.addAttribute("page", JsonUtil.serialize(plist));
+        model.addAttribute("metric", metricJson);
+        model.addAttribute("layout", layoutJson);
+        return view();
+    }
+
+    /**
      * 查询页面配置信息
      * @return
      */
@@ -116,5 +142,26 @@ public class MonitorController extends SysWebController {
             ls = pageService.select(p);
         }
         return ls;
+    }
+
+
+    public Object getPageJson(Integer page_id){
+        String layout = "[{x: 0, y: 0, width: 12, height: 6, id:0, no:1}]";
+        if(page_id != null && page_id > 0){
+            String res = sectionService.selectSectionJson(page_id);
+            if(!QCommon.isNullOrEmpty(res))
+                layout = res;
+        }
+        return layout;
+    }
+
+    public Object getMetricJson(Integer page_id){
+        String json = "[]";
+        if(page_id != null && page_id > 0){
+            String res = sectionService.selectMetricJson(page_id);
+            if(!QCommon.isNullOrEmpty(res))
+                json = res;
+        }
+        return json;
     }
 }

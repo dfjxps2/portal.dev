@@ -36,12 +36,22 @@ function loadctx(n){
 	var u = n.app_preview_url;
 	if(!u){
 		u = _host + "/res/script/home/images/preview.png";
-		return '<span class="cell-bar ss21">'+ n.app_name +'</span><img class="ss21" src="'+ u + '" />';
+		return '<div class="cell-bar ss21">'+ n.app_name +drawMenu(n)+'</div><img class="ss21" src="'+ u + '" />';
 	}
 	var ar = u.split('.'), fix = ar[ar.length - 1].toLowerCase();
 	if(/jpg|jpeg|gif|png/.test(fix))
 		return '<img class="ss21" src="'+ u + '" />';
 	return loadpancel(n, u);
+
+	function drawMenu(n){
+		return '<span class="cell-barico dropdown">'
+			   +  '<a href="javascript:void(0);" class="dropdown-toggle white" data-toggle="dropdown"><i class="fa fa-cog"></i></a>'
+			   +  '<ul class="dropdown-menu"><li><a href="javascript:void(0);" onclick="usr_setting(\''+ n.app_id+'\');"><i class="fa fa-desktop"></i>&nbsp;&nbsp;个性化配置</a></li></ul>'
+			   +'</span>';
+	}
+}
+function usr_setting(aid){
+	window.open(_host + "/monitor/setting?t="+aid);
 }
 function loadpancel(n, u){
 	return '<div class="ss21" style="margin:auto 0px;"><iframe class="ss21" src="'+u+'"></iframe></div>';

@@ -19,7 +19,7 @@ body {
 	color:#666;
 }
 
-/*滚动条美化css 适合WebKit引擎的浏览器如chrome、oprea、Safari等*/
+/*婊氬姩鏉＄編鍖朿ss 閫傚悎WebKit寮曟搸鐨勬祻瑙堝櫒濡俢hrome銆乷prea銆丼afari绛�*/
 ::-webkit-scrollbar {  
 	width: 16px;   
 }  
@@ -139,7 +139,7 @@ hr{
 .bg_lv{ background:#603bbc; }
 .bg_lh{ background:#b6b3b3; }
 
-/* Content */
+/* Content 
 #content {
 	background: none repeat scroll 0 0 #eeeeee;
 	margin-left: 0px;
@@ -148,6 +148,21 @@ hr{
 	position: relative;
 	min-height:100%;
 	width: auto;
+}
+*/
+
+/* Content */
+#content {
+	background: url(../images/img1.png) no-repeat;
+	margin-left: 0px;
+	margin-right: 0;
+	background-size: 100% 100%;padding: 0;
+	padding-bottom: 10px;
+	
+	position: relative;
+	min-height:100%;
+	width: auto;
+	height: auto;
 }
 #content-header {
 	position: abslute;

@@ -20,16 +20,9 @@ package com.quick.core.base;
 
 import com.quick.core.base.model.DataStore;
 import com.quick.core.util.common.QCommon;
-import com.quick.core.util.common.QCookie;
-import com.quick.portal.sysUser.SysUserDO;
-import com.quick.portal.web.login.WebLoginUser;
 import org.apache.log4j.Logger;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.util.UrlPathHelper;
-
-import java.io.IOException;
 import java.util.*;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
