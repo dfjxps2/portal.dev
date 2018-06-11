@@ -114,8 +114,33 @@ function playnext(){
 	var i = page == pageMax ? 1 : page + 1;
 	play(i);
 }
+function bindsearch(){
+	var $ui = $('#div_append');
+	$("#txtico").after(txtdata);
+	var w = $("#div_append").width();
+	$("#div_data ul").width(w);
+	$ui.bind('mouseleave',function(){
+		$ui.find('.arrowUp').addClass('arrowDown').removeClass('arrowUp').andSelf().find('.dropdown').slideUp(500);
+	});
+	$('#txt').click(function(){
+		document.getElementById("div_data").style.display ='block';
+		$ui.find('.arrowDown').addClass('arrowUp').removeClass('arrowDown').andSelf().find('.dropdown').slideDown(500);
+	});
+	$('#btn_span').click(function(){
+		query();
+	});
+}
+function click_event(str){
+	var str = $("input[name='radio']:checked").val();
+	$("#txt").value=str;
+	$ui.find('.arrowUp').addClass('arrowDown').removeClass('arrowUp').andSelf().find('.dropdown').slideUp(10);
+}
 function query(){
+	$ui.find('.arrowUp').addClass('arrowDown').removeClass('arrowUp').andSelf().find('.dropdown').slideUp(10);
 	var t = $("#txt").val();
+	searchApp(t);
+}
+function searchApp(t){
 	$.post('getUserApp',{'t':t}, function(d){
 		if(d == null || d.length == 0){
 			$("#apps").html('');
@@ -202,17 +227,20 @@ function savecomm(){
 	$('#pfm').attr("action",_host+"/comments/save").ajaxSubmit(function(ds) {
 		if(typeof(ds) == "string")
 			ds = eval("("+ds+")");
-		layer.alert(ds.msg, function(i){
+		alert(ds.msg);
+		if(ds.code > 0)
+			layer.closeAll();
+		/*layer.alert(ds.msg, function(i){
 			if(ds.code > 0)
 				layer.closeAll();
 			else
 				layer.close(i);
-		});
+		});*/
 	});
 }
 
 function capture(){
-	if (typeof(Worker) == "undefined"){
+	if (typeof(Promise) == "undefined"){
 		alert("您的浏览器不支持截屏,请使用现代浏览器");
 		return;
 	}

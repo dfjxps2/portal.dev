@@ -15,7 +15,7 @@
 		.barbtn{margin:5px 0;}
 		.apps{margin:20px;}
 		.footer{background-color:#274360;color:#fff;width:100%;height:52px;z-index:2;}
-		.main{background-color:#fff;margin:0 auto;width:90%;min-height:95%;padding-top:76px;}
+		.main{background-color:#fff;margin:0 auto;width:90%;min-height:95%;min-height: 600px !important;padding-top:76px;}
 
 		.cell{float:left; padding: 10px;position: relative; }
 		.box .cell{cursor:move;text-align:center;max-width:100%;}
@@ -76,6 +76,37 @@
 		.btn:hover{color: #fff;background-color: #274360;border-color: #204d74;  }
 		.pagination { display: inline-block; padding-left: 0; margin: 5px 0; border-radius: 4px; }
 		.addwin .layui-layer-btn{text-align:center;background-color:#274360;}
+
+		/* dropdown */
+		#div_data .dropdown {
+			padding: 6px 5px;
+			border: solid 1px #000;
+			background: #fff;
+			position: absolute;
+			left: 20px;
+			top: 34px;
+			z-index:300;
+		}
+
+		#div_data .dropdown .tit_filter {
+			font-weight: 700;
+			background: #fff;
+			font-size: 14px;
+			color: #000;
+			height: 10px;
+			line-height: 2px;
+			margin: 14px 5px;
+			border-bottom: 1px solid #000;
+		}
+
+		#div_data .dropdown li {
+			float: left;
+			width: calc(100%/5);
+			padding: 0 0 0 5px;
+			font-size: 14px;
+			line-height: 32px;
+			height: 32px;
+		}
 	</style>
 </head>
 <body>
@@ -87,9 +118,11 @@
 </div>
 <div class="main">
 	<div class="bar btn-group">
-		<div class="btn-group barbtn" style="width:30%;min-width:220px;padding:0px 20px;">
+		<div id="div_append" class="btn-group barbtn" style="width:30%;min-width:220px;padding:0px 20px;">
 			<input type="text" placeholder="请输入搜索内容" class="form-control" style="width:100%;" id="txt" name="txt">
+			<span id="txtico" class="arrowDown"></span>
 		</div>
+
 		<div class="btn-group barbtn" style="width:100px;">
 			<button class="btn btn-base1" type="button" onclick="query();">&nbsp;&nbsp;&nbsp;&nbsp;搜索&nbsp;&nbsp;&nbsp;&nbsp;</button>
 		</div>
@@ -144,8 +177,10 @@
 	var ww = [];
 	var apps = ${apps};
 	var _host = '${G.host}';
+	var txtdata = '${txtdata}';
 	$(function() {
 		loadapp('#apps',apps);
+		bindsearch();
 		//回车查询
 		document.onkeydown=function(event){
 			var e = event || window.event || arguments.callee.caller.arguments[0];

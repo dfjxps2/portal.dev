@@ -22,7 +22,7 @@
 </head>
 
 <body class="qbody">
-<div class="qheader-title"><div class="qheader-title1">${app.app_name}</div><div class="qheader-title2"><#if (pageList?size>0)>${pageList[0].page_name}</#if></div></div>
+<div class="qheader-title"><div class="qheader-title1">${app.app_name}</div><div id="qt2" class="qheader-title2"></div></div>
 <div class="qheader"><div class="qmenu-ico" onclick="$('.qmenu').toggle();"><i class="fa fa-list-ul"></i></div></div>
 <div class="qpage animated fadeInRight">
     <div class="row"  style="margin-top: 5px">
@@ -53,9 +53,23 @@
     var tData = [];
     
     window.onload = function() {
+        initTitle();
         initLayout();
         initChart();
         initMenu(_page);
+    }
+    function initTitle(){
+        var p = ${page_id} || 0;
+        var tt = (_page && _page.length > 0) ? _page[0].page_name : '';
+        if(p){
+            for(var i = 0; i < _page.length; i++){
+                if(_page[i].page_id == p){
+                    tt = _page[i].page_name;
+                    break;
+                }
+            }
+        }
+        $("#qt2").text(tt);
     }
     function initLayout(){
         for(var i = 0; i < _layout.length;i++){

@@ -23,6 +23,7 @@ import com.quick.core.base.model.DataStore;
 import com.quick.core.util.common.JsonUtil;
 import com.quick.core.util.common.QCommon;
 import com.quick.portal.menuPrivilege.IMenuPrivilegeService;
+import com.quick.portal.search.infomng.IInfoMngService;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -51,6 +52,9 @@ public class HomeController extends SysWebController {
     @Resource(name = "menuPrivilegeService")
     private IMenuPrivilegeService menuPrivilegeService;
 
+    @Resource(name = "infoMngService")
+    private IInfoMngService infoMngService;
+
 
     /**
      * 管理驾驶仓(仪表盘)
@@ -76,6 +80,9 @@ public class HomeController extends SysWebController {
             homeService.addDashboard(parm);
             apps = getUserApp();
         }
+
+        String habitInfo = infoMngService.getPersonalHabitsInfo(loginer.getUser_id().toString());
+        model.addAttribute("txtdata", habitInfo);  //信息搜索
 
         model.addAttribute("apps", JsonUtil.toJson(apps));
         model.addAttribute("roleid", loginer.getRole_id()); //管理员ROLEID
