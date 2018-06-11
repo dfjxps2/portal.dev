@@ -18,19 +18,19 @@
  */
 package com.quick.portal.sysMenu;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.quick.core.base.SysBaseService;
-import com.quick.core.base.ISysBaseDao;
-
-import com.quick.portal.application.IApplicationDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.quick.core.base.ISysBaseDao;
+import com.quick.core.base.SysBaseService;
 import com.quick.core.base.model.DataStore;
 import com.quick.core.util.common.DateTime;
+import com.quick.portal.application.IApplicationDao;
 
 /**
  * sys_menu服务实现类
@@ -79,11 +79,41 @@ public class SysMenuServiceImpl extends SysBaseService<SysMenuDO> implements ISy
 
             c = dao.update(entity);
         }
+        this.updateMenuLevel(entity);
         if(c == 0)
             return ActionMsg.setError("操作失败");
         ActionMsg.setValue(entity);
         return ActionMsg.setOk("操作成功");
     }
+    
+    
+	public void updateMenuLevel(SysMenuDO menuVO) {
+		Map<String,Object> paramMap = new HashMap();
+		String sMenuID  = null;
+		String menuID = null;
+		int menuLevel = 0;
+		//公服标识查询部门上级编号数据
+		List<Map<String, Object>> menuList = this.searchMenuInfoByID(menuVO.getMenu_id());
+		for (Map<String, Object> m : menuList){
+		    	//通过上级部门编号查询部门ID
+				  sMenuID = m.get("SUPER_MENU_ID").toString();
+		    	  menuID = m.get("MENU_ID").toString();
+		    	  menuLevel = Integer.parseInt(m.get("MENU_LEVEL").toString());
+		    	  menuLevel = menuLevel +1;
+		    	  System.out.println("menuID="+menuID+"menuID="+sMenuID+"menuLevel="+menuLevel);
+		    	  paramMap.put("super_menu_id", sMenuID);
+		    	  paramMap.put("menu_id", menuID);
+		    	  paramMap.put("menu_level", menuLevel);
+				  dao.updateMenuLevel(paramMap);
+		  }
+		
+	}
+	
+	
+	public List<Map<String, Object>> searchMenuInfoByID(int menuID) {
+		List<Map<String, Object>> result = dao.searchMenuInfoByID(menuID);
+		return result;
+	}
     
     @Override
     public List<Map<String, Object>> listAllMenu() {
