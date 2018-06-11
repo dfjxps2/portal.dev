@@ -33,6 +33,7 @@ import com.quick.core.base.model.DataStore;
 import com.quick.core.util.common.DateTime;
 import com.quick.core.util.common.JsonUtil;
 import com.quick.core.util.common.QCommon;
+import com.quick.core.util.common.QCookie;
 import com.quick.portal.appPage.AppPageDO;
 import com.quick.portal.appPage.IAppPageDao;
 import com.quick.portal.metric.IMetricDao;
@@ -88,7 +89,7 @@ public class PageServiceImpl extends SysBaseService<PageDO> implements IPageServ
      * @return 
      */
     @Override
-    public DataStore save(PageDO entity, Integer app_id, String section_json, String metric_json) {
+    public DataStore save(PageDO entity, Integer app_id, String section_json, String metric_json,String user_id) {
         //section_json: [{x: 0, y: 0, width: 12, height: 6}]
         if(QCommon.isNullOrEmpty(section_json))
             return ActionMsg.setError("栏目不能为空,请添加栏目");
@@ -145,7 +146,6 @@ public class PageServiceImpl extends SysBaseService<PageDO> implements IPageServ
             //2.3指标配置保存
             String section_na = intval(secmap, i, "no", "1").toString();
             int section_id = sdo.getSection_id();
-            System.out.println("metric_json======================"+metric_json.toString());
             List<Map<String, Object>> metric = JsonUtil.fromJson(metric_json, List.class, Map.class);
             //删除原来的配置信息
             List<Map<String, Object>> sec_id = sectionMetricDao.getId(section_id);
@@ -166,11 +166,10 @@ public class PageServiceImpl extends SysBaseService<PageDO> implements IPageServ
 						sectionMetricDO.setSection_id(section_id);
 						int a=sectionMetricDao.insert(sectionMetricDO);
 	                    String[] paramKeys = new String[]{"", "metric_id","category_id","dimension","charts","numb","measure_name","time_dim","unit"};
-						System.out.println("metric======================"+metric.toString());
 	                    if (a>0) {
 	                        for(int x = 1; x < paramKeys.length; x++){
 	                            con =  new SecMetricConfigDo();
-	                            con.setUser_id(1);
+	                            con.setUser_id(Integer.parseInt(user_id));
 	                            con.setSec_metric_id(sectionMetricDO.getSec_metric_id());
 	                            con.setParam_id(x);
 	                            con.setParam_value(metric.get(j).get(paramKeys[x]).toString());

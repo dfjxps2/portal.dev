@@ -31,5 +31,5 @@ public interface IPageService extends ISysBaseService<PageDO> {
      * @param app_id
      * @return
      */
-    DataStore save(PageDO entity, Integer app_id, String section_json, String metric_json);
+    DataStore save(PageDO entity, Integer app_id, String section_json, String metric_json,String user_id);
 }

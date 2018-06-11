@@ -18,13 +18,8 @@
  */
 package com.quick.portal.page;
 
-import com.quick.core.base.ISysBaseService;
-import com.quick.core.base.SysBaseController;
 import javax.annotation.Resource;
-import com.quick.core.base.model.DataStore;
-import com.quick.core.util.common.QCommon;
-import com.quick.portal.section.ISectionService;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -32,8 +27,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
-import java.util.Map;
+import com.quick.core.base.ISysBaseService;
+import com.quick.core.base.SysBaseController;
+import com.quick.core.base.model.DataStore;
+import com.quick.core.util.common.QCommon;
+import com.quick.core.util.common.QCookie;
+import com.quick.portal.section.ISectionService;
 
 /**
  * page请求类
@@ -87,6 +86,8 @@ public class PageController extends SysBaseController<PageDO> {
 
     @Override
     public DataStore save(PageDO model){
+    	//获取当前用户id
+    	 String user_id = QCookie.getValue(request, "ids");
         Integer app_id = rint("app_id");
         Integer page_id = model.getPage_id();
         if(page_id == null){
@@ -95,7 +96,7 @@ public class PageController extends SysBaseController<PageDO> {
         String section_json = rstr("section_json");
         
         String metric_json = rstr("metric_json");
-        return pageService.save(model, app_id, section_json,metric_json);
+        return pageService.save(model, app_id, section_json,metric_json,user_id);
     }
 
     /**
