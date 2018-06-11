@@ -90,7 +90,10 @@
         for(var m = 0; m < _layout.length; m++){
             for(var n = 0; n < _layout[m].metric.length; n++) {
                 _layout[m].metric[n].section_id = _layout[m].no;
-                co.push(_layout[m].metric[n]);
+                if (_layout[m].metric[n].metric_id != "") {
+                    co.push(_layout[m].metric[n]);
+				}
+               
             }
         }
         var met = [];

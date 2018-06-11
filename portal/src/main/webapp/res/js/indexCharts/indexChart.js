@@ -37,12 +37,6 @@ return color;
 //添加折线图
 function line(data,settingData,typeData,name,num,dimension,stateTime,endTime){
 	data = setData(data,dimension,settingData.time_dim,stateTime,endTime);
-	if (ba>6) {
-		ba = 0;
-	}
-	var color = colo[ba];//settingData.color;
-	ba++;
-	
 	var datas = [];
 	for (var i = 0; i < data.length; i++) {
 		datas.push(data[i].value);
@@ -602,6 +596,7 @@ var option = {
             }
         },
         tooltip : {
+        	z:20,
 	        trigger: 'item',
 	        formatter:name+ "<br/>{b}: {c} "+unit+" <br/>占比：{d}%"
 	    },

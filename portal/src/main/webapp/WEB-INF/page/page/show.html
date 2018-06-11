@@ -246,10 +246,14 @@ var name = "";
 			}
 		}
     	sid = "s"+q;
+    	/* String idss = QCookie.getValue(request, "ids");
+    	alert(idss); */
     }
   function getByTime(){
 	if (sid != '') {
     	add(tData,name,co,_layout,$('#statedate').val(),$('#enddate').val(),sid);
+    	$('#statedate').val($('#statedate').val());
+    	$('#enddate').val($('#enddate').val());
 	}else {
 		alert('请先双击选中栏目！');
 	}
