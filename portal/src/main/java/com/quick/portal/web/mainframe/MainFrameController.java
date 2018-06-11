@@ -138,7 +138,7 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
     	}
     }
     
-    //
+    //APP:1;MENU:0
     @RequestMapping(value = "/getIsAppMenuByID")
     @ResponseBody
     public void getIsAppMenuByID(HttpServletResponse res,int menuId) throws Exception {
