@@ -184,17 +184,14 @@ a, img {
 	   function config(){
            var RFlag=$.request.queryString["RFlag"];
 		   quick.serverUrl = "${G.host}/info";
-		   quick.editUrl = "${G.editUrl}";
-		   quick.objName = "${G.objName}";
-		   quick.idField = "${G.idField}";
            
 		   $("#list").bootstrapTable("destroy");
 		   _gd["list"]=new BGrid("#list");
 		   _gd["list"].config({
 			   type: "post",
 			   url:quick.serverUrl+"/getInfo?i=" + Math.random(),
-			   idField: quick.idField,
-			   sortName: quick.idField,
+//			   idField: quick.idField,
+//			   sortName: quick.idField,
                cache:false,
 			   height: $(document.body).height()-50,
 			   toolbar:"#formSearch",
@@ -210,6 +207,8 @@ a, img {
                 		   doc_class = '<span style="color:#9ACD32">消息</span>';
                 	   }else if(row.portal_doc_class=="3"){
                 		   doc_class = '<span style="color:#9ACD32">应用</span>';
+                	   }else if(row.portal_doc_class=="6"){
+                		   doc_class = '<span style="color:#9ACD32">资料</span>';
                 	   }
                 	   return doc_class;
                    }},
@@ -250,20 +249,24 @@ a, img {
 
    
     
-	//查看详细信息
-	function downClick(id,type){
-		if(id ==null ||id =="" || id=="undefined"){
-			$. layer.msg("文件路径不对，请联系管理员",{icon:1,time: 1000,skin: 'layer-ext-moon'}); 
-			return false ;
+		//查看详细信息
+		function downClick(id,aid,type){
+			if(id ==null ||id =="" || id=="undefined"){
+				$. layer.msg("文件路径不对，请联系管理员",{icon:1,time: 1000,skin: 'layer-ext-moon'}); 
+				return false ;
+			}
+	/*  	  type='2';	
+		  id= 'D:/upload/测试5.txt';
+		  aid='D:/upload/新建1.docx';  */
+	 	  id = encodeURI(id);
+		  aid = encodeURI(aid); 
+		  var param ='?type='+type+'&aid='+aid+'&id='+id;	  
+		  var url =quick.serverUrl+'/download';
+		  url = url +param;
+		  url = encodeURI(url);
+		  window.location.href= url; 
 		}
-//	  id= 'D:/upload/测试5.txt';
-	  id = encodeURI(id);
-	  var param ='?type='+type+'&id='+id;	  
-	  var url =quick.serverUrl+'/download';
-	  url = url +param;
-	  url = encodeURI(url);
-	  window.location.href= url; 
-	}
+
 
 
     function query(){
