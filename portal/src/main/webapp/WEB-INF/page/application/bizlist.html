@@ -30,8 +30,9 @@
 		   columns: [
 			   {  checkbox: true },
 			   { field: 'app_name',  title: '应用系统名称' ,width: 100 },
-			   { field: 'dep_name', title: '部门', width: '20%'  },
-			   { field: 'CZ',  title: '操作',width: 60, align:'center', formatter:function(value,row,index){
+			   { field: 'pub_date',  title: '发布时间' ,width: 50 },
+			   { field: 'dep_name', title: '部门', width: 80  },
+			   { field: 'cz',  title: '操作',width: 60, align:'center', formatter:function(value,row,index){
 				   return "<button type='button' class='btn_el' onclick='edit(\""+row.app_id+"\",\""+row.app_name+"\")'>编辑</button>| "
 						   +"<button type='button' class='btn_el' onclick='del(\""+row.app_id+"\",\""+row.app_name+"\")'>删除</button>";
 				   ;

@@ -119,28 +119,26 @@ function bindsearch(){
 	$("#txtico").after(txtdata);
 	var w = $("#div_append").width();
 	$("#div_data ul").width(w);
+	$("#div_data ul li.tit_filter").width(w - 10);
 	$ui.bind('mouseleave',function(){
-		$ui.find('.arrowUp').addClass('arrowDown').removeClass('arrowUp').andSelf().find('.dropdown').slideUp(500);
+		//$ui.find('.arrowUp').addClass('arrowDown').removeClass('arrowUp').andSelf().find('.dropdown').slideUp(500);
 	});
 	$('#txt').click(function(){
 		document.getElementById("div_data").style.display ='block';
 		$ui.find('.arrowDown').addClass('arrowUp').removeClass('arrowDown').andSelf().find('.dropdown').slideDown(500);
 	});
 	$('#btn_span').click(function(){
-		query();
+		gosearch();
 	});
 }
 function click_event(str){
+	var $ui = $('#div_append');
 	var str = $("input[name='radio']:checked").val();
-	$("#txt").value=str;
+	$("#txt").val(str);
 	$ui.find('.arrowUp').addClass('arrowDown').removeClass('arrowUp').andSelf().find('.dropdown').slideUp(10);
 }
 function query(){
-	$ui.find('.arrowUp').addClass('arrowDown').removeClass('arrowUp').andSelf().find('.dropdown').slideUp(10);
 	var t = $("#txt").val();
-	searchApp(t);
-}
-function searchApp(t){
 	$.post('getUserApp',{'t':t}, function(d){
 		if(d == null || d.length == 0){
 			$("#apps").html('');
@@ -151,6 +149,31 @@ function searchApp(t){
 		loadapp('#apps',d);
 	});
 }
+function gosearch(){
+	var $ui = $('#div_append');
+	$ui.find('.arrowUp').addClass('arrowDown').removeClass('arrowUp').andSelf().find('.dropdown').slideUp(10);
+	layer.open({
+		type: 2
+		,title: false //不显示标题栏
+		,area: ['680px', '500px']
+		,shade: 0
+		,skin:'addwin'
+		,maxmin: true
+		,content: _host+'/home/listinfo'
+		,btn: ['添加', '取消']
+		,yes: function(index, layero){
+			layer.closeAll();
+		}
+		,btn2: function(){
+			layer.closeAll();
+		}
+		,zIndex: layer.zIndex
+		,success: function(layero){
+			layer.setTop(layero);
+		}
+	});
+}
+
 function adddel(){
 	var o = $(".apps:visible").find(".cell");
 	if(!o.hasClass("shake")) {
@@ -214,11 +237,11 @@ function addnew(){
 function savecomm(){
 	var txt = $("#ppcomm").val();
 	if(cn == null){
-		layer.alert('没有批示图片,请使用现代浏览器打开系统');
+		alert('没有批示图片,请使用现代浏览器打开系统');
 		return;
 	}
 	if(txt==''){
-		layer.alert('请先填写批示内容');
+		alert('请先填写批示内容');
 		return;
 	}
 	var imgdata = cn.toDataURL("image/png");
@@ -266,7 +289,7 @@ var canvasTop = 0;
 var canvasLeft = 0;
 
 //画笔大小
-var size = 5;
+var size = 5, rsize = 2;
 var color  = '#ff1200';
 function inipnl(can,w, h){
 	$("#pnl").remove();
@@ -298,7 +321,7 @@ function inipnl(can,w, h){
 	ctx_bak = cn_bak.getContext('2d');
 }
 function initbl(){
-	var dt = [{n:'pencil',t:'铅笔'},{n:'circle',t:'圆'},{n:'square',t:'方形'}];
+	var dt = [{n:'pencil',t:'铅笔'},{n:'circle',t:'圆'},{n:'square',t:'方形'},{n:'rubber',t:'橡皮擦'}];
 	var ss = [];
 	var u = _host + "/res/script/home/images/";
 	for(var i =0; i < dt.length; i++){
@@ -306,7 +329,21 @@ function initbl(){
 	}
 	return ss.join('');
 }
-
+//选择功能按钮 修改样式
+function chooseImg(obj){
+	$(".toolbar li img").removeClass("active");
+	$(obj).addClass("active");
+}
+function getLocation(e) {
+	e=e||window.event;
+	var bbox = cn.getBoundingClientRect();
+	return {
+		x: e.clientX,
+		y: e.clientY
+		/*x: (e.clientX - bbox.left) * (cn.width / bbox.width),
+		y: (e.clientY - bbox.top) * (cn.height / bbox.height)*/
+	};
+}
 //画图形
 var draw_graph = function(graphType,obj){
 	canvasTop = $(cn).offset().top;
@@ -325,9 +362,9 @@ var draw_graph = function(graphType,obj){
 		ctx.strokeStyle= color;
 		ctx_bak.strokeStyle= color;
 		ctx_bak.lineWidth = size;
-		e=e||window.event;
-		startX = e.clientX - canvasLeft;
-		startY = e.clientY - canvasTop;
+		var loc = getLocation(e);
+		startX = loc.x - canvasLeft;
+		startY = loc.y - canvasTop;
 		ctx_bak.moveTo(startX ,startY );
 		canDraw = true;
 
@@ -339,13 +376,12 @@ var draw_graph = function(graphType,obj){
 			ctx.lineTo(startX +2 ,startY+2);
 			ctx.stroke();
 		}else if(graphType == 'rubber'){
-			ctx.clearRect(startX - size * 10 ,  startY - size * 10 , size * 20 , size * 20);
+			ctx.clearRect(startX - size * rsize ,  startY - size * rsize , size * rsize * 2 , size * rsize * 2);
 		}
 	};
 
 	//鼠标离开 把蒙版canvas的图片生成到canvas中
 	var mouseup = function(e){
-		e=e||window.event;
 		canDraw = false;
 
 		var image = new Image();
@@ -356,8 +392,9 @@ var draw_graph = function(graphType,obj){
 				clearContext();
 				//saveImageToAry();
 			}
-			var x = e.clientX - canvasLeft;
-			var y = e.clientY - canvasTop;
+			var loc = getLocation(e);
+			var x = loc.x - canvasLeft;
+			var y = loc.y - canvasTop;
 			ctx.beginPath();
 			ctx.moveTo(x ,y );
 			ctx.lineTo(x +2 ,y+2);
@@ -365,17 +402,11 @@ var draw_graph = function(graphType,obj){
 		}
 	};
 
-	//选择功能按钮 修改样式
-	function chooseImg(obj){
-		$(".toolbar li img").removeClass("active");
-		$(obj).addClass("active");
-	}
-
 	// 鼠标移动
 	var  mousemove = function(e){
-		e=e||window.event;
-		var x = e.clientX - canvasLeft;
-		var y = e.clientY - canvasTop;
+		var loc = getLocation(e);
+		var x = loc.x - canvasLeft;
+		var y = loc.y - canvasTop;
 		//方块  4条直线搞定
 		if(graphType == 'square'){
 			if(canDraw){
@@ -400,7 +431,7 @@ var draw_graph = function(graphType,obj){
 			//画笔
 		}else if(graphType == 'pencil'){
 			if(canDraw){
-				ctx_bak.lineTo(e.clientX   - canvasLeft ,e.clientY  - canvasTop);
+				ctx_bak.lineTo(x ,y);
 				ctx_bak.stroke();
 			}
 			//圆 未画得时候 出现一个小圆
@@ -440,19 +471,17 @@ var draw_graph = function(graphType,obj){
 			clearContext();
 			ctx_bak.beginPath();
 			ctx_bak.strokeStyle =  '#000000';
-			ctx_bak.moveTo(x - size * 10 ,  y - size * 10 );
-			ctx_bak.lineTo(x + size * 10  , y - size * 10 );
-			ctx_bak.lineTo(x + size * 10  , y + size * 10 );
-			ctx_bak.lineTo(x - size * 10  , y + size * 10 );
-			ctx_bak.lineTo(x - size * 10  , y - size * 10 );
+			ctx_bak.moveTo(x - size * rsize ,  y - size * rsize );
+			ctx_bak.lineTo(x + size * rsize  , y - size * rsize );
+			ctx_bak.lineTo(x + size * rsize  , y + size * rsize );
+			ctx_bak.lineTo(x - size * rsize  , y + size * rsize );
+			ctx_bak.lineTo(x - size * rsize  , y - size * rsize );
 			ctx_bak.stroke();
 			if(canDraw){
-				context.clearRect(x - size * 10 ,  y - size * 10 , size * 20 , size * 20);
-
+				context.clearRect(x - size * rsize ,  y - size * rsize , size * rsize * 2 , size * rsize * 2);
 			}
 		}
 	};
-
 
 	//鼠标离开区域以外 除了涂鸦 都清空
 	var mouseout = function(){

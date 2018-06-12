@@ -9,14 +9,15 @@
 	<link href="${G.host}/res/layer/skin/moon/style.css" rel="stylesheet">
 	<link href="${G.host}/res/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
 	<style>
-		body{background-color: #203140;font:12px/150% Arial,Verdana,"宋体";}
+		body{background-color: #203140;font:12px/150% Arial,Verdana,"宋体";height: 100%;}
+		li{list-style-type: none;}
 		.nav{position:absolute;top:0px;left:0;background-image:url(${G.host}/res/script/home/images/top.png);width:100%;height:76px;z-index:2;overflow: hidden;}
 		.bar {padding-left:15px;background-color:#efefef;width:100%;}
 		.barbtn{margin:5px 0;}
 		.apps{margin:20px;}
 		.footer{background-color:#274360;color:#fff;width:100%;height:52px;z-index:2;}
-		.main{background-color:#fff;margin:0 auto;width:90%;min-height:95%;min-height: 600px !important;padding-top:76px;}
-
+		.main{background-color:#fff;margin:0 auto;width:90%;height:600px!important; min-height:100%;padding-top:76px;}
+		.main:after {content:"";  visibility:hidden;  display:block;  clear:both;  height:0px;}
 		.cell{float:left; padding: 10px;position: relative; }
 		.box .cell{cursor:move;text-align:center;max-width:100%;}
 		.cell .cell-ctx {z-index: 10;text-indent: 2px;overflow: hidden;border-bottom-left-radius: 3px;border-bottom-right-radius: 3px;}
@@ -62,7 +63,7 @@
 		.ss62{width:600px;height:200px;}
 		.ss21{width:320px; height:180px;}
 		.ss24{width:250px; height:360px;}
-		.sortable { list-style-type: none; /*margin: 0; padding: 0;*/ }
+		.sortable { /*margin: 0; padding: 0;*/ }
 		.board {overflow: auto;position:relative;}
 		.board canvas{}
 
@@ -101,12 +102,14 @@
 
 		#div_data .dropdown li {
 			float: left;
-			width: calc(100%/5);
+			width: calc(100%/4);
 			padding: 0 0 0 5px;
 			font-size: 14px;
 			line-height: 32px;
 			height: 32px;
 		}
+
+		#div_data input[type="radio"]{opacity: 0;}
 	</style>
 </head>
 <body>
@@ -124,7 +127,7 @@
 		</div>
 
 		<div class="btn-group barbtn" style="width:100px;">
-			<button class="btn btn-base1" type="button" onclick="query();">&nbsp;&nbsp;&nbsp;&nbsp;搜索&nbsp;&nbsp;&nbsp;&nbsp;</button>
+			<button class="btn btn-base1" type="button" onclick="gosearch();">&nbsp;&nbsp;&nbsp;&nbsp;搜索&nbsp;&nbsp;&nbsp;&nbsp;</button>
 		</div>
 		<div class="btn-group barbtn" style="width:100px;">
 			<button class="btn btn-base1" type="button" onclick="capture();">&nbsp;&nbsp;&nbsp;&nbsp;批示&nbsp;&nbsp;&nbsp;&nbsp;</button>
@@ -185,7 +188,7 @@
 		document.onkeydown=function(event){
 			var e = event || window.event || arguments.callee.caller.arguments[0];
 			if(e && e.keyCode==13){ // enter 键
-				query();
+				gosearch();
 			}
 		};
 	});

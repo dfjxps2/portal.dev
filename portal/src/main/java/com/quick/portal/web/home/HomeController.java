@@ -228,4 +228,12 @@ public class HomeController extends SysWebController {
                 m.put("menu_icon_url", getUrl() + "/" + menu_icon_url);
         }
     }
+
+    @RequestMapping
+    public String listinfo(Model model) {
+        String ids = loginer.getUser_id().toString();
+        String habitInfo = infoMngService.getPersonalHabitsInfo(ids);
+        model.addAttribute("data", habitInfo);
+        return view();
+    }
 }
