@@ -3,10 +3,8 @@ package com.quick.portal.search.infomng;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
@@ -43,7 +41,7 @@ public class SolrUtils {
 		doc.addField("create_time", DateTime.Now().getTime());
 		doc.addField("portal_doc_class", type);
 		doc.addField("portal_doc_title", title);
-		doc.addField("portal_attachment_id", attachID);
+		doc.addField("portal_attachment_id",attachID);
 		
 		HttpSolrClient server = null;
 		try {
