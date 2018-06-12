@@ -116,7 +116,7 @@ function playnext(){
 }
 function bindsearch(){
 	var $ui = $('#div_append');
-	$("#txtico").after(txtdata);
+//	$("#txtico").after(txtdata);
 	var w = $("#div_append").width();
 	$("#div_data ul").width(w);
 	$("#div_data ul li.tit_filter").width(w - 10);
@@ -155,12 +155,12 @@ function gosearch(){
 	layer.open({
 		type: 2
 		,title: false //不显示标题栏
-		,area: ['680px', '500px']
+		,area: ['780px', '600px']
 		,shade: 0
 		,skin:'addwin'
 		,maxmin: true
 		,content: _host+'/home/listinfo'
-		,btn: ['添加', '取消']
+		,btn: ['关闭']
 		,yes: function(index, layero){
 			layer.closeAll();
 		}
