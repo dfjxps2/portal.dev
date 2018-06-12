@@ -211,6 +211,8 @@ a, img {
                 		   doc_class = '<span style="color:#9ACD32">消息</span>';
                 	   }else if(row.portal_doc_class=="3"){
                 		   doc_class = '<span style="color:#9ACD32">应用</span>';
+                	   }else if(row.portal_doc_class=="6"){
+                		   doc_class = '<span style="color:#9ACD32">资料</span>';
                 	   }
                 	   return doc_class;
                    }},
@@ -227,7 +229,7 @@ a, img {
 						return down = '<span style="color:#9ACD32"></span>';  
                 	   }else{
 //                		   var url ="D:/00-software/luna/eclipse/ws_git/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/portal/upload/mesPublish/20180525/test内容申请.txt";
-                	   return down = "<button type='button' class='btn_el' onclick='downClick(\""+row.id+"\",\""+row.portal_doc_class+"\")'>下载</button>";
+                	   return down = "<button type='button' class='btn_el' onclick='downClick(\""+row.id+"\",\""+row.aid+"\",\""+row.portal_doc_class+"\")'>下载</button>";
                 	   }
 				   }} 
 			   ],onPageChange:function(number, size){
@@ -252,14 +254,17 @@ a, img {
    
     
 	//查看详细信息
-	function downClick(id,type){
+	function downClick(id,aid,type){
 		if(id ==null ||id =="" || id=="undefined"){
 			$. layer.msg("文件路径不对，请联系管理员",{icon:1,time: 1000,skin: 'layer-ext-moon'}); 
 			return false ;
 		}
-//	  id= 'D:/upload/测试5.txt';
-	  id = encodeURI(id);
-	  var param ='?type='+type+'&id='+id;	  
+/*  	  type='2';	
+	  id= 'D:/upload/测试5.txt';
+	  aid='D:/upload/新建1.docx';  */
+ 	  id = encodeURI(id);
+	  aid = encodeURI(aid); 
+	  var param ='?type='+type+'&aid='+aid+'&id='+id;	  
 	  var url =quick.serverUrl+'/download';
 	  url = url +param;
 	  url = encodeURI(url);
