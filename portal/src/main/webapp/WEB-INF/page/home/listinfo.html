@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	  <#include "/WEB-INF/include/reslist.html" />
+  </head>
+<style type="text/css">
+* {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
+a, img {
+	border: 0;
+}
+
+.clearfix:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+
+.clearfix {
+	display: inline-table;
+} /* Hides from IE-mac \*/
+* html .clearfix {
+	height: 1%;
+}
+
+.clearfix {
+	display: block;
+} /* End hide from IE-mac */
+*+html .clearfix {
+	min-height: 1%;
+}
+/* searchinfo */
+.searchinfo {
+	position: relative;
+	height: 35px;
+}
+
+.searchinfo li {
+	float: left;
+	position: relative;
+}
+
+.searchinfo li .text, .searchinfo li .button {
+	background: url(${G.host}/res/images/spis_031ddf34.png) no-repeat;
+}
+
+.searchinfo li .text {
+	width: 356px;
+	height: 22px;
+	padding: 4px 7px;
+	padding: 6px 7px 2px\9;
+	font: 16px arial;
+	border: 1px solid #cdcdcd;
+	border-color: #9a9a9a #cdcdcd #cdcdcd #9a9a9a;
+	vertical-align: top;
+	outline: none;
+	margin: 0 5px 0 0;
+}
+
+.searchinfo li .button {
+	width: 95px;
+	height: 32px;
+	padding: 0;
+	padding-top: 2px\9;
+	border: 0;
+	background-position: 0 -35px;
+	background-color: #ddd;
+	cursor: pointer
+}
+
+.searchinfo .arrowUp, .searchinfo .arrowDown {
+	position: absolute;
+	top: 12px;
+	right: 238px;
+	width: 10px;
+	height: 9px;
+	z-index: 10;
+}
+
+.searchinfo .arrowUp {
+	background: url(${G.host}/res/images/up.png) no-repeat;
+}
+
+.searchinfo .arrowDown {
+	background: url(${G.host}/res/images/down.png) no-repeat;
+}
+/* dropdown */
+.dropdown {
+	width: 360px;
+	padding: 6px 5px;
+	border: solid 1px #ddd;
+	background: #ddd;
+	position: absolute;
+	left: 0;
+	top: 31px;
+	z-index:300;
+}
+
+.dropdown .tit_filter {
+	font-weight: 700;
+	background: #ddd;
+	font-size: 14px;
+	color: #000;
+	height: 10px;
+	line-height: 2px;
+	/*
+	padding: 2px 5px;
+	*/
+	margin: 14px 5px;
+    border-bottom: 1px solid #000;
+}
+
+.dropdown li {
+/*	float: left;
+	width: 175px;
+	*/
+	float: left;
+	width: calc(100%/5);
+	padding: 0 0 0 5px;
+	font-size: 14px;
+	line-height: 32px;
+	height: 32px;
+}
+
+  </style>
+  <body class="gray-bg">
+  <div class="wrapper wrapper-content wrapper-content-x animated fadeInRight">
+	  <div class="row">
+		  <div class="col-sm-12">
+			  <div class="ibox ibox-x">
+				  <div class="ibox-content ibox-content-x">
+					  <div class="panel-mar">
+							  <form id="formSearch" class="form-inline" >
+							  	    <div class="form-group" style="padding: 0px;width:96px;">
+                        				 <select name="obj_type" class="input-group form-control form-control-green select_change" id="IDS_SYSPLATFORM">
+										  <option value="9">全部</option>
+										  <option value="4">未阅</option>
+										  <option value="5">已阅</option>
+										  <option value="1">指标</option>
+										  <option value="2">消息</option>
+										  <option value="3">应用</option>
+										  <option value="6">资料</option>
+									  </select>
+									</div>
+								  
+								  <div class="input-group" id ="div_append" >
+    									<input name="keyword" class="form-control input-lg" type="text"   value=""
+												id="keyword" style="width:400px">
+												<span class="arrowDown"></span>
+												<span id ="btn_span" class="input-group-addon btn btn-primary">搜索</span>
+								  </div>
+                                  
+							  </form>
+						</div>
+					  <div style ="margin:5px;">
+						  <table id="list" class="table-striped" style="table-layout:fixed"></table>
+					  </div>
+				  </div>
+			  </div>
+		  </div>
+		  <input type="hidden"  id="IDS_PAGENUM" name="IDS_PAGENUM">
+		  <input type="hidden"  id="IDS_PAGESIZE" name="IDS_PAGENUM">
+	  </div>
+  </div>
+  </body>
+</html>
+ <script>
+ var data = '${data}';
+ $('#div_append').after(data);
+ var $ui = $('#formSearch');
+ 
+       var pageNum=1;
+       var pageSize=10;
+       var queryParm = '';
+       var flag=true;
+       var pageFlag=0;
+	   //初始化表格
+	   function config(){
+           var RFlag=$.request.queryString["RFlag"];
+		   quick.serverUrl = "${G.host}/info";
+		   quick.editUrl = "${G.editUrl}";
+		   quick.objName = "${G.objName}";
+		   quick.idField = "${G.idField}";
+           
+		   $("#list").bootstrapTable("destroy");
+		   _gd["list"]=new BGrid("#list");
+		   _gd["list"].config({
+			   type: "post",
+			   url:quick.serverUrl+"/getInfo?i=" + Math.random(),
+			   idField: quick.idField,
+			   sortName: quick.idField,
+               cache:false,
+			   height: $(document.body).height()-50,
+			   toolbar:"#formSearch",
+			   columns: [
+//				   {  checkbox: true },
+				   { field: 'title', title: '信息名称', width: 100  },
+				   /* { field: 'id', title: '信息路径', width: 100  }, */
+				   { field: 'portal_doc_class', title: '信息类别', width: 80 , formatter:function(value,row,index){
+			    	   var doc_class = '<span style="color:#9ACD32">其它</span>';  
+                	   if (row.portal_doc_class=="1") {
+                		   doc_class = '<span style="color:#9ACD32">指标</span>';  
+                	   }else if(row.portal_doc_class=="2"){
+                		   doc_class = '<span style="color:#9ACD32">消息</span>';
+                	   }else if(row.portal_doc_class=="3"){
+                		   doc_class = '<span style="color:#9ACD32">应用</span>';
+                	   }
+                	   return doc_class;
+                   }},
+				   
+				   { field: 'status', title: '查阅状态', width: 80 , formatter:function(value,row,index){
+			    	   var state = '<span style="color:#CFCFCF">未阅</span>';  
+                	   if (row.status=="1") {
+                		   state = '<span style="color:#9ACD32">已阅</span>';  
+                	   }
+                	   return state;
+                   }},
+				   { field: 'CZ',  title: '操作',width: '15%', formatter:function(value,row,index){
+					   if (row.portal_doc_class=="1") {
+						return down = '<span style="color:#9ACD32"></span>';  
+                	   }else{
+//                		   var url ="D:/00-software/luna/eclipse/ws_git/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/portal/upload/mesPublish/20180525/test内容申请.txt";
+                	   return down = "<button type='button' class='btn_el' onclick='downClick(\""+row.id+"\",\""+row.portal_doc_class+"\")'>下载</button>";
+                	   }
+				   }} 
+			   ],onPageChange:function(number, size){
+                   $("#IDS_PAGESIZE").val(size);
+                   $("#IDS_PAGENUM").val(number);
+                   pageNum=number;
+                   pageSize=size;
+               },onPostBody:function(data){
+				   if(queryParm=='' &&　(data == null || data.length == 0)){
+					   $(".no-records-found td").html('您输入搜索条件进行数据查询');
+                   }
+			   }
+		   });
+
+           if(RFlag==1){
+               requery();
+           }else{
+               _gd["list"].init();
+           }
+	   }
+
+   
+    
+	//查看详细信息
+	function downClick(id,type){
+		if(id ==null ||id =="" || id=="undefined"){
+			$. layer.msg("文件路径不对，请联系管理员",{icon:1,time: 1000,skin: 'layer-ext-moon'}); 
+			return false ;
+		}
+//	  id= 'D:/upload/测试5.txt';
+	  id = encodeURI(id);
+	  var param ='?type='+type+'&id='+id;	  
+	  var url =quick.serverUrl+'/download';
+	  url = url +param;
+	  url = encodeURI(url);
+	  window.location.href= url; 
+	}
+
+
+    function query(){
+		$ui.find('.arrowUp').addClass('arrowDown').removeClass('arrowUp').andSelf().find('.dropdown').slideUp(10);
+       _gd['list'].refresh();
+       queryParm=getParm();
+    }
+    //获取返回时传回的数据
+    function requery(){
+       var pn = Number($.request.queryString["IpageNum"]) || 1;
+       var ps =  $.request.queryString["IpageSize"] || 10;
+       
+       _gd["list"].config({
+           pageSize: ps
+           ,onLoadSuccess:function(){
+               if(pageFlag>0){
+                   return;
+               }
+               $('#list').bootstrapTable('selectPage', pn);
+               pageFlag++;
+           }
+       });
+       _gd["list"].init();
+    }
+    //获取查询框数据
+	function getParm(){
+		var s = '&I'+$("#formSearch").serialize().replace(/&/g, "&I");
+		return s;
+	}
+	function getDetailParm(){
+		var s= queryParm + "&IpageNum="+pageNum+"&IpageSize="+pageSize;
+		return s;
+	}
+
+	$('#keyword').click(function(){	
+		 document.getElementById("div_data").style.display ='block';
+		$ui.find('.arrowDown').addClass('arrowUp').removeClass('arrowDown').andSelf().find('.dropdown').slideDown(500);
+	})
+
+	
+	
+	$('#btn_span').click(function(){
+		$ui.find('.arrowUp').addClass('arrowDown').removeClass('arrowUp').andSelf().find('.dropdown').slideUp(10);
+	       _gd['list'].refresh();
+	       queryParm=getParm();
+	
+	})
+	
+
+	
+	function click_event(str){
+		var str = $("input[name='radio']:checked").val();
+		document.getElementById("keyword").value=str;
+		$ui.find('.arrowUp').addClass('arrowDown').removeClass('arrowUp').andSelf().find('.dropdown').slideUp(10);
+	}
+	
+	$ui.bind('mouseleave',function(){
+		//$ui.find('.arrowUp').addClass('arrowDown').removeClass('arrowUp').andSelf().find('.dropdown').slideUp(500);
+	});
+
+	
+  </script>
