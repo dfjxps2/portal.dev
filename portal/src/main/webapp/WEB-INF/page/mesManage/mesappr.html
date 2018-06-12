@@ -56,7 +56,7 @@
                                 </select>
                             </div>
 
-                            <div class="form-group" style="padding-left: 5px;width:100px;">
+                            <div class="form-group" style="padding-left: 5px;width:130px;">
                                 <input id="pub_time" name="pub_time" class="input-sm form-control" type="text" onfocus="(this.type='date')" placeholder="发布日期"/>
                             </div>
                             <div class="form-group" style="padding-left: 0px;width: 90px;">
@@ -261,8 +261,7 @@
                     dataType: "json",
                     data: {
                         appr_state: 1,
-                        msgids: checkedVal("msg"),
-                        appr_user_id: user_id
+                        msgids: checkedVal("msg")
                     },
                     success: function (data) {
                         if (data == 1) {
@@ -293,8 +292,7 @@
                     dataType: "json",
                     data:{
                         appr_state:2,
-                        msgids:checkedVal("msg"),
-                        appr_user_id:user_id
+                        msgids:checkedVal("msg")
                     },
                     success: function (data) {
                         if (data == 1) {

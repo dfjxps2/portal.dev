@@ -45,7 +45,7 @@
                         <label id="pagename" class="col-xs-8" style="text-align:center;font-size: 22px;color:blue;margin-left: 180px"></label>
                     </div>
                 </div>
-            <div class="ibox " style="padding-top:30px;">
+            <div class="ibox " style="padding-top:30px;padding-left:2px;">
                 <div class="ibox-content ibox-content-ad" style="margin-left:5px;margin-top: -30px;height:500px;width:1000px">
                     <form id="pubform" name="pubform" method="post"  enctype="multipart/form-data" >
                         <div class="row" style="padding-top:50px">
@@ -63,24 +63,27 @@
                                 <label class="col-xs-3 lable_top" style="width:120px;padding-right:2px;"><span class="span_require">*</span>资料小类</label>
                                 <div class="col-xs-9" style="padding-left:10px;width:75%;"> <select style="width:100%;" class="form-control required select_change" id="msg_type_id" name="msg_type_id" onchange="subClass()"></select></div>
                             </div>
-                            <div class="form-group" style="padding-left:32px;width: 100%;">
-                                <label class="col-xs-3 lable_top" style="width:100px;padding-right:2px;"><span class="span_require">*</span>关键词</label>
-                                <div class="col-xs-9" style="padding-left:27px;width:90%;"><input style="width:90%;left: auto;" placeholder="输入的关键词以空格键隔开，如：参数1 惨数2" class="form-control required" id="keywords" name="keywords"  /></div>
+                            <div class="form-group" style="padding-left:32px;width: 100%;padding-top:10px;">
+                                <label class="col-xs-3 lable_top" style="width:100px;padding-right:2px;padding-top:10px;"><span class="span_require">*</span>关键词</label>
+                                <div class="col-xs-9" style="padding-left:27px;width:90%;padding-top:10px;"><input style="width:90%;left: auto;" placeholder="输入的关键词以空格隔开，如：参数1 参数2....." class="form-control required" id="keywords" name="keywords"  /></div>
                             </div>
-                            <div class="form-group" style="padding-left:46px; width:60%;height:80px;" >
-                                <li class="li_file" style="width: 100%;"  >
-                                    <div class="uploader white" style="padding-top:20px;height:55px;width:85%;" >
-                                        <label class="col-xs-3 lable_top" style="width:114px;padding-left:0px;"><span class="span_require">*</span>资料文件</label>
-                                        <input id="btn_select" type="button" name="file" class="button_normal"  value="上传">
-                                        <input id="upload"  onchange="uploadFiles();"  type="file" name="file"  style="border-right-color:#e5e6e7;width:390px;padding-top:20px;height:55px;" onmousedown="fileOnMouseDown()" onmouseup="fileOnMouseUp()" />
-                                        <input id="msg_content" name="msg_content" type="text" class="filename required" style="border-right-color:black;border-right-style: solid ;" readonly="readonly">
+
+                            <li class="li_file" style="width: 100%;"  >
+                                <div class="uploader white" style="padding-left:50px;padding-top:25px;height:60px;width:55%;" >
+                                    <div style="position:absolute;cursor:pointer;display:none;left:450px;z-index:999;padding-top:7px;" align="center"  class="input_clear">
+                                        <button type="button" class="close" data-dismiss="modal" style="text-align: center" aria-hidden="true" >×</button>
                                     </div>
-                                </li>
-                            </div>
+                                    <label class="col-xs-3 lable_top" style="width:114px;padding-left:0px;"><span class="span_require">*</span>资料文件</label>
+                                    <input id="upload"  onchange="uploadFiles();"  type="file" name="file"  style="width:90px;padding-top:20px;height:55px;left:50px;margin-left:90px;"  onmousedown="fileOnMouseDown()" onmouseup="fileOnMouseUp()" />
+                                    <input id="btn_select" type="button" name="file" class="button_normal"  value="上传">
+                                    <input id="msg_content"  name="msg_content" type="text" class="filename required" style="border-right-width:1px;border-right-style:solid;border-right-color:rgb(204,204,204);" readonly="readonly">
+
+                                </div>
+                            </li>
                         </div>
 
 
-                        <div ibox-toolbars hidefield  style="float:left;width:62%;height:80px;padding-top: 50px;">
+                        <div ibox-toolbars hidefield  style="float:left;width:62%;height:80px;margin-top:60px;">
                             <li class="li_bom" style="height:70px;">
                                 <span class="input-group-btn" style="width:9%;" ><input  id="fat-btn" type="button" class="pull-right btn btn-primary" onclick="formCommit()" value="确认"/> </span>
                                 <span class="input-group-btn"  ><input id="reset" class="pull-right btn btn-primary"  type="button"  value="放弃"/></span>
@@ -144,6 +147,23 @@
         }
     };
 
+
+    //当通过鼠标点击选中元素或通过 tab 键定位到元素时，该元素就会获得焦点
+    $("input").focus(function () {
+        $(this).parent().children(".input_clear").show();
+    });
+    //当元素失去焦点时发生 blur 事件。
+    $("input").blur(function(){
+        if($(this).val()=='')
+        {
+            $(this).parent().children(".input_clear").hide();
+        }
+    });
+    $(".input_clear").click(function(){
+            $("#upload").val(null);
+            $("#msg_content").val(null);
+        $(this).hide();
+    });
 
     $(function(){
         $("input[type=file]").change(function(){$(this).parents(".uploader").find(".filename").val($(this).val());});
