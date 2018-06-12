@@ -131,7 +131,7 @@ public class SynchronizedDataServiceImpl implements ISynchronizedDataService {
 		for (Map<String, Object> m : depList){
 		    	//通过上级部门编号查询部门ID
 		    	  supDepGlobalID = m.get("SUP_DEP_GLOBAL_ID").toString();
-		    	  deptID = m.get("DEP_ID").toString();
+		    	  deptID = m.get("menu_id").toString();
 		    	  System.out.println("deptID="+deptID+"supDepGlobalID="+supDepGlobalID);
 		    	  paramMap.put("supDepGlobalID", supDepGlobalID);
 		    	  paramMap.put("deptID", deptID);
