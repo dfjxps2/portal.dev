@@ -31,7 +31,12 @@ public class MetricPrivilegeConstants {
 	 
 	 public static final String ROOT_NODE = "root";
 	 
-	 public static final String GET_METRIC_INFO_URL = "http://portal-server:8082/services/reMeaSys";
+	 
+	 public static final String GET_METRIC_SERVICE_NAME = "/services/reMeaSys";
+	 
+	 public static final String SERVICE_PORT = ":";
+		
+	
 		
 	 
 	
