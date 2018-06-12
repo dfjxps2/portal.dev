@@ -69,20 +69,20 @@
             height: $(document.body).height()-50,
             toolbar:"#formSearch",
             columns: [
-                { field: 'user_id', title: '用户ID', width: 70 },
-                { field: 'user_name', title: '用户名称', width: 90  },
-                { field: 'role_name', title: '角色名称', width: 100  },
-                { field: 'user_real_name', title: '真实名称', width: 90  },
-                { field: 'dep_name', title: '部门名称', width: 110  },
-                { field: 'job_name', title: '岗位名称', width: 100  },
-                { field: 'user_state', title: '激活状态', width:80  },
-                { field: 'cre_time', title: '创建时间', width: 110  },
+                { field: 'user_id', title: '用户ID', width: 70,align: 'center' },
+                { field: 'user_name', title: '用户名称', width: 90 ,align: 'center' },
+                { field: 'role_name', title: '角色名称', width: 100 ,align: 'center' },
+                { field: 'user_real_name', title: '真实名称', width: 90,align: 'center'  },
+                { field: 'dep_name', title: '部门名称', width: 110 ,align: 'center' },
+                { field: 'job_name', title: '岗位名称', width: 100 ,align: 'center' },
+                { field: 'user_state', title: '激活状态', width:80 ,align: 'center' },
+                { field: 'cre_time', title: '创建时间', width: 110 ,align: 'center' },
                 { field: 'user_tel',  visible:false },
                 { field: 'user_addr',  visible:false },
                 { field: 'rela_id',  visible:false },
                 { field: 'rel_id',  visible:false },
-                { field: 'upd_time', title: '更新时间', width: 110  },
-                { field: 'CZ',  title: '操作',width: '25%', formatter:function(value,row,index){
+                { field: 'upd_time', title: '更新时间', width: 110 ,align: 'center'},
+                { field: 'CZ',  title: '操作',width: '25%',align: 'center', formatter:function(value,row,index){
                     return "<button type='button' class='btn_el' onclick='edit(\""+row.user_id+"\",\""+row.user_name+"\")'>编辑</button>| "
                         +"<button type='button' class='btn_el' onclick='del(\""+row.user_id+"\",\""+row.user_name+"\",\""+row.rela_id+"\",\""+row.rel_id+"\")'>删除</button>|"
                         +"<button type='button' class='btn_el' onclick='repw(\""+row.user_id+"\",\""+row.user_name+"\",\""+row.user_state+"\")'>密码重置</button>"
