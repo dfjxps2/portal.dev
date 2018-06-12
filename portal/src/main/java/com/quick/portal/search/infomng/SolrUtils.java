@@ -180,6 +180,9 @@ public class SolrUtils {
 	 */
 	public static SolrQuery getAllSolrQuery(Map<String, Object> m,PageBounds page,String type){
 		String queryStr = m.get(SolrInfoConstants.INDEX_KEYWORD).toString();
+		if(null == queryStr ||"".equals(queryStr)){
+			return null;
+		}
 		SolrQuery query = new SolrQuery(queryStr);
 		query.setStart(page.getStartRow() == 1 ? 0 : page.getStartRow() - 1);
 		query.setRows(page.getPageSize());
@@ -216,6 +219,48 @@ public class SolrUtils {
 	 * 连接SOLR服务
 	 * 
 	 */
+	public static SolrDocumentList getSolrInfoDataByID(SolrQuery query,String id){
+		QueryResponse response = null;
+		try {
+			HttpSolrClient server = InitSolrServer.initServer(SolrInfoConstants.PORTAL_DOC_URL);
+			response = server.query(query);
+		} catch (SolrServerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		SolrDocumentList docList = response.getResults();
+		
+		
+		return docList;
+	}
+	
+	/*
+	 * 通过关键字规则判断，有关键字返回TRUE; 没有关键字返回FALSE;
+	 * 
+	 */
+	public static boolean getSolrDataByRule(SolrDocumentList docList,String key){
+		boolean  bool = false;
+		String id = null;
+		System.out.println("####### 总共 ： " + docList.size() + "条记录");
+		for (SolrDocument doc : docList) {
+			System.out.println("####### id : " + doc.get("id") + "  title : "
+					+ doc.get("portal_doc_title") + "  portal_doc_class : "
+					+ doc.get("portal_doc_class") );
+			id = doc.get("id") == null ? "" : doc.get("id").toString();
+			if(null !=key && key.equals(id)){
+			    bool = true;
+				return bool;
+			}
+		}
+		return bool;
+	}
+	
+	
+	
+	
 	public static SolrDocumentList getSolrInfoDataByTitle(SolrQuery query){
 		QueryResponse response = null;
 		try {
