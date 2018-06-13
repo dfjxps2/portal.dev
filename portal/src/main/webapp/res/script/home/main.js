@@ -54,7 +54,7 @@ function usr_setting(aid){
 	window.open(_host + "/monitor/setting?t="+aid);
 }
 function loadpancel(n, u){
-	return '<div class="ss21" style="margin:auto 0px;"><iframe class="ss21" src="'+u+'"></iframe></div>';
+	return '<div class="cell-bar cell-barbg ss21"></div><div class="ss21" style="margin:auto 0px;"><iframe class="ss21" src="'+u+'"></iframe></div>';
 }
 function loadpg(n){
 	var str = [];
@@ -100,7 +100,7 @@ function play(n){
 			var dd = {"s": JSON.stringify(dt)};
 			$.post(_host+'/home/saveSort',dd, function(ds){
 				if(ds.code <1){
-					layer.msg("无法保存排序,"+ds.msg);
+					layer.msg("无法保存排序,"+ds.msg,{zIndex:20001234});
 				}
 			});
 		}
@@ -237,11 +237,11 @@ function addnew(){
 function savecomm(){
 	var txt = $("#ppcomm").val();
 	if(cn == null){
-		alert('没有批示图片,请使用现代浏览器打开系统');
+		layer.alert('没有批示图片,请使用现代浏览器打开系统',{zIndex:20001234});
 		return;
 	}
 	if(txt==''){
-		alert('请先填写批示内容');
+		layer.alert('请先填写批示内容',{zIndex:20001234});
 		return;
 	}
 	var imgdata = cn.toDataURL("image/png");
@@ -250,7 +250,7 @@ function savecomm(){
 	$('#pfm').attr("action",_host+"/comments/save").ajaxSubmit(function(ds) {
 		if(typeof(ds) == "string")
 			ds = eval("("+ds+")");
-		alert(ds.msg);
+		layer.alert(ds.msg,{zIndex:20001234});
 		if(ds.code > 0)
 			layer.closeAll();
 		/*layer.alert(ds.msg, function(i){
@@ -287,14 +287,15 @@ function capture(){
 var cn, ctx, cn_bak, ctx, canvasWidth, canvasHeight;
 var canvasTop = 0;
 var canvasLeft = 0;
+var cancelList = [];
 
 //画笔大小
-var size = 5, rsize = 2;
+var size = 3, rsize = 2;
 var color  = '#ff1200';
 function inipnl(can,w, h){
 	$("#pnl").remove();
 	var str = [];
-	str.push('<div id="pnl" class="container panl" style="display:none;">',
+	str.push('<div id="pnl" class="container panl" style="display:none;z-index:300">',
 		'<div class="row">',
 			'<div class="col-xs-12 col-md-8">',
 				'<div class="col-xs-12 col-md-12"><ul class="toolbar">', initbl(), '</ul>','</div>',
@@ -309,6 +310,9 @@ function inipnl(can,w, h){
 		'</div>',
 	'</div>');
 	$(document.body).append(str.join(''));
+	can.style.position = "absolute";
+	can.style.top = 0;
+	can.style.left = 0;
 	canvasWidth = can.width;
 	canvasHeight = can.height;
 	$("#pcn").append(can);
@@ -319,13 +323,15 @@ function inipnl(can,w, h){
 	cn_bak.width = canvasWidth;
 	cn_bak.height = canvasHeight;
 	ctx_bak = cn_bak.getContext('2d');
+	saveImageToAry();
 }
 function initbl(){
-	var dt = [{n:'pencil',t:'铅笔'},{n:'circle',t:'圆'},{n:'square',t:'方形'},{n:'rubber',t:'橡皮擦'}];
+	var dt = [{n:'pencil',t:'铅笔'},{n:'circle',t:'圆'},{n:'square',t:'方形'},{n:'cancel',t:'撤销上一步',f:'cancel'}];
 	var ss = [];
 	var u = _host + "/res/script/home/images/";
 	for(var i =0; i < dt.length; i++){
-		ss.push('<li><img src="',u, dt[i].n,'.png" onclick="draw_graph(&#39;',dt[i].n, '&#39;,this)" title="',dt[i].t,'"></li>')
+		var fn = dt[i].f || 'draw_graph';
+		ss.push('<li><img src="',u, dt[i].n,'.png" onclick="',fn,'(&#39;'+dt[i].n+'&#39;,this)" title="',dt[i].t,'"></li>')
 	}
 	return ss.join('');
 }
@@ -390,7 +396,7 @@ var draw_graph = function(graphType,obj){
 			image.onload = function(){
 				ctx.drawImage(image , 0 ,0 , image.width , image.height , 0 ,0 , canvasWidth , canvasHeight);
 				clearContext();
-				//saveImageToAry();
+				saveImageToAry();
 			}
 			var loc = getLocation(e);
 			var x = loc.x - canvasLeft;
@@ -478,7 +484,7 @@ var draw_graph = function(graphType,obj){
 			ctx_bak.lineTo(x - size * rsize  , y - size * rsize );
 			ctx_bak.stroke();
 			if(canDraw){
-				context.clearRect(x - size * rsize ,  y - size * rsize , size * rsize * 2 , size * rsize * 2);
+				ctx.clearRect(x - size * rsize ,  y - size * rsize , size * rsize * 2 , size * rsize * 2);
 			}
 		}
 	};
@@ -501,8 +507,28 @@ var draw_graph = function(graphType,obj){
 	});
 }
 
+function cancel(){
+	var index = cancelList.length-2;
+	if(index < 0)
+		index = 0;
+	var  image = new Image();
+	var url = cancelList[index];
+	ctx.clearRect(0,0,canvasWidth,canvasHeight);
+	image.src = url;
+	image.onload = function(){
+		ctx.drawImage(image , 0 ,0 , image.width , image.height , 0 ,0 , canvasWidth , canvasHeight);
+	}
+	if(cancelList.length > 1)
+		cancelList.pop();
+}
+
+function saveImageToAry(){
+	var dataUrl =  cn.toDataURL();
+	cancelList.push(dataUrl);
+}
+
 //清空层
-var clearContext = function(type){
+function clearContext(type){
 	if(!type){
 		ctx_bak.clearRect(0,0,canvasWidth,canvasHeight);
 	}else{

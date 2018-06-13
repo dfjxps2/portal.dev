@@ -81,7 +81,7 @@
 	<select id="listAllApp"  parameterType="map" resultType="map">
 		select m.*,p.show_on_init,p.show_order from sys_menu m
 		left join (select show_on_init,show_order,menu_id from menu_privilege where role_id=#{role_id}) p on p.menu_id=m.menu_id
-		where m.menu_state=1
+		where 1=1
 		order by p.show_order asc
 	</select>
 
