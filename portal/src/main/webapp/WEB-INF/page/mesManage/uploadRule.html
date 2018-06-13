@@ -54,9 +54,9 @@
                                 </li>
                                 <li class="li_file">
                                     <div class="uploader white">
-                                        <input type="text" class="filename" readonly="readonly">
-                                        <input id="btn_select" type="button" name="file" class="button_normal" value="选择附件">
-                                        　　<input id="upload"  onchange="uploadFiles();"  type="file" name="file"  onmousedown="fileOnMouseDown()" onmouseup="fileOnMouseUp()" />
+                                        <input id="upload"  onchange="uploadFiles();" class="" type="file" name="file"  onmousedown="fileOnMouseDown()" onmouseup="fileOnMouseUp()" />
+                                        <input type="text"  class="filename" readonly="readonly">
+                                        <input id="btn_select" type="button" name="file" class="button_normal" value="选择文件">
                                     </div>
                                 </li>
                                 <li class="li_error">
@@ -87,10 +87,10 @@
 <script>
     $(function(){
         $("input[type=file]").change(function(){$(this).parents(".uploader").find(".filename").val($(this).val());});
-        $("input[type=file]").each(function(){
-            if($(this).val()==""){$(this).parents(".uploader").find(".filename").val("");
-                $("#fat-btn").attr("disabled","true");}
-        });
+//        $("input[type=file]").each(function(){
+//            if($(this).val()==""){$(this).parents(".uploader").find(".filename").val("");
+//                $("#fat-btn").attr("disabled","true");}
+//        });
 
     });
     function back(){
@@ -117,24 +117,19 @@
             $("#fat-btn").attr("disabled","true");
             return;
         }
-
         var uploadValue = $("#upload").val();
         if(uploadValue!="" && uploadValue!=null){
             $("#fat-btn").removeAttr("disabled");
             $(".btn").click(function(){
-                $("#upload").attr("disabled","true");
                 $("#btn_select").removeClass().addClass("button_disabled");
-                $("#fat-btn").removeAttr("disabled");
                 $("#uploadFile").removeClass("uploadFile_n").addClass("uploadFile_b");
-                $("#fat-btn").attr("disabled","true");
-                $(".btn_text").html("正在处理您的请求，请稍后...");
-
             });
         }else{
             $("#fat-btn").attr("disabled","true");
         }
     }
     function formCommit(){
+        $(".btn_text").html("正在处理您的请求，请稍后...");
         $("#uploadForm").ajaxSubmit({
             type:'post',
             url:'${G.host}/mesManage/uploadRules',
@@ -143,7 +138,6 @@
             },
             dataType:'json',
             success:function(data){
-                $("#upload").removeAttr("disabled");
                 $("#btn_select").removeClass().addClass("button_normal");
                 $("#uploadFile").removeClass("uploadFile_b").addClass("uploadFile_n");
                 $("#fat-btn").removeAttr("disabled");

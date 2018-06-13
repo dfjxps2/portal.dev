@@ -128,4 +128,20 @@ public class QCookie {
     	   return null;
        }
    }
+   
+   /**
+	 * 清除所有cookie
+	 * @param req
+	 * @param res
+	 */
+	public static void clear(HttpServletRequest req,HttpServletResponse res) {
+		Cookie[] cookies = req.getCookies();
+		for(int i = 0,len = cookies.length; i < len; i++) {
+			Cookie cookie = new Cookie(cookies[i].getName(),null);
+			cookie.setMaxAge(0);
+			cookie.setPath("/");
+			res.addCookie(cookie);
+		}
+	}
+
 }

@@ -19,11 +19,11 @@
                             <div class="col-sm-6 form_ipt_botm">
                                 <div class="form-group">
                                     <label class="col-xs-3 lable_top"><span></span>资料大类</label>
-                                    <select  style="width:300px;" type="button" name="sup_msg_type_id" class="input-group form-control form-control-green select_change" id="sup_msg_type_id">
+                                    <select  style="width:300px;" type="button" name="sup_msg_type_id" class="input-group form-control required form-control-green select_change" id="sup_msg_type_id">
                                         <option value="">请选择资料大类</option>
-                                        <option value="1">政府文件</option>
+                                        <option value="1">政策文件</option>
                                         <option value="2">政府公文</option>
-                                        <option value="3">大数据平台报告</option>
+                                        <option value="3">大数据分析报告</option>
                                     </select>
                                 </div>
                             </div>
@@ -38,8 +38,8 @@
 
                             <div style="padding-top:30px;height:180px;"  class="row">
                                 <div ibox-toolbars  style="padding-top:50px;width:565px;">
-                                    <input id="canel-addSup" type="button" align="center" class="pull-right btn btn-primary" value="放弃"/>
-                                    <input id="submit-form" type="button" align="center" class="pull-right btn btn-primary" value="保存"/>
+                                    <span class="input-group-btn" style="width:9%;" >  <input id="submit-form" type="button" class="pull-right btn btn-primary" value="保存"/></span>
+                                    <span class="input-group-btn" > <input id="canel-addSup" type="button" class="pull-right btn btn-primary" value="放弃"/></span>
                                 </div>
                             </div>
                         </div>
@@ -61,6 +61,43 @@
 
     window.onload = function() {
         $('#pagename').html("新增资料小类");
+        $("#form").validate({
+            errorPlacement: function(error, element) {
+                element.parent().append(error);
+            },
+            rules: {
+                msg_type_name: {
+                    required: true,
+                    remote: {
+                        url: "${G.host}/mesManage/checkSubClass",     //后台处理程序
+                        type: "post",               //数据发送方式
+                        dataType: "json",           //接受数据格式
+                        data: {                     //要传递的数据
+                            msg_type_name: function() {
+                                return $("#msg_type_name").val();
+                            },
+                            sup_msg_type_id: function() {
+                                return $("#sup_msg_type_id").val();
+                            }
+                        },
+                        dataFilter: function (data, type) {//判断控制器返回的内容
+                            //console.log(data);
+                            if ( data =="false") {
+                                return true;
+                            }else{
+                                return false;
+                            }
+                        }
+                    }
+                } ,
+
+            },
+            messages:{
+                msg_type_name : {
+                    remote:"该大类下已存在将要新增的小类值！"
+                }
+            }
+        });
     };
     // 保存
     $("#submit-form").click(function () {

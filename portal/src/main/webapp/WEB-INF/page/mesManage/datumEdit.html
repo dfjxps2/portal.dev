@@ -45,45 +45,48 @@
                         <label id="pagename" class="col-xs-8" style="text-align:center;font-size: 22px;color:blue;margin-left: 180px"></label>
                     </div>
                 </div>
-            <div class="ibox " style="padding-top:30px;">
+            <div class="ibox " style="padding-top:30px;padding-left:2px;">
                 <div class="ibox-content ibox-content-ad" style="margin-left:5px;margin-top: -30px;height:500px;width:1000px">
                     <form id="pubform" name="pubform" method="post"  enctype="multipart/form-data" >
                         <div class="row" style="padding-top:50px">
-                            <div class=" form-group" style="padding-left:50px;width:400px;float: left">
+                            <div class=" form-group" style="padding-left:50px;width:45%;float: left;margin-right:0px;">
                                 <label class="col-xs-3 lable_top" style="width:100px;padding-right:2px;"><span class="span_require">*</span>资料大类</label>
-                                <div class="col-xs-9" style="padding-left: 20px;">
-                                    <select type="button" name="sup_msg_type_id" class="input-group form-control form-control-green select_change" id="sup_msg_type_id" style="width:280px;" onchange="supDatumTy()">
+                                <div class="col-xs-9" style="padding-left: 10px;padding-right:0px;width:80%">
+                                    <select type="button" name="sup_msg_type_id" class="input-group form-control required form-control-green select_change" id="sup_msg_type_id" style="width:100%;" onchange="supDatumTy()">
                                         <option value="">请选择资料大类</option>
                                         <option value="1">政府文件</option>
                                         <option value="2">政府公文</option>
                                         <option value="3">大数据平台报告</option>
                                     </select></div>
                             </div>
-                            <div class="form-group" style="width:500px;float: left;padding-left:50px;" >
-                                <label class="col-xs-3 lable_top" style="width:120px;"><span class="span_require">*</span>资料小类</label>
-                                <div class="col-xs-9" style="padding-left: 20px;width:300px"> <select style="width:280px;" class="form-control required select_change" id="msg_type_id" name="msg_type_id" onchange="subClass()"></select></div>
+                            <div class="form-group" style="width:45%;float: left;padding-left:50px;" >
+                                <label class="col-xs-3 lable_top" style="width:120px;padding-right:2px;"><span class="span_require">*</span>资料小类</label>
+                                <div class="col-xs-9" style="padding-left:10px;width:75%;"> <select style="width:100%;" class="form-control required select_change" id="msg_type_id" name="msg_type_id" onchange="subClass()"></select></div>
                             </div>
-                            <div class="form-group" style="padding-left:32px;width: 100%;">
-                                <label class="col-xs-3 lable_top" style="width:120px;"><span class="span_require">*</span>关键词</label>
-                                <div class="col-xs-9" style="padding-left: 18px;width:800px;"><input style="width:708px;left: auto;" placeholder="参数1 惨数2" class="form-control required" id="keywords" name="keywords"  /></div>
+                            <div class="form-group" style="padding-left:32px;width: 100%;padding-top:10px;">
+                                <label class="col-xs-3 lable_top" style="width:100px;padding-right:2px;padding-top:10px;"><span class="span_require">*</span>关键词</label>
+                                <div class="col-xs-9" style="padding-left:27px;width:90%;padding-top:10px;"><input style="width:90%;left: auto;" placeholder="输入的关键词以空格隔开，如：参数1 参数2....." class="form-control required" id="keywords" name="keywords"  /></div>
                             </div>
-                            <div class="form-group" style="padding-left:50px; width:530px;height:80px;" >
-                                <li class="li_file" style="width: 520px;"style="width: 400px;"  >
-                                    <div class="uploader white" style="padding-top:20px;height:55px;width:510px;" >
-                                        <label class="col-xs-3 lable_top" style="width:120px;"><span class="span_require">*</span>资料文件</label>
-                                        <input id="upload"  onchange="uploadFiles();"  type="file" name="file" style="width:360px;padding-top:20px;height:55px;" onmousedown="fileOnMouseDown()" onmouseup="fileOnMouseUp()" />
-                                        <input id="msg_content" name="msg_content" type="text" class="filename" style="border-right-width: 2px;" readonly="readonly">
-                                        <input id="btn_select" type="button" name="file" class="button_normal"  value="上传">
+
+                            <li class="li_file" style="width: 100%;"  >
+                                <div class="uploader white" style="padding-left:50px;padding-top:25px;height:60px;width:55%;" >
+                                    <div style="position:absolute;cursor:pointer;display:none;left:450px;z-index:999;padding-top:7px;" align="center"  class="input_clear">
+                                        <button type="button" class="close" data-dismiss="modal" style="text-align: center" aria-hidden="true" >×</button>
                                     </div>
-                                </li>
-                            </div>
+                                    <label class="col-xs-3 lable_top" style="width:114px;padding-left:0px;"><span class="span_require">*</span>资料文件</label>
+                                    <input id="upload"  onchange="uploadFiles();"  type="file" name="file"  style="width:90px;padding-top:20px;height:55px;left:50px;margin-left:90px;"  onmousedown="fileOnMouseDown()" onmouseup="fileOnMouseUp()" />
+                                    <input id="btn_select" type="button" name="file" class="button_normal"  value="上传">
+                                    <input id="msg_content"  name="msg_content" type="text" class="filename required" style="border-right-width:1px;border-right-style:solid;border-right-color:rgb(204,204,204);" readonly="readonly">
+
+                                </div>
+                            </li>
                         </div>
 
 
-                        <div ibox-toolbars hidefield  style="float:left;width:490px;height:80px;padding-top: 50px;">
+                        <div ibox-toolbars hidefield  style="float:left;width:62%;height:80px;margin-top:60px;">
                             <li class="li_bom" style="height:70px;">
-                                <input id="reset" class="pull-right btn btn-primary"  type="button"  value="放弃"/>
-                                <input  id="fat-btn" type="button" class="pull-right btn btn-primary" onclick="formCommit()" value="确认">
+                                <span class="input-group-btn" style="width:9%;" ><input  id="fat-btn" type="button" class="pull-right btn btn-primary" onclick="formCommit()" value="确认"/> </span>
+                                <span class="input-group-btn"  ><input id="reset" class="pull-right btn btn-primary"  type="button"  value="放弃"/></span>
                                 <input type="hidden" id="msgattachment" name="msg_content" class="form-control"/>
                                 <input type="hidden" id="msg_id" name="msg_id" class="form-control"/>
                                 <input type="hidden" id="msg_title" name="msg_title" class="form-control"/>
@@ -115,11 +118,24 @@
     }
 
     window.onload = function() {
-        /*加载数据*/
+        jQuery.validator.addMethod("keyword",function (value,element) {
+            var key = /^[a-zA-Z0-9\s?\u4e00-\u9fa5]*$/;
+            return this.optional(element) || (key.test(value));
+        },"请按照指定格式输入关键词！");
+        $("#pubform").validate({
+            errorPlacement: function(error, element) {
+                element.parent().append(error);
+            },
+            rules: {
+                keywords: {
+                    keyword:true
+                } ,
+            }
+        });
         var mode = $.request.queryString["mode"];
         var sysid = $.request.queryString["msg_id"];
         if (sysid) {
-            $('#pagename').html("资料管理修改");
+            $('#pagename').html("资料修改");
             $("input,textarea").attr("placeholder", "");
             $(".hidefield").show();
             $.post(quick.serverUrl + '/getEditDatum?msg_id='+sysid + "&i=" + Math.random(), function (data) {
@@ -131,6 +147,23 @@
         }
     };
 
+
+    //当通过鼠标点击选中元素或通过 tab 键定位到元素时，该元素就会获得焦点
+    $("input").focus(function () {
+        $(this).parent().children(".input_clear").show();
+    });
+    //当元素失去焦点时发生 blur 事件。
+    $("input").blur(function(){
+        if($(this).val()=='')
+        {
+            $(this).parent().children(".input_clear").hide();
+        }
+    });
+    $(".input_clear").click(function(){
+            $("#upload").val(null);
+            $("#msg_content").val(null);
+        $(this).hide();
+    });
 
     $(function(){
         $("input[type=file]").change(function(){$(this).parents(".uploader").find(".filename").val($(this).val());});
@@ -237,7 +270,11 @@
 
     //确认
     function formCommit(){
+        if(!($("#pubform").valid())){
+            return false;
+        };
         $(".btn_text").html("正在处理您的请求，请稍后...");
+
         $("#pubform").ajaxSubmit({
             type:'post',
             url:'${G.host}/mesManage/editDatum',
@@ -251,8 +288,6 @@
                     layer.msg('资料已修改完成！', {icon:1,time: 1000,skin: 'layer-ext-moon'},function(){
                         window.location.href = quick.serverUrl+"/databaselist";
                     });
-                }else{
-                    layer.msg('资料修改未成功！', {icon:1,time: 1000,skin: 'layer-ext-moon'});
                 }
             },
             error:function () {

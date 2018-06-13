@@ -66,7 +66,10 @@
 			 #{app_id},
 			 #{cre_time},
 			 #{upd_time}
-			)
+			);
+		<selectKey resultType="int" order="AFTER" keyProperty="menu_id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
 	</insert>
 		
 	<!-- 修改sys_menu -->
@@ -184,6 +187,32 @@
 	</select>
 	
     <select id="getIsAppMenuByID" parameterType="com.quick.portal.sysMenu.SysMenuDO" resultType="int">
-		select count(*) from sys_menu where super_menu_id=15 and menu_state=1 and menu_id =${menu_id}
+		select count(*) from sys_menu where (super_menu_id=15 OR APP_ID IS NOT NULL ) and menu_state=1 and menu_id =${menu_id}
 	</select>
+	
+	
+	
+	<!-- 修改sys_menu -->
+	<update id="updateMenuLevel" parameterType="map">	
+		<![CDATA[ 
+			UPDATE SYS_MENU T,(
+			SELECT   MENU_LEVEL FROM SYS_MENU WHERE MENU_ID=#{super_menu_id}
+			) T2
+			SET T.MENU_LEVEL = #{menu_level}
+			,UPD_TIME = CURRENT_TIMESTAMP()
+			WHERE  T.MENU_ID =#{menu_id} AND T.MENU_STATE=1;
+  		]]> 	
+
+	</update>
+	
+	<select id="searchMenuInfoByID" parameterType="int" resultType="map">
+	<![CDATA[ 
+			SELECT  SUPER_MENU_ID ,MENU_ID,MENU_LEVEL FROM  SYS_MENU T
+			WHERE  T.MENU_ID =#{menu_id} AND T.MENU_STATE=1;
+  		]]> 	
+	</select>
+		
+
+	
+	
 </mapper>

@@ -12,31 +12,30 @@
                     <label id="pagename" class="col-xs-8" style="text-align:center;font-size: 22px;color:blue;margin-left: 180px"></label>
                 </div>
             </div>
-            <div class="col-sm-2">
-                <div class="pull-right ibox-toolbars hidefield" style="margin-right: -14px;margin-top: 2px;">
-                    <button type="button" class="btn btn-primary" onclick="cancel();">返回</button>
-                </div>
-            </div>
 
             <div class="ibox">
                 <div class="ibox-content ibox-content-ad" style="margin-top: 25px;">
                     <form id="form" name="form" method="post" action="${G.serverUrl}/save" class="wizard-big addForm" enctype="multipart/form-data" accept="image/jpg, image/png">
                         <div class="row">
                             <div class="col-sm-6 form_ipt_botm">
-                                <select class="form-control form-control-green select_change" id="superTypeName" name="superTypeName">
-                                </select>
+                                <div class="form-group">
+                                    <label class="col-xs-3 lable_top" style="width:134px;"><span></span>上级标签类型</label>
+                                    <div class="col-xs-9"><select class="form-control form-control-green select_change" id="superTypeName" name="superTypeName"></select></div>
+                                </div>
                             </div>
+
 
                             <div class="col-sm-6 form_ipt_botm">
                                 <div class="form-group">
-                                    <label class="col-xs-3 lable_top"><span></span>标签类型</label>
-                                    <div class="col-xs-9"><input class="form-control" id="tag_type_name" name="tag_type_name"></input>
+                                    <label class="col-xs-3 lable_top"><span class="span_require">*</span>标签类型</label>
+                                    <div class="col-xs-9"><input class="form-control required" id="tag_type_name" name="tag_type_name"/>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div ibox-toolbars hidefield>
-                                    <input id="submit-form" type="button" class="pull-right btn btn-primary" value="保存">
+                                <div ibox-toolbars hidefield style="float:left;width:100%;height:80px;">
+                                    <span class="input-group-btn" style="width:50%;" > <input id="submit-form" type="button" class="pull-right btn btn-primary" value="保存"/></span>
+                                    <span class="input-group-btn" style="width:14%;"  > <button type="button" class="pull-right btn btn-primary" onclick="cancel();">返回</button></span>
                                 </div>
                             </div>
                         </div>
@@ -60,6 +59,12 @@
     window.onload = function() {
         /*加载数据*/
             $('#pagename').html("新增标签类型");
+        $("#form").validate({
+            errorPlacement: function(error, element) {
+                element.parent().append(error);
+            },
+            rules: {}
+        });
     };
 
     //获得标签类型进行查询

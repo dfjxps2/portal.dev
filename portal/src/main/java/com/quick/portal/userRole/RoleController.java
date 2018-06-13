@@ -41,6 +41,7 @@ import com.quick.core.base.model.DataStore;
 import com.quick.core.util.common.DateTime;
 import com.quick.core.util.common.ReflectUtil;
 import com.quick.portal.security.authority.metric.MetricPrivilegeConstants;
+import com.quick.portal.security.authority.metric.PropertiesUtil;
 
 /**
  * 请求类
@@ -185,7 +186,10 @@ public class RoleController extends SysBaseController<Role> {
     
     @RequestMapping
     public String metricAuth(ModelMap model) {
-    	model.addAttribute("METRIC_URL", MetricPrivilegeConstants.GET_METRIC_INFO_URL);
+    	String url = PropertiesUtil.getPropery("index.service.url");
+    	String port = PropertiesUtil.getPropery("index.service.port");
+    	String serviceUrl = url.concat(MetricPrivilegeConstants.SERVICE_PORT).concat(port).concat(MetricPrivilegeConstants.GET_METRIC_SERVICE_NAME);
+    	model.addAttribute("METRIC_URL", serviceUrl);
         return "page/role/metricAuth";
     }
 

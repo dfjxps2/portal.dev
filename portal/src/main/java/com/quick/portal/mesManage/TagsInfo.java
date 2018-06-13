@@ -19,7 +19,7 @@ public class TagsInfo {
          sb.append("<ul class=\\\"menu-body clearfloat\\\" style=\\\"width:90%\\\">");
         List<Map<String,Object>> tags = (List<Map<String,Object>>) map.get(i).get("tags");
          for(Map<String,Object> tag:tags){
-             sb.append("<li style=\\\"line-height:20px \\\"><a href='#' onclick=\\\"click_event('"+tag.get("tag_id")+","+tag.get("tag_text")+"')\\\">"+ tag.get("tag_text")+"</a></li>");
+             sb.append("<li style=\\\"line-height:20px \\\"><a href='#'  class=\\\"ck_qx\\\" onclick=\\\"click_event(this,'"+tag.get("tag_id")+","+tag.get("tag_text")+"')\\\">"+ tag.get("tag_text")+"</a></li>");
          }
             sb.append("</ul>");
             sb.append("</li>");

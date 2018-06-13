@@ -145,30 +145,44 @@ public class InfoMngController extends SysBaseController<InfoMngDO> {
 	     *            页面请求对象
 	     * @return 跳转页面
 	     * @throws IOException
+	     * filePath：内容
+	     * attachPath:附件
 	     */
 	    @RequestMapping(value = "/download")
 		public ModelAndView download(HttpServletRequest request,
 				HttpServletResponse response) throws Exception {
-		String type = request.getParameter("type");
-		String filePath = request.getParameter("id");
-		try {
-			filePath = URLDecoder.decode(filePath,
-					MetricPrivilegeConstants.LANGUAGE_CODE_UTF);
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			throw new Exception("指标转义异常：" + e.getLocalizedMessage());
-		}
-
-		if (filePath == null || "".equals(filePath)) {
-			System.out.println("文件路径名称:" + filePath + ",filePath不能为空");
-			throw new Exception("查询文件路径异常: " + "文件路径:" + filePath
-					+ ",filePath不能为空");
-		}
-		String ids = QCookie.getValue(request, "ids");
-		infoMngService.saveVisitInfo(filePath, Integer.parseInt(type),
-				Integer.parseInt(ids));
-		FileOperateUtils.download(request, response, filePath);
-		return null;
+			String type = request.getParameter("type");
+			String filePath = request.getParameter("id");
+			String attachPath = request.getParameter("aid");
+			if (filePath == null || "".equals(filePath)) {
+				System.out.println("文件路径名称:" + filePath + ",filePath不能为空");
+				throw new Exception("查询文件路径异常: " + "文件路径:" + filePath
+						+ ",filePath不能为空");
+			}
+			try {
+				filePath = URLDecoder.decode(filePath,
+						MetricPrivilegeConstants.LANGUAGE_CODE_UTF);
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				throw new Exception("指标转义异常：" + e.getLocalizedMessage());
+			}
+			String ids = QCookie.getValue(request, "ids");
+			infoMngService.saveVisitInfo(filePath, Integer.parseInt(type),
+					Integer.parseInt(ids));
+			//消息：2，有内容附件和上传附件
+			if(null != type && SolrInfoConstants.MSG_OBJ_TYPE.equals(type)){
+				if (attachPath == null || "".equals(attachPath)) {
+					FileOperateUtils.download(request, response, filePath);
+				}else{
+					attachPath = URLDecoder.decode(attachPath,
+							MetricPrivilegeConstants.LANGUAGE_CODE_UTF);
+					FileOperateUtils.download(request, response, filePath, attachPath);
+				}
+			}else{
+				FileOperateUtils.download(request, response, filePath);
+			}
+			
+			return null;
 		}
 	    
 	    

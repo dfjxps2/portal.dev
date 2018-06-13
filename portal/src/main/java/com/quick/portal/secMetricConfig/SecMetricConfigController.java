@@ -156,7 +156,7 @@ public class SecMetricConfigController extends SysBaseController<SecMetricConfig
         }
         return null;
     }
-    @RequestMapping(value = "/use")    //启用配置
+    @RequestMapping(value = "/use")    //启用指标配置
     @ResponseBody
     public Object use() throws Exception {
         int term_type_id = 0;//获取终端设备类型id  0 电脑 1手机 2 pad 9 全部

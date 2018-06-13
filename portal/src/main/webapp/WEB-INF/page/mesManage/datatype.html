@@ -8,21 +8,16 @@
 <div class="wrapper wrapper-content wrapper-content-x animated fadeInRight">
     <div class="row">
         <div class="col-sm-12">
-            <div class="col-sm-10">
-                <div class="col-sm-12">
-                    <label id="pagename" class="col-xs-8" style="text-align:center;font-size: 22px;color:blue;margin-left: 180px"></label>
-                </div>
-            </div>
             <div class="ibox ">
-                <div class="ibox-content ibox-content-ad" style="margin-left:5px;margin-top: -30px;height:500px;width:1000px">
+                <div class="ibox-content ibox-content-ad" style="margin-left:55px;margin-top:35px;height:500px;width:90%">
                     <form id="pubform" name="pubform" method="post"  enctype="multipart/form-data" >
                         <div class="row" style="margin-top:20px">
                             <div class="form-group" style="width:220px;">
                                <select type="button" name="sup_msg_type_id" class="input-group form-control form-control-green select_change" id="sup_msg_type_id" onchange="query()">
                                    <option value="">请选择资料大类</option>
-                                   <option value="1">政府文件</option>
+                                   <option value="1">政策文件</option>
                                    <option value="2">政府公文</option>
-                                   <option value="3">大数据平台报告</option>
+                                   <option value="3">大数据分析报告</option>
                                </select>
                             </div>
                             <div class="form-group" style="width:100%;height:40px;">
@@ -93,7 +88,6 @@
     }
 
     window.onload=function () {
-        $('#pagename').html("资料类别管理");
     }
 
     function  SelectDataType() {

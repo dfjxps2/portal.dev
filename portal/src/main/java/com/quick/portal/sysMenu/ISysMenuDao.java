@@ -32,4 +32,12 @@ public interface ISysMenuDao<SysMenuDO> extends ISysBaseDao<SysMenuDO> {
 	 List<Map<String,Object>> listAllMenu();
 	 
 	 public int getIsAppMenuByID(SysMenuDO sysMenu);
+	 
+	 
+	 public void updateMenuLevel(Map<String,Object> paramMap);
+	 
+	 
+	 List<Map<String,Object>> searchMenuInfoByID(int menuID);
+	 
+	
 }

@@ -3,10 +3,8 @@ package com.quick.portal.search.infomng;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
@@ -35,7 +33,7 @@ public class SolrUtils {
 	 * 添加文档 用solrJ创建索引
 	 * @throws Exception 
 	 */
-	public static void addSolrInfo(String id, String content, String type,String title) {
+	public static void addSolrInfo(String id, String content, String type,String title,String attachID) {
 		SolrInputDocument doc = new SolrInputDocument();
 		doc.addField("id", id);
 		doc.addField("content",content);
@@ -43,6 +41,8 @@ public class SolrUtils {
 		doc.addField("create_time", DateTime.Now().getTime());
 		doc.addField("portal_doc_class", type);
 		doc.addField("portal_doc_title", title);
+		doc.addField("portal_attachment_id",attachID);
+		
 		HttpSolrClient server = null;
 		try {
 		    server = InitSolrServer.initServer(SolrInfoConstants.PORTAL_DOC_URL);
@@ -161,6 +161,9 @@ public class SolrUtils {
 					doc.get("portal_doc_title") == null ? "" : doc.get("portal_doc_title"));
 			dataMap.put("portal_doc_class",
 					doc.get("portal_doc_class") == null ? "" : doc.get("portal_doc_class"));
+			dataMap.put("aid",
+					doc.get("portal_attachment_id") == null ? "" : doc.get("portal_attachment_id"));
+			
 			dataList.add(dataMap);
 		}
 		Integer count = dataList.size();
@@ -175,6 +178,9 @@ public class SolrUtils {
 	 */
 	public static SolrQuery getAllSolrQuery(Map<String, Object> m,PageBounds page,String type){
 		String queryStr = m.get(SolrInfoConstants.INDEX_KEYWORD).toString();
+		if(null == queryStr ||"".equals(queryStr)){
+			return null;
+		}
 		SolrQuery query = new SolrQuery(queryStr);
 		query.setStart(page.getStartRow() == 1 ? 0 : page.getStartRow() - 1);
 		query.setRows(page.getPageSize());
@@ -211,6 +217,48 @@ public class SolrUtils {
 	 * 连接SOLR服务
 	 * 
 	 */
+	public static SolrDocumentList getSolrInfoDataByID(SolrQuery query,String id){
+		QueryResponse response = null;
+		try {
+			HttpSolrClient server = InitSolrServer.initServer(SolrInfoConstants.PORTAL_DOC_URL);
+			response = server.query(query);
+		} catch (SolrServerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		SolrDocumentList docList = response.getResults();
+		
+		
+		return docList;
+	}
+	
+	/*
+	 * 通过关键字规则判断，有关键字返回TRUE; 没有关键字返回FALSE;
+	 * 
+	 */
+	public static boolean getSolrDataByRule(SolrDocumentList docList,String key){
+		boolean  bool = false;
+		String id = null;
+		System.out.println("####### 总共 ： " + docList.size() + "条记录");
+		for (SolrDocument doc : docList) {
+			System.out.println("####### id : " + doc.get("id") + "  title : "
+					+ doc.get("portal_doc_title") + "  portal_doc_class : "
+					+ doc.get("portal_doc_class") );
+			id = doc.get("id") == null ? "" : doc.get("id").toString();
+			if(null !=key && key.equals(id)){
+			    bool = true;
+				return bool;
+			}
+		}
+		return bool;
+	}
+	
+	
+	
+	
 	public static SolrDocumentList getSolrInfoDataByTitle(SolrQuery query){
 		QueryResponse response = null;
 		try {
@@ -270,7 +318,8 @@ public class SolrUtils {
 							"portal_doc_class",
 							doc.get("portal_doc_class") == null ? "" : doc
 									.get("portal_doc_class"));
-					
+					dataMap.put("aid",
+							doc.get("portal_attachment_id") == null ? "" : doc.get("portal_attachment_id"));
 					dataList.add(dataMap);
 					break;
 				}
@@ -327,7 +376,8 @@ public class SolrUtils {
 					doc.get("portal_doc_title") == null ? "" : doc.get("portal_doc_title"));
 			dataMap.put("portal_doc_class", doc.get("portal_doc_class") == null ? ""
 					: doc.get("portal_doc_class"));
-			
+			dataMap.put("aid",
+					doc.get("portal_attachment_id") == null ? "" : doc.get("portal_attachment_id"));
 			dataList.add(dataMap);
 		}
 		restList.add(count);

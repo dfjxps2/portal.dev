@@ -103,7 +103,6 @@ a, img {
 }
 
 .dropdown .tit_filter {
-	
 	font-weight: 700;
 	background: #ddd;
 	font-size: 14px;
@@ -184,18 +183,15 @@ a, img {
 	   //初始化表格
 	   function config(){
            var RFlag=$.request.queryString["RFlag"];
-		   quick.serverUrl = "${G.serverUrl}";
-		   quick.editUrl = "${G.editUrl}";
-		   quick.objName = "${G.objName}";
-		   quick.idField = "${G.idField}";
+		   quick.serverUrl = "${G.host}/info";
            
 		   $("#list").bootstrapTable("destroy");
 		   _gd["list"]=new BGrid("#list");
 		   _gd["list"].config({
 			   type: "post",
 			   url:quick.serverUrl+"/getInfo?i=" + Math.random(),
-			   idField: quick.idField,
-			   sortName: quick.idField,
+//			   idField: quick.idField,
+//			   sortName: quick.idField,
                cache:false,
 			   height: $(document.body).height()-50,
 			   toolbar:"#formSearch",
@@ -229,7 +225,7 @@ a, img {
 						return down = '<span style="color:#9ACD32"></span>';  
                 	   }else{
 //                		   var url ="D:/00-software/luna/eclipse/ws_git/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/portal/upload/mesPublish/20180525/test内容申请.txt";
-                	   return down = "<button type='button' class='btn_el' onclick='downClick(\""+row.id+"\",\""+row.aid+"\",\""+row.portal_doc_class+"\")'>下载</button>";
+                	   return down = "<button type='button' class='btn_el' onclick='downClick(\""+row.id+"\",\""+row.portal_doc_class+"\")'>下载</button>";
                 	   }
 				   }} 
 			   ],onPageChange:function(number, size){
@@ -253,23 +249,24 @@ a, img {
 
    
     
-	//查看详细信息
-	function downClick(id,aid,type){
-		if(id ==null ||id =="" || id=="undefined"){
-			$. layer.msg("文件路径不对，请联系管理员",{icon:1,time: 1000,skin: 'layer-ext-moon'}); 
-			return false ;
+		//查看详细信息
+		function downClick(id,aid,type){
+			if(id ==null ||id =="" || id=="undefined"){
+				$. layer.msg("文件路径不对，请联系管理员",{icon:1,time: 1000,skin: 'layer-ext-moon'}); 
+				return false ;
+			}
+	/*  	  type='2';	
+		  id= 'D:/upload/测试5.txt';
+		  aid='D:/upload/新建1.docx';  */
+	 	  id = encodeURI(id);
+		  aid = encodeURI(aid); 
+		  var param ='?type='+type+'&aid='+aid+'&id='+id;	  
+		  var url =quick.serverUrl+'/download';
+		  url = url +param;
+		  url = encodeURI(url);
+		  window.location.href= url; 
 		}
-/*  	  type='2';	
-	  id= 'D:/upload/测试5.txt';
-	  aid='D:/upload/新建1.docx';  */
- 	  id = encodeURI(id);
-	  aid = encodeURI(aid); 
-	  var param ='?type='+type+'&aid='+aid+'&id='+id;	  
-	  var url =quick.serverUrl+'/download';
-	  url = url +param;
-	  url = encodeURI(url);
-	  window.location.href= url; 
-	}
+
 
 
     function query(){

@@ -291,3 +291,18 @@ quick.decode = function(val,store){
     }
     return val;
 }
+function addValid(opt,id){
+    id = id || '#form';
+    opt = $.extend(true, {
+        errorPlacement: function(error, element) {
+            var pp = element.parent();
+            if(pp.hasClass("input-group"))
+                pp = pp.parent();
+            pp.append(error);
+        },
+        ignore : ":disabled",
+        rules: {
+        }
+    },opt);
+    $(id).validate(opt);
+}

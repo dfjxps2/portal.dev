@@ -5,7 +5,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Map.Entry;
+
+import org.apache.commons.lang.StringUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -119,5 +122,36 @@ public class MetricPrivilegeUtils {
 		}
 		return bool;
 	}
+	
+	private static ResourceBundle indexServicesProperties;
+	  
+    /** 配置文件myConfig.properties放在classpath下面otherConfigs目录下面   */
+    public static final String INDEXSERVICES_PROPERTIES_FILENAME = "properties/config.properties";
+    
+    
+    
+    /**
+     * 在静态块中通过<code>ResourceBundle<code>类来加载配置的<code>indexServicesProperties.properties</code>.
+     */
+    static {
+        try {
+        	indexServicesProperties = ResourceBundle.getBundle(INDEXSERVICES_PROPERTIES_FILENAME);
+        } catch (Exception e) {
+            System.out.println("加载indexServicesProperties配置文件错误！".concat(e.getMessage()));
+ //           System.exit(0);
+        }
+    }
+     
+    /**
+     * 通过在<code>indexServicesProperties.properties</code>中定义的key来取得对应的value.
+     * 
+     * @param key <code>indexServicesProperties.properties</code>的key.
+     * @return 返回key对应的value，没有则返回"".
+     */
+    public static String getProValByKey(String key) {
+        String str = indexServicesProperties.getString(key);
+        return StringUtils.isEmpty(str) ? "" : str;
+    }
+     
     
 }

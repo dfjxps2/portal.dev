@@ -9,38 +9,36 @@
 <div class="wrapper wrapper-content wrapper-content-x animated fadeInRight">
         <div class="col-sm-12">
             <div class="ibox ibox-x ">
-                <div class="ibox-content ibox-content-ad" style="margin-left:5px;margin-top: -30px;height:500px;width:1000px">
+                <div class="ibox-content ibox-content-ad" style="margin-left:30px;margin-top:40px;height:500px;width:95%;">
                     <form id="pubform" name="pubform" method="post"  enctype="multipart/form-data" >
-                        <div class="row" style="padding-top:50px">
-                            <div class=" form-group" style="padding-left:50px;width:400px;float: left">
-                                <label class="col-xs-3 lable_top" style="width:100px;padding-right:2px;"><span class="span_require"></span>资料大类</label>
-                                <div class="col-xs-9" style="padding-left: 0px;">
-                                    <select type="button" name="sup_msg_type_id" class="input-group form-control form-control-green select_change" id="sup_msg_type_id" style="width:280px;" onchange="supDatumTy()">
+                        <div class="row" style="padding-top:40px">
+                            <div class=" form-group" style="padding-left:50px;width:451px;float: left;margin-bottom:5px;">
+                                <label class="col-xs-3 lable_top" style="width:100px;padding-right:12px;"><span class="span_require"></span>资料大类</label>
+                                <div class="col-xs-9" style="padding-left: 0px;width:81%">
+                                    <select type="button" name="sup_msg_type_id" class="input-group form-control form-control-green select_change" id="sup_msg_type_id" style="width:100%;height:41px;" onchange="supDatumTy()">
                                         <option value="">请选择资料大类</option>
                                         <option value="1">政府文件</option>
                                         <option value="2">政府公文</option>
                                         <option value="3">大数据平台报告</option>
                                     </select></div>
                             </div>
-                            <div class="form-group" style="width:500px;float: left;padding-left:50px;" >
-                                <label class="col-xs-3 lable_top" style="width:100px;"><span class="span_require"></span>资料小类</label>
-                                <div class="col-xs-9" style="padding-left: 0px;width:300px"> <select style="width:280px;" class="form-control required select_change" id="msg_type_id" name="msg_type_id" onchange="subClass()"></select></div>
+                            <div class="form-group" style="width:460px;float: left;padding-left:40px;margin-bottom:5px;margin-left:20px;" >
+                                <label class="col-xs-3 lable_top" style="width:100px;padding-right:12px;"><span class="span_require"></span>资料小类</label>
+                                <div class="col-xs-9" style="padding-left: 0px;width:82%;"> <select style="width:93%;height:41px;" class="form-control required select_change" id="msg_type_id" name="msg_type_id" onchange="subClass()"></select></div>
                             </div>
-                            <div class="form-group" style="padding-left:32px;width: 100%;height:50px;">
-                                <label class="col-xs-3 lable_top" style="width:120px;"><span class="span_require">*</span>关键词</label>
-                                <div class="col-xs-9" style="padding-left: 0px;width:800px;"><input style="width:708px;left: auto;" placeholder="参数1 惨数2" class="form-control required" id="keywords" name="keywords"  /></div>
+                            <div class="form-group" style="padding-left:50px;width: 99%;height:50px;margin-bottom:2px;">
+                                <label class="col-xs-3 lable_top" style="width:100px;padding-right:27px;"><span class="span_require"></span>关键词</label>
+                                <div class="col-xs-9" style="padding-left: 0px;width:90%;"><input style="width:95%;left: auto;height:41px;" placeholder="输入的关键词以空格隔开，如：参数1 参数2....." class="form-control " id="keywords" name="keywords"  /></div>
                             </div>
 
-                            <div class="form-group" style="padding-left: 5px;width:500px;padding-top:50px;">
-                               <button class="pull-right btn btn-primary " type="button" onclick="query();"> 查询</button>
-                            </div>
-                            <div class="pull-right form-group" style="padding-top:20px;padding-left:5px;width: 100%;">
+                            <div class="form-group" style="padding-left: 5px;width:92%;padding-top:45px;margin-bottom:0px;">
+                                <span class="input-group-btn" style="width:1.5%;" > <button class="pull-right btn btn-primary "  type="button" onclick="query();"> 查询</button></span>
                                 <span class="input-group-btn" ><button class="pull-right btn btn-primary " type="button" onclick="addDataBase();">新增</button> </span>
                             </div>
                             </div>
                     </form>
-                    <div style="margin:5px;">
-                        <table id="list" class="table-striped" style="table-layout:fixed"></table>
+                    <div style="margin:5px;margin-top: 0px;">
+                        <table id="list" class="table-striped" style="table-layout:fixed;margin-top:0px;"></table>
                     </div>
                 </div>
             </div>
@@ -78,16 +76,16 @@
             clickToSelect:true,
             columns:[
                 {field:'serialNum',title:'资料编号',width:'10%',align:'center'},
-                {field:'msg_title',title:'资料标题',width:'40%',align:'center',
+                {field:'msg_title',title:'资料标题',width:'20%',align:'center',
                     formatter:function (value,row) {
                         var temp ='<a href='+quick.serverUrl+'/downloadFile?msg_content='+row.msg_content+'>'+row.msg_title+'</a>';
                         return temp;
                     }},
-                {field:'pub_time',title:'入库日期',width:'15%',align:'center'},
-                {field:'appr_time',title:'更新日期',width:'15%',align:'center'},
+                {field:'pub_time',title:'入库日期',width:'25%',align:'center'},
+                {field:'appr_time',title:'更新日期',width:'25%',align:'center'},
                 {field:'msg_content',visible:false},
                 {field:'msg_id',visible:false},
-                {field: 'CZ',  title: '操作',width: '20%', formatter:function(value,row,index){
+                {field: 'CZ',  title: '操作',width: '20%', align: 'center', formatter:function(value,row,index){
                     return "<button type='button' class='btn_el' onclick='viewData(\""+row.msg_id+"\")'>编辑</button>"+
                   "<button type='button' class='btn_el' onclick='delData(\""+row.msg_id+"\",\""+row.msg_content+"\")'>删除</button>";
                 }}
@@ -108,6 +106,22 @@
         }
     }
 
+     window.onload=function () {
+      jQuery.validator.addMethod("keyword",function (value,element) {
+          var key = /^[a-zA-Z0-9\s?\u4e00-\u9fa5]*$/;
+          return this.optional(element) || (key.test(value));
+      },"请按照指定格式输入关键词！");
+         $("#pubform").validate({
+             errorPlacement: function(error, element) {
+                 element.parent().append(error);
+             },
+             rules: {
+                 keywords: {
+                     keyword:true
+                 } ,
+             }
+         });
+     }
     //下拉框联动
     function supDatumTy(){
         var supdata = $("#sup_msg_type_id").val();

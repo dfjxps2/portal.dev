@@ -403,6 +403,55 @@ public class MesManageController extends SysBaseController<MesManageDO> {
             e.printStackTrace();
         }
     }
+
+    //新增参数值校验
+    @RequestMapping(value="checkParamName")
+    public void checkParamName(HttpServletResponse res,MesManageDO contentRuleDo) throws IOException {
+        String[] data = null;
+        Map<String,Object> map = new HashMap<>();
+        if(contentRuleDo.getRuleValue()!=null && !contentRuleDo.getRuleValue().equals("undefined") && !"null".equals(contentRuleDo.getRuleValue())){
+            data= contentRuleDo.getRuleValue().split(",");
+            String rule_id = data[0];
+            String param_name = data[1];
+            map.put("rule_id",rule_id);
+            map.put("param_name",param_name);
+        }
+        if(contentRuleDo.getParam_value()!=null && !contentRuleDo.getParam_value().equals("undefined") && !"null".equals(contentRuleDo.getParam_value())){
+            map.put("param_value",contentRuleDo.getParam_value());
+        }
+         List<Map<String,Object>> result = mesManageDao.selectRules(map);
+        if(result.size()!= 0){
+            res.getWriter().write("true");
+        }else {
+            res.getWriter().write("false");
+        }
+        res.getWriter().flush();
+    }
+
+   //新增资料小类检查
+    @RequestMapping(value="checkSubClass")
+    public void checkSubClass(HttpServletResponse res,MesManageDO contentRuleDo,String msgtypename) throws IOException {
+        String[] data = null;
+        Map<String,Object> map = new HashMap<>();
+        if(contentRuleDo.getMsg_type_name()!=null && !contentRuleDo.getMsg_type_name().equals("undefined") && !"null".equals(contentRuleDo.getMsg_type_name())){
+              if(contentRuleDo.getMsg_type_name().equals(msgtypename)){
+                  res.getWriter().write("false");
+                  res.getWriter().flush();
+                  return;
+              }
+            map.put("msg_type_name",contentRuleDo.getMsg_type_name());
+        }
+        if(contentRuleDo.getSup_msg_type_id()!=null && !contentRuleDo.getSup_msg_type_id().equals("undefined") && !"null".equals(contentRuleDo.getSup_msg_type_id())){
+            map.put("sup_msg_type_id",contentRuleDo.getSup_msg_type_id());
+        }
+        List<Map<String,Object>> result = mesManageDao.selectSubClass(map);
+        if(result.size()!= 0){
+            res.getWriter().write("true");
+        }else {
+            res.getWriter().write("false");
+        }
+        res.getWriter().flush();
+    }
       //新增规则参数数据上传
     @RequestMapping(value = "uploadRules",method={RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
@@ -512,8 +561,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
          if(paramValue!=null && !"".equals(paramValue)){
              String[] data = paramValue.split(",");
              map.put("rule_id",data[0]);
-             map.put("rule_type_name",data[1]);
-             map.put("param_name",data[2]);
+             map.put("param_name",data[1]);
          }
         List<Map<String,Object>> list = mesManageDao.selectRules(map);
        return list;
@@ -528,6 +576,8 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         }
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss ");
         map.put("appr_time",new Date());
+        String useId = QCookie.getValue(request,"ids");
+        map.put("appr_user_id",useId);
         if(msgids!=null && msgids.length>0){
             String[] msgs = msgids[0].split(",");
             for (String data:msgs){
@@ -1098,36 +1148,15 @@ public class MesManageController extends SysBaseController<MesManageDO> {
     //新增资料小类
      @RequestMapping(value = "insertSupClass")
      @ResponseBody
-    public void  insertSupClass(HttpServletResponse res,MesManageDO mesManageDO) throws IOException {
-        Map<String,Object> map = new HashMap<>();
-        if(mesManageDO.getSup_msg_type_id()!=null ){
-            map.put("sup_msg_type_id",mesManageDO.getSup_msg_type_id());
-        }
-        if(mesManageDO.getMsg_type_name()!=null && !mesManageDO.getMsg_type_name().equals("")){
-            map.put("msg_type_name",mesManageDO.getMsg_type_name());
-        }
-        mesManageDao.insertMsgTy(map);
-        res.getWriter().write("1");
-        res.getWriter().flush();
+    public void  insertSupClass(HttpServletResponse res,MesManageDO mesManageDO) throws Exception {
+           mesManageService.insertSupClass(res,mesManageDO);
     }
 
     //编辑资料类别
     @RequestMapping(value = "editSubClass")
     @ResponseBody
-    public void editSubClass(HttpServletResponse response,MesManageDO mesManageDO) throws IOException {
-        Map<String,Object> map = new HashMap<>();
-        if(mesManageDO.getSup_msg_type_id()!=null ){
-            map.put("sup_msg_type_id",mesManageDO.getSup_msg_type_id());
-        }
-        if(mesManageDO.getMsg_type_name()!=null && !mesManageDO.getMsg_type_name().equals("")){
-            map.put("msg_type_name",mesManageDO.getMsg_type_name());
-        }
-        if(mesManageDO.getMsg_type_id()!=null && !mesManageDO.getMsg_type_id().equals("undefined")){
-            map.put("msg_type_id",mesManageDO.getMsg_type_id());
-        }
-         mesManageDao.updateMsgTy(map);
-        response.getWriter().write("1");
-        response.getWriter().flush();
+    public void editSubClass(HttpServletResponse response,MesManageDO mesManageDO) throws Exception {
+        mesManageService.editSubClass(response,mesManageDO);
     }
 
 
@@ -1160,6 +1189,8 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         map.put("msg_id",msgId);
         List<Map<String,Object>> obj = mesManageDao.selectDataMes(map);
         Map<String,Object> a =obj.get(0);
+      String keywords =  a.get("keywords").toString().replace(","," ");
+       a.put("keywords",keywords);
         Integer typeId = (Integer) a.get("msg_type_id");
         if(typeId<=3){
             a.put("sup_msg_type_id",typeId);
@@ -1180,19 +1211,6 @@ public class MesManageController extends SysBaseController<MesManageDO> {
     }
 
 
-    //资料详情
-    @RequestMapping(value = "getDatumDetail", method= RequestMethod.POST)
-    @ResponseBody
-    public Map<String,Object> getDatumDetail() throws IOException {
-        String msgcontent = QRequest.getString(request,"msg_content");
-        Map<String,Object> content = new HashMap<>();
-        String msgtext = null;
-        if(msgcontent!= null && !msgcontent.equals("undefined") && !"null".equals(msgcontent)){
-            msgtext = LoadContentByPath(msgcontent,0);
-        }
-        content.put("msg_content",msgtext);
-        return content;
-    }
 
     //资料编辑
     @RequestMapping(value="editDatum",method={RequestMethod.GET,RequestMethod.POST})

@@ -64,6 +64,8 @@ public class ApplicationServiceImpl extends SysBaseService<ApplicationDO> implem
     
     /**
      * 保存业务
+     * mdy date:20180611
+     * mdy desc:保存应用时，不要新增菜单数据
      * @return 
      */
     @Override
@@ -81,7 +83,7 @@ public class ApplicationServiceImpl extends SysBaseService<ApplicationDO> implem
 
             c = dao.insert(entity);
             //新增应用时加入菜单 （自增多isnert未解决，采用代码插入)
-            if(c>0) {
+            /*if(c>0) {
                 //获取上级菜单Id  应用集成
                 Integer super_menu_id = 0;
                 Map<String, Object> superParm = new HashMap<>();
@@ -103,7 +105,7 @@ public class ApplicationServiceImpl extends SysBaseService<ApplicationDO> implem
                 m.setCre_time( entity.getCre_time() );
 
                 menuDao.insert(m);
-            }
+            }*/
         }else {
             entity.setUpd_time( now );  //修改时间
             c = dao.update(entity);

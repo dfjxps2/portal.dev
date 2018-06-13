@@ -78,7 +78,7 @@ public class MonitorController extends SysWebController {
         Object layout = getLayout(page_id);
 
         model.addAttribute("app", app);
-        model.addAttribute("pageList", plist);
+        model.addAttribute("page_id", page_id);
         model.addAttribute("pageJson", JsonUtil.serialize(plist));
         model.addAttribute("layout", layout);
         return view();
