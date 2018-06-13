@@ -66,7 +66,10 @@
 			 #{app_id},
 			 #{cre_time},
 			 #{upd_time}
-			)
+			);
+		<selectKey resultType="int" order="AFTER" keyProperty="menu_id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
 	</insert>
 		
 	<!-- 修改sys_menu -->
