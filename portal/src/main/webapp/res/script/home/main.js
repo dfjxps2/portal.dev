@@ -40,7 +40,7 @@ function loadctx(n){
 	}
 	var ar = u.split('.'), fix = ar[ar.length - 1].toLowerCase();
 	if(/jpg|jpeg|gif|png/.test(fix))
-		return '<img class="ss21" src="'+ u + '" />';
+		return '<div class="cell-bar">'+ n.app_name +'</div><img class="ss21" src="'+ u + '" />';
 	return loadpancel(n, u);
 
 	function drawMenu(n){
@@ -54,7 +54,7 @@ function usr_setting(aid){
 	window.open(_host + "/monitor/setting?t="+aid);
 }
 function loadpancel(n, u){
-	return '<div class="cell-bar cell-barbg ss21"></div><div class="ss21" style="margin:auto 0px;"><iframe class="ss21" src="'+u+'"></iframe></div>';
+	return '<div class="cell-nav">'+ n.app_name+'</div><div class="cell-box" style="margin:auto 0px;"><iframe class="cell-box" src="'+u+'"></iframe></div>';
 }
 function loadpg(n){
 	var str = [];
@@ -116,12 +116,12 @@ function playnext(){
 }
 function bindsearch(){
 	var $ui = $('#div_append');
-//	$("#txtico").after(txtdata);
+    $("#txtico").after(txtdata);
 	var w = $("#div_append").width();
 	$("#div_data ul").width(w);
 	$("#div_data ul li.tit_filter").width(w - 10);
 	$ui.bind('mouseleave',function(){
-		//$ui.find('.arrowUp').addClass('arrowDown').removeClass('arrowUp').andSelf().find('.dropdown').slideUp(500);
+		$ui.find('.arrowUp').addClass('arrowDown').removeClass('arrowUp').andSelf().find('.dropdown').slideUp(500);
 	});
 	$('#txt').click(function(){
 		document.getElementById("div_data").style.display ='block';
