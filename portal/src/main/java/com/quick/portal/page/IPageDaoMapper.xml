@@ -80,6 +80,7 @@
         </if>
 	</select>
 	
+	
 	<!-- 查询总记录数 -->
 	<select id="count" parameterType="map" resultType="int">
 		select count(*) from page

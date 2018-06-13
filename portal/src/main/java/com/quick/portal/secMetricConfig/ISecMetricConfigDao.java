@@ -31,4 +31,6 @@ public interface ISecMetricConfigDao<SecMetricConfigDO> extends ISysBaseDao<SecM
     int  insertUAC( Map<String, Object> queryMap );
     int  updateUAC_Active( Map<String, Object> queryMap );
     int  updateUAC_Version( Map<String, Object> queryMap );
+    
+    int  deleteBySectionId(String sec_metric_id );
 }

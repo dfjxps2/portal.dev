@@ -23,9 +23,9 @@
 
 	<jaxws:endpoint id="userDtSync"
 		implementor="com.quick.portal.security.synchrodata.internal.DataSynchronizedWsdlImpl"
-		address="http://portal-webservice:18001/portal/UserDataSync" />
+		address="http://127.0.0.1:18001/portal/UserDataSync" />
 	<jaxws:endpoint id="dataSynchronizedService"
 		implementor="com.quick.portal.security.synchrodata.bjcadata.DataSynchronizedServiceImpl"
-		address="http://portal-webservice:18001/portal/dataSynchronizedService" />
+		address="http://127.0.0.1:18001/portal/dataSynchronizedService" />
 
 </beans>

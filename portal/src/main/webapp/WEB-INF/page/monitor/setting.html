@@ -17,6 +17,21 @@
         .grid-stack-item-content {color: #2c3e50; background-color: #e5e6e7;position: relative;}
         .dgs-toolbar{width:100%;height:25px;line-height: 25px;text-align:right;position: absolute;top:0;z-index:2;}
         .dgs-ctx{width:100%;height:100%;line-height: 100%;text-align:center;display: flex;vertical-align: middle;  align-items: center;  justify-content: center;}
+    @media screen and (max-width: 1000px) {
+  table td:before {
+    content: attr(data-label);
+    float: left;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+}
+table td{
+height: 33px;
+}
+table th{
+height: 40px;
+font-size: 16px;
+}
     </style>
 </head>
 
@@ -39,35 +54,26 @@
             </div>
         </div>
 		<div class="col-sm-4">
-            <form id="form" name="form" method="post" action="${G.host}/saveSetting" class="wizard-big" enctype="multipart/form-data" accept="image/jpg, image/png">
+            <form id="form" name="form" method="post" action="${G.host}/monitor/saveSetting" class="wizard-big" enctype="multipart/form-data" accept="image/jpg, image/png">
 			<div class="ibox">
                 <div class="ibox-content ibox-content-ad">
                     <div class="row">
-                        <div class="col-sm-12 form_ipt_botm">
-                            <div class="form-group">
-                                <label class="col-xs-4 lable_top"><span class="span_require">*</span>名称</label>
-                                <div class="col-xs-8"><input type="text" id="page_name" name="page_name" class="form-control required" /></div>
-                            </div>
-                        </div>
-                        <div class="col-sm-12 form_ipt_botm">
-                            <div class="form-group">
-                                <label class="col-xs-4 lable_top"><span></span>创建人</label>
-                                <div class="col-xs-8"><input type="text" id="user_NAME" readOnly="readOnly" class="form-control"/></div>
-                            </div>
-                        </div>
-                        <div class="col-sm-12 form_ipt_botm">
-                            <div class="form-group">
-                                <label class="col-xs-4 lable_top"><span></span>创建时间</label>
-                                <div class="col-xs-8"><input id="cre_time" name="cre_time" type="text" class="form-control"  readonly="readOnly">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-12 form_ipt_botm">
-                            <div class="form-group">
-                                <label class="col-xs-4 lable_top"><span></span>更新时间</label>
-                                <div class="col-xs-8"><input id="upd_time" name="upd_time" type="text" class="form-control"  readonly="readOnly">
-                                </div>
-                            </div>
+                    	<div class="col-sm-12 form_ipt_botm" style="font-size: 20px;text-align: center;margin-bottom: 10px;margin-top: 10px;">
+                    	<h2>指标设置</h2>
+                    	</div>
+                        <div class="col-sm-12 form_ipt_botm" id = "list">
+                        <table  style="width: 100%">
+                         <thead>
+						    <tr>
+						      <th>指标名称</th>
+						      <th>图表类型</th>
+						      <th>显示状态</th>
+						      <th>操作</th>
+						    </tr>
+						  </thead>
+						  <tbody id = "tb">
+						  </tbody>
+                        </table>
                         </div>
                     </div>
                     <div class="row" style="height:60px;">
@@ -99,13 +105,117 @@
 <script>
     var _tmpls={},_layout = ${layout},_metric = ${metric}, _page = ${page}, _ca, _pid='${page_id}', _aid='${app.app_id}';
 	window.onload = function() {
-
+		
         /*加载数据*/
         $("#app_id").val(_aid);
+        copyData(_metric)
         initPage();
         extLayout();
         initPlugin();
+        addTable(_metric);
 	}
+	var newData = [];
+	function copyData(metric){
+		var tmp = {};
+		for (var i = 0; i < metric.length; i++) {
+			tmp = {};
+			tmp.section_id = metric[i].section_id;
+			tmp.metric_id = metric[i].metric_id;
+			tmp.category_id = metric[i].category_id;
+			tmp.dimension = metric[i].dimension;
+			tmp.charts = metric[i].charts;
+			tmp.numb = metric[i].numb;
+			tmp.measure_name = metric[i].measure_name;
+			tmp.time_dim = metric[i].time_dim;
+			tmp.unit = metric[i].unit;
+			tmp.display = metric[i].display;
+			newData.push(tmp);
+		}
+	}
+	
+	
+	
+	function addTable(metric){
+		var table=window.document.getElementById("tb");
+		var str="";
+		var color = '';
+		for (var i = 0; i < metric.length; i++) {
+			var cha = getChart(metric[i].charts);
+			var dis = "隐藏";
+			var chage = "显示";
+			color = 'green';
+			if (metric[i].display == '1') {
+				dis = "显示";
+				chage = "隐藏";
+				color = 'red';
+			}
+			str = str+	 '<tr>'+
+		      '<td data-label="指标名称">'+metric[i].measure_name+'</td>'+
+		      '<td data-label="图表类型">'+cha+'</td>'+
+		      '<td data-label="显示状态">'+dis+'</td>'+
+		      '<td data-label="操作"><a name = "'+metric[i].metric_id+'" onclick="change(this.name);" style = "color:'+color+'">'+chage+'</a></td>'+
+		    '</tr>';
+		}
+		table.innerHTML = str;
+	}
+	
+	function change(value){
+		var sno = '';
+		for (var j = 0; j < _metric.length; j++) {
+			if (_metric[j].metric_id == value) {
+				sno = _metric[j].section_id;
+				if (_metric[j].display == '1') {
+					_metric[j].display = '0';
+				}else {
+					_metric[j].display = '1';
+				}
+			}
+		}
+		addTable(_metric);
+		var ino = '';
+		for (var i = 0; i < _layout.length; i++) {
+			if (_layout[i].id == sno) {
+				ino = _layout[i].no;
+			}
+		}
+		 //alert(JSON.stringify(_metric));
+		for(var x = 0; x < _ca().length; x++){
+            var no = _ca()[x].no;
+            if(no == ino){
+                var item = _ca()[x];
+                item.metric =setMetric(_metric,sno).join(',');
+                updateCA(item);
+            }
+        }
+		metricInfo = [];
+		extLayout();
+	}
+	
+	function setMetric(metric,section_id){
+		var ss = [];
+		for (var i = 0; i < metric.length; i++) {
+			if (metric[i].section_id == section_id&&metric[i].display == '1') {
+				ss.push(metric[i].measure_name);
+			}
+		}
+		return ss;
+	}
+	
+	function getChart(name){
+		var chartList = [{name:"柱状图",value:"bar"},{name:"折线图",value:"line"},{name:"饼图",value:"pie"},
+		                  {name:"环形图",value:"ringPie"},{name:"玫瑰图",value:"rose"},{name:"环形玫瑰图",value:"ringRose"},
+		                  {name:"表格",value:"table"},{name:"仪表盘",value:"gauge"}];
+		var na = '';
+		for (var i = 0; i < chartList.length; i++) {
+			if (name == chartList[i].value) {
+				na = chartList[i].name;
+				return na;
+			}
+			
+		}
+		
+	}
+	
 	
 	function initPage(){
         var pg = _page || [], str = [];
@@ -201,7 +311,7 @@
                     [
                         '<div class="grid-stack" data-bind="foreach: {data: widgets, afterRender: afterAddWidget}">',
                         '   <div class="grid-stack-item" data-bind="attr: {\'data-gs-x\': $data.x, \'data-gs-y\': $data.y, \'data-gs-width\': $data.width, \'data-gs-height\': $data.height, \'data-gs-auto-position\': $data.auto_position}">',
-                        '       <div class="grid-stack-item-content"><div class="dgs-ctx"><a data-bind="html:showBind($data),attr: {\'data-no\': $data.no,\'data-id\': $data.id,\'data-metric\': $data.metric}" href="javascript:void(0);" onclick="showsetting(this);"><i class="fa fa-plus"></i>点击添加栏目</a></div>',
+                        '       <div class="grid-stack-item-content"><div class="dgs-ctx"><a data-bind="html:showBind($data),attr: {\'data-no\': $data.no,\'data-id\': $data.id,\'data-metric\': $data.metric}"><i class="fa fa-plus"></i>点击添加栏目</a></div>',
                         '       </div>',
                         '   </div>',
                         '</div> '
@@ -304,7 +414,20 @@
     }
     
     function addMetricInfo(){
-    	$("#metric_json").val(JSON.stringify(metricInfo));
+    	var data = getChangeMetricInfo(metricInfo,newData);
+    	$("#metric_json").val(JSON.stringify(data));
+    }
+    
+    function getChangeMetricInfo(data,data1){
+    	var d = [];
+    	for (var i = 0; i < data.length; i++) {
+			for (var j = 0; j < data1.length; j++) {
+				if (data[i].section_id == data1[j].section_id&&data[i].metric_id == data1[j].metric_id&&data[i].display != data1[j].display) {
+					d.push(data[i]);
+				}
+			}
+		}
+    	return d;
     }
 
     function find_sec(no){
@@ -318,7 +441,7 @@
     function find_sec_metric(ls,sid){
         var arr = [];
         for(var i = 0; i <ls.length; i++)
-            if(ls[i].section_id ==sid)
+            if(ls[i].section_id ==sid&&ls[i].metric_id!="")
                 arr.push(ls[i]);
         return arr;
     }
@@ -346,7 +469,7 @@
             for(var n in _metric[j])
                 m[n] = _metric[j][n];
             for(var k = 0; k < _layout.length; k++){
-                if(_layout[k].id == m.section_id)
+                if(_layout[k].id == m.section_id&&m.display == '1')
                     m.section_id=_layout[k].no;
             }
             metricInfo.push(m);
@@ -356,7 +479,7 @@
         if(d.metric)
             return '<i class="fa fa-pie-chart"></i>绑定：'+ d.metric+'</a>';
         else
-            return '<i class="fa fa-plus"></i>点击配置栏目</a>';
+            return '<i class="fa fa-plus"></i>无绑定指标</a>';
     }
 
     function settingbox(nid, url,id, fn, opt){
@@ -394,7 +517,9 @@
     function array_join(ar, sp, name){
         var s = '';
         for(var i = 0; i < ar.length; i++){
-            s += sp + ar[i][name];
+        	if (ar[i].display == '1') {
+                s += sp + ar[i][name];
+			}
         }
         return s.substr(1);
     }

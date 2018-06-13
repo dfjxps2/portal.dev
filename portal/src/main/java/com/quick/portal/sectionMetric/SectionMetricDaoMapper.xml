@@ -54,6 +54,11 @@
 	<delete id="delete" parameterType="String">
 		delete from section_metric where section_id = #{section_id}
 	</delete>
+	
+	<!-- 删除 -->
+	<delete id="deleteById" parameterType="String">
+		delete from section_metric where sec_metric_id = #{sec_metric_id}
+	</delete>
     
     <!--查询-->
 	<!-- <select id="select" parameterType="map" resultType="map">

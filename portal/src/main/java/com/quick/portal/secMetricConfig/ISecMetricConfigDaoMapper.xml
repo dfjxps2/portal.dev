@@ -26,6 +26,11 @@
 	<delete id="delete" parameterType="String">
 		delete from sec_metric_config where config_id = #{config_id}
 	</delete>
+	
+	<!-- 删除 -->
+	<delete id="deleteBySectionId" parameterType="String">
+		delete from sec_metric_config where sec_metric_id = #{sec_metric_id}
+	</delete>
     
     <!--查询-->
 	<!--<select id="select" parameterType="map" resultType="map">

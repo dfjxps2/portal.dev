@@ -83,7 +83,7 @@ public class MonitorController extends SysWebController {
         model.addAttribute("layout", layout);
         return view();
     }
-
+    
     /**
      * 添加应用
      * @param model
@@ -108,6 +108,17 @@ public class MonitorController extends SysWebController {
         model.addAttribute("metric", metricJson);
         model.addAttribute("layout", layoutJson);
         return view();
+    }
+    
+    /**
+     * 添加用户指标配置
+     * @param model
+     */
+    @RequestMapping
+    public void saveSetting( String metric_json) {
+    	String user_id = QCookie.getValue(request, "ids");
+    	pageService.addUserConfig(metric_json,user_id);
+    	
     }
 
     /**
@@ -156,12 +167,26 @@ public class MonitorController extends SysWebController {
     }
 
     public Object getMetricJson(Integer page_id){
+    	String user_id = QCookie.getValue(request, "ids");
         String json = "[]";
         if(page_id != null && page_id > 0){
-            String res = sectionService.selectMetricJson(page_id);
+            String res = sectionService.selectMetricJson(page_id,Integer.parseInt(user_id));
             if(!QCommon.isNullOrEmpty(res))
                 json = res;
         }
         return json;
     }
+    
+    @RequestMapping(value = "/getEditionMetric")
+	@ResponseBody
+    public Object  getEditionMetric(Integer app_id) {
+    	String user_id = QCookie.getValue(request, "ids");
+    	String json = "";
+         if(app_id!= null && app_id > 0){
+        	 String res = sectionService.getEditionMetricJson(app_id,Integer.parseInt(user_id));
+             if(!QCommon.isNullOrEmpty(res))
+            	 json = res;
+         }
+         return json;
+	}
 }

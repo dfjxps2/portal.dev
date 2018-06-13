@@ -51,6 +51,7 @@ function loadctx(n){
 	}
 }
 function usr_setting(aid){
+	alert(_host + "/monitor/setting?t="+aid);
 	window.open(_host + "/monitor/setting?t="+aid);
 }
 function loadpancel(n, u){

@@ -18,10 +18,17 @@
  */
 package com.quick.portal.page;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.annotation.Resource;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -117,9 +124,10 @@ public class PageController extends SysBaseController<PageDO> {
     @PostMapping
     @ResponseBody
     public Object getMetricJson(Integer page_id){
+    	String user_id = QCookie.getValue(request, "ids");
         String json = "[]";
         if(page_id != null && page_id > 0){
-            String res = sectionService.selectMetricJson(page_id);
+            String res = sectionService.selectMetricJson(page_id,Integer.parseInt(user_id));
             if(!QCommon.isNullOrEmpty(res))
                 json = res;
         }

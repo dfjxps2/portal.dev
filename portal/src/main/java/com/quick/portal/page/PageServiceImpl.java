@@ -151,11 +151,15 @@ public class PageServiceImpl extends SysBaseService<PageDO> implements IPageServ
             List<Map<String, Object>> sec_id = sectionMetricDao.getId(section_id);
             if (sec_id.size()>0) {
                 for (int k = 0; k < sec_id.size(); k++) {
-    				metricConfigDao.delete(String.valueOf(sec_id.get(k).get("sec_metric_id")));
+    				int q= metricConfigDao.deleteBySectionId(sec_id.get(k).get("sec_metric_id").toString());
     			}
 		}
-            sectionMetricDao.delete(String.valueOf(section_id));
+            //sectionMetricDao.delete(String.valueOf(section_id));
             SecMetricConfigDo con = null;
+            if (sec_id.size()>metric.size()&&sec_id.size()>0) {
+            	//如果表中的数据多于新的数据则将多于的数据删除
+            	deleteSecId(metric,sec_id);
+			}
             for (int j = 0; j < metric.size(); j++) {
             	SectionMetricDO sectionMetricDO = new SectionMetricDO();
             	List<Map<String, Object>> das = new ArrayList<Map<String,Object>>();
@@ -164,12 +168,14 @@ public class PageServiceImpl extends SysBaseService<PageDO> implements IPageServ
 					if (id.size()>0) {
 						sectionMetricDO.setMetric_id(Integer.parseInt(id.get(0).get("metric_id").toString()));
 						sectionMetricDO.setSection_id(section_id);
-						int a=sectionMetricDao.insert(sectionMetricDO);
-	                    String[] paramKeys = new String[]{"", "metric_id","category_id","dimension","charts","numb","measure_name","time_dim","unit"};
-	                    if (a>0) {
+						//如果新数据多于原始数据  则多余的部分新增  其他的修改
+						int a = addSectionInfo(sectionMetricDO,sec_id,j);
+						//int a=sectionMetricDao.insert(sectionMetricDO);
+	                    String[] paramKeys = new String[]{"", "metric_id","category_id","dimension","charts","numb","measure_name","time_dim","unit","display"};
+	                   if (a>0) {
 	                        for(int x = 1; x < paramKeys.length; x++){
 	                            con =  new SecMetricConfigDo();
-	                            con.setUser_id(Integer.parseInt(user_id));
+	                            con.setUser_id(0);
 	                            con.setSec_metric_id(sectionMetricDO.getSec_metric_id());
 	                            con.setParam_id(x);
 	                            con.setParam_value(metric.get(j).get(paramKeys[x]).toString());
@@ -179,14 +185,61 @@ public class PageServiceImpl extends SysBaseService<PageDO> implements IPageServ
 						}
 					}
 				}
-			}
-           
+        	}
         }
         //2.3删除不存在的栏目
         delOldSection(osectionLst, ids);
 
         ActionMsg.setValue(entity);
         return ActionMsg.setOk("操作成功");
+    }
+    
+    //添加用户指标配置信息
+    @Override
+	public void addUserConfig(String metric_json, String user_id) {
+		// TODO Auto-generated method stub
+		List<Map<String, Object>> metric = JsonUtil.fromJson(metric_json, List.class, Map.class);
+   	 String[] paramKeys = new String[]{"", "metric_id","category_id","dimension","charts","numb","measure_name","time_dim","unit","display"};
+   	 SecMetricConfigDo con = null;
+   	 Date now = DateTime.Now().getTime();
+   	 for (int j = 0; j < metric.size(); j++) {
+   		 String sec_id = getSecMetricId(metric.get(j).get("section_id").toString(),metric.get(j).get("metric_id").toString()).get(0).get("sec_metric_id").toString();
+             for(int x = 1; x < paramKeys.length; x++){
+                 con =  new SecMetricConfigDo();
+                 con.setUser_id(Integer.parseInt(user_id));
+                 con.setSec_metric_id(Integer.parseInt(sec_id));
+                 con.setParam_id(x);
+                 con.setParam_value(metric.get(j).get(paramKeys[x]).toString());
+                 con.setCre_time(now);
+                 metricConfigDao.insert(con);
+             }
+   	 }
+	}
+    
+  //删除多余数据
+    private List<Map<String, Object>>  getSecMetricId(String section_id,String metric_id){
+    	System.out.println("list======================================"+section_id+"-----"+metric_id);
+    	List<Map<String, Object>> list = sectionDao.getSecMetricId(Integer.parseInt(section_id), metric_id);
+    	System.out.println("list======================================"+list);
+    	return list;
+    }
+    
+    //删除多余数据
+    private void  deleteSecId(List<Map<String, Object>> metric,List<Map<String, Object>> sec_id){
+    	for (int i = metric.size(); i < sec_id.size(); i++) {
+    		sectionMetricDao.deleteById(sec_id.get(i).get("sec_metric_id").toString());
+    	}
+    }
+    //新增或修改数据
+    private int  addSectionInfo(SectionMetricDO sectionMetricDO,List<Map<String, Object>> sec_id,int s){
+    	int a = 0;
+    	if (s<sec_id.size()) {
+    		sectionMetricDO.setSec_metric_id(Integer.parseInt(sec_id.get(s).get("sec_metric_id").toString()));
+    		a = sectionMetricDao.update(sectionMetricDO);
+		}else{
+			a = sectionMetricDao.insert(sectionMetricDO);
+		}
+    	return a;
     }
 
     private String val(List<Map<String, Object>> lst, int i ,String name, String defValue){

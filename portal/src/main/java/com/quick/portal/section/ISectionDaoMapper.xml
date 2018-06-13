@@ -80,6 +80,13 @@
 	where user_id = #{user_id})
 	</select>
 	
+	<!--查询-->
+	<select id="getSecMetricId" parameterType="map" resultType="map">
+	select sec_metric_id from section_metric
+	where 1=1
+	and section_id = #{section_id}
+	AND metric_id =(select metric_id from metric WHERE 1=1 and src_metric_id = #{src_metric_id})
+	</select>
 	
 	<!-- 查询总记录数 -->
 	<select id="count" parameterType="map" resultType="int">
@@ -159,5 +166,19 @@
 	<select id="selectPageMsg" parameterType="int" resultType="map">
 		select * from section_msg_src
 		where section_id in (select section_id from page_section where page_id=#{page_id})
+	</select>
+	
+	 <!--查询-->
+	<select id="getEditionMetric" parameterType="map" resultType="int">
+		SELECT *
+  from sec_metric_config
+ WHERE sec_metric_id in
+       (SELECT sec_metric_id
+          FROM section_metric
+         where section_id in
+               (SELECT section_id
+                  FROM page_section
+                 WHERE page_id in
+                       (select page_id from app_page where app_id = #{app_id})))
 	</select>
 </mapper>

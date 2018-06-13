@@ -117,7 +117,7 @@
 
     <!-- CAS融合 配置 Start -->
     <!--  -->
-    <filter>
+   <!--  <filter>
         <filter-name>CAS Single Sign Out Filter</filter-name>
         <filter-class>org.jasig.cas.client.session.SingleSignOutFilter</filter-class>
         <init-param>
@@ -191,7 +191,7 @@
     <filter-mapping>
         <filter-name>CAS HttpServletRequest Wrapper Filter</filter-name>
         <url-pattern>/*</url-pattern>
-    </filter-mapping>
+    </filter-mapping> -->
   
     <!-- CAS融合 配置 End -->
     <!--

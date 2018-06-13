@@ -110,6 +110,7 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
             json += "," + j.substring(0, j.length() - 1) + ",metric:" + m + "}";
         }
         json = "[" + json.substring(1) + "]";
+        System.out.println("json111111=============="+json);
         return json;
     }
     @Override
@@ -123,21 +124,33 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
             json += getSectionConfig(lst.get(i)) + ",";
         }
         json += getSectionConfig(lst.get(l)) + "]";
+        System.out.println("json222222222=============="+json);
         return json;
     }
 
     @Override
-    public String selectMetricJson(Integer page_id) {
+    public String selectMetricJson(Integer page_id,Integer user_id) {
         List<Map<String,Object>> metriclst = dao.selectPageMetric(page_id);
         List<Map<String,Object>> mconfiglst = dao.selectPageMetricConfig(page_id);
         if(metriclst == null || metriclst.size() == 0 || mconfiglst == null || mconfiglst.size() == 0)
             return "[]";
-        String json = "[";
+        String json = "";
         int i, l = metriclst.size() - 1;
         for(i = 0; i < l; i++){
-            json += getMetricConfig(metriclst.get(i), mconfiglst) + ",";
+        	 String json1 = "";
+        	if (getMetricConfig(metriclst.get(i), mconfiglst,user_id).length()>0) {
+                json1 = getMetricConfig(metriclst.get(i), mconfiglst,user_id);
+                if (json1.equals("")==false) {
+            		json +=","+json1;
+    			}
+			}
         }
-        json += getMetricConfig(metriclst.get(l), mconfiglst) + "]";
+        json += ','+getMetricConfig(metriclst.get(l), mconfiglst,user_id) + "]";
+        if (json.length()>1) {
+            json = json.substring(1);
+		}
+        json =  "["+json;
+        System.out.println("json3333333=============="+json);
         return json;
     }
 
@@ -152,14 +165,16 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
         String json = "";
         if (user_id.equals(1)==false) {
         	List<Map<String,Object>> metric_role = dao.getMetricRoleByUserId(user_id);
+        	System.out.println("metric_rol---------------------"+metric_role.toString());
             config = setConfig("1",config, metric_role);
 		}
         for(Map<String,Object> m : metrics){
             String sid = m.get("section_id").toString();
             String smid = m.get("sec_metric_id").toString();
             if(section_id.equals(sid)){
-                String json2 = "{"
-                        + findSubMetricConfig(smid, "1", "metric_id", config)
+                String json2 = "";
+                		if (findSubMetricConfig(smid, "1", "metric_id", config).toString().equals("")==false) {
+                		json2 = json2+"{"+ findSubMetricConfig(smid, "1", "metric_id", config)
                         + "," + findSubMetricConfig(smid, "2", "category_id", config)
                         + "," + findSubMetricConfig(smid, "3", "dimension", config)
                         + "," + findSubMetricConfig(smid, "4", "charts", config)
@@ -167,26 +182,38 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
                         + "," + findSubMetricConfig(smid, "6", "measure_name", config)
                         + "," + findSubMetricConfig(smid, "7", "time_dim", config)
                         + "," + findSubMetricConfig(smid, "8", "unit", config)
+                        + "," + findSubMetricConfig(sid, "9", "display", config)
                         + "}";
-                json += "," + json2;
+                		}
+                		if (json2.length()>0) {
+                            json += "," + json2;	
+						}
             }
         }
         if(json.length()>1)
             json = json.substring(1);
         return "[" + json + "]";
     }
-    private String getMetricConfig(Map<String, Object> m, List<Map<String,Object>> config){
+    private String getMetricConfig(Map<String, Object> m, List<Map<String,Object>> config,Integer user_id){
+    	 if (user_id.equals(1)==false) {
+         	List<Map<String,Object>> metric_role = dao.getMetricRoleByUserId(user_id);
+             config = setConfig("1",config, metric_role);
+ 		}
         String sid = m.get("sec_metric_id").toString();
-        String json = "{\"section_id\":"+m.get("section_id")
-                + "," + findSubMetricConfig(sid, "1", "metric_id", config)
-                + "," + findSubMetricConfig(sid, "2", "category_id", config)
-                + "," + findSubMetricConfig(sid, "3", "dimension", config)
-                + "," + findSubMetricConfig(sid, "4", "charts", config)
-                + "," + findSubMetricConfig(sid, "5", "numb", config)
-                + "," + findSubMetricConfig(sid, "6", "measure_name", config)
-                + "," + findSubMetricConfig(sid, "7", "time_dim", config)
-                + "," + findSubMetricConfig(sid, "8", "unit", config)
-                + "}";
+        String json = "";
+        if (findSubMetricConfig(sid, "1", "metric_id", config).toString().equals("")==false) {
+        	json = json+"{\"section_id\":"+m.get("section_id")
+        	+ "," + findSubMetricConfig(sid, "1", "metric_id", config)
+            + "," + findSubMetricConfig(sid, "2", "category_id", config)
+            + "," + findSubMetricConfig(sid, "3", "dimension", config)
+            + "," + findSubMetricConfig(sid, "4", "charts", config)
+            + "," + findSubMetricConfig(sid, "5", "numb", config)
+            + "," + findSubMetricConfig(sid, "6", "measure_name", config)
+            + "," + findSubMetricConfig(sid, "7", "time_dim", config)
+            + "," + findSubMetricConfig(sid, "8", "unit", config)
+            + "," + findSubMetricConfig(sid, "9", "display", config)
+            + "}";
+		}
         return json;
     }
     private String findSubMetricConfig(String id, String no, String name, List<Map<String,Object>> config){
@@ -196,7 +223,8 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
             if(id.equals(sid) && no.equals(sno))
                 return "\""+name+"\":\"" + m.get("param_value").toString() + "\"";
         }
-        return "\""+name+"\":\"\"";
+        return "";
+        //return "\""+name+"\":\"\"";
     }
     
     private List<Map<String,Object>> setConfig(String name,List<Map<String,Object>> config,List<Map<String,Object>> metric_role){
@@ -221,4 +249,11 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
 		}
         return list;
     }
+
+	@Override
+	public String getEditionMetricJson(Integer app_id, Integer user_id) {
+		// TODO Auto-generated method stub
+		List<Map<String,Object>> metric_list = dao.getEditionMetric(app_id);
+		return null;
+	}
 }
