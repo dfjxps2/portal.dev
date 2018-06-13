@@ -79,7 +79,10 @@ public class SysMenuServiceImpl extends SysBaseService<SysMenuDO> implements ISy
 
             c = dao.update(entity);
         }
-        this.updateMenuLevel(entity);
+        if(null !=entity.getMenu_id() && !"".equals(entity.getMenu_id())){
+        	 this.updateMenuLevel(entity);
+        }
+       
         if(c == 0)
             return ActionMsg.setError("操作失败");
         ActionMsg.setValue(entity);
