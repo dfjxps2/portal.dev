@@ -60,36 +60,34 @@ public class WebLoginController {
     private IUserRoleRelaService userRoleRelaService;
     @Resource(name = "userAccessLogService")
     private IUserAccessLogService userAccessLogService;
-    @Resource(name = "sysUserService")
-	private ISysUserService loginerService;
-    
+
 
     //登录页
     @RequestMapping(value = "/" )
     public String index(HttpServletRequest request,HttpServletResponse response) {
-    	 String rid = QCookie.getValue(request, "sbd.role");
-    	 //判断公服用户直接访问home/login时，跳转APP_Menu
-    	 String gid = QCookie.getValue(request, "sbd.gid");
-    	 WebLoginUser loginer = null;
-    	 String userGlobalID = null;
-    	 if((null == rid || "".equals(rid))&&(null == gid || "".equals(gid))){
-    		  loginer = loadCASUserInfo(request,response);
-    		  if(null == loginer ){
-    			  return "redirect:"+LOGIN; 
-    		  }else{
-    			  rid =  String.valueOf(loginer.getRole_id());
-        		  userGlobalID = loginer.getUser_global_id();
-    		  }
-    	 }
-       	 //平台用户:1:app;2:sys;公服用户:1:app
-    	 String flag = getSysUrlByUserGlobalID(userGlobalID,rid);
+   	 String rid = QCookie.getValue(request, "sbd.role");
+   	 String uid = QCookie.getValue(request, "ids");
+   	 //判断公服用户直接访问home/login时，跳转APP_Menu
+   	 String gid = QCookie.getValue(request, "sbd.gid");
+   	 WebLoginUser loginer = null;
+   	 String userGlobalID = null;
+   		 if((null == uid || "".equals(uid))&&(null == gid || "".equals(gid))){
+       		  loginer = loadCASUserInfo(request,response);
+       		  if(null == loginer ){
+       			  return "redirect:"+LOGIN; 
+       		  }else{
+       			  rid =  String.valueOf(loginer.getRole_id());
+           		  userGlobalID = loginer.getUser_global_id();
+       		  }
+   		 }
+   	     //平台用户:1:app;2:sys;公服用户:1:app
+   		 String flag = getSysUrlByUserGlobalID(userGlobalID,rid);
 		 if(SYS_MENU_FLAG.equals(flag) || SYS_MENU_FLAG.equals(flag)){
-    		 return "redirect:/mainframe";
+			 return "redirect:/mainframe";
 		 }else{
-    		 return "redirect:/home/main"; 
+			 return "redirect:/home/main"; 
 		 } 
-    }
-    
+   }
 
     @RequestMapping(value = "/home/login")
     public String login(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
@@ -154,6 +152,8 @@ public class WebLoginController {
         QCookie.remove(response, request, "sbd.user" );
         QCookie.remove(response, request, "sbd.role" );
         QCookie.remove(response, request, "sbd.gid" );
+        QCookie.remove(response, request, "sbd.tk" );
+       
 
         String url = request.getScheme() + "://" + request.getServerName()
                 + ":" + request.getServerPort() + request.getContextPath()
@@ -176,7 +176,7 @@ public class WebLoginController {
 		if (request.getRemoteUser() != null) {
 			Map<String, Object> parm = new HashMap<>();
 			parm.put("user_name", request.getRemoteUser());
-			Map<String, Object> u = loginerService.selectMap(parm);
+			Map<String, Object> u = sysUserService.selectMap(parm);
 			WebLoginUser user = new WebLoginUser();
 			user.setRole_id( Integer.valueOf(WebLoginUitls.getVal(u, "role_id")) );
 			user.setUser_real_name(WebLoginUitls.getVal(u, "user_real_name"));
