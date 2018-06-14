@@ -143,5 +143,19 @@ public class QCookie {
 			res.addCookie(cookie);
 		}
 	}
+	
+	
+	public static void clearAll(HttpServletRequest req,HttpServletResponse res) {
+		Cookie[] cookies = req.getCookies();
+		for(int i = 0,len = cookies.length; i < len; i++) {
+/*			Cookie cookie = new Cookie(cookies[i].getName(),null);
+			cookie.setMaxAge(0);
+			cookie.setPath("/");
+			res.addCookie(cookie);*/
+			Cookie newCookie= new Cookie("newcookie",null); //将之前设置NewCookie值设置为空
+			newCookie.setMaxAge(0); //设置存活时间为0.此时cookies就会自动注销
+	        res.addCookie(newCookie);
+		}
+	}
 
 }
