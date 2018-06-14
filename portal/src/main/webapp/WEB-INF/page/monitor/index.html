@@ -49,7 +49,7 @@
 
 </html>
 <script>
-    var _tmpls={},_layout = ${layout},co = [],name,_page=${pageJson};
+    var _tmpls={},_layout = ${layout},co = [],name,_page=${pageJson}, _metUrl='${MEASURES_URL}';
     var tData = [];
     
     window.onload = function() {
@@ -129,7 +129,8 @@
         if(metricList == null || metricList.length == 0)
             return;
         $.ajax({
-            url:"http://portal-server:8082/services/measures",
+//            url:"http://portal-server:8082/services/measures",
+			url:_metUrl,
             data:{meaId:metricList,to:'2018',from:'1900'},
             type:'get',
             success:function(res){
