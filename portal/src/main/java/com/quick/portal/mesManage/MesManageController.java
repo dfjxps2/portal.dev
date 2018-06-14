@@ -146,7 +146,6 @@ public class MesManageController extends SysBaseController<MesManageDO> {
      //  String tags = QRequest.getString(request,"tags");
        //获取表名
        String tableName = getTableName();
-
        // 排序处理
        String fieldOrder = getFieldOrder();
        String whereStr = "ORDER BY pub_time DESC";
