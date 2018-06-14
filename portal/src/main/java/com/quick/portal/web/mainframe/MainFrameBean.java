@@ -172,12 +172,12 @@ public class MainFrameBean implements Serializable {
 			this.setParent(false);
 		}
 		
-		Collections.sort(this.children, new Comparator<MainFrameBean>() {
+	/*	Collections.sort(this.children, new Comparator<MainFrameBean>() {
 			@Override
 			public int compare(MainFrameBean o1, MainFrameBean o2) {
 				return o1.getMenuId() - o2.getMenuId();
 			}
-		});
+		});*/
 		for (MainFrameBean MainFrmBean : children) {
 			MainFrmBean.buildChildren(chldList);
 		}

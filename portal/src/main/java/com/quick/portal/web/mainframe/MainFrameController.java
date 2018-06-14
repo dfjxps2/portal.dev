@@ -83,6 +83,7 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
                   jsonStr = JsonUtil.toJson(menuTree.getChildren());
             }  
             model.addAttribute("data", jsonStr);
+            System.out.println("jsonStr="+jsonStr);
         } catch (Exception e){
         	throw new Exception("查询权限菜单异常,权限菜单数据:jsonStr="+jsonStr +"ERROR:="+e.getMessage());
         }
