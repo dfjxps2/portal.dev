@@ -18,6 +18,8 @@ import org.apache.solr.common.SolrInputDocument;
 
 import com.quick.core.base.model.PageBounds;
 import com.quick.core.util.common.DateTime;
+import com.quick.portal.security.authority.metric.MetricPrivilegeConstants;
+import com.quick.portal.security.authority.metric.PropertiesUtil;
 
 /**
  * Solr7 操作 solr版本是7.3.0 
@@ -44,8 +46,9 @@ public class SolrUtils {
 		doc.addField("portal_attachment_id",attachID);
 		
 		HttpSolrClient server = null;
+		String url = getSolrServiceUrl();
 		try {
-		    server = InitSolrServer.initServer(SolrInfoConstants.PORTAL_DOC_URL);
+		    server = InitSolrServer.initServer(url);
 			UpdateResponse response = server.add(doc);
 			// 提交
 			server.commit();
@@ -66,8 +69,9 @@ public class SolrUtils {
 	 * 单个id 的删除索引
 	 */
 	public static void deleteSolrInfo(String id) throws Exception {
+		String url = getSolrServiceUrl();
 		// [1]获取连接
-		HttpSolrClient server = InitSolrServer.initServer(SolrInfoConstants.PORTAL_DOC_URL);
+		HttpSolrClient server = InitSolrServer.initServer(url);
 		// [2]通过id删除
 		server.deleteById(id);
 		// [3]提交
@@ -80,8 +84,9 @@ public class SolrUtils {
 	 * 多个id 的list集合 删除索引
 	 */
 	public static void deleteBatchSolrList(ArrayList<String> ids) throws Exception {
+		String url = getSolrServiceUrl();
 		// [1]获取连接
-		HttpSolrClient server = InitSolrServer.initServer(SolrInfoConstants.PORTAL_DOC_URL);
+		HttpSolrClient server = InitSolrServer.initServer(url);
 		// [2]通过id删除
 		for (String id : ids) {
 			server.deleteById(id);
@@ -219,8 +224,9 @@ public class SolrUtils {
 	 */
 	public static SolrDocumentList getSolrInfoDataByID(SolrQuery query,String id){
 		QueryResponse response = null;
+		String url = getSolrServiceUrl();
 		try {
-			HttpSolrClient server = InitSolrServer.initServer(SolrInfoConstants.PORTAL_DOC_URL);
+			HttpSolrClient server = InitSolrServer.initServer(url);
 			response = server.query(query);
 		} catch (SolrServerException e) {
 			// TODO Auto-generated catch block
@@ -261,8 +267,9 @@ public class SolrUtils {
 	
 	public static SolrDocumentList getSolrInfoDataByTitle(SolrQuery query){
 		QueryResponse response = null;
+		String url = getSolrServiceUrl();
 		try {
-			HttpSolrClient server = InitSolrServer.initServer(SolrInfoConstants.PORTAL_DOC_URL);
+			HttpSolrClient server = InitSolrServer.initServer(url);
 			response = server.query(query);
 		} catch (SolrServerException e) {
 			// TODO Auto-generated catch block
@@ -471,4 +478,12 @@ public class SolrUtils {
 		query.setRows(SolrInfoConstants.PAGE_ROWS);
 		return query;
 	}
+	
+	public static String getSolrServiceUrl(){
+		String url = PropertiesUtil.getPropery("solr.service.url");
+	  	String port = PropertiesUtil.getPropery("solr.service.port");
+	  	String serviceUrl = url.concat(MetricPrivilegeConstants.SERVICE_PORT).concat(port).concat(SolrInfoConstants.SOLR_PORTAL_DOC_SERVICE);
+	  	return  serviceUrl;
+	}
+	
 }
