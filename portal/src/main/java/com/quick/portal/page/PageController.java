@@ -33,6 +33,8 @@ import com.quick.core.base.model.DataStore;
 import com.quick.core.util.common.QCommon;
 import com.quick.core.util.common.QCookie;
 import com.quick.portal.section.ISectionService;
+import com.quick.portal.security.authority.metric.MetricPrivilegeConstants;
+import com.quick.portal.security.authority.metric.PropertiesUtil;
 
 /**
  * page请求类
@@ -73,10 +75,18 @@ public class PageController extends SysBaseController<PageDO> {
         Integer page_id = rint("p");
         //Object layout = getLayoutJson(page_id);
         //model.addAttribute("layout", layout);
+      	String url = PropertiesUtil.getPropery("index.service.url");
+      	String port = PropertiesUtil.getPropery("index.service.port");
+      	String serviceUrl = url.concat(MetricPrivilegeConstants.SERVICE_PORT).concat(port).concat(MetricPrivilegeConstants.GET_MEASURES_SERVICE_NAME);
+      	model.addAttribute("MEASURES_URL", serviceUrl);
         return view();
     }
     @RequestMapping
     public String setting(ModelMap model) {
+    	String url = PropertiesUtil.getPropery("index.service.url");
+      	String port = PropertiesUtil.getPropery("index.service.port");
+      	String serviceUrl = url.concat(MetricPrivilegeConstants.SERVICE_PORT).concat(port).concat(MetricPrivilegeConstants.GET_METRIC_SERVICE_NAME);
+      	model.addAttribute("METRIC_URL", serviceUrl);
         return view();
     }
     @RequestMapping
