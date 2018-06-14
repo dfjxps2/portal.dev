@@ -214,12 +214,24 @@
 		function drawLi(arr, dt) {
 			for (var i = 0; i < dt.length; i++) {
 				if (dt[i].depth == 1) {
+					
+					 
+					if (dt[i].menuId == '152') {
 					arr
 							.push(
 									' <li>',
-									'	<a href="#"><i class="'+dt[i].menuIconUrl+'"></i> <span class="nav-label">',
+									'	<a class="J_menuItem" tabindex='+dt[i].menuId+' href="'+dt[i].menuUrl+'" ><i class="fa fa-columns"></i> <span class="nav-label">',
 									dt[i].menuCnName, '</span>',
-									' <span class="fa arrow"></span></a>');
+									'</a>');
+
+					}else{
+					arr
+					.push(
+							' <li>',
+							'	<a href="#"><i class="'+dt[i].menuIconUrl+'"></i> <span class="nav-label">',
+							dt[i].menuCnName, '</span>',
+							' <span class="fa arrow"></span></a>');
+					}
 
 					if (dt[i].children != null || dt[i].children.length > 0) {
 						arr.push('<ul class="nav nav-second-level">');
