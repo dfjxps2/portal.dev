@@ -27,6 +27,8 @@ import com.quick.portal.application.ApplicationDO;
 import com.quick.portal.application.IApplicationService;
 import com.quick.portal.page.IPageService;
 import com.quick.portal.section.ISectionService;
+import com.quick.portal.security.authority.metric.MetricPrivilegeConstants;
+import com.quick.portal.security.authority.metric.PropertiesUtil;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -76,11 +78,16 @@ public class MonitorController extends SysWebController {
         }
         ApplicationDO app = applicationService.selectObj(app_id.toString());
         Object layout = getLayout(page_id);
-
+        
+        String url = PropertiesUtil.getPropery("index.service.url");
+    	String port = PropertiesUtil.getPropery("index.service.port");
+    	String serviceUrl = url.concat(MetricPrivilegeConstants.SERVICE_PORT).concat(port).concat(MetricPrivilegeConstants.GET_MEASURES_SERVICE_NAME);
+    	model.addAttribute("MEASURES_URL", serviceUrl);
         model.addAttribute("app", app);
         model.addAttribute("page_id", page_id);
         model.addAttribute("pageJson", JsonUtil.serialize(plist));
         model.addAttribute("layout", layout);
+        
         return view();
     }
 
