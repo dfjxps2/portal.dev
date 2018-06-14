@@ -290,13 +290,14 @@
 
             this.add_new_widget = function () {
                 var cc = JsonDown(controller.widgets(),'no');
+                var num = cc.length > 0 ? cc[0].no*1+1 : 1;
                 this.widgets.push({
                     x: 0,
                     y: 0,
                     width: 4,
                     height: 2,
                     id:0,
-                    no:(cc[0].no*1+1),
+                    no:num,
                     auto_position: true
                 });
             };

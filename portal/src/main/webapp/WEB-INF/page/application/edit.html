@@ -48,29 +48,15 @@
                         <div class="col-sm-6 form_ipt_botm">
                             <div class="form-group">
                                 <label class="col-xs-4 lable_top"><span></span>注册日期</label>
-                                <div class="col-xs-8"><input id="reg_date" name="reg_date" type="text" class="form-control" >
-                                <label onclick="layerDateTime('reg_date');" style="position: absolute;top: 0px;right: 15px;background-position-x: center;" class="laydate-icon inline demoicon layer_date"></label></div>
+                                <div class="col-xs-8"><input id="reg_date" name="reg_date" type="text" class="form-control layer_date" onfocus="laydate({elem: '#reg_date'});" >
+                                <label onclick="layerDateTime('reg_date');" style="position: absolute;top: 0px;right: 13px;background-position-x: center;" class="laydate-icon inline demoicon layer_date"></label></div>
                             </div>
                         </div>
                         <div class="col-sm-6 form_ipt_botm">
                             <div class="form-group">
                                 <label class="col-xs-4 lable_top"><span></span>发布日期</label>
-                                <div class="col-xs-8"><input id="pub_date" name="pub_date" type="text" class="form-control" >
-                                <label onclick="layerDateTime('pub_date');" style="position: absolute;top: 0px;right: 15px;background-position-x: center;" class="laydate-icon inline demoicon layer_date"></label></div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 form_ipt_botm">
-                            <div class="form-group">
-                                <label class="col-xs-4 lable_top"><span></span>创建时间</label>
-                                <div class="col-xs-8"><input id="cre_time" name="cre_time" type="text" class="form-control"  readonly="readOnly">
-                        </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 form_ipt_botm">
-                            <div class="form-group">
-                                <label class="col-xs-4 lable_top"><span></span>更新时间</label>
-                                <div class="col-xs-8"><input id="upd_time" name="upd_time" type="text" class="form-control"  readonly="readOnly">
-                        </div>
+                                <div class="col-xs-8"><input id="pub_date" name="pub_date" type="text" class="form-control layer_date" onfocus="laydate({elem: '#pub_date'});">
+                                <label onclick="layerDateTime('pub_date');" style="position: absolute;top: 0px;right: 13px;background-position-x: center;" class="laydate-icon inline demoicon layer_date"></label></div>
                             </div>
                         </div>
                         <div class="col-sm-6 form_ipt_botm">
@@ -106,6 +92,8 @@
                                     <input type="hidden" id="dep_id" name="dep_id" />
                                     <input type="hidden" id="app_class_id" name="app_class_id" />
                                     <input type="hidden" id="rel_id" name="rel_id" />
+                                    <input id="cre_time" name="cre_time" type="hidden">
+                                    <input id="upd_time" name="upd_time" type="hidden">
                                     <input id="submit-form" type="button" class="btn btn-primary" value="保存" onclick="return thingOver();">
 							    </div>
 						    </div>

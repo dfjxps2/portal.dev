@@ -293,9 +293,9 @@ function clearPlaceHodler(fid){
 }
 function layerDateTime(id){
     laydate({
-        elem: '#'+ id,
-        event: 'focus'
+        elem: '#'+ id
     });
+    $("#"+id).focus();
 }
 function chosebox(nid, url,id, fn, opt){
     if(!layer.values)
