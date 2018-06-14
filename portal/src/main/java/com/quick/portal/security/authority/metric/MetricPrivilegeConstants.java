@@ -33,6 +33,7 @@ public class MetricPrivilegeConstants {
 	 
 	 
 	 public static final String GET_METRIC_SERVICE_NAME = "/services/reMeaSys";
+	 public static final String GET_MEASURES_SERVICE_NAME = "/services/measures";
 	 
 	 public static final String SERVICE_PORT = ":";
 		
