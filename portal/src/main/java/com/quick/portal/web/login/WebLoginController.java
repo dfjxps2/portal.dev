@@ -153,7 +153,7 @@ public class WebLoginController {
         QCookie.remove(response, request, "sbd.role" );
         QCookie.remove(response, request, "sbd.gid" );
         QCookie.remove(response, request, "sbd.tk" );
-       
+//        QCookie.clearAll(request,response);
 
         String url = request.getScheme() + "://" + request.getServerName()
                 + ":" + request.getServerPort() + request.getContextPath()
