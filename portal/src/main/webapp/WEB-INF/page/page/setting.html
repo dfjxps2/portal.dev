@@ -7,7 +7,7 @@
     <script src="${G.host}/res/js/indexCharts/indexChart.js"></script>
 </head>
  <script>
- 
+ 	var _metUrl='${METRIC_URL}';
     $(document).ready(function() {
         loadBindMetric();
     	getMetric();
@@ -16,7 +16,8 @@
     
     function getMetric(){
     	$.ajax({
-            url:"http://portal-server:8082/services/reMeaSys",
+    		url:_metUrl,
+//            url:"http://portal-server:8082/services/reMeaSys",
             type:'get',
             success:function(res){
             	if (res.length>0) {

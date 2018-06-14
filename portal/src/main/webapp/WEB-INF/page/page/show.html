@@ -42,8 +42,7 @@ var name = "";
 <script>
 	var tData = [];
 	var co = [];
-    var _tmpls={},_layout = [],_ca;
-    
+    var _tmpls={},_layout = [],_ca,_metUrl='${MEASURES_URL}';
     function config() {
         quick.serverUrl = "${G.serverUrl}";
         quick.objName = "${G.objName}";
@@ -53,7 +52,8 @@ var name = "";
     }
     function getMetricData(metricList){
     	$.ajax({
-            url:"http://portal-server:8082/services/measures",
+    		url:_metUrl,
+//            url:"http://portal-server:8082/services/measures",
             data:{meaId:metricList,to:2017,from:1990},
             type:'get',
             success:function(res){
