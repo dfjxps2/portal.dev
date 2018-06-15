@@ -178,7 +178,6 @@ font-size: 16px;
 				ino = _layout[i].no;
 			}
 		}
-		 //alert(JSON.stringify(_metric));
 		for(var x = 0; x < _ca().length; x++){
             var no = _ca()[x].no;
             if(no == ino){
@@ -215,8 +214,7 @@ font-size: 16px;
 		}
 		
 	}
-	
-	
+
 	function initPage(){
         var pg = _page || [], str = [];
         for(var i = 0; i < pg.length; i++){
@@ -236,6 +234,13 @@ font-size: 16px;
             isdone = true;
         }
     });
+    
+    //跳转回首页
+    function cancel(){
+    	var id = $("#pages").val();
+		var url = '${G.host}/monitor/index?t='+_aid+'&p='+id;
+		window.location.href = url;
+	}
     function thingOver(){
     	addMetricInfo();
         if(!isdone) {
@@ -446,10 +451,19 @@ font-size: 16px;
         return arr;
     }
     function preview(){
+    	var id = $("#pages").val();
+		var url = '${G.host}/monitor/show?p='+id;
         var sjson = getLayout();
-        localStorage.pageShow =JSON.stringify(metricInfo);//JSON.parse(metricInfo);
+        var data = [];
+        for (var i = 0; i < _metric.length; i++) {
+			if (_metric[i].display == '1') {
+				data.push(_metric[i]);
+			}
+		}
+        localStorage.pageShow =JSON.stringify(data);//JSON.parse(metricInfo);
+        localStorage.pageName ='2222';
         localStorage.pageLayout = JSON.stringify(sjson);
-        window.open('${G.host}/page/show?p=' + _pid);
+        window.open(url);
     }
     function extLayout(){
         if(_metric == null || _metric.length == 0)

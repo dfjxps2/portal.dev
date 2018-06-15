@@ -75,6 +75,12 @@
 	    where a.user_id = #{user_id} and a.term_type_id=#{term_type_id} and a.cre_time=#{cre_time}
 	</select>
 	
+	<!--查询用户当前版本时间-->
+	<select id="selectTime" parameterType="int" resultType="map">
+		select cre_time from user_config_version 
+	    where user_id = #{user_id} and is_active = 1
+	</select>
+	
 	 <!-- 新增metric -->
 	<insert id="insert" parameterType="com.quick.portal.sectionMetric.SectionMetricDO">
 		insert into sec_metric_config (
@@ -113,11 +119,13 @@
 	<insert id="insertUAC_Version" parameterType="map" >
 		insert into user_config_version (
 		user_id,
+		is_active,
 		term_type_id,
 		cre_time,
 		version_num
 		)values(
 		#{user_id},
+		#{is_active},
 		#{term_type_id},
 		#{cre_time},
 		#{version_num}
@@ -133,6 +141,19 @@
 		/*0 未激活  1 激活*/
 		where
 		user_id = #{user_id} and term_type_id=#{term_type_id} and cre_time=#{cre_time}
+	</update>
+	
+	<!--将用户当前版本关闭-->
+	<update id="updateUserActive" parameterType="map" >
+		update user_config_version
+		set
+
+	      is_active=0
+
+		/*0 未激活  1 激活*/
+		where
+		is_active=1
+		and user_id = #{user_id} and term_type_id=#{term_type_id}
 	</update>
 	<update id="updateUAC_Version" parameterType="map" >
 		update user_config_version

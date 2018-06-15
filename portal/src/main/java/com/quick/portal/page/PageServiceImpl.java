@@ -20,6 +20,7 @@ package com.quick.portal.page;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,12 +34,12 @@ import com.quick.core.base.model.DataStore;
 import com.quick.core.util.common.DateTime;
 import com.quick.core.util.common.JsonUtil;
 import com.quick.core.util.common.QCommon;
-import com.quick.core.util.common.QCookie;
 import com.quick.portal.appPage.AppPageDO;
 import com.quick.portal.appPage.IAppPageDao;
 import com.quick.portal.metric.IMetricDao;
 import com.quick.portal.secMetricConfig.ISecMetricConfigDao;
 import com.quick.portal.secMetricConfig.SecMetricConfigDo;
+import com.quick.portal.secMetricConfig.UserActiveConfigDo;
 import com.quick.portal.section.ISectionDao;
 import com.quick.portal.section.SectionDO;
 import com.quick.portal.sectionMetric.ISectionMetricDao;
@@ -196,31 +197,54 @@ public class PageServiceImpl extends SysBaseService<PageDO> implements IPageServ
     
     //添加用户指标配置信息
     @Override
-	public void addUserConfig(String metric_json, String user_id) {
+	public DataStore addUserConfig(String metric_json, String user_id) {
 		// TODO Auto-generated method stub
 		List<Map<String, Object>> metric = JsonUtil.fromJson(metric_json, List.class, Map.class);
    	 String[] paramKeys = new String[]{"", "metric_id","category_id","dimension","charts","numb","measure_name","time_dim","unit","display"};
    	 SecMetricConfigDo con = null;
    	 Date now = DateTime.Now().getTime();
+   	 int s = 0;
    	 for (int j = 0; j < metric.size(); j++) {
-   		 String sec_id = getSecMetricId(metric.get(j).get("section_id").toString(),metric.get(j).get("metric_id").toString()).get(0).get("sec_metric_id").toString();
-             for(int x = 1; x < paramKeys.length; x++){
+   		 	String sec_id = getSecMetricId(metric.get(j).get("section_id").toString(),metric.get(j).get("metric_id").toString()).get(0).get("sec_metric_id").toString();
+   		 	int a =0; 
+   		 	for(int x = 1; x < paramKeys.length; x++){
                  con =  new SecMetricConfigDo();
                  con.setUser_id(Integer.parseInt(user_id));
                  con.setSec_metric_id(Integer.parseInt(sec_id));
                  con.setParam_id(x);
                  con.setParam_value(metric.get(j).get(paramKeys[x]).toString());
                  con.setCre_time(now);
-                 metricConfigDao.insert(con);
+                a = metricConfigDao.insert(con);
              }
+             if (a>0) {
+					s++;
+				}
    	 }
+   	int b =0;
+   	 if (s == metric.size()) {
+   		Map<String, Object> map = new HashMap<String, Object>();
+   		map.put("user_id", user_id);
+    	map.put("term_type_id", 0);
+    	int t = metricConfigDao.updateUserActive(map);
+       	UserActiveConfigDo usDO = new UserActiveConfigDo();
+       	usDO.setUser_id(Integer.parseInt(user_id));
+       	usDO.setIs_active(1);
+       	usDO.setCre_time(now);
+       	b = metricConfigDao.insertUAC_Version(usDO);
+	}
+   	if (b>0) {
+		return ActionMsg.setOk("操作成功！");
+	}else{
+		 return ActionMsg.setOk("操作失败！");
+	}
 	}
     
   //删除多余数据
     private List<Map<String, Object>>  getSecMetricId(String section_id,String metric_id){
-    	System.out.println("list======================================"+section_id+"-----"+metric_id);
-    	List<Map<String, Object>> list = sectionDao.getSecMetricId(Integer.parseInt(section_id), metric_id);
-    	System.out.println("list======================================"+list);
+    	Map<String, Object> map = new HashMap<String, Object>();
+    	map.put("section_id", section_id);
+    	map.put("src_metric_id", metric_id);
+    	List<Map<String, Object>> list = sectionMetricDao.getSecId( map);
     	return list;
     }
     

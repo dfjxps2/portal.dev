@@ -113,6 +113,7 @@
 </body>
 <script>
     var _tmpls={},_layout = ${layout},_metric = ${metric}, _ca;
+    var urlSet =  '${urlSet}',urlShow = '${urlShow}';
     function config() {
         quick.serverUrl = "${G.serverUrl}";
         quick.objName = "${G.objName}";
@@ -120,6 +121,8 @@
         quick.listUrl = quick.serverUrl + "/list";
     }
 	window.onload = function() {
+		localStorage.urlSet =urlSet;
+		localStorage.urlShow =urlShow;
 		/*自定义错误提示信息的方法*/
 		$("#form").validate({
 			errorPlacement: function(error, element) {

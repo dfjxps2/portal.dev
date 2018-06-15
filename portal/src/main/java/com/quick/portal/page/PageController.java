@@ -18,17 +18,11 @@
  */
 package com.quick.portal.page;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,6 +34,8 @@ import com.quick.core.base.model.DataStore;
 import com.quick.core.util.common.QCommon;
 import com.quick.core.util.common.QCookie;
 import com.quick.portal.section.ISectionService;
+import com.quick.portal.security.authority.metric.MetricPrivilegeConstants;
+import com.quick.portal.security.authority.metric.PropertiesUtil;
 
 /**
  * page请求类
@@ -68,6 +64,10 @@ public class PageController extends SysBaseController<PageDO> {
     }
     @RequestMapping
     public String edit(ModelMap model) {
+    	String urlSet = PropertiesUtil.getPropery("index.service.setURL");
+    	String urlShow = PropertiesUtil.getPropery("index.service.showURL");
+    	model.addAttribute("urlSet", urlSet);
+    	model.addAttribute("urlShow", urlShow);
         Integer page_id = rint("page_id");
         Object layoutJson = getLayoutJson(page_id);
         Object metricJson = getMetricJson(page_id);
@@ -133,4 +133,5 @@ public class PageController extends SysBaseController<PageDO> {
         }
         return json;
     }
+
 }

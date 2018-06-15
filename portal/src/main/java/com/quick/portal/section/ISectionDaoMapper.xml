@@ -80,13 +80,6 @@
 	where user_id = #{user_id})
 	</select>
 	
-	<!--查询-->
-	<select id="getSecMetricId" parameterType="map" resultType="map">
-	select sec_metric_id from section_metric
-	where 1=1
-	and section_id = #{section_id}
-	AND metric_id =(select metric_id from metric WHERE 1=1 and src_metric_id = #{src_metric_id})
-	</select>
 	
 	<!-- 查询总记录数 -->
 	<select id="count" parameterType="map" resultType="int">
@@ -158,15 +151,34 @@
 		select * from section_metric
 		where section_id in (select section_id from page_section where page_id=#{page_id})
 	</select>
-	<select id="selectPageMetricConfig" parameterType="int" resultType="map">
+	<select id="selectPageMetricConfig" parameterType="map" resultType="map">
+		<!-- select * from sec_metric_config
+		where sec_metric_id in (select sec_metric_id from page_section p left join section_metric m on p.section_id=m.section_id and page_id=#{page_id})
+		AND user_id = 0 -->
+		select * from sec_metric_config 
+WHERE sec_metric_id NOT in(
+select sec_metric_id from sec_metric_config
+		where sec_metric_id in (select sec_metric_id from page_section p 
+left join section_metric m on p.section_id=m.section_id and page_id=#{page_id})
+AND user_id = #{user_id}
+AND cre_time = #{cre_time}
+GROUP BY sec_metric_id)
+AND user_id = 0
+AND sec_metric_id in (select sec_metric_id from page_section p 
+left join section_metric m on p.section_id=m.section_id and page_id=#{page_id})
+	</select>
+	<select id="selectPageMetricUserConfig" parameterType="map" resultType="map">
 		select * from sec_metric_config
 		where sec_metric_id in (select sec_metric_id from page_section p left join section_metric m on p.section_id=m.section_id and page_id=#{page_id})
+		AND user_id = #{user_id}
+		AND cre_time =#{cre_time}
 	</select>
 	<!--查询页面所有关联信息源 -->
 	<select id="selectPageMsg" parameterType="int" resultType="map">
 		select * from section_msg_src
 		where section_id in (select section_id from page_section where page_id=#{page_id})
 	</select>
+	
 	
 	 <!--查询-->
 	<select id="getEditionMetric" parameterType="map" resultType="int">

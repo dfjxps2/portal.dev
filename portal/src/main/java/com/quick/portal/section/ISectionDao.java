@@ -18,10 +18,11 @@
  */
 package com.quick.portal.section;
 
-import com.quick.core.base.ISysBaseDao;
-
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import com.quick.core.base.ISysBaseDao;
 
 /**
  * section数据访问接口
@@ -42,7 +43,9 @@ public interface ISectionDao<SectionDO> extends ISysBaseDao<SectionDO> {
 
     List<Map<String, Object>> selectPageMetric(Integer page_id);
 
-    List<Map<String, Object>> selectPageMetricConfig(Integer page_id);
+    List<Map<String, Object>> selectPageMetricConfig(Map<String, Object> map);
+    
+    List<Map<String, Object>> selectPageMetricUserConfig(Map<String, Object> map);
 
     List<Map<String, Object>> getEditionMetric(Integer app_id);
     
@@ -50,5 +53,5 @@ public interface ISectionDao<SectionDO> extends ISysBaseDao<SectionDO> {
     
     int getIdByMetricId(String src_metric_id);
     
-    List<Map<String, Object>> getSecMetricId(Integer section_id,String src_metric_id);
+    
 }

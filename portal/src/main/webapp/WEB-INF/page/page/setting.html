@@ -15,8 +15,9 @@
     
     
     function getMetric(){
+    	var url =localStorage.urlSet;
     	$.ajax({
-            url:"http://portal-server:8082/services/reMeaSys",
+            url:url,
             type:'get',
             success:function(res){
             	if (res.length>0) {

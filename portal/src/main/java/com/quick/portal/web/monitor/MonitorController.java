@@ -18,7 +18,23 @@
  */
 package com.quick.portal.web.monitor;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.quick.core.base.SysWebController;
+import com.quick.core.base.model.DataStore;
 import com.quick.core.util.common.JsonUtil;
 import com.quick.core.util.common.QCommon;
 import com.quick.core.util.common.QCookie;
@@ -27,20 +43,7 @@ import com.quick.portal.application.ApplicationDO;
 import com.quick.portal.application.IApplicationService;
 import com.quick.portal.page.IPageService;
 import com.quick.portal.section.ISectionService;
-
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.annotation.Resource;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.quick.portal.security.authority.metric.PropertiesUtil;
 
 /**
  * 门户请求类
@@ -76,7 +79,8 @@ public class MonitorController extends SysWebController {
         }
         ApplicationDO app = applicationService.selectObj(app_id.toString());
         Object layout = getLayout(page_id);
-
+        String urlShow = PropertiesUtil.getPropery("index.service.showURL");
+    	model.addAttribute("urlShow", urlShow);
         model.addAttribute("app", app);
         model.addAttribute("page_id", page_id);
         model.addAttribute("pageJson", JsonUtil.serialize(plist));
@@ -101,7 +105,6 @@ public class MonitorController extends SysWebController {
 
         Object layoutJson = getPageJson(page_id);
         Object metricJson = getMetricJson(page_id);
-
         model.addAttribute("page_id", page_id);
         model.addAttribute("app", app);
         model.addAttribute("page", JsonUtil.serialize(plist));
@@ -110,17 +113,13 @@ public class MonitorController extends SysWebController {
         return view();
     }
     
-    /**
-     * 添加用户指标配置
-     * @param model
-     */
     @RequestMapping
-    public void saveSetting( String metric_json) {
-    	String user_id = QCookie.getValue(request, "ids");
-    	pageService.addUserConfig(metric_json,user_id);
-    	
+    public String show(ModelMap model) {
+        String urlShow = PropertiesUtil.getPropery("index.service.showURL");
+    	model.addAttribute("urlShow", urlShow);
+        return view();
     }
-
+    
     /**
      * 查询页面配置信息
      * @return
@@ -189,4 +188,17 @@ public class MonitorController extends SysWebController {
          }
          return json;
 	}
+    
+    
+    /**
+     * 添加用户指标配置
+     * @param model
+     */
+    @RequestMapping(value ="/saveSetting")
+    @ResponseBody
+    public DataStore saveSetting( String metric_json) {
+    	String user_id = QCookie.getValue(request, "ids");
+    	return saveAfter(pageService.addUserConfig(metric_json,user_id));
+    }
+
 }

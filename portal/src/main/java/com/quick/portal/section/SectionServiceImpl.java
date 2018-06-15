@@ -28,8 +28,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.quick.core.base.model.DataStore;
 import com.quick.core.util.common.DateTime;
+import com.quick.portal.secMetricConfig.ISecMetricConfigDao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +54,9 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
     
     @Autowired
     private ISectionDao dao;
+    
+    @Autowired
+    private ISecMetricConfigDao configDao;
     
     @Override
     public ISysBaseDao getDao(){
@@ -99,7 +104,19 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
     public String selectLayoutJson(Integer page_id,Integer user_id){
         List<Map<String, Object>> ls = dao.selectPageSection(page_id);
         List<Map<String,Object>> metricls = dao.selectPageMetric(page_id);
-        List<Map<String,Object>> mconfigls = dao.selectPageMetricConfig(page_id);
+        
+        List<Map<String,Object>> li = configDao.selectTime(user_id);
+        Map<String, Object> map1 = new HashMap<String, Object>();
+    	map1.put("user_id", user_id);
+    	map1.put("page_id", page_id);
+        String cre_time = "";
+        List<Map<String,Object>> mconfigls = dao.selectPageMetricConfig(map1);
+        if (li.size()>0) {
+        	cre_time = li.get(0).get("cre_time").toString();
+        	map1.put("cre_time", cre_time);
+        	mconfigls = mergeData(map1,"show");
+		}
+        //mergeData(mconfigls,page_id,user_id);
         if(ls == null || ls.size() == 0)
             return "[]";
         String json = "";
@@ -110,9 +127,31 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
             json += "," + j.substring(0, j.length() - 1) + ",metric:" + m + "}";
         }
         json = "[" + json.substring(1) + "]";
-        System.out.println("json111111=============="+json);
         return json;
     }
+    
+    public List<Map<String,Object>> mergeData(Map<String,Object> map,String type){
+    	 List<Map<String,Object>> mconfigls = dao.selectPageMetricConfig(map);
+         List<Map<String,Object>> userMconfigls = dao.selectPageMetricUserConfig(map);
+         if (type.equals("show")&&userMconfigls.size()>0) {
+	         for (int i = 0; i < userMconfigls.size(); i++) {
+	        		 if (userMconfigls.get(i).get("param_id").toString().equals("9")&&userMconfigls.get(i).get("param_value").toString().equals("1")) {
+	     				String secId = userMconfigls.get(i).get("sec_metric_id").toString();
+	     				for (int j = 0; j < userMconfigls.size(); j++) {
+	     					if (userMconfigls.get(j).get("sec_metric_id").toString().equals(secId)) {
+	     						mconfigls.add(userMconfigls.get(j));
+	     					}
+	     				}
+	     			}
+				}
+         }else if (type.equals("set")&&userMconfigls.size()>0) {
+			for (int k = 0; k < userMconfigls.size(); k++) {
+ 				mconfigls.add(userMconfigls.get(k));
+ 			}
+		}
+    	return mconfigls;
+    }
+    
     @Override
     public String selectSectionJson(Integer page_id){
         List<Map<String, Object>> lst = dao.selectPageSection(page_id);
@@ -124,14 +163,23 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
             json += getSectionConfig(lst.get(i)) + ",";
         }
         json += getSectionConfig(lst.get(l)) + "]";
-        System.out.println("json222222222=============="+json);
         return json;
     }
 
     @Override
     public String selectMetricJson(Integer page_id,Integer user_id) {
         List<Map<String,Object>> metriclst = dao.selectPageMetric(page_id);
-        List<Map<String,Object>> mconfiglst = dao.selectPageMetricConfig(page_id);
+        List<Map<String,Object>> li = configDao.selectTime(user_id);
+    	 Map<String, Object> map1 = new HashMap<String, Object>();
+     	map1.put("user_id", user_id);
+     	map1.put("page_id", page_id);
+         String cre_time = "";
+         List<Map<String,Object>> mconfiglst = dao.selectPageMetricConfig(map1);
+         if (li.size()>0) {
+         	cre_time = li.get(0).get("cre_time").toString();
+         	map1.put("cre_time", cre_time);
+         	mconfiglst = mergeData(map1,"set");
+ 		}
         if(metriclst == null || metriclst.size() == 0 || mconfiglst == null || mconfiglst.size() == 0)
             return "[]";
         String json = "";
@@ -150,7 +198,6 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
             json = json.substring(1);
 		}
         json =  "["+json;
-        System.out.println("json3333333=============="+json);
         return json;
     }
 
@@ -165,7 +212,6 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
         String json = "";
         if (user_id.equals(1)==false) {
         	List<Map<String,Object>> metric_role = dao.getMetricRoleByUserId(user_id);
-        	System.out.println("metric_rol---------------------"+metric_role.toString());
             config = setConfig("1",config, metric_role);
 		}
         for(Map<String,Object> m : metrics){

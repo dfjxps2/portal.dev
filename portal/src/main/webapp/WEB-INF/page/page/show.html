@@ -52,8 +52,9 @@ var name = "";
         
     }
     function getMetricData(metricList){
+    	var url =localStorage.urlShow;
     	$.ajax({
-            url:"http://portal-server:8082/services/measures",
+            url:url,
             data:{meaId:metricList,to:2017,from:1990},
             type:'get',
             success:function(res){
@@ -246,8 +247,6 @@ var name = "";
 			}
 		}
     	sid = "s"+q;
-    	/* String idss = QCookie.getValue(request, "ids");
-    	alert(idss); */
     }
   function getByTime(){
 	if (sid != '') {
