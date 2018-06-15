@@ -3706,6 +3706,7 @@ nav.page-tabs .page-tabs-content {
 }
 
 .roll-right.btn-group button {
+	text-align:left;
     width: 80px;
 }
 
