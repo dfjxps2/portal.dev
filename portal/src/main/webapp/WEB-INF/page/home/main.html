@@ -160,7 +160,10 @@
 	var txtdata = '${txtdata}';
 	$(function() {
 		loadapp('#apps',apps);
-		bindsearch();
+//		bindsearch();
+		$('#txt').click(function(){
+			gosearch();
+		});
 		//回车查询
 		document.onkeydown=function(event){
 			var e = event || window.event || arguments.callee.caller.arguments[0];
