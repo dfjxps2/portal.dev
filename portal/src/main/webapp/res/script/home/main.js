@@ -116,7 +116,7 @@ function playnext(){
 }
 function bindsearch(){
 	var $ui = $('#div_append');
-    $("#txtico").after(txtdata);
+//    $("#txtico").after(txtdata);
 	var w = $("#div_append").width();
 	$("#div_data ul").width(w);
 	$("#div_data ul li.tit_filter").width(w - 10);
