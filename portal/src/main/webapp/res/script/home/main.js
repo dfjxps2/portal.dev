@@ -33,9 +33,10 @@ function loadapp(id, dt){
 	});
 }
 function loadctx(n){
+	var au = n.app_url;
 	var u = n.app_preview_url;
-	if(!u){
-		u = _host + "/res/script/home/images/preview.png";
+	if(!au){
+		u = u || _host + "/res/script/home/images/preview.png";
 		return '<div class="cell-bar ss21">'+ n.app_name +drawMenu(n)+'</div><img class="ss21" src="'+ u + '" />';
 	}
 	var ar = u.split('.'), fix = ar[ar.length - 1].toLowerCase();
