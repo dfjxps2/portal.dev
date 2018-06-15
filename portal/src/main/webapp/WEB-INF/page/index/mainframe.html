@@ -216,7 +216,7 @@
 				if (dt[i].depth == 1) {
 					arr.push(' <li>');
 					if (dt[i].children == null || dt[i].children.length == 0) {
-						arr.push('	<a class="J_menuItem" tabindex='+dt[i].menuId+' href="'+dt[i].menuUrl+'" ><i class="fa fa-columns"></i> <span class="nav-label">',
+						arr.push('	<a class="J_menuItem" tabindex='+dt[i].menuId+' href="'+dt[i].menuUrl+'" ><i class="'+dt[i].menuIconUrl+'"></i> <span class="nav-label">',
 									dt[i].menuCnName, '</span>',
 									'</a> </li>');
 					}else{
