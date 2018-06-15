@@ -180,6 +180,15 @@
     function supDatumTy(){
         var supdata = $("#sup_msg_type_id").val();
         var sudata = $("#msg_type_id").val();
+        if(supdata=="" ){
+            $("#sup_msg_type_id").empty();
+            $("#sup_msg_type_id").append("<option selected hidden value=''>请选择资料大类</option><option value= ''>资料大类</option>");
+            $("#sup_msg_type_id").append("<option value='1'>政府文件</option>");
+            $("#sup_msg_type_id").append("<option value='2'>政府公文</option>");
+            $("#sup_msg_type_id").append("<option value='3'>大数据平台报告</option>");
+            $("#msg_type_id").empty();
+            SelectDataType();
+        }
         if(supdata!=null && supdata !="" && sudata == ""){
             $("#msg_type_id").empty();
             $.ajax({
@@ -203,7 +212,15 @@
 
     function subClass() {
         var subdata = $("#msg_type_id").val();
-        if(subdata!=""&& subdata!=null ){
+        var supdata = $("#sup_msg_type_id").val();
+        if(subdata=="" && supdata==""){
+            $("#sup_msg_type_id").empty();
+            $("#sup_msg_type_id").append("<option selected hidden value=''>资料大类</option><option value= ''>资料大类</option>");
+            $("#sup_msg_type_id").append("<option value='1'>政府文件</option>");
+            $("#sup_msg_type_id").append("<option value='2'>政府公文</option>");
+            $("#sup_msg_type_id").append("<option value='3'>大数据平台报告</option>");
+        }
+        if(subdata!=""&& subdata!=null && supdata==""){
             $("#sup_msg_type_id").empty();
             $.ajax({
                 type:"post",
@@ -214,6 +231,7 @@
                     submtid: subdata
                 },
                 success:function (data) {
+                    $("#sup_msg_type_id").append("<option selected hidden value=''>资料大类</option><option value= ''>资料大类</option>");
                     for(var i=0;i<data.length;i++){
                         var item = data[i];
                         $("#sup_msg_type_id").append("<option value="+item.sup_msg_type_id+">"+item.supTyName+"</option>")

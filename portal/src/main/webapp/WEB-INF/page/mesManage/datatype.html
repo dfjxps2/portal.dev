@@ -66,7 +66,7 @@
                 { field:'serialNum',title:'编号',width:'10%',align:'center'},
                 {field:'msg_type_name',title:'资料类别',width:'50%',align:'center'},
                 {field:'msg_type_id',visible:false},
-                {field: 'CZ',  title: '操作',width: '25%', formatter:function(value,row,index){
+                {field: 'CZ',  title: '操作',width: '25%', align:'center',formatter:function(value,row,index){
                     return "<button type='button' class='btn_el' onclick='editData(\""+row.msg_type_id+",\")'>编辑</button>"
                     +"<button type='button' class='btn_el' onclick='delData(\""+row.msg_type_id+"\")'>删除</button>";
                 }}
