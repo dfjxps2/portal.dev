@@ -965,15 +965,20 @@ public class MesManageController extends SysBaseController<MesManageDO> {
             List<Map<String,Object>> res = new ArrayList<>();
             list.put("tag_type_name",map.get("tag_type_name"));
             list.put("tag_type_id",map.get("tag_type_id"));
-            String tags = map.get("tag_text").toString();
+            String tags = "";
+            if(map.get("tag_text")!=null && !map.get("tag_text").equals("") && !map.get("tag_text").equals("undefined")){
+                tags=map.get("tag_text").toString();
+            }
             String[] tag = tags.split(",");
             map.clear();
-            for(String t:tag){
-                map = new HashMap<>();
-                String[] ta = t.split(":");
-                map.put("tag_id",ta[0]);
-                map.put("tag_text",ta[1]);
-                res.add(map);
+            if(!tag[0].equals("")&& tag.length>0) {
+                for (String t : tag) {
+                    map = new HashMap<>();
+                    String[] ta = t.split(":");
+                    map.put("tag_id", ta[0]);
+                    map.put("tag_text", ta[1]);
+                    res.add(map);
+                }
             }
             list.put("tags",res);
             result.add(list);

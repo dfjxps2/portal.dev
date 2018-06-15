@@ -113,8 +113,8 @@
     </insert>
           <!--内容管理初始化和查询-->
    <select id="selectMes" parameterType="map" resultType="map">
-       SELECT met.msg_id,met.msg_title,met.src_msg_id,met.pub_user_id,met.pub_time,met.msg_type_id,met.msg_src_id,       met.msg_digest,met.msg_content,met.msg_class_id,met.appr_user_id,met.msg_attachment,met.appr_state,met.appr_time,met.msg_src_name,met.msg_src_url,met.msg_class_name,su.user_name apprname
-       FROM (SELECT mew.msg_id,mew.msg_title,mew.src_msg_id,mew.pub_user_id,mew.pub_time,mew.msg_type_id,mew.     msg_src_id,mew.msg_digest,mew.msg_content,mew.msg_class_id,mew.appr_user_id,mew.msg_attachment,mew.appr_state,mew.appr_time,mew.msg_src_name,mew.msg_src_url,mc.msg_class_name
+       SELECT met.msg_id,met.msg_title,met.src_msg_id,met.pub_user_id,met.pub_time,met.msg_type_id,met.msg_src_id,met.msg_digest,met.msg_content,met.msg_class_id,met.appr_user_id,met.msg_attachment,met.appr_state,met.appr_time,met.msg_src_name,met.msg_src_url,met.msg_class_name,su.user_name apprname
+       FROM (SELECT mew.msg_id,mew.msg_title,mew.src_msg_id,mew.pub_user_id,mew.pub_time,mew.msg_type_id,mew.msg_src_id,mew.msg_digest,mew.msg_content,mew.msg_class_id,mew.appr_user_id,mew.msg_attachment,mew.appr_state,mew.appr_time,mew.msg_src_name,mew.msg_src_url,mc.msg_class_name
        FROM
        (SELECT me.msg_id,me.msg_title,me.src_msg_id,me.pub_user_id,me.pub_time,me.msg_type_id,me.msg_src_id,me.msg_digest,me.msg_content,me.msg_class_id,me.appr_user_id,me.msg_attachment,me.appr_state,me.appr_time,ms.msg_src_name,ms.msg_src_url FROM  msg_source ms LEFT join
        message me on me.msg_src_id = ms.msg_src_id )
@@ -125,6 +125,10 @@
           <include refid="where" />
       </where>
    </select>
+
+    <select id="selectMsgId" parameterType="map" resultType="java.lang.Integer">
+        SELECT  MAX(msg_id) FROM  message WHERE  1=1
+    </select>
     <!--内容管理，获取内容对应标签-->
     <select id="selectMesTag" parameterType="String" resultType="String">
         SELECT mt.tag_text FROM(SELECT mg.*,ts.tag_text FROM tags ts right join msg_tag mg on ts.tag_id = mg.tag_id WHERE 1=1) mt
@@ -193,8 +197,9 @@
 
     <!--内容标签-->
     <select id="selectTagsTree" resultType="map">
-        SELECT b.tag_type_id,b.tag_type_name,GROUP_CONCAT(tag_id,':',tag_text) tag_text  FROM (SELECT DISTINCT t.tag_type_id,t.tag_text,t.tag_id,tt.tag_type_name
-        FROM tags t LEFT JOIN tag_type tt on t.tag_type_id=tt.tag_type_id where t.tag_type_id !='' ) b GROUP BY b.tag_type_name
+      SELECT b.tag_type_id,b.tag_type_name,GROUP_CONCAT(tag_id,':',tag_text) tag_text
+      FROM (SELECT t.tag_type_id,t.tag_type_name,tt.tag_text,tt.tag_id FROM tag_type t left join tags tt on  t.tag_type_id = tt.tag_type_id where t.tag_type_id !='' )
+      b GROUP BY b.tag_type_name
     </select>
 
     <!--根据标签查询msgid-->
