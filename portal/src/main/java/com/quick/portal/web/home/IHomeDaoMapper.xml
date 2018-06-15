@@ -79,14 +79,14 @@
 	<!-- 查询所有应用 -->
 	<select id="queryApp" parameterType="map" resultType="map">
 		select c.app_class_name, m.menu_id, m.menu_icon_url,a.* from application a
-		  left join app_class_rela r on a.app_id=r.app_id
-		  left join app_class c on r.app_class_id=c.app_class_id
+		  inner join app_class_rela r on a.app_id=r.app_id
+		  inner join app_class c on r.app_class_id=c.app_class_id
 		  left join sys_menu m on a.app_id=m.app_id
+		  and m.menu_id in (select menu_id from menu_privilege mp where mp.role_id=#{role_id})
 		  where a.app_state=1
-		   and m.menu_id in (select menu_id from menu_privilege mp where mp.role_id=#{role_id})
 		   and a.app_id not in (
 		       select a1.app_id from dashboard_app_config a1
-		         left join user_dashboard a2 on a1.dashboard_id=a2.dashboard_id
+		        inner join user_dashboard a2 on a1.dashboard_id=a2.dashboard_id
 			    where a2.user_id=#{user_id}
 		   )
 	</select>
