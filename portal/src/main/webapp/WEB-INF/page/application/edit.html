@@ -68,7 +68,13 @@
                         <div class="col-sm-6 form_ipt_botm">
                             <div class="form-group">
                                 <label class="col-xs-4 lable_top"><span></span>应用系统预览URL</label>
-                                <div class="col-xs-8"><input type="text" id="app_preview_url" name="app_preview_url" class="form-control" /></div>
+                                <div class="col-xs-8">
+                                    <div class="input-group">
+                                        <input type="file" style="display:none;" id="prefile" name="prefile" accept=".png,.jpg,.jpeg,.gif,.bmp" onchange="previewImage(this);" />
+                                        <input type="text" id="app_preview_url" name="app_preview_url" class="form-control"/><span class="input-group-btn"><a role="button" class="btn btn-default" type="button" onclick="$('#prefile').click();"><i class="fa fa-upload"></i></a></span>
+                                    </div>
+                                    <label>可填写url或上传图片(320X180)<span id="prename"></span></label>
+                                </div>
                             </div>
                         </div>
                         <div class="col-sm-6 form_ipt_botm">
@@ -179,6 +185,11 @@
         $("#app_class_id").val(a1.join(','));
         $("#app_class_name").val(a2.join(','));
         $("#rel_id").val(a3.join(','));
+    }
+    function previewImage(f){
+        if (f.files && f.files[0]){
+            $("#app_preview_url").val('').attr("placeholder", f.files[0].name);
+        }
     }
 </script>
 </html>
