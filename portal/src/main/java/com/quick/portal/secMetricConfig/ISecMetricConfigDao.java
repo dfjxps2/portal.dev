@@ -27,12 +27,12 @@ import java.util.Map;
  * sec_metric_config数据访问接口
  */
 public interface ISecMetricConfigDao<SecMetricConfigDO> extends ISysBaseDao<SecMetricConfigDO> {
-   int  selectUAC( Map<String, Object> queryMap ); //查找指定配置
-    int  insertUAC( Map<String, Object> queryMap );
-    int  updateUAC_Active( Map<String, Object> queryMap );
-    int  updateUAC_Version( Map<String, Object> queryMap );
+   int  selectUAC(Map<String, Object> queryMap); //查找指定配置
+    int  insertUAC(Map<String, Object> queryMap);
+    int  updateUAC_Active(Map<String, Object> queryMap);
+    int  updateUAC_Version(Map<String, Object> queryMap);
     
-    int  deleteBySectionId(String sec_metric_id );
+    int  deleteBySectionId(String sec_metric_id);
     
     int  insertUAC_Version(UserActiveConfigDo usDO);
     
