@@ -22,21 +22,24 @@
 			   url:quick.serverUrl+"/getList?i=" + Math.random(),
 			   idField: quick.idField,
 			   sortName: quick.idField,
+			   nowrap:false,
                cache:false,
-			   height: $(document.body).height()-50,
+
+			  // height: $(document.body).height()-50,
+
 			   toolbar:"#formSearch",
 			   columns: [
-				   { field: 'config_id', title: '配置id', width: 30  },
+				  /* { field: 'config_id', title: '配置id', width: 30  },*/
 /*
                    { field: 'user_id', title: '用户id',type:"hidden" , width: 60   },
 */
 				   { field: 'version_num', title: '版本号', width: 30   },
 
-                   { field: 'cre_time', title: '配置修改时间', width: 80  },
+                   { field: 'cre_time', title: '配置修改时间', width: 50  },
 
-				   { field: 'details', title: '指标配置详情', width: 170   },
+				   { field: 'details', title: '指标配置详情' ,width: 150},
 
-				   { field: 'is_active', title: '生效状态', width: 30 ,formatter:function(value,row,index){
+				   { field: 'is_active', title: '生效状态', width: 25 ,formatter:function(value,row,index){
 					   var state = '<span style="color:#CFCFCF">未生效</span>';
 					   if (row.is_active==1) {
 						   state = '<span style="color:#9ACD32">已生效</span>';
@@ -46,7 +49,7 @@
                    { field: 'param_value', title: '参数值', width: 60  },
 				   { field: 'valid_status', title: '版本状态', width: 40  },*/
 
-				   { field: 'cz', align:'center', title: '操作',width: 90, formatter:function(value,row,index){
+				   { field: 'cz', align:'center', title: '操作',width: 50, formatter:function(value,row,index){
 					   var state= "<button type='button' class='btn_el' onclick='use(\""+row.config_id+"\",\""+row.user_id+"\",\""+row.cre_time+"\")'>启用</button>| "
 					          +"<button type='button' class='btn_el' onclick='edit(\""+row.cre_id+"\",\""+row.version_num+"\",\""+row.cre_time+"\")'>编辑版本号</button> "
 
