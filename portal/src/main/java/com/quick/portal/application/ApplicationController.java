@@ -32,6 +32,7 @@ import com.quick.core.util.common.QCommon;
 import com.quick.core.util.type.TypeUtil;
 import com.quick.portal.appClassRela.AppClassRelaDO;
 import com.quick.portal.appClassRela.IAppClassRelaService;
+import com.quick.portal.security.authority.metric.PropertiesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -143,7 +144,8 @@ public class ApplicationController extends SysBaseController<ApplicationDO> {
         //将request变成多部分request
         MultipartHttpServletRequest multiRequest=(MultipartHttpServletRequest)request;
         //创建文件夹
-        File dirPath = new File(request.getSession().getServletContext().getRealPath("")+"/upload/home/");
+        String baseDir = PropertiesUtil.getPropery("file.dir");
+        File dirPath = new File(baseDir+"upload/home/");
         if (!dirPath.exists()) {
             dirPath.mkdirs();
         }
