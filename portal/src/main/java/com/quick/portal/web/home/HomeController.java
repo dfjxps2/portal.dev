@@ -193,7 +193,6 @@ public class HomeController extends SysWebController {
         String role_id = rstr("r", loginer.getRole_id().toString());
         urlMap.put("user_id", uid);
         urlMap.put("role_id", role_id);
-
         List<Map<String, Object>> list =   homeService.queryApp(urlMap);
         fixUrl(list);
         return list;

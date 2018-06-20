@@ -35,7 +35,7 @@ import com.quick.core.base.SysBaseController;
 @Controller
 @Scope("prototype")
 @RequestMapping(value = "/metric")
-public class MetricController extends SysBaseController<MetricDO> {
+public class  MetricController extends SysBaseController<MetricDO> {
     
     @Resource(name = "metricService")
     private IMetricService metricService;
