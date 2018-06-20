@@ -7,7 +7,7 @@
     <script src="${G.host}/res/js/indexCharts/indexChart.js"></script>
 </head>
  <script>
- 
+ 	var _metUrl='${METRIC_URL}';
     $(document).ready(function() {
         loadBindMetric();
     	getMetric();
@@ -15,9 +15,9 @@
     
     
     function getMetric(){
-    	var url =localStorage.urlSet;
+    	alert(_metUrl);
     	$.ajax({
-            url:url,
+           	url:_metUrl,
             type:'get',
             success:function(res){
             	if (res.length>0) {

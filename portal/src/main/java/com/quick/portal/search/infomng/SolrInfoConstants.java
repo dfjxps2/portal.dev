@@ -16,15 +16,19 @@ public class SolrInfoConstants {
 
 	public static final String INDEX_PORTAL_METRIC = "PORTAL_METRIC";
 
-	public static final String PORTAL_DOC_URL = "http://10.1.3.193:8983/solr/portal_doc";
-
+	
+	
+	public static final String SOLR_PORTAL_DOC_SERVICE = "/solr/portal_doc";
+	
+/*	public static final String PORTAL_DOC_URL = "http://10.1.3.193:8983/solr/portal_doc";
+	
 	public static final String PORTAL_METRIC_URL = "http://10.1.3.193:8983/solr/portal_metric";
 
 	public static final String PORTAL_MSG_URL = "http://10.1.3.193:8983/solr/portal_msg";
 
 	public static final String DATA_MSG_URL = "http://10.1.3.193:8983/solr/portal_data";
 	
-	public static final String USER_MSG_URL ="http://10.1.3.193:8983/solr/user_msg";
+	public static final String USER_MSG_URL ="http://10.1.3.193:8983/solr/user_msg";*/
 	
 	public static final String INDEX_KEYWORD = "keyword";
 	

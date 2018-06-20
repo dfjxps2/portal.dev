@@ -45,6 +45,7 @@ import com.quick.portal.application.ApplicationDO;
 import com.quick.portal.application.IApplicationService;
 import com.quick.portal.page.IPageService;
 import com.quick.portal.section.ISectionService;
+import com.quick.portal.security.authority.metric.MetricPrivilegeConstants;
 import com.quick.portal.security.authority.metric.PropertiesUtil;
 
 /**
@@ -81,12 +82,16 @@ public class MonitorController extends SysWebController {
         }
         ApplicationDO app = applicationService.selectObj(app_id.toString());
         Object layout = getLayout(page_id);
-        String urlShow = PropertiesUtil.getPropery("index.service.showURL");
-    	model.addAttribute("urlShow", urlShow);
+        
+        String url = PropertiesUtil.getPropery("index.service.url");
+    	String port = PropertiesUtil.getPropery("index.service.port");
+    	String serviceUrl = url.concat(MetricPrivilegeConstants.SERVICE_PORT).concat(port).concat(MetricPrivilegeConstants.GET_MEASURES_SERVICE_NAME);
+    	model.addAttribute("MEASURES_URL", serviceUrl);
         model.addAttribute("app", app);
         model.addAttribute("page_id", page_id);
         model.addAttribute("pageJson", JsonUtil.serialize(plist));
         model.addAttribute("layout", layout);
+        
         return view();
     }
     
@@ -107,9 +112,13 @@ public class MonitorController extends SysWebController {
 
         Object layoutJson = getPageJson(page_id);
         Object metricJson = getMetricJson(page_id);
-        String urlShow = PropertiesUtil.getPropery("index.service.showURL");
+       /* String urlShow = PropertiesUtil.getPropery("index.service.showURL");
+    	model.addAttribute("urlShow", urlShow);*/
+        String url = PropertiesUtil.getPropery("index.service.url");
+    	String port = PropertiesUtil.getPropery("index.service.port");
+    	String urlShow = url.concat(MetricPrivilegeConstants.SERVICE_PORT).concat(port).concat(MetricPrivilegeConstants.GET_MEASURES_SERVICE_NAME);
     	model.addAttribute("urlShow", urlShow);
-        model.addAttribute("page_id", page_id);
+    	model.addAttribute("page_id", page_id);
         model.addAttribute("app", app);
         model.addAttribute("page", JsonUtil.serialize(plist));
         model.addAttribute("metric", metricJson);
@@ -128,7 +137,9 @@ public class MonitorController extends SysWebController {
 
         Object layoutJson = getPageJson(page_id);
         Object metricJson = getMetricJson(page_id);
-        String urlShow = PropertiesUtil.getPropery("index.service.showURL");
+        String url = PropertiesUtil.getPropery("index.service.url");
+    	String port = PropertiesUtil.getPropery("index.service.port");
+    	String urlShow = url.concat(MetricPrivilegeConstants.SERVICE_PORT).concat(port).concat(MetricPrivilegeConstants.GET_MEASURES_SERVICE_NAME);
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("urlShow", urlShow);
         map.put("page_id", page_id);
@@ -141,7 +152,9 @@ public class MonitorController extends SysWebController {
     
     @RequestMapping
     public String show(ModelMap model) {
-        String urlShow = PropertiesUtil.getPropery("index.service.showURL");
+    	String url = PropertiesUtil.getPropery("index.service.url");
+    	String port = PropertiesUtil.getPropery("index.service.port");
+    	String urlShow = url.concat(MetricPrivilegeConstants.SERVICE_PORT).concat(port).concat(MetricPrivilegeConstants.GET_MEASURES_SERVICE_NAME);
     	model.addAttribute("urlShow", urlShow);
         return view();
     }

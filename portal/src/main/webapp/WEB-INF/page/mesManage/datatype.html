@@ -9,7 +9,7 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="ibox ">
-                <div class="ibox-content ibox-content-ad" style="margin-left:55px;margin-top:35px;height:500px;width:90%">
+                <div class="ibox-content ibox-content-ad" style="margin-left:45px;margin-top:25px;height:500px;width:1025px">
                     <form id="pubform" name="pubform" method="post"  enctype="multipart/form-data" >
                         <div class="row" style="margin-top:20px">
                             <div class="form-group" style="width:220px;">
@@ -25,7 +25,6 @@
                                 <button class="pull-right btn btn-primary "  type="button" onclick="addData()" style="padding-left:10px;">新增</button>
                             </div>
                         </div>
-
                     </form>
                     <div style="margin:5px;">
                         <table id="list" class="table-striped" style="table-layout:fixed"></table>
@@ -67,7 +66,7 @@
                 { field:'serialNum',title:'编号',width:'10%',align:'center'},
                 {field:'msg_type_name',title:'资料类别',width:'50%',align:'center'},
                 {field:'msg_type_id',visible:false},
-                {field: 'CZ',  title: '操作',width: '25%', formatter:function(value,row,index){
+                {field: 'CZ',  title: '操作',width: '25%', align:'center',formatter:function(value,row,index){
                     return "<button type='button' class='btn_el' onclick='editData(\""+row.msg_type_id+",\")'>编辑</button>"
                     +"<button type='button' class='btn_el' onclick='delData(\""+row.msg_type_id+"\")'>删除</button>";
                 }}

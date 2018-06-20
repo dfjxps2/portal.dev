@@ -1,8 +1,5 @@
 package com.quick.portal.search.infomng;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 
 public class InitSolrServer {
@@ -34,7 +31,7 @@ public class InitSolrServer {
     private static HttpSolrClient pMsgServer = null;
     private static HttpSolrClient uMsgServer = null;
     
-    public static List<HttpSolrClient> getSolrServer() {
+/*    public static List<HttpSolrClient> getSolrServer() {
     	String [] data = new String[]{SolrInfoConstants.INDEX_PORTAL_DOC,SolrInfoConstants.INDEX_PORTAL_METRIC,SolrInfoConstants.INDEX_PORTAL_MSG,SolrInfoConstants.INDEX_USER_MSG};
     	List<HttpSolrClient> serList = new ArrayList<HttpSolrClient>();
     	HttpSolrClient service = null;
@@ -43,9 +40,9 @@ public class InitSolrServer {
 			serList.add(service);
     	}
     	return serList;
-    }
+    }*/
     
-    public static HttpSolrClient InitSolrServer(String data) {
+/*    public static HttpSolrClient InitSolrServer(String data) {
     	HttpSolrClient  server = null;
     	switch (data) {
     		case SolrInfoConstants.INDEX_PORTAL_DOC: // 全表格[{}]
@@ -62,7 +59,7 @@ public class InitSolrServer {
     			break;
     		}
     	return server;
-    }
+    }*/
     
     public static synchronized HttpSolrClient getServer(HttpSolrClient server, String url){
     	 // 创建 server
@@ -75,7 +72,7 @@ public class InitSolrServer {
 	     return server;
     }
     
-    public static  HttpSolrClient getHttpSolrServer(String objType) {
+/*    public static  HttpSolrClient getHttpSolrServer(String objType) {
     	//资料索引库是独立
     	HttpSolrClient solrcServer = null ;
     	if(null != objType && SolrInfoConstants.DATA_OBJ_TYPE.equals(objType)){
@@ -85,7 +82,7 @@ public class InitSolrServer {
     	}
     	return solrcServer;
     }
-    
+    */
     
     /*
      * 创建 server

@@ -170,10 +170,7 @@
 	<!--add by SongChaoqun-->
 	<select id="listAllMenu"  parameterType="map" resultType="map">
 		select * from sys_menu
-		where menu_level is not null
-		and menu_id is not null
-		and super_menu_id is not null
-		and menu_cn_name is not null
+		where  menu_state=1
 	</select>
 	
 	

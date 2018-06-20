@@ -27,7 +27,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.quick.core.base.ISysBaseService;
@@ -84,6 +83,7 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
                   jsonStr = JsonUtil.toJson(menuTree.getChildren());
             }  
             model.addAttribute("data", jsonStr);
+            System.out.println("jsonStr="+jsonStr);
         } catch (Exception e){
         	throw new Exception("查询权限菜单异常,权限菜单数据:jsonStr="+jsonStr +"ERROR:="+e.getMessage());
         }

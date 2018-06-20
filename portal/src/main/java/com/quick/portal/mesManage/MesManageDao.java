@@ -18,6 +18,8 @@ public interface MesManageDao<MesManageDO> extends ISysBaseDao<MesManageDO> {
     int deleteMsg(String msgId);
     //内容管理初始化--获取内容标签信息
     List<String> selectMesTag( String mesId);
+    //获得当前插入数据ID
+    int  selectMsgId (Map<String,Object> map);
     //内容发布,信息标签
     int insertMesTag( Map<String,Object> map);
     //内容管理修改信息标签,删除原标签

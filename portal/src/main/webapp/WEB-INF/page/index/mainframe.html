@@ -57,6 +57,7 @@
                             </div>
                         </form>
                           -->
+                          <div class="left"><a href="main"><img align ="right" src="${G.host}/res/script/home/images/logo2.png" title="系统首页"></a></div>
 					</div>
 					<ul class="nav navbar-top-links navbar-right">
 						<li class="hidden-xs"><a href="javascript:void(0);"
@@ -214,20 +215,28 @@
 		function drawLi(arr, dt) {
 			for (var i = 0; i < dt.length; i++) {
 				if (dt[i].depth == 1) {
-					arr
-							.push(
-									' <li>',
-									'	<a href="#"><i class="'+dt[i].menuIconUrl+'"></i> <span class="nav-label">',
+					arr.push(' <li>');
+					if (dt[i].children == null || dt[i].children.length == 0) {
+						arr.push('	<a class="J_menuItem" tabindex='+dt[i].menuId+' href="'+dt[i].menuUrl+'" ><i class="'+dt[i].menuIconUrl+'"></i> <span class="nav-label">',
 									dt[i].menuCnName, '</span>',
-									' <span class="fa arrow"></span></a>');
+									'</a> </li>');
+					}else{
+						arr.push('	<a href="#"><i class="'+dt[i].menuIconUrl+'"></i> <span class="nav-label">',
+							dt[i].menuCnName, '</span>',
+							' <span class="fa arrow"></span></a>');
+						
+						arr.push('<ul class="nav nav-second-level">');
+						drawLi(arr, dt[i].children);
+						arr.push('</ul></li>');
+					}
 
-					if (dt[i].children != null || dt[i].children.length > 0) {
+			/* 		if (dt[i].children != null || dt[i].children.length > 0) {
 						arr.push('<ul class="nav nav-second-level">');
 						drawLi(arr, dt[i].children);
 						arr.push('</ul>');
 					} else {
 						arr.push('	</li>');
-					}
+					} */
 
 				} else if (dt[i].depth > 1 && dt[i].children.length > 0) {
 					arr.push(' <li><a href="#"> ', dt[i].menuCnName,
@@ -237,9 +246,7 @@
 					arr.push('	</ul>', '</li>');
 
 				} else if (dt[i].depth > 1 && dt[i].children.length == 0) {
-					arr
-							.push(
-									'<li><a class="J_menuItem" tabindex='+dt[i].menuId+' href="'+dt[i].menuUrl+'">',
+					arr.push('<li><a class="J_menuItem" tabindex='+dt[i].menuId+' href="'+dt[i].menuUrl+'">',
 									dt[i].menuCnName, '</a></li>');
 
 				}

@@ -36,11 +36,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
+import java.io.File;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -88,6 +94,10 @@ public class ApplicationController extends SysBaseController<ApplicationDO> {
 
     @Override
     public DataStore save(ApplicationDO model) {
+        //保存上传图片
+        String up_url = saveUpload();
+        if(up_url.length() > 0)
+            model.setApp_preview_url(up_url);
         //保存应用
         ActionMsg = getBaseService().save(model);
         //保存应用分类
@@ -107,8 +117,6 @@ public class ApplicationController extends SysBaseController<ApplicationDO> {
                 appClassRelaService.save(m);
             }
         }
-
-
         return ActionMsg;
     }
 
@@ -127,5 +135,41 @@ public class ApplicationController extends SysBaseController<ApplicationDO> {
         model.setPub_date(new Date());
         ActionMsg = applicationService.save(model);
         return ActionMsg;
+    }
+
+    public String saveUpload(){
+        //将当前上下文初始化给  CommonsMutipartResolver （多部分解析器）
+        CommonsMultipartResolver multipartResolver=new CommonsMultipartResolver(request.getSession().getServletContext());
+        //将request变成多部分request
+        MultipartHttpServletRequest multiRequest=(MultipartHttpServletRequest)request;
+        //创建文件夹
+        File dirPath = new File(request.getSession().getServletContext().getRealPath("")+"/upload/home/");
+        if (!dirPath.exists()) {
+            dirPath.mkdirs();
+        }
+        //获取multiRequest 中所有的文件名
+        Iterator iter=multiRequest.getFileNames();
+
+        try {
+            while (iter.hasNext()) {
+                //一次遍历所有文件
+                MultipartFile file = multiRequest.getFile(iter.next().toString());
+                if (file != null) {
+                    //上传
+                    // 获取文件名后缀
+                    String oldname = file.getOriginalFilename();
+                    String suffix = oldname.indexOf(".") != -1 ? oldname.substring(oldname.lastIndexOf(".")) : "";
+                    String fname = QCommon.getUUID() + suffix;
+                    File uploadFile = new File(dirPath+File.separator+ fname);
+                    FileCopyUtils.copy(file.getBytes(), uploadFile);
+                    String url = "upload/home/" + fname;
+                    return url;
+                }
+            }
+        }catch (Exception e){
+            System.out.print("[application]无法保存上传文件:" + e.getMessage());
+            e.printStackTrace();
+        }
+        return "";
     }
 }

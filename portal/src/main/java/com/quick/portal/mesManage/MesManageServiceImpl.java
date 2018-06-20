@@ -159,10 +159,8 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
                 mesManageDO.setPub_user_id(Integer.parseInt(userId));
                 mesManageDao.insert(mesManageDO);
                 map.clear();
-                String time = format.format(mesManageDO.getAppr_time());
-                map.put("appr_time",time);
-                List<Map<String,Object>> result = mesManageDao.selectMes(map);
-                String msgId = result.get(0).get("msg_id").toString();
+               Integer result = mesManageDao.selectMsgId(map);
+                String msgId = result.toString();
                 String[] tags = tagId[0].split(",");
                 map.clear();
                 for(int i=0;i<tags.length;i++){
@@ -341,10 +339,9 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
             }
             mesManageDao.insert(mesManageDO);
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String time = format.format(mesManageDO.getAppr_time());
-            map.put("appr_time", time);
-            List<Map<String, Object>> result = mesManageDao.selectDataMes(map);
-            msgId = (Integer) result.get(0).get("msg_id");
+           Map<String,Object> mas = new HashMap<>();
+        Integer result = mesManageDao.selectMsgId(mas);
+            msgId = result;
             int tagId = mesManageDao.selectMaxTagId();
             tagFilter(key,map,tagId,msgId);
             String attach = "";

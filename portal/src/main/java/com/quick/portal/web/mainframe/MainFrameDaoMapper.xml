@@ -34,9 +34,9 @@
 			AND U.MENU_STATE = 1
 			AND R.ROLE_STATE = 1
 			AND A.USER_ID = #{userId}
-			ORDER BY
-				MENU_ID,
-				DISP_ORDER	
+			ORDER BY U.DISP_ORDER DESC,
+				U.MENU_ID
+				
 		]]>
 	
     </select>

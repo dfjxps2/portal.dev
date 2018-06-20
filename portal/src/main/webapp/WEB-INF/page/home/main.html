@@ -23,7 +23,7 @@
 		.cell{float:left; padding: 10px;position: relative; }
 		.box .cell{cursor:pointer;text-align:center;max-width:100%;}
 		.cell .cell-ctx {z-index: 10;text-indent: 2px;overflow: hidden;border-bottom-left-radius: 3px;border-bottom-right-radius: 3px;}
-		.cell .cell-remove {display: none;position: absolute;top: 9px;right: 10px;cursor:pointer;color: white;background: #101010;border-radius: 50%;font-size: 16px;border: 1px solid white;height: 24px;width: 24px;line-height: 24px;text-align: center;}
+		.cell .cell-remove {display: none;position: absolute;top:9px;right:12px;color:white;background: #101010;border-radius: 50%;font-size: 18px;height: 24px;width: 24px;line-height: 24px;z-index:300;}
 		.cell .cell-bar{cursor:move;position: absolute;left:21px;z-index:12;font-size:12px;color:#fff;text-align:left;padding:2px 0 0 15px;width:320px;height: 20px;background-color:#00b3b6;}
 		.cell .cell-barico{position: absolute;width:16px;height:16px;right:5px;top:5px;font-size: 12px;}
 		.cell .cell-barico .dropdown-menu{left:auto;right:0;font-size:11px;min-width:100px;color:#000;}
@@ -83,42 +83,15 @@
 		.addwin .layui-layer-btn{text-align:center;background-color:#274360;}
 
 		/* dropdown */
-		#div_data .dropdown {
-			padding: 6px 5px;
-			border: solid 1px #000;
-			background: #fff;
-			position: absolute;
-			left: 20px;
-			top: 34px;
-			z-index:100;
-		}
-
-		#div_data .dropdown .tit_filter {
-			font-weight: 700;
-			background: #fff;
-			font-size: 14px;
-			color: #000;
-			height: 10px;
-			line-height: 2px;
-			margin: 14px 5px;
-			border-bottom: 1px solid #000;
-		}
-
-		#div_data .dropdown li {
-			float: left;
-			width: calc(100%/4);
-			padding: 0 0 0 5px;
-			font-size: 14px;
-			line-height: 32px;
-			height: 32px;
-		}
-
+		#div_data .dropdown {padding:6px 5px;border:solid 1px #000;background:#fff;position:absolute;left: 20px;top:34px;z-index:100;}
+		#div_data .dropdown .tit_filter {font-weight:700;background:#fff;font-size:14px;color:#000;height:10px;line-height:2px;margin:14px 5px;border-bottom:1px solid #000;}
+		#div_data .dropdown li {float:left;width:calc(100%/4);padding:0 0 0 5px;font-size:14px;line-height:32px;height:32px;}
 		#div_data input[type="radio"]{opacity: 0;}
 	</style>
 </head>
 <body>
 <div class="nav">
-	<div class="left"><a href="main"><img src="${G.host}/res/script/home/images/logo.png" title="系统首页"></a></div>
+	<div class="left"><a href="main"><img align ="middle" src="${G.host}/res/script/home/images/logo1.png" title="系统首页"></a></div>
 	<#if roleid == 1 || isadmin == 1 >
 		<div class="right" style="width:250px;"><a href="javascript:void(0);" onclick="location.href='../mainframe';"><img src="${G.host}/res/script/home/images/niu.png" title="后台"></a></div>
 	</#if>
@@ -158,7 +131,7 @@
 </div>
 <nav class="navbar navbar-default navbar-fixed-bottom footer">
 	<div class="container">
-		<h3 style="text-align:center;font-size:16px;">东方金信 版权所有2018</h3>
+		<h3 style="text-align:center;font-size:16px;">版权所有 Copyright(C)2013-2016 北京泰豪智能工程有限公司 </h3>
 	</div>
 </nav>
 </body>
@@ -187,7 +160,10 @@
 	var txtdata = '${txtdata}';
 	$(function() {
 		loadapp('#apps',apps);
-		bindsearch();
+//		bindsearch();
+		$('#txt').click(function(){
+			gosearch();
+		});
 		//回车查询
 		document.onkeydown=function(event){
 			var e = event || window.event || arguments.callee.caller.arguments[0];

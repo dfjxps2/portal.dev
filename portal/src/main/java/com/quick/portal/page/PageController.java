@@ -64,8 +64,10 @@ public class PageController extends SysBaseController<PageDO> {
     }
     @RequestMapping
     public String edit(ModelMap model) {
-    	String urlSet = PropertiesUtil.getPropery("index.service.setURL");
-    	String urlShow = PropertiesUtil.getPropery("index.service.showURL");
+    	String url = PropertiesUtil.getPropery("index.service.url");
+      	String port = PropertiesUtil.getPropery("index.service.port");
+    	String urlSet = url.concat(MetricPrivilegeConstants.SERVICE_PORT).concat(port).concat(MetricPrivilegeConstants.GET_METRIC_SERVICE_NAME);
+    	String urlShow = url.concat(MetricPrivilegeConstants.SERVICE_PORT).concat(port).concat(MetricPrivilegeConstants.GET_MEASURES_SERVICE_NAME);
     	model.addAttribute("urlSet", urlSet);
     	model.addAttribute("urlShow", urlShow);
         Integer page_id = rint("page_id");
@@ -80,10 +82,18 @@ public class PageController extends SysBaseController<PageDO> {
         Integer page_id = rint("p");
         //Object layout = getLayoutJson(page_id);
         //model.addAttribute("layout", layout);
+      	String url = PropertiesUtil.getPropery("index.service.url");
+      	String port = PropertiesUtil.getPropery("index.service.port");
+      	String serviceUrl = url.concat(MetricPrivilegeConstants.SERVICE_PORT).concat(port).concat(MetricPrivilegeConstants.GET_MEASURES_SERVICE_NAME);
+      	model.addAttribute("MEASURES_URL", serviceUrl);
         return view();
     }
     @RequestMapping
     public String setting(ModelMap model) {
+    	String url = PropertiesUtil.getPropery("index.service.url");
+      	String port = PropertiesUtil.getPropery("index.service.port");
+      	String serviceUrl = url.concat(MetricPrivilegeConstants.SERVICE_PORT).concat(port).concat(MetricPrivilegeConstants.GET_METRIC_SERVICE_NAME);
+      	model.addAttribute("METRIC_URL", serviceUrl);
         return view();
     }
     @RequestMapping
