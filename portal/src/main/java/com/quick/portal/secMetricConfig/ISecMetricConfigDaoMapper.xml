@@ -77,7 +77,7 @@
 	
 	<!--查询用户当前版本时间-->
 	<select id="selectTime" parameterType="int" resultType="map">
-		select cre_time from user_config_version 
+		select * from user_config_version 
 	    where user_id = #{user_id} and is_active = 1
 	</select>
 	

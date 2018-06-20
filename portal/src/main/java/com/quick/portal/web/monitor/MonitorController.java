@@ -114,7 +114,6 @@ public class MonitorController extends SysWebController {
         model.addAttribute("page", JsonUtil.serialize(plist));
         model.addAttribute("metric", metricJson);
         model.addAttribute("layout", layoutJson);
-        System.out.println(",,,,,,,,,,,,,,,,,,,,,,,,,,,,,");
         return view();
     }
     

@@ -200,7 +200,6 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
         if (json.length()>1) {
             json = json.substring(1);
 		}
-        System.out.println("................................."+json);
         json =  "["+json;
         return json;
     }
