@@ -8,8 +8,6 @@
 		<![CDATA[ SELECT COUNT(*) FROM VISIT_STATS WHERE USER_ID =#{user_id} AND VISIT_OBJ_ID =#{visit_obj_id}
 		]]> 
 	</select>
-
-
 <!-- 修改 -->
 	<update id="updExitsVisitInfo" parameterType="com.quick.portal.search.infomng.InfoMngDO">
 		<![CDATA[ UPDATE VISIT_STATS 
@@ -18,7 +16,6 @@
 		 WHERE USER_ID = #{user_id} AND VISIT_OBJ_ID =#{visit_obj_id}
 		 ]]> 
 	</update>
-	
 	<!-- 新增  VISIT_STATS-->
     <insert id="saveVisitInfo" parameterType="map">
 		<![CDATA[ INSERT INTO VISIT_STATS (
@@ -35,8 +32,6 @@
 			1
 		)]]> 
 	</insert>
-	
-	
 	<!-- 通过url查询msgID -->
 	<select id="searchMsgByUrl" parameterType="String" resultType="map">
 		SELECT MSG_ID FROM MESSAGE WHERE MSG_CONTENT=#{url}
@@ -49,10 +44,7 @@
 		SELECT  E.MSG_CONTENT FROM  VISIT_STATS S,MESSAGE E WHERE S.VISIT_OBJ_ID = E.MSG_ID AND S.USER_ID=#{userID}
 		]]> 
 	</select>
-	
-	
-	
-	
+
 	<!-- 新增  user_dept_tmp-->
     <insert id="saveSearchTermsInfo" parameterType="map">
 		<![CDATA[ INSERT INTO SEARCH_KEYWORDS (
