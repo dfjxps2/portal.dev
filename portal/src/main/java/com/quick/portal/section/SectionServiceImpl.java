@@ -193,10 +193,14 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
     			}
 			}
         }
-        json += ','+getMetricConfig(metriclst.get(l), mconfiglst,user_id) + "]";
+        if (getMetricConfig(metriclst.get(l), mconfiglst,user_id).length()>0) {
+        	json += ','+getMetricConfig(metriclst.get(l), mconfiglst,user_id) ;
+		}
+        json +=  "]";
         if (json.length()>1) {
             json = json.substring(1);
 		}
+        System.out.println("................................."+json);
         json =  "["+json;
         return json;
     }
@@ -210,7 +214,7 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
     private String getMetricConfig(Object section_value, List<Map<String,Object>> metrics, List<Map<String,Object>> config,Integer user_id){
         String section_id = section_value.toString();
         String json = "";
-        if (user_id.equals(1)==false) {
+        if (user_id.equals(0)==false) {
         	List<Map<String,Object>> metric_role = dao.getMetricRoleByUserId(user_id);
             config = setConfig("1",config, metric_role);
 		}
@@ -241,13 +245,13 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
         return "[" + json + "]";
     }
     private String getMetricConfig(Map<String, Object> m, List<Map<String,Object>> config,Integer user_id){
-    	 if (user_id.equals(1)==false) {
+    	 if (user_id.equals(0)==false) {
          	List<Map<String,Object>> metric_role = dao.getMetricRoleByUserId(user_id);
              config = setConfig("1",config, metric_role);
  		}
         String sid = m.get("sec_metric_id").toString();
         String json = "";
-        if (findSubMetricConfig(sid, "1", "metric_id", config).toString().equals("")==false) {
+        if (findSubMetricConfig(sid, "1", "metric_id", config).toString().equals("")==false&&findSubMetricConfig(sid, "9", "display", config).equals("")==false) {
         	json = json+"{\"section_id\":"+m.get("section_id")
         	+ "," + findSubMetricConfig(sid, "1", "metric_id", config)
             + "," + findSubMetricConfig(sid, "2", "category_id", config)

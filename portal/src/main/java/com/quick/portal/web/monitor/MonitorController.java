@@ -24,7 +24,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.json.Json;
 
+import org.json.JSONArray;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -105,12 +107,37 @@ public class MonitorController extends SysWebController {
 
         Object layoutJson = getPageJson(page_id);
         Object metricJson = getMetricJson(page_id);
+        String urlShow = PropertiesUtil.getPropery("index.service.showURL");
+    	model.addAttribute("urlShow", urlShow);
         model.addAttribute("page_id", page_id);
         model.addAttribute("app", app);
         model.addAttribute("page", JsonUtil.serialize(plist));
         model.addAttribute("metric", metricJson);
         model.addAttribute("layout", layoutJson);
+        System.out.println(",,,,,,,,,,,,,,,,,,,,,,,,,,,,,");
         return view();
+    }
+    
+    @RequestMapping(value = "/settingUser")
+  	@ResponseBody
+      public Object settingUser(Integer app_id,Integer page_id) {
+        List<Map<String, Object>> plist = getPage(app_id);
+        if(page_id == 0 && plist != null && plist.size() > 0){
+            page_id = (Integer)TypeUtil.parse(Integer.class, plist.get(0).get("page_id"));
+        }
+        ApplicationDO app = applicationService.selectObj(app_id.toString());
+
+        Object layoutJson = getPageJson(page_id);
+        Object metricJson = getMetricJson(page_id);
+        String urlShow = PropertiesUtil.getPropery("index.service.showURL");
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("urlShow", urlShow);
+        map.put("page_id", page_id);
+        map.put("app", app);
+        map.put("page", JsonUtil.serialize(plist));
+        map.put("metric", metricJson);
+        map.put("layout", layoutJson);
+        return map;
     }
     
     @RequestMapping
