@@ -117,8 +117,6 @@ public class ApplicationController extends SysBaseController<ApplicationDO> {
                 appClassRelaService.save(m);
             }
         }
-
-
         return ActionMsg;
     }
 
