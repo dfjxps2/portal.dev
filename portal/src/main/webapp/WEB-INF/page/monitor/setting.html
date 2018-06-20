@@ -2,23 +2,21 @@
 <html>
 <head>
 	<#include "/WEB-INF/include/resedit.html" />
-    <link href="${G.host}/res/script/home/gridstack.min.css" rel="stylesheet" type="text/css" />
+   <link href="${G.host}/res/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+	<link href="${G.host}/res/css/animate.min.css" rel="stylesheet">
+	<link href="${G.host}/res/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+	<link href="${G.host}/res/script/home/gridstack.min.css" rel="stylesheet" type="text/css" />
+	<link href="${G.host}/res/layer/skin/moon/style.css" rel="stylesheet" type="text/css" />
+	<link href="${G.host}/upload/pageTemplate/t1/style.css" rel="stylesheet" type="text/css" />
     <script src="${G.host}/res/js/jquery-ui.min.js" type="text/javascript"></script>
     <script src="${G.host}/res/script/home/lodash.min.js" type="text/javascript"></script>
     <script src="${G.host}/res/script/home/knockout.min.js" type="text/javascript"></script>
     <script src="${G.host}/res/script/home/gridstack.min.js" type="text/javascript"></script>
+	<script src="${G.host}/res/js/echarts/echarts.js"></script>
     <script src="${G.host}/res/js/indexCharts/indexChart.js"></script>
     <style type="text/css">
-        .form-group{margin-right:0px;}
-        .panel{min-height: 410px;}
-        .lbox{padding:10px;min-height:410px;background-color:#fff;}
-        .lbox-title{height:60px;line-height:60px;width:100%;}
-        .grid-stack {}
-        .grid-stack-item-content {color: #2c3e50; background-color: #e5e6e7;position: relative;}
-        .dgs-toolbar{width:100%;height:25px;line-height: 25px;text-align:right;position: absolute;top:0;z-index:2;}
-        .dgs-ctx{width:100%;height:100%;line-height: 100%;text-align:center;display: flex;vertical-align: middle;  align-items: center;  justify-content: center;}
-    @media screen and (max-width: 1000px) {
-  table td:before {
+     @media screen and (max-width: 1000px) {
+  	table td:before {
     content: attr(data-label);
     float: left;
     text-transform: uppercase;
@@ -35,32 +33,32 @@ font-size: 16px;
     </style>
 </head>
 
-<body class="gray-bg">
+<body class="qbody">
 <div class="wrapper wrapper-content animated fadeInRight">
-	<div class="row">
-        <div class="col-sm-8">
+	<div class="row" style="margin-left: -110px;margin-right: -50px">
+        <div class="col-sm-9">
             <div class="container-fluid lbox" style="min-height:360px;width:99%;">
                 <div class="lbox-title">
-                    <div style="float:left;padding-left: 10px;">
-                        页面：<select id="pages" onchange="loadPage(this.value)" ></select>
-                    </div>
-                    <div style="float:left;width: 50%;text-align: center;"><h2>${app.app_name}</h2></div>
-                    <div style="float:right;padding-right: 10px;">
-                        <button class="btn btn-primary" onclick="preview();">预览</button>
-                    </div>
-                    <div style="clear:both;"></div>
+                    <div style="float:left;width: 100%;text-align: center;"><h3 id = "p_name" style="color:#fff;text-align: center;"></h3></div>
                 </div>
-                <div id="box" data-bind="component: {name: 'dashboard-grid', params: $data}"></div>
+                 <div class="col-sm-12">
+		            <div class="container-fluid qmain ">
+		                <div id="box" class="grid-stack qbox" data-bind="component: {name: 'dashboard-grid', params: $data}"></div>
+		            </div>
+        		</div>
             </div>
         </div>
-		<div class="col-sm-4">
-            <form id="form" name="form" method="post" action="${G.host}/monitor/saveSetting" class="wizard-big" enctype="multipart/form-data" accept="image/jpg, image/png">
+		<div class="col-sm-3" style="margin-top: 67px;">
+           <!--  <form id="form" name="form" method="post" action="${G.host}/monitor/saveSetting" class="wizard-big" enctype="multipart/form-data" accept="image/jpg, image/png"> -->
 			<div class="ibox">
                 <div class="ibox-content ibox-content-ad">
                     <div class="row">
                     	<div class="col-sm-12 form_ipt_botm" style="font-size: 20px;text-align: center;margin-bottom: 10px;margin-top: 10px;">
                     	<h2>指标设置</h2>
                     	</div>
+                    	 <div class="col-sm-12 form_ipt_botm" style="padding-left: 10px;">
+                       		 页面：<select id="pages" onchange="loadPage(this.value)" ></select>
+                    </div>
                         <div class="col-sm-12 form_ipt_botm" id = "list">
                         <table  style="width: 100%">
                          <thead>
@@ -76,26 +74,19 @@ font-size: 16px;
                         </table>
                         </div>
                     </div>
-                    <div class="row" style="height:60px;">
-                        <div class="col-sm-12 ediefield">
-                            <div class="form-group">
-                                <label class="col-xs-4 lable_top"></label>
-                                <div class="col-xs-8">
-                                    <input type="hidden" id="page_id" name="page_id" />
-                                    <input type="hidden" id="template_id" name="template_id" />
-                                    <input type="hidden" id="user_id" name="user_id" />
-                                    <input type="hidden" id="section_json" name="section_json" />
-                                    <input type="hidden" id="metric_json" name="metric_json" />
-                                    <input type="hidden" id="metric_json_1" name="metric_json_1" />
-                                    <input type="hidden" id="app_id" name="app_id" />
-                                    <input id="submit-form" type="button" class="btn btn-primary" value="保存" onclick="return thingOver();">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 			</div>
-            </form>
+             <div class="col-xs-12">
+               <input type="hidden" id="page_id" name="page_id" />
+                <input type="hidden" id="template_id" name="template_id" />
+               <input type="hidden" id="user_id" name="user_id" />
+               <input type="hidden" id="section_json" name="section_json" />
+               <input type="hidden" id="metric_json" name="metric_json" />
+               <input type="hidden" id="metric_json_1" name="metric_json_1" />
+               <input type="hidden" id="app_id" name="app_id" />
+               <input id="submit-form" type="button" class="btn btn-primary" style="margin-left: 170px" value="保存" onclick="thingOver();">
+         	 </div>
+           <!--  </form> -->
 		</div>
 
 	</div>
@@ -103,38 +94,124 @@ font-size: 16px;
 
 </body>
 <script>
-    var _tmpls={},_layout = ${layout},_metric = ${metric}, _page = ${page}, _ca, _pid='${page_id}', _aid='${app.app_id}';
-	window.onload = function() {
-		
-        /*加载数据*/
-        $("#app_id").val(_aid);
-        copyData(_metric)
-        initPage();
-        extLayout();
-        initPlugin();
-        addTable(_metric);
-	}
+    var _tmpls={},_layout = ${layout},co = ${metric}, _page = ${page}, _ca, _pid='${page_id}', _aid='${app.app_id}',url = '${urlShow}';
+	var tData = "";
+	var allMetric = [];
+	var pageId = "";
+	var allLayout = [];
+	  window.onload = function() {
+		 	$("#p_name").html(_page[0].page_name);
+		 	initPage(_page);
+		 	pageId = $('#pages').val();
+			co = addPageId(getNo(co,_layout));
+			_layout = addPageId(_layout);
+			copyData(co);
+	        initLayout(_layout);
+	        initChart(co,_layout);
+	        addTable(co);
+	    }
+	  
+	  function addLayout(data){
+		  for (var i = 0; i < _layout.length; i++) {
+			if (_layout[i].page_id == pageId) {
+				return;
+			}
+		}
+			for (var j = 0; j < data.length; j++) {
+				_layout.push(data[j]);
+			}
+	  }
+	  //将指标配置信息的  id 和no 改为所需格式
+	function getNo(data,data1){
+		for (var i = 0; i < data.length; i++) {
+			for (var j = 0; j < data1.length; j++) {
+				if (data[i].section_id == data1[j].id) {
+					data[i].section_id = data1[j].no;
+				}
+			}
+		}
+		return data;
+	} 
+	
+	function addPageId(data){
+		for (var i = 0; i < data.length; i++) {
+			data[i].page_id = pageId;
+		}
+		return data;
+	} 
+	  
+	//将指标配置信息备份
 	var newData = [];
 	function copyData(metric){
+		if (newData.length>0) {
+			var f = false;
+			for (var j = 0; j < newData.length; j++) {
+				if (newData[j].page_id == pageId) {
+					f = true;
+				}
+			}
+			if (f == false) {
+				copy(metric);
+			}
+		}else{
+			copy(metric);
+	   }
+	}
+	
+	function copy(data){
 		var tmp = {};
-		for (var i = 0; i < metric.length; i++) {
+		for (var i = 0; i < data.length; i++) {
 			tmp = {};
-			tmp.section_id = metric[i].section_id;
-			tmp.metric_id = metric[i].metric_id;
-			tmp.category_id = metric[i].category_id;
-			tmp.dimension = metric[i].dimension;
-			tmp.charts = metric[i].charts;
-			tmp.numb = metric[i].numb;
-			tmp.measure_name = metric[i].measure_name;
-			tmp.time_dim = metric[i].time_dim;
-			tmp.unit = metric[i].unit;
-			tmp.display = metric[i].display;
+			tmp.section_id = data[i].section_id;
+			tmp.metric_id = data[i].metric_id;
+			tmp.category_id = data[i].category_id;
+			tmp.dimension = data[i].dimension;
+			tmp.charts = data[i].charts;
+			tmp.numb = data[i].numb;
+			tmp.measure_name = data[i].measure_name;
+			tmp.time_dim = data[i].time_dim;
+			tmp.unit = data[i].unit;
+			tmp.display = data[i].display;
+			tmp.page_id = data[i].page_id;
 			newData.push(tmp);
 		}
 	}
 	
+	//点击操作选项触发方法
+	function change(id){
+		var ids = "#"+id; 
+		var value = $(ids).attr("name");
+		var sec = $(ids).attr("value")
+		var sno = '';
+		for (var j = 0; j < co.length; j++) {
+			if (co[j].metric_id == value&&co[j].section_id == sec&&co[j].page_id == pageId) {
+				sno = co[j].section_id;
+				if (co[j].display == '1') {
+					co[j].display = '0';
+				}else {
+					co[j].display = '1';
+				}
+			}
+		}
+		var m = getPageConfig(co);
+		var ly = getPageConfig(_layout);
+		addTable(m);
+		initLayout(ly);
+		add(tData,name,isShow(m),ly,'1990','2017','');
+	}
 	
+	//获取当前页面配置信息
+	function getPageConfig(data){
+		var dp = [];
+		for (var i = 0; i < data.length; i++) {
+			if (data[i].page_id == pageId) {
+				dp.push(data[i]);
+			}
+		}
+		return dp;
+	}
 	
+	//生成用户页面配置操作列表
 	function addTable(metric){
 		var table=window.document.getElementById("tb");
 		var str="";
@@ -149,57 +226,18 @@ font-size: 16px;
 				chage = "隐藏";
 				color = 'red';
 			}
+			var idd = 'c'+i;
 			str = str+	 '<tr>'+
 		      '<td data-label="指标名称">'+metric[i].measure_name+'</td>'+
 		      '<td data-label="图表类型">'+cha+'</td>'+
 		      '<td data-label="显示状态">'+dis+'</td>'+
-		      '<td data-label="操作"><a name = "'+metric[i].metric_id+'" onclick="change(this.name);" style = "color:'+color+'">'+chage+'</a></td>'+
+		      '<td data-label="操作"><a id = "'+idd+'" name = "'+metric[i].metric_id+'" value = "'+metric[i].section_id+'" onclick="change(this.id);" style = "color:'+color+'">'+chage+'</a></td>'+
 		    '</tr>';
 		}
 		table.innerHTML = str;
 	}
 	
-	function change(value){
-		var sno = '';
-		for (var j = 0; j < _metric.length; j++) {
-			if (_metric[j].metric_id == value) {
-				sno = _metric[j].section_id;
-				if (_metric[j].display == '1') {
-					_metric[j].display = '0';
-				}else {
-					_metric[j].display = '1';
-				}
-			}
-		}
-		addTable(_metric);
-		var ino = '';
-		for (var i = 0; i < _layout.length; i++) {
-			if (_layout[i].id == sno) {
-				ino = _layout[i].no;
-			}
-		}
-		for(var x = 0; x < _ca().length; x++){
-            var no = _ca()[x].no;
-            if(no == ino){
-                var item = _ca()[x];
-                item.metric =setMetric(_metric,sno).join(',');
-                updateCA(item);
-            }
-        }
-		metricInfo = [];
-		extLayout();
-	}
-	
-	function setMetric(metric,section_id){
-		var ss = [];
-		for (var i = 0; i < metric.length; i++) {
-			if (metric[i].section_id == section_id&&metric[i].display == '1') {
-				ss.push(metric[i].measure_name);
-			}
-		}
-		return ss;
-	}
-	
+	//获取指标的展示图形
 	function getChart(name){
 		var chartList = [{name:"柱状图",value:"bar"},{name:"折线图",value:"line"},{name:"饼图",value:"pie"},
 		                  {name:"环形图",value:"ringPie"},{name:"玫瑰图",value:"rose"},{name:"环形玫瑰图",value:"ringRose"},
@@ -214,343 +252,214 @@ font-size: 16px;
 		}
 		
 	}
-
-	function initPage(){
-        var pg = _page || [], str = [];
+	
+	//生成页面选择下来列表
+	function initPage(page){
+        var pg = page || [], str = [];
         for(var i = 0; i < pg.length; i++){
             var s = pg[i].page_id == _pid ? ' selected="selected"' : '';
             str.push('<option ',s,' value="', pg[i].page_id ,'">', pg[i].page_name, '</option>');
         }
         $("#pages").html(str.join(''));
     }
+	//切换页面方法
     function loadPage(id){
-        window.location.href = '${G.host}/monitor/setting?t='+_aid+'&p=' + id;
+    	  $.ajax({
+              url:'${G.host}/monitor/settingUser',
+              data:{app_id:_aid,page_id:id},
+              type:'get',
+              success:function(res){
+            	  pageId = $('#pages').val();
+            	 var cos = addPageId(getNo(JSON.parse(res.metric),JSON.parse(res.layout)));
+            	 copyData(cos);
+            	 if (ifPageMetric()) {
+            		 cos =getPageMetric(co);
+				}else {
+	            	 for (var i = 0; i < cos.length; i++) {
+	 					co.push(cos[i]);
+	 				}
+				}
+            	  url = res.urlShow;
+            	  setName(id,JSON.parse(res.page))
+            	 var lay =addPageId(setLayout(JSON.parse(res.layout)));
+            	  addLayout(lay);
+            	  initLayout(lay);
+      	          initChart(cos,lay);
+      	          addTable(cos);
+              }
+          });
     }
-    /*完成*/
-    var isdone = true;
-    $.ajaxSetup({
-        error: function(jq,txt){
-            layer.alert("服务异常，"+txt);
-            isdone = true;
-        }
-    });
+    
+    function ifPageMetric(){
+    	var f = false;
+    	if (co.length>0) {
+			for (var i = 0; i < co.length; i++) {
+				if (co[i].page_id == pageId) {
+					f = true;
+				}
+			}
+		}
+    	return f;
+    }
+	
+	//给栏目配置信息加入sid的值
+    function setLayout(data){
+    	for (var i = 0; i < data.length; i++) {
+    		data[i].sid = "s"+data[i].no;
+		}
+    	return data;
+    }
+    
+	//改变页面的名字
+    function setName(id,pageList){
+    	var name = ""
+    	for (var i = 0; i < pageList.length; i++) {
+			if (pageList[i].page_id == id) {
+				name = pageList[i].page_name;
+			}
+		}
+    	$("#p_name").html(name);
+    }
     
     //跳转回首页
     function cancel(){
-    	var id = $("#pages").val();
+    	var id = _page[0].page_id;
 		var url = '${G.host}/monitor/index?t='+_aid+'&p='+id;
 		window.location.href = url;
 	}
+    
+    //保存方法
     function thingOver(){
     	addMetricInfo();
-        if(!isdone) {
-            return false;
-        }
-        isdone = false;
-        var b = save();
-        if(!b){
-            isdone = true;
-            return b;
-        }
-    }
-    function save(){
-        var pn = $("#page_name").val();
-        if(pn == ''){
-            layer.alert("请先填写页面名称");
-        }
-        if(!$("#form").valid()){
-            return false;
-        }
-        var arr = getLayout();
-        if(arr == null || arr.length == 0){
-            layer.alert("栏目不能为空,请添加栏目");
-            return false;
-        }
-        $("#section_json").val(JSON.stringify(arr));
-        clearPlaceHodler();
-        quick.submit(function(data) {
-            isdone=true;
-            if(data.code != "1"){
-                layer.msg('保存失败,'+ data.msg,{icon:1,time: 3000,skin: 'layer-ext-moon'});
-                return;
-            }
-            layer.msg('保存成功',{icon:1,time: 1500,skin: 'layer-ext-moon'}, function(){
-                $("#page_id").val(data.page_id);
-                cancel();
-            });
-        });
-
-        return true;
-    }
-    function initPlugin(){
-        ko.components.register('dashboard-grid', {
-            viewModel: {
-                createViewModel: function (controller, componentInfo) {
-                    var ViewModel = function (controller, componentInfo) {
-                        var grid = null;
-
-                        this.widgets = controller.widgets;
-
-                        this.afterAddWidget = function (items) {
-                            if (grid == null) {
-                                grid = $(componentInfo.element).find('.grid-stack').gridstack({
-                                    cellHeight:40,
-                                    verticalMargin:10,
-                                    auto: false,
-                                    staticGrid:true
-                                }).data('gridstack');
-                            }
-
-                            var item = _.find(items, function (i) { return i.nodeType == 1 });
-                            grid.addWidget(item);
-                            ko.utils.domNodeDisposal.addDisposeCallback(item, function () {
-                                grid.remove_widget(item);
-                            });
-                        };
-                    };
-
-                    return new ViewModel(controller, componentInfo);
-                }
-            },
-            template:
-                    [
-                        '<div class="grid-stack" data-bind="foreach: {data: widgets, afterRender: afterAddWidget}">',
-                        '   <div class="grid-stack-item" data-bind="attr: {\'data-gs-x\': $data.x, \'data-gs-y\': $data.y, \'data-gs-width\': $data.width, \'data-gs-height\': $data.height, \'data-gs-auto-position\': $data.auto_position}">',
-                        '       <div class="grid-stack-item-content"><div class="dgs-ctx"><a data-bind="html:showBind($data),attr: {\'data-no\': $data.no,\'data-id\': $data.id,\'data-metric\': $data.metric}"><i class="fa fa-plus"></i>点击添加栏目</a></div>',
-                        '       </div>',
-                        '   </div>',
-                        '</div> '
-                    ].join('')
-        });
-        window.Controller = function (widgets) {
-            var self = this;
-            this.widgets = ko.observableArray(widgets);
-        };
-
-        var controller = new Controller(_layout);
-        ko.applyBindings(controller);
-        _ca = controller.widgets;
-    }
-    function initLayout(cfg){
-        _ca.removeAll();
-        for(var i = 0; i < cfg.length; i++)
-            _ca.push(cfg[i]);
-    }
-    function getLayout(){
-        var dd = _.map($('.grid-stack > .grid-stack-item:visible'), function (el) {
-            el = $(el);
-            var node = el.data('_gridstack_node');
-            var a = el.find(".dgs-ctx>a")[0];
-
-            return {
-                x: node.x,
-                y: node.y,
-                id:a.dataset.id,
-                no:a.dataset.no,
-                width: node.width,
-                height: node.height
-            };
-        }, this);
-        dd.sort(function (n1,n2) {
-            return n1.no-n2.no;
-        });
-        return dd;
+    	if (allMetric.length>0) {
+        	$.ajax({
+                 url:'${G.host}/monitor/saveSetting',
+                 data:{metric_json:JSON.stringify(allMetric)},
+                 type:'get',
+                 success:function(res){
+                	 if (res.code == '1') {
+                		 cancel();
+    				}
+                 }
+             });	
+		}else{
+			alert('您未对应用做出修改！');
+		}
     }
     
-    function removeList(data,dx){ 
-        if(isNaN(dx)||dx>data.length){return false;} 
-        for(var i=0,n=0;i<data.length;i++) 
-        { 
-          if(data[i]!=data[dx]) 
-          { 
-          	data[n++]=data[i] 
-          } 
-        } 
-        data.length-=1 
-        return data;
-      } 
-    var metricInfo = [];
-    
-    function deleteMetric(data,no){
-    	var ss = [];
-			for (var j = 0; j < data.length; j++) {
-				if (no!=data[j].section_id) {
-					//removeList(metricInfo,j);
-					ss.push(data[j]);
-				}
-			}
-		return ss;
-    }
-    
-    function showsetting(o){
-    	var ls = find_sec_metric(metricInfo,o.dataset.no);
-   		 localStorage.metricInfo =JSON.stringify(ls);
-    	settingbox('section_NAME', '${G.host}/setting?rid=' + o.dataset.id + "&rmt=" + o.dataset.metric,null, function(ar){
-    		if(ar == null || ar.length == 0){
-    			if (metricInfo.length>0) {
-    				metricInfo = deleteMetric(metricInfo,o.dataset.no);
-    				o.dataset.metric = '';
-    			}
-    		}else{
-	    		for(var i = 0; i < ar.length; i++)
-	    			ar[i]["section_id"] = o.dataset.no;
-	            var rem = [];
-				if (metricInfo.length>0) {
-					metricInfo = deleteMetric(metricInfo,ar[0].section_id);
-				}
-    		}
-            var metric_name = [];
-            for (var n = 0; n < ar.length; n++) {
-                metricInfo.push(ar[n]);
-                metric_name.push(ar[n].measure_name);
-            }
-            for(var x = 0; x < _ca().length; x++){
-                var no = _ca()[x].no;
-                if(no == o.dataset.no){
-                    var item = _ca()[x];
-                    item.metric = metric_name.join(',');
-                    updateCA(item);
-                }
-            }
-
-        },{
-            area: [$(window).width()+'px', $(window).height()+'px']
-        });
-    }
-    
+    //将获取的指标配置信息存入input
     function addMetricInfo(){
-    	var data = getChangeMetricInfo(metricInfo,newData);
-    	$("#metric_json").val(JSON.stringify(data));
+    	allMetric = getChangeMetricInfo(co,newData);
+    	//$("#metric_json").val(JSON.stringify(allMetric));
     }
     
+    //获取有改变的指标配置信息
     function getChangeMetricInfo(data,data1){
     	var d = [];
     	for (var i = 0; i < data.length; i++) {
 			for (var j = 0; j < data1.length; j++) {
-				if (data[i].section_id == data1[j].section_id&&data[i].metric_id == data1[j].metric_id&&data[i].display != data1[j].display) {
+				if (data[i].page_id == data1[j].page_id&&data[i].section_id == data1[j].section_id&&data[i].metric_id == data1[j].metric_id&&data[i].display != data1[j].display) { 
 					d.push(data[i]);
 				}
 			}
 		}
-    	return d;
+    		for (var m = 0; m < d.length; m++) {
+    			for (var n = 0; n < _layout.length; n++) {
+    				if (d[m].page_id ==_layout[n].page_id&&d[m].section_id == _layout[n].no) {
+    					d[m].section_id = _layout[n].id;
+    				}
+    			}
+    		}
+		return d;
     }
-
-    function find_sec(no){
-        var arr = _ca();
-        for(var i = 0; i< arr.length; i++){
-            if(arr[i].no == no)
-                return arr[i];
-        }
-        return null;
-    }
-    function find_sec_metric(ls,sid){
-        var arr = [];
-        for(var i = 0; i <ls.length; i++)
-            if(ls[i].section_id ==sid&&ls[i].metric_id!="")
-                arr.push(ls[i]);
-        return arr;
-    }
-    function preview(){
-    	var id = $("#pages").val();
-		var url = '${G.host}/monitor/show?p='+id;
-        var sjson = getLayout();
-        var data = [];
-        for (var i = 0; i < _metric.length; i++) {
-			if (_metric[i].display == '1') {
-				data.push(_metric[i]);
+  
+    //加载页面栏目框
+	 function initLayout(layout){
+	        for(var i = 0; i < layout.length;i++){
+	        	layout[i].sid = 's'+layout[i].no;
+	        }
+	        var str = [];
+	        for(var i = 0; i < layout.length; i++){
+	            var n = layout[i];
+	            var s =  layout[i].no;
+	            str.push('<div class="grid-stack-item" data-gs-x="',n.x,'" data-gs-y="',n.y,'" data-gs-width="',n.width,'" data-gs-height="',n.height,'" data-gs-auto-position="true">');
+	            str.push('<div class="grid-stack-item-content qsection" ><div class="_qborder"></div><div id="', n.sid,'" class="_qbody" style = "height:100%"></div></div>');
+	            str.push('</div>');
+	        }
+	        $("#box").html(str.join(''));
+	        var ch = getCH();
+	        $('.grid-stack').gridstack({
+	            cellHeight:ch,
+	            staticGrid:true
+	        });
+	        function getCH(){
+	            var h = 4;
+	            $("#box").find(".grid-stack-item").each(function(){
+	                var xh = parseInt(this.dataset.gsY) + parseInt(this.dataset.gsHeight);
+	                if(xh > h)
+	                    h = xh;
+	            });
+	            if(h>12) h = 12;
+	            return ($(window).height() - 68) / h*0.8 - 20;
+	        }
+	    }
+    
+    //获取需要查询的指标
+	    function initChart(metric,layoutList){
+	    	var metricList = '';
+			var met = [];
+			for (var j = 0; j < metric.length; j++) {
+				met.push(metric[j].metric_id);
 			}
-		}
-        localStorage.pageShow =JSON.stringify(data);//JSON.parse(metricInfo);
-        localStorage.pageName ='2222';
-        localStorage.pageLayout = JSON.stringify(sjson);
-        window.open(url);
-    }
-    function extLayout(){
-        if(_metric == null || _metric.length == 0)
-            return;
-        for(var i = 0; i < _layout.length; i++){
-            var ls = find_sec_metric(_metric, _layout[i].id);
-            if(ls){
-                var ss = array_join(ls,',', 'measure_name');
-                if(!_layout[i].metric)
-                    _layout[i].metric = ss;
-                else
-                    _layout[i].metric += "," + ss;
-            }
-        }
-        for(var j = 0; j < _metric.length; j++){
-            var m = {};
-            for(var n in _metric[j])
-                m[n] = _metric[j][n];
-            for(var k = 0; k < _layout.length; k++){
-                if(_layout[k].id == m.section_id&&m.display == '1')
-                    m.section_id=_layout[k].no;
-            }
-            metricInfo.push(m);
-        }
-    }
-    function showBind(d){
-        if(d.metric)
-            return '<i class="fa fa-pie-chart"></i>绑定：'+ d.metric+'</a>';
-        else
-            return '<i class="fa fa-plus"></i>无绑定指标</a>';
-    }
-
-    function settingbox(nid, url,id, fn, opt){
-        if(!layer.values)
-            layer.values = {};
-        var val = $("#"+id).val();
-        opt = opt || {};
-        var d = {
-            type: 2
-            ,title: '选择记录'
-            ,area: ['680px', '500px']
-            ,shade: 0
-            ,maxmin: true
-            ,content: url
-            ,btn: ['确认', '关闭'] //只是为了演示
-            ,yes: function(index, layero){
-                var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
-                var fd = iframeWin.getFrom();
-                if(fd==null){
-                    alert('您还未选择记录，请点击要选择的行');
-                    return;
-                }
-                if(fn){
-                    fn(fd, iframeWin);
-                }
-                layer.closeAll();
-            }
-            ,btn2: function(){
-                layer.closeAll();
-            }
-        };
-        var o = $.extend(d, opt);
-        layer.open(o);
-    }
-    function array_join(ar, sp, name){
-        var s = '';
-        for(var i = 0; i < ar.length; i++){
-        	if (ar[i].display == '1') {
-                s += sp + ar[i][name];
+			met = onlyData(met);
+			for (var k = 0; k < met.length; k++) {
+				if (j ==met.length-1) {
+					metricList= metricList+met[k];
+				}else{
+					metricList= metricList+met[k]+',';
+				} 
 			}
-        }
-        return s.substr(1);
-    }
-    function updateCA(o){
-        var gd = getLayout();
-        for(var i = 0; i < gd.length; i++){
-            if(o.no == gd[i].no){
-                o.x = gd[i].x;
-                o.y = gd[i].y;
-                o.width = gd[i].width;
-                o.height = gd[i].height;
-                o.auto_position = false;
-                break;
-            }
-        }
-        _ca.remove(o);
-        _ca.push(o);
-    }
+	        getMetricData(metricList,metric,layoutList);
+	    }
+    
+    //获取指标的数值
+	    function getMetricData(metricList,metricData,layoutList){
+	        if(metricList == null || metricList.length == 0)
+	            return;
+	        $.ajax({
+	            url:url,
+	            data:{meaId:metricList,to:'2018',from:'1900'},
+	            type:'get',
+	            success:function(res){
+	            	tData = res.measure;
+	            	$('#statedate').val('199001');
+	            	$('#enddate').val('201712');
+	            	
+	                add(res.measure,name,isShow(metricData),layoutList,'1990','2017','');
+	                hideMask();
+	            },error:function(jqr){
+	                hideMask();
+	                alert("网络出错");
+	            }
+	        });
+	    }
+    
+    //将指配置信息中的隐藏配置信息去掉
+	    function isShow(data){
+	    	var li = [];
+		    for (var i = 0; i < data.length; i++) {
+				if (data[i].display == '1') {
+					li.push(data[i]);
+				}
+			}
+		    return li;
+	    }
+	   
+	    function showMask(){
+	        $("#qmask").show();
+	    }
+	    function hideMask(){
+	        $("#qmask").hide();
+	    }
 </script>
 </html>

@@ -286,7 +286,6 @@ function dataType(data,typeData,stateTime,endTime){
 				}
 			}
 		}
-		
 	//将整个栏目的图表数据分类
 	var em1 = {};
 	if (all.length>0) {
@@ -1085,7 +1084,6 @@ function add_table(data,name,dimension){
 
 //向页面添加图表方法  data--指标数据   name--栏目名称       typeData--栏目图表信息   id--栏目的div的id
 function add(data,name,typeData,sectionData,stateTime,endTime,ids){
-	
 	var id = "";
 	if (ids == '') {
 		for (var i = 0; i < sectionData.length; i++) {
