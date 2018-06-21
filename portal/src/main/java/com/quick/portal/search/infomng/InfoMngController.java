@@ -144,6 +144,7 @@ public class InfoMngController extends SysBaseController<InfoMngDO> {
 	     * @param page
 	     *            页面请求对象
 	     * @return 跳转页面
+		 * @throws Exception 
 	     * @throws IOException
 	     * filePath：内容
 	     * attachPath:附件
@@ -154,34 +155,34 @@ public class InfoMngController extends SysBaseController<InfoMngDO> {
 			String type = request.getParameter("type");
 			String filePath = request.getParameter("id");
 			String attachPath = request.getParameter("aid");
-			if (filePath == null || "".equals(filePath)) {
-				System.out.println("文件路径名称:" + filePath + ",filePath不能为空");
-				throw new Exception("查询文件路径异常: " + "文件路径:" + filePath
-						+ ",filePath不能为空");
-			}
 			try {
+				if (filePath == null || "".equals(filePath)) {
+					System.out.println("文件路径名称:" + filePath + ",filePath不能为空");
+					throw new Exception("查询文件路径异常: " + "文件路径:" + filePath
+							+ ",filePath不能为空");
+				}
 				filePath = URLDecoder.decode(filePath,
 						MetricPrivilegeConstants.LANGUAGE_CODE_UTF);
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				throw new Exception("指标转义异常：" + e.getLocalizedMessage());
-			}
-			String ids = QCookie.getValue(request, "ids");
-			infoMngService.saveVisitInfo(filePath, Integer.parseInt(type),
+				String ids = QCookie.getValue(request, "ids");
+				infoMngService.saveVisitInfo(filePath, Integer.parseInt(type),
 					Integer.parseInt(ids));
-			//消息：2，有内容附件和上传附件
-			if(null != type && SolrInfoConstants.MSG_OBJ_TYPE.equals(type)){
-				if (attachPath == null || "".equals(attachPath)) {
-					FileOperateUtils.download(request, response, filePath);
+				//消息：2，有内容附件和上传附件
+				if(null != type && SolrInfoConstants.MSG_OBJ_TYPE.equals(type)){
+					if (attachPath == null || "".equals(attachPath)) {
+						FileOperateUtils.download(request, response, filePath);
+					}else{
+						attachPath = URLDecoder.decode(attachPath,
+								MetricPrivilegeConstants.LANGUAGE_CODE_UTF);
+						FileOperateUtils.download(request, response, filePath, attachPath);
+					}
 				}else{
-					attachPath = URLDecoder.decode(attachPath,
-							MetricPrivilegeConstants.LANGUAGE_CODE_UTF);
-					FileOperateUtils.download(request, response, filePath, attachPath);
+					FileOperateUtils.download(request, response, filePath);
 				}
-			}else{
-				FileOperateUtils.download(request, response, filePath);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block附件文件路径不存在，请检查附件路径
+//				throw new Exception("指标转义异常：" + e.getLocalizedMessage());
+				response.getWriter().write("<script>alert('文件路径不存在，请检查文件路径');</script>");
 			}
-			
 			return null;
 		}
 	    
