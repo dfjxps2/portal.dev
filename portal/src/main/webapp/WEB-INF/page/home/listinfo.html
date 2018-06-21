@@ -150,7 +150,7 @@ a, img {
 									</div>
 								  
 								  <div class="input-group" id ="div_append" >
-    									<input name="keyword" class="form-control input-lg" type="text"   value=""
+    									<input name="keyword" class="form-control input-lg" type="text" autocomplete="off" value=""
 												id="keyword" style="width:400px">
 												<span class="arrowDown"></span>
 												<span id ="btn_span" class="input-group-addon btn btn-primary">搜索</span>
@@ -173,13 +173,15 @@ a, img {
  <script>
  var data = '${data}';
  $('#div_append').after(data);
+
  var $ui = $('#formSearch');
- 
+ var $pn = $ui.find('.arrowDown');
        var pageNum=1;
        var pageSize=10;
        var queryParm = '';
        var flag=true;
        var pageFlag=0;
+
 	   //初始化表格
 	   function config(){
            var RFlag=$.request.queryString["RFlag"];
@@ -247,8 +249,6 @@ a, img {
            }
 	   }
 
-   
-    
 		//查看详细信息
 		function downClick(id,aid,type){
 			if(id ==null ||id =="" || id=="undefined"){
@@ -324,7 +324,7 @@ a, img {
 	}
 	
 	$ui.bind('mouseleave',function(){
-		//$ui.find('.arrowUp').addClass('arrowDown').removeClass('arrowUp').andSelf().find('.dropdown').slideUp(500);
+		$ui.find('.arrowUp').addClass('arrowDown').removeClass('arrowUp').andSelf().find('.dropdown').slideUp(500);
 	});
 
 	
