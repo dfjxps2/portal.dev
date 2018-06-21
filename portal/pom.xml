@@ -390,6 +390,41 @@
         <!--Tik所需包导入结束-->
     </dependencies>
 
+    <!--不同环境切换配置参数1 Start -->
+    <profiles>
+        <!--本地开发环境-->
+        <profile>
+            <id>dev</id>
+            <properties>
+                <profiles.active>dev</profiles.active>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <!--测试环境-->
+        <profile>
+            <id>test</id>
+            <properties>
+                <profiles.active>test</profiles.active>
+            </properties>
+        </profile>
+        <!--演示环境-->
+        <profile>
+            <id>demo</id>
+            <properties>
+                <profiles.active>demo</profiles.active>
+            </properties>
+        </profile>
+        <!--生产环境-->
+        <profile>
+            <id>pro</id>
+            <properties>
+                <profiles.active>pro</profiles.active>
+            </properties>
+        </profile>
+    </profiles>
+    <!--不同环境切换配置参数1 End -->
     <build>
         <finalName>portal</finalName>
         <plugins>
@@ -408,6 +443,20 @@
                  </compilerArguments>
               </configuration>
             </plugin>
+            <!--不同环境切换配置参数2 Start -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <webResources>
+                        <resource>
+                            <directory>src/main/resources/profile/${profiles.active}/web-inf</directory>
+                            <targetPath>WEB-INF</targetPath>
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>
+            <!--不同环境切换配置参数2 End -->
         </plugins>
         <resources>
             <resource>
@@ -422,7 +471,24 @@
                     <include>**/**.*</include>
                     <include>**.*</include>
                 </includes>
+                <excludes>
+                    <exclude>profile/**/*</exclude>
+                </excludes>
             </resource>
+            <!--不同环境切换配置参数3 Start -->
+            <resource>
+                <directory>src/main/resources/profile/${profiles.active}</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/**.*</include>
+                    <include>**.*</include>
+                </includes>
+                <excludes>
+                    <exclude>web-inf/**.*</exclude>
+                </excludes>
+            </resource>
+            <!--不同环境切换配置参数3 End -->
         </resources>
     </build>
+
 </project>
