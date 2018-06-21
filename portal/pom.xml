@@ -426,7 +426,7 @@
     </profiles>
     <!--不同环境切换配置参数1 End -->
     <build>
-        <finalName>portal</finalName>
+        <finalName>portal_${profiles.active}</finalName>
         <plugins>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
