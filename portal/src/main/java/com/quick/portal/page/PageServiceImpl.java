@@ -204,7 +204,9 @@ public class PageServiceImpl extends SysBaseService<PageDO> implements IPageServ
    	 SecMetricConfigDo con = null;
    	 Date now = DateTime.Now().getTime();
    	 int s = 0;
-   	 for (int j = 0; j < metric.size(); j++) {
+   	 System.out.println("metric..........................."+metric);
+   	 if (metric.size()>0) {
+   		for (int j = 0; j < metric.size(); j++) {
    		 	String sec_id = getSecMetricId(metric.get(j).get("section_id").toString(),metric.get(j).get("metric_id").toString()).get(0).get("sec_metric_id").toString();
    		 	int a =0; 
    		 	for(int x = 1; x < paramKeys.length; x++){
@@ -219,7 +221,8 @@ public class PageServiceImpl extends SysBaseService<PageDO> implements IPageServ
              if (a>0) {
 					s++;
 				}
-   	 }
+    	 }
+	}
    	int b =0;
    	 if (s == metric.size()) {
    		Map<String, Object> map = new HashMap<String, Object>();
@@ -239,7 +242,6 @@ public class PageServiceImpl extends SysBaseService<PageDO> implements IPageServ
 	}
 	}
     
-  //删除多余数据
     private List<Map<String, Object>>  getSecMetricId(String section_id,String metric_id){
     	Map<String, Object> map = new HashMap<String, Object>();
     	map.put("section_id", section_id);

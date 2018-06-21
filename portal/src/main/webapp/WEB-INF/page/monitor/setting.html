@@ -24,11 +24,11 @@
   }
 }
 table td{
-height: 33px;
+height: 30px;
 }
 table th{
-height: 40px;
-font-size: 16px;
+height: 36px;
+font-size: 14px;
 }
     </style>
 </head>
@@ -53,10 +53,10 @@ font-size: 16px;
 			<div class="ibox">
                 <div class="ibox-content ibox-content-ad">
                     <div class="row">
-                    	<div class="col-sm-12 form_ipt_botm" style="font-size: 20px;text-align: center;margin-bottom: 10px;margin-top: 10px;">
-                    	<h2>指标设置</h2>
+                    	<div class="col-sm-12 form_ipt_botm" style="text-align: center;margin-bottom: 10px;margin-top: 10px;">
+                    	<h2 style="font-size: 22px;">指标设置</h2>
                     	</div>
-                    	 <div class="col-sm-12 form_ipt_botm" style="padding-left: 10px;">
+                    	 <div class="col-sm-12 form_ipt_botm" style="padding-left: 10px;margin-bottom: 5px;font-size: 14px;">
                        		 页面：<select id="pages" onchange="loadPage(this.value)" ></select>
                     </div>
                         <div class="col-sm-12 form_ipt_botm" id = "list">
@@ -64,7 +64,7 @@ font-size: 16px;
                          <thead>
 						    <tr>
 						      <th>名称</th>
-						      <th>栏目</th>
+						      <th>所属栏目</th>
 						      <th>图表类型</th>
 						      <th>状态</th>
 						      <th>操作</th>
@@ -85,7 +85,8 @@ font-size: 16px;
                <input type="hidden" id="metric_json" name="metric_json" />
                <input type="hidden" id="metric_json_1" name="metric_json_1" />
                <input type="hidden" id="app_id" name="app_id" />
-               <input id="submit-form" type="button" class="btn btn-primary" style="margin-left: 170px" value="保存" onclick="thingOver();">
+            <input id="banck" type="button" class="btn btn-primary" style="margin-left: 44px" value="返回" onclick="banck();">
+               <input id="submit-form" type="button" class="btn btn-primary" style="margin-left: 67px" value="保存" onclick="thingOver();">
          	 </div>
            <!--  </form> -->
 		</div>
@@ -231,7 +232,7 @@ font-size: 16px;
 			var lm =  '栏目'+metric[i].section_id;
 			str = str+	 '<tr>'+
 		      '<td data-label="名称">'+metric[i].measure_name+'</td>'+
-		      '<td data-label="栏目">'+lm+'</td>'+
+		      '<td data-label="所属栏目">'+lm+'</td>'+
 		      '<td data-label="图表类型">'+cha+'</td>'+
 		      '<td data-label="状态">'+dis+'</td>'+
 		      '<td data-label="操作"><a id = "'+idd+'" name = "'+metric[i].metric_id+'" value = "'+metric[i].section_id+'" onclick="change(this.id);" style = "color:'+color+'">'+chage+'</a></td>'+
@@ -331,25 +332,57 @@ font-size: 16px;
 		window.location.href = url;
 	}
     
+  //保存方法
+    function banck(){
+	  var infoBefore = '您确定要返回首页吗？';
+    	layer.confirm(
+	    		infoBefore,
+			   {icon:1,title:'',skin: 'layer-ext-moon'},
+			   function(){
+				   window.opener=null;
+				   window.open('','_self');
+				   window.close();
+			   }
+	       );
+  }
+    
     //保存方法
     function thingOver(){
-    	addMetricInfo();
-    	if (allMetric.length>0) {
-        	$.ajax({
-                 url:'${G.host}/monitor/saveSetting',
-                 data:{metric_json:JSON.stringify(allMetric)},
-                 type:'get',
-                 success:function(res){
-                	 if (res.code == '1') {
-                		 cancel();
-    				}
-                 }
-             });	
-		}else{
-			alert('您未对应用做出修改！');
-		}
+    	var infoBefore = '您确定要保存当前配置吗？';
+    	layer.confirm(
+	    		infoBefore,
+			   {icon:1,title:'',skin: 'layer-ext-moon'},
+			   function(){
+				   addMetricInfo();
+			    	if (allMetric.length>0) {
+			        	$.ajax({
+			                 url:'${G.host}/monitor/saveSetting',
+			                 data:{metric_json:JSON.stringify(removeDis(allMetric))},
+			                 type:'get',
+			                 success:function(res){
+			                	 if (res.code == '1') {
+			                		 layer.msg('保存成功！', {icon:1,time: 1000,skin: 'layer-ext-moon'});
+			                		 cancel();
+			    				}
+			                 }
+			             });	
+					}else{
+						layer.msg("您未对页面做出修改！",{icon:1,time: 1000,skin: 'layer-ext-moon'});
+					}
+			   }
+	       );
     }
     
+    //去掉和原始版本相同的配置信息
+    function removeDis(data){
+    	var re = [];
+    	for (var i = 0; i < data.length; i++) {
+			if (data[i].display == '0') {
+				re.push(data[i]);
+			}
+		}
+    	return re;
+    }
     //将获取的指标配置信息存入input
     function addMetricInfo(){
     	allMetric = getChangeMetricInfo(co,newData);
@@ -361,8 +394,10 @@ font-size: 16px;
     	var d = [];
     	for (var i = 0; i < data.length; i++) {
 			for (var j = 0; j < data1.length; j++) {
-				if (data[i].page_id == data1[j].page_id&&data[i].section_id == data1[j].section_id&&data[i].metric_id == data1[j].metric_id&&data[i].display != data1[j].display) { 
-					d.push(data[i]);
+				if (data[i].page_id == data1[j].page_id&&data[i].section_id == data1[j].section_id&&data[i].metric_id == data1[j].metric_id) { 
+					if (data[i].display != data1[j].display||(data[i].display == data1[j].display&&data[i].display == '0')) {
+						d.push(data[i]);
+					}
 				}
 			}
 		}
