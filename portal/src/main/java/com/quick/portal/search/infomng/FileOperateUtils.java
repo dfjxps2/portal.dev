@@ -193,6 +193,10 @@ public class FileOperateUtils {
 		BufferedOutputStream bos = null;
 		String downLoadPath = filePath;
 		File file = new File(downLoadPath);
+		if (!file.exists()) {
+			throw new Exception("附件路径不存在，请检查附件路径！");
+		}
+		
 		// 取得文件名。
 		String filename = file.getName();
 		long fileLength = file.length();
@@ -294,12 +298,22 @@ public class FileOperateUtils {
 
 	public static void download(HttpServletRequest request,
 			HttpServletResponse response, String tFilePath, String aFilePath)
-			throws IOException {
+			throws Exception {
 		// 文件名称
 		String tFileName = new File(tFilePath).getName();
 		String aFileName = new File(aFilePath).getName();
-		;
 		String[] names = { tFileName, aFileName };
+		File tFile = new File(tFilePath);
+		if (!tFile.exists()) {
+			throw new Exception("附件路径不存在，请检查附件路径！");
+		}
+		
+		File aFile = new File(aFilePath);
+		if (!aFile.exists()) {
+			throw new Exception("附件路径不存在，请检查附件路径！");
+		}
+		
+		
 		// 四个文件流
 		FileInputStream input1 = new FileInputStream(new File(tFilePath));
 		FileInputStream input2 = new FileInputStream(new File(aFilePath));
