@@ -60,7 +60,7 @@ import com.quick.core.util.common.QRequest;
 public abstract class SysBaseController<T> {
 
 	private final Logger logger = Logger.getLogger(getClass());
-	private final static String LOGIN_URL = "https://cas4.example.org:8443/cas/login";
+	//private final static String LOGIN_URL = "/";
 
 	protected HttpServletRequest request;
 	protected HttpServletResponse response;
@@ -381,7 +381,7 @@ public abstract class SysBaseController<T> {
 		outString+="<link href=\""+url+"/res/layer/skin/moon/style.css\" rel=\"stylesheet\">";
 		outString+="<script src=\""+url+"/res/layer/layer.js\"></script>";
 		outString+= "<script language=javascript>layer.msg('"+msg+"',{icon: 1, time: 2000, skin: 'layer-ext-moon'},function(){(window.parent||window).location='"
-				+ LOGIN_URL + ";});</script>";
+				+ url + "/';});</script>";
 		try {
 			response.getWriter().print(outString);
 		} catch (IOException ex) {
