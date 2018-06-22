@@ -90,5 +90,12 @@
 		]]> 
 	</select>
 	
+	<!-- 按习惯搜索信息查询-->
+	<select id="getMsgIDByID" parameterType="String" resultType="map">
+		<![CDATA[ 
+			SELECT MSG_ID FROM MESSAGE WHERE MSG_CONTENT=#{uid} 
+		]]> 
+	</select>
+	
 
 </mapper>

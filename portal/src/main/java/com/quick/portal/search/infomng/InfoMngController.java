@@ -204,4 +204,24 @@ public class InfoMngController extends SysBaseController<InfoMngDO> {
 	             e.printStackTrace();
 	         }
 		}
+	    
+	    
+	    
+	    @RequestMapping(value = "/getMsgIDByID")
+	    @ResponseBody
+	    public void getMsgIDByID(HttpServletResponse res,String uid) throws Exception {
+	    	String	msgID = "0";
+			if (uid == null || "".equals(uid)) {
+				msgID = "0";
+				System.out.println("文件路径名称:" + uid + ",filePath不能为空");
+				throw new Exception("查询文件路径异常: " + "文件路径:" + uid
+						+ ",filePath不能为空");
+			}
+			uid = URLDecoder.decode(uid,
+					MetricPrivilegeConstants.LANGUAGE_CODE_UTF);
+			msgID = infoMngService.getMsgIDByID(uid);
+	        res.getWriter().write(msgID);
+	    }
+	    
+	    
 }

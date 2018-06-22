@@ -38,6 +38,9 @@ public interface IInfoMngService extends ISysBaseService<InfoMngDO> {
 	 
 	//按热点搜索信息查询
 	public String getPersonalHabitsInfo(String userID);
+	
+	
+	public String getMsgIDByID (String uid);
 
 
 }
