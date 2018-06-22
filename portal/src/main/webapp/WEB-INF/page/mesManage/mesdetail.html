@@ -25,7 +25,7 @@
             </div>
             <div class="col-sm-2">
                 <div class="pull-right ibox-toolbars hidefield" style="margin-right: -1px;margin-top: 2px;">
-                    <button type="button" class="btn btn-primary" onclick="cancel();">返回</button>
+                    <button type="button" id ="btn_cancel" class="btn btn-primary" style="display:block;" onclick="cancel();">返回</button>
                 </div>
             </div>
 
@@ -56,6 +56,10 @@
         /*加载数据*/
         var mode = $.request.queryString["mode"];
         var sysid = $.request.queryString["msg_id"];
+        var fg = $.request.queryString["fg"];
+        if(fg =="i"){
+        	document.getElementById("btn_cancel").style.display="none"; 
+        }
         if (sysid) {
             $('#pagename').html("内容管理详细");
             $("input,textarea").attr("placeholder", "");
