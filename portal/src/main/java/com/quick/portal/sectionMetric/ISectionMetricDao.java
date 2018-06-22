@@ -9,6 +9,4 @@ public interface ISectionMetricDao<SectionMetricDO> extends ISysBaseDao<SectionM
 	 List<Map<String,Object>> getId(int section_id);
 	 
 	int deleteById(String sec_metric_id);
-	
-	List<Map<String, Object>> getSecId(Map<String, Object> map);
 }

@@ -85,7 +85,7 @@ font-size: 14px;
                <input type="hidden" id="metric_json" name="metric_json" />
                <input type="hidden" id="metric_json_1" name="metric_json_1" />
                <input type="hidden" id="app_id" name="app_id" />
-            <input id="banck" type="button" class="btn btn-primary" style="margin-left: 44px" value="返回" onclick="banck();">
+            <input id="banck" type="button" class="btn btn-primary" style="margin-left: 44px" value="关闭" onclick="banck();">
                <input id="submit-form" type="button" class="btn btn-primary" style="margin-left: 67px" value="保存" onclick="thingOver();">
          	 </div>
            <!--  </form> -->
@@ -334,7 +334,7 @@ font-size: 14px;
     
   //保存方法
     function banck(){
-	  var infoBefore = '您确定要返回首页吗？';
+	  var infoBefore = '您确定要关闭此页面吗？';
     	layer.confirm(
 	    		infoBefore,
 			   {icon:1,title:'',skin: 'layer-ext-moon'},

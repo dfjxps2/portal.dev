@@ -361,17 +361,13 @@ function getxAxis(data,dimension,timeType,stateTime,endTime){
 				color:'#87CEFF'
 				//width:8,//这里是为了突出显示加上的，可以去掉
 			}
-		},    
+		},
 		axisLabel : {
 			nterval: 0,//标签设置为全部显示
 			margin: 12,
 			interval:0 ,
 			formatter:function(value){
-          	  if (value.length>4) {
-          		  return (value.substring(0,3)).split("").join("\n")+'\n'+'…';
-				}else{
-					return value.split("").join("\n");	
-				}
+          	 return value;
 				},
 			textStyle: {
 				color: '#fff',
@@ -512,7 +508,7 @@ function gauge(data,name,id,dimension,timeType,time,unit){
 			if (divhei<120) {
 				radius = '65%'	
 			}
-		 top =-5+Math.floor((divhei-228)/5)+'%';
+		 top =-5+Math.floor((divhei-220)/5)+'%';
 	}else if (divhei>400) {
 		top =Math.floor((divhei-420)/9)+'%';
 		if (Math.floor((divhei-420)/9)>5) {
@@ -597,7 +593,7 @@ var option = {
         tooltip : {
         	z:20,
 	        trigger: 'item',
-	        formatter:name+ "<br/>{b}: {c} "+unit+" <br/>占比：{d}%"
+	        formatter:name+ "<br/>{b}: {c} "+unit
 	    },
         series: [{
             type: 'gauge',
@@ -810,14 +806,17 @@ function bar_echart(data,name,id){
 	var wid= getPX(id,'width'); //宽度
 	var divhei= getPX(id,'height'); //高度
 	//根据容器高度自动调整x轴和y轴字体大小
-	var txtSize = Math.floor((divhei - 160)/40)+8
-	if (txtSize>16) {
+	var txtSize = Math.floor(divhei*0.25/4);
+	if (txtSize>15) {
 		txtSize = 15;
+	}
+	if (txtSize<9) {
+		txtSize = 9;
 	}
 	//根据容器大小自动调整标注的位置和显示隐藏
 	var show = true;
 	var sh = true;
-	var top = '17%';
+	var top = '20%';
 	//根据容器高度调整时间标题的位置
 	var subtop = '0%';
 	if (divhei<410&&divhei>200) {
@@ -828,13 +827,13 @@ function bar_echart(data,name,id){
 		sh = false;
 	}
 	if (wid<100) {
-		top = '13%';
+		top = '15%';
 		show = false;
 	}
 	
 	if (divhei<100) {
 		subtop = '-38%';
-		top = '13%';
+		top = '15%';
 		show = false;
 		sh = false;
 	}
@@ -953,18 +952,33 @@ function bar_echart(data,name,id){
 		end = xAxis[0].data.length;
 	}
 	//当x轴的分割宽度大于字段的占用宽度时 地段横向全部展示
-	if (wid/(end+1)>xAxis[0].axisLabel.textStyle.fontSize*1*le) {
-		xAxis[0].axisLabel.formatter = function(value){
-					return value;
-				};
-	}
+	//if (wid/(end+3)<txtSize*1*le) {
+		var lz = Math.floor(divhei*0.2/txtSize);
+
+			if (txtSize*1*le<wid/(end+3)) {
+				xAxis[0].axisLabel.formatter = function(value){
+					return value;	
+				}
+			}else {
+				xAxis[0].axisLabel.formatter = function(value){
+					if (lz == 0) {
+						return '';
+					}
+					if (value.length<=lz+1) {
+						return value.split("").join("\n");	
+					}else{
+						 return (value.substring(0,lz)).split("").join("\n")+'\n'+'…';
+					}
+				}
+			}
+	//}
 	var myChart = echarts.init(document.getElementById(id));
 	option = {
 		    title: [{
 		  	   show:sh,
 			   subtext:'时间：'+data.time[0]+'-'+data.time[1],
 			   top:subtop,
-			   right:'3%',
+			   right:'6%',
 			   subtextStyle: {			   
 			  		color: '#fff',
 			  		fontSize:txtSize

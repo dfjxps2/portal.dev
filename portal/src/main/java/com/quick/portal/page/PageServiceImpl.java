@@ -206,12 +206,11 @@ public class PageServiceImpl extends SysBaseService<PageDO> implements IPageServ
    	 int s = 0;
    	 if (metric.size()>0) {
    		for (int j = 0; j < metric.size(); j++) {
-   		 	String sec_id = getSecMetricId(metric.get(j).get("section_id").toString(),metric.get(j).get("metric_id").toString()).get(0).get("sec_metric_id").toString();
    		 	int a =0; 
    		 	for(int x = 1; x < paramKeys.length; x++){
                  con =  new SecMetricConfigDo();
                  con.setUser_id(Integer.parseInt(user_id));
-                 con.setSec_metric_id(Integer.parseInt(sec_id));
+                 con.setSec_metric_id(Integer.parseInt(metric.get(j).get("sec_metric_id").toString()));
                  con.setParam_id(x);
                  con.setParam_value(metric.get(j).get(paramKeys[x]).toString());
                  con.setCre_time(now);
@@ -240,14 +239,6 @@ public class PageServiceImpl extends SysBaseService<PageDO> implements IPageServ
 		 return ActionMsg.setOk("操作失败！");
 	}
 	}
-    
-    private List<Map<String, Object>>  getSecMetricId(String section_id,String metric_id){
-    	Map<String, Object> map = new HashMap<String, Object>();
-    	map.put("section_id", section_id);
-    	map.put("src_metric_id", metric_id);
-    	List<Map<String, Object>> list = sectionMetricDao.getSecId( map);
-    	return list;
-    }
     
     //删除多余数据
     private void  deleteSecId(List<Map<String, Object>> metric,List<Map<String, Object>> sec_id){

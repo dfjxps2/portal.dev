@@ -249,9 +249,16 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
              config = setConfig("1",config, metric_role);
  		}
         String sid = m.get("sec_metric_id").toString();
+        String sec_metric_id = "";
+        for (int i = 0; i < config.size(); i++) {
+			if (sid.equals(config.get(i).get("sec_metric_id").toString())) {
+				sec_metric_id = config.get(i).get("sec_metric_id").toString();
+			}
+		}
         String json = "";
         if (findSubMetricConfig(sid, "1", "metric_id", config).toString().equals("")==false&&findSubMetricConfig(sid, "9", "display", config).equals("")==false) {
         	json = json+"{\"section_id\":"+m.get("section_id")
+        	+ "," + "\"sec_metric_id\":"+sec_metric_id
         	+ "," + findSubMetricConfig(sid, "1", "metric_id", config)
             + "," + findSubMetricConfig(sid, "2", "category_id", config)
             + "," + findSubMetricConfig(sid, "3", "dimension", config)
