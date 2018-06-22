@@ -2,7 +2,7 @@
 <html>
 <head>
     <#include "/WEB-INF/include/resedit.html" />
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8">
     <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
     <script src="${G.host}/res/plugin/jQuery/jquery-1.11.3.min.js" type="text/javascript"></script>
     <!--Bootstrap -->
@@ -49,61 +49,61 @@
                 </div>
             </div>
             <div class="ibox " style="padding-right: 5px;padding-left:5px;">
-                <div class="ibox-content ibox-content-ad" style="margin-left:5px;margin-top: -30px;height:1000px;width:100%">
+                <div class="ibox-content ibox-content-ad" style="margin-left:5px;margin-top: -30px;height:1000px;">
                     <form id="pubform" name="pubform" method="post"  enctype="multipart/form-data" >
                         <div class="row" style="margin-top:20px">
                             <!--<div class="row">-->
                             <div class="col-sm-6 form_ipt_botm" style="width:100%;">
                                 <div class="form-group">
                                     <label class="col-xs-3 lable_top" style="width:100px;"><span class="span_require">*</span>标题</label>
-                                    <div class="col-xs-9"><input maxlength="50" style="width: 800px;" class="form-control required required" id="msg_title" name="msg_title"  /></div>
+                                    <div class="col-xs-9" style="width:89%;"><input maxlength="50" style="width:100%;" class="form-control required required" id="msg_title" name="msg_title"  /></div>
                                 </div>
                             </div>
 
                             <div class="col-sm-6 form_ipt_botm" style="width:100%;">
                                 <div class="form-group">
                                     <label class="col-xs-3 lable_top" style="width:100px;"><span class="span_require">*</span>摘要</label>
-                                    <div class="col-xs-9"><textarea style="height:72px;width:800px;" class="form-control required" id="msg_digest" name="msg_digest"></textarea></div>
+                                    <div class="col-xs-9" style="width:89%;"><textarea style="height:72px;width:100%;resize:none;" class="form-control required" id="msg_digest" name="msg_digest"></textarea></div>
                                 </div>
                             </div>
 
-                            <div class="col-sm-6 form_ipt_botm" style="width:300px;padding-right:2px;">
-                                <div class="form-group" style="width:300px;">
+                            <div class="col-sm-6 form_ipt_botm" style="width:33%;padding-right:2px;">
+                                <div class="form-group" >
                                     <label class="col-xs-3 lable_top" style="width:100px;"><span class="span_require">*</span>密级</label>
-                                    <div class="col-xs-9" style="padding-left:14px;"> <select class="form-control required select_change" id="msg_class_id" name="msg_class_id"></select></div>
+                                    <div class="col-xs-9" style="padding-left:15px;width:70%;"> <select class="form-control required select_change" id="msg_class_id" name="msg_class_id"></select></div>
                                 </div>
                             </div>
 
-                            <div class="col-sm-6 form_ipt_botm"style="padding-left:19px;width:300px;">
+                            <div class="col-sm-6 form_ipt_botm"style="padding-left:19px;width:33%;">
                                 <div class="form-group">
-                                    <label class="col-xs-4 lable_top" style="width:80px;"><span></span>标签</label>
-                                    <div class="col-xs-8" style="padding-left:2px;">
-                                        <div style="position:absolute;cursor:pointer;display:none;left:158px;z-index:999;padding-top:7px;" align="center"  class="input_clear">
+                                    <label class="col-xs-4 lable_top" style="width:26%;"><span></span>标签</label>
+                                    <div class="col-xs-8" style="padding-left:2px;width:73%;">
+                                        <div style="position:absolute;cursor:pointer;display:none;left:128px;z-index:999;padding-top:7px;" align="center"  class="input_clear">
                                             <button type="button" class="close" data-dismiss="modal" style="text-align: center" aria-hidden="true" >×</button>
                                         </div>
-                                        <div class="input-group" style="width:187px;">
-                                            <input type="text" style="width:170px;"  placeholder="标签" id="tag_text" readOnly="readOnly" class="form-control required"/>
-                                            <span class="input-group-btn"><button class="btn btn-default" type="button" onclick="chosebox('tag_text', '${G.serverUrl}/mespubtags','tagId');">...</button></span>
+                                        <div class="input-group" style="width:100%;">
+                                            <input type="text" style="width:100%;"  placeholder="标签" id="tag_text" readOnly="readOnly" class="form-control required"/>
+                                            <span class="input-group-btn"><button class="btn btn-default" type="button" id="anniu" onclick="chosebox('tag_text', '${G.serverUrl}/mespubtags','tagId');">...</button></span>
                                         </div>
                                 </div>
                             </div>
                             </div>
 
                             <li class="li_file"  >
-                                <div class="uploader white"style="width:280px;padding-left:18px;" >
-                                    <div style="position:absolute;cursor:pointer;display:none;left:158px;z-index:999;padding-top:7px;" align="center"  class="input_clear">
+                                <div class="uploader white"style="width:25%;padding-left:18px;" >
+                                    <div style="position:absolute;cursor:pointer;display:none;left:172px;z-index:999;padding-top:7px;" align="center"  class="input_clear">
                                         <button type="button" class="close" data-dismiss="modal" style="text-align: center" aria-hidden="true" >×</button>
                                     </div>
-                                    <input type="text" class="filename" id="file_box" name="msg_attachment" readonly="readonly" style="width:150px;">
-                                    <input id="btn_select" type="button" name="file" class="button_normal" style="padding-left:1px; width:80px;" value="选择附件">　
-                                    <input id="upload" style="width:110px;" onchange="uploadFiles();"  type="file" name="file"  onmousedown="fileOnMouseDown()" onmouseup="fileOnMouseUp()" />
+                                    <input type="text" class="filename" id="file_box" name="msg_attachment" readonly="readonly" style="width:75%;">
+                                    <input id="btn_select" type="button" name="file" class="button_normal" style="padding-left:1px; width:25%;" value="选择附件">　
+                                    <input id="upload" style="width:100%;" onchange="uploadFiles();"  type="file" name="file"  onmousedown="fileOnMouseDown()" onmouseup="fileOnMouseUp()" />
                                 </div>
                             </li>
 
-                            <div class="col-sm-6 form_ipt_botm"style="width:870px;">
-                                <div class="form-group" style="width:820px;">
+                            <div class="col-sm-6 form_ipt_botm"style="width:100%;">
+                                <div class="form-group" >
                                     <label class="col-xs-3 lable_top" style="width:100px;"><span class="span_require">*</span>内容</label>
-                                    <div class="col-xs-9"><textarea style="width:800px;padding-left:15px;height:600px;" class="form-control required" id="msgcontent" name="msgcontent"></textarea></div>
+                                    <div class="col-xs-9" style="width:89%;"><textarea style="width:100%;padding-left:15px;height:600px;resize:none;" class="form-control required" id="msgcontent" name="msgcontent"></textarea></div>
                                 </div>
                             </div>
 
@@ -139,6 +139,81 @@
         quick.listUrl = quick.serverUrl + "/list";
     }
 
+    function setData(obj) {
+        if (!obj) {
+            obj = request.getAll();
+        } else if (typeof (obj) == "string") {
+            obj = eval("(" + obj + ")");
+        }
+        for (var name in obj) {
+            //var val = obj[name] || '';
+            var val = obj[name] === null ? '' : obj[name];
+            var nodes = document.getElementsByName(name);
+            if (nodes == null || nodes.length == 0) {
+                _selector = $("#" + name);
+            } else {
+                _selector = $(nodes);
+            }
+            if (_selector == null || _selector.length == 0)
+                continue;
+            var nodeType = _selector[0].nodeName.toLowerCase();
+            if (nodeType == "input") {
+                var etype = _selector.attr("type") || "text";
+                if (etype == "checkbox") {
+                    CheckBoxInit(name, val);
+                } else if (etype == "radio") {
+                    _selector.each(function () {
+                        if ($(this).val() == encodeURI(val)) {
+                            $(this).attr("checked", "checked");
+                            if (typeof ($(this).parent().parent().attr("data-toggle")) != "undefined") {
+                                $(this).parent().parent().find('label').removeClass("active");
+                                $(this).parent().addClass("active");
+                            }
+                        }
+                    });
+                } else {
+                    _selector.val(val);
+                }
+
+            } else if (nodeType == "select") {
+                ListInit(name, encodeURI(val));
+            } else if (nodeType == "div") {
+
+            } else if (nodeType == "button") {
+                _selector.val(val);
+            } else {
+                _selector.text(val);
+            }
+        }
+        //选中多选下拉框的值
+        function ListInit(obj, v) {
+            if (!obj) return false;
+            var x = v.split(',');
+            $("#" + obj).find("option").each(function () {
+                for (var i = 0; i < x.length; i++) {
+                    if (x[i] == this.value)
+                        this.selected = "selected";
+                }
+            });
+        }
+        function CheckBoxInit(obj, v) {
+            if (null == obj || v == '') return false;
+            var chks = document.getElementsByName(obj);
+            var vs = v.split(',');
+            for (var i = 0; i < chks.length; i++) {
+                chks[i].checked = false;
+                for (var j = 0; j < vs.length; j++) {
+                    if (vs[j] == chks[i].value) {
+                        chks[i].checked = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+
+
     $(function(){
         $("input[type=file]").change(function(){$(this).parents(".uploader").find(".filename").val($(this).val());});
     });
@@ -152,13 +227,34 @@
             $("input,textarea").attr("placeholder", "");
             $(".hidefield").show();
             $.post(quick.serverUrl + '/getEditMes?msg_id=' + sysid + "&i=" + Math.random(), function (data) {
-                setForm(data);
+                 setData(data);
                 if (mode == "browse") {
                     viewRead();
                 }
             });
         }
     };
+
+    //内容管理查询--密级下拉框
+    function  SelectMsgCs(){
+        $.ajax({
+            type:"post",
+            url:"getMsgCs",
+            async:false,
+            dataType:"json",
+            success:function (data) {
+
+
+                console.log(JSON.stringify(data));
+                $("#msg_class_id").append("<option selected hidden value=''>密级</option><option value= ''>密级</option>");
+                for(var i=0;i<data.length;i++){
+                    var item = data[i];
+                    $("#msg_class_id").append("<option value="+item.msg_class_id+"> "+item.msg_class_name+"</option>")
+                }
+            }
+        });
+    }
+    SelectMsgCs();
 
     //文本框删除按钮
     //当通过鼠标点击选中元素或通过 tab 键定位到元素时，该元素就会获得焦点
@@ -197,23 +293,7 @@
         });
     })
 
-    //内容管理查询--密级下拉框
-    function  SelectMsgCs() {
-        $.ajax({
-            type:"get",
-            url:"getMsgCs",
-            async:false,
-            dataType:"json",
-            success:function (data) {
-                $("#msg_class_id").append("<option selected hidden value=''>密级</option><option value= ''>密级</option>");
-                for(var i=0;i<data.length;i++){
-                    var item = data[i];
-                    $("#msg_class_id").append("<option value="+item.msg_class_id+"> "+item.msg_class_name+"</option>")
-                }
-            }
-        });
-    }
-    SelectMsgCs();
+
 
     // 保存
     function formCommit(){
@@ -247,12 +327,13 @@
     }
 
     function chosebox(nid, url,id, fn){
+        $("#anniu").attr("disabled",true);
         if(!layer.values)
             layer.values = {};
         var val = $("#"+id).val();
         layer.open({
             type: 2 //此处以iframe举例
-            ,title: '选择记录'
+            ,title: '选择标签'
             ,area: ['680px', '500px']
             ,shade: 0
             ,maxmin: true
@@ -275,9 +356,11 @@
                 }
 
                 layer.closeAll();
+                $("#anniu").attr("disabled",false);
             }
             ,btn2: function(){
                 layer.closeAll();
+                $("#anniu").attr("disabled",false);
             }
         });
     }

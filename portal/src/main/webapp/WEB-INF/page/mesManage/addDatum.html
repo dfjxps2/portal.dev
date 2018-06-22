@@ -123,8 +123,37 @@
             },
             rules: {
                 keywords: {
+                    required:true,
                     keyword:true
                 } ,
+                file:{
+                    required:true,
+                    remote:{
+                        url:quick.serverUrl+"/checkUpDatum",
+                        dataType:"json",
+                        type:"post",
+                        data:{
+                            msg_content:function(){
+                                return $("#msg_content").val();
+                            }
+                        },
+                        dataFilter:function (data,type) {
+                            if ( data =="false") {
+                                return false;
+                            }else{
+                                return true;
+                            }
+                        }
+                    },
+                }
+            },
+            messages:{
+                file:{
+                    remote:"存在同名的资料，请您检查后再上传！"
+                },
+                keywords:{
+                    remote:" "
+                }
             }
         });
     };

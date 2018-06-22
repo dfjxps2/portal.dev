@@ -14,7 +14,7 @@
             </div>
             <div class="ibox">
                 <div class="ibox-content ibox-content-ad" style="margin-top: 25px;">
-                    <form id="form" name="form" method="post" action="${G.serverUrl}/save" class="wizard-big addForm" enctype="multipart/form-data" accept="image/jpg, image/png">
+                    <form id="form" name="form" onkeydown="if(event.keyCode==13){return false;}" method="post" action="${G.serverUrl}/save" class="wizard-big addForm" enctype="multipart/form-data" accept="image/jpg, image/png">
                         <div class="row">
                             <div class="col-sm-6 form_ipt_botm">
                                 <div class="form-group">

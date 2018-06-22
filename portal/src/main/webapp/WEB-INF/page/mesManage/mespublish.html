@@ -50,61 +50,61 @@
                 </div>
             </div>
             <div class="ibox " style="padding-right: 5px;">
-                <div class="ibox-content ibox-content-ad" style="margin-left:5px;margin-top: -30px;height:1000px;width:100%">
+                <div class="ibox-content ibox-content-ad" style="margin-left:5px;margin-top: -30px;height:1000px;">
                     <form id="pubform" name="pubform" method="post"  enctype="multipart/form-data" >
                         <div class="row" style="margin-top:20px">
                             <!--<div class="row">-->
                             <div class="col-sm-6 form_ipt_botm" style="width:100%;">
                                 <div class="form-group">
                                     <label class="col-xs-3 lable_top" style="width:100px;"><span class="span_require">*</span>标题</label>
-                                    <div class="col-xs-9"><input maxlength="50" style="width: 800px;" class="form-control required " id="msg_title" name="msg_title"  /></div>
+                                    <div class="col-xs-9" style="width:89%;"><input maxlength="50" style="width:100%;" class="form-control required " id="msg_title" name="msg_title"  /></div>
                                 </div>
                             </div>
 
                             <div class="col-sm-6 form_ipt_botm" style="width:100%;">
                                 <div class="form-group">
                                     <label class="col-xs-3 lable_top" style="width:100px;"><span class="span_require">*</span>摘要</label>
-                                    <div class="col-xs-9"><textarea style="height:72px;width:800px;" class="form-control required" id="msg_digest" name="msg_digest"></textarea></div>
+                                    <div class="col-xs-9" style="width:89%;"><textarea style="height:72px;width:100%;resize:none;" class="form-control required" id="msg_digest" name="msg_digest"></textarea></div>
                                 </div>
                             </div>
 
-                            <div class="col-sm-6 form_ipt_botm" style="width:300px;padding-right:2px;">
-                                <div class="form-group" style="width:300px;">
+                            <div class="col-sm-6 form_ipt_botm" style="width:33%;padding-right:2px;">
+                                <div class="form-group" >
                                     <label class="col-xs-3 lable_top" style="width:100px;"><span class="span_require">*</span>密级</label>
-                                    <div class="col-xs-9" style="padding-left:14px;"> <select class="form-control required select_change" id="msg_class_name" name="msg_class_name"></select></div>
+                                    <div class="col-xs-9" style="padding-left:15px;width:70%;"> <select class="form-control required select_change" id="msg_class_name" name="msg_class_name"></select></div>
                                 </div>
                             </div>
 
-                            <div class="col-sm-6 form_ipt_botm"style="padding-left:19px;width:300px;">
+                            <div class="col-sm-6 form_ipt_botm"style="padding-left:15px;width:33%;">
                                 <div class="form-group">
-                                    <label class="col-xs-4 lable_top" style="width:80px;"><span></span>标签</label>
-                                    <div class="col-xs-8" style="padding-left:2px;">
-                                        <div style="position:absolute;cursor:pointer;display:none;left:158px;z-index:999;padding-top:7px;" align="center"  class="input_clear">
+                                    <label class="col-xs-4 lable_top" style="width:28%;"><span></span>标签</label>
+                                    <div class="col-xs-8" style="padding-left:2px;width:76%;">
+                                        <div style="position:absolute;cursor:pointer;display:none;left:128px;z-index:999;padding-top:7px;" align="center"  class="input_clear">
                                             <button type="button" class="close" data-dismiss="modal" style="text-align: center" aria-hidden="true" >×</button>
                                         </div>
-                                        <div class="input-group" style="width:187px;">
-                                            <input type="text" style="width:170px;"  placeholder="标签" id="tag_text" readOnly="readOnly" class="form-control required"/>
-                                            <span class="input-group-btn"><button class="btn btn-default" type="button" onclick="chosebox('tag_text', '${G.serverUrl}/mespubtags','tagId');">...</button></span>
+                                        <div class="input-group" style="width:100%;">
+                                            <input type="text" style="width:100%;"  placeholder="标签" id="tag_text" readOnly="readOnly" class="form-control required"/>
+                                            <span class="input-group-btn"><button class="btn btn-default" id="anniu" type="button" onclick="chosebox('tag_text', '${G.serverUrl}/mespubtags','tagId');">...</button></span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             <li class="li_file"  >
-                                <div class="uploader white pull-right"style="width:280px;padding-left:18px;" >
-                                    <div style="position:absolute;cursor:pointer;display:none;left:158px;z-index:999;padding-top:7px;" align="center"  class="input_clear">
+                                <div class="uploader white "style="width:24%;padding-left:10px;" >
+                                    <div style="position:absolute;cursor:pointer;display:none;left:172px;z-index:999;padding-top:7px;" align="center"  class="input_clear">
                                         <button type="button" class="close" data-dismiss="modal" style="text-align: center" aria-hidden="true" >×</button>
                                     </div>
-                                    <input type="text" class="filename" id="file_box" readonly="readonly" style="width:150px;">
-                                    <input id="btn_select" type="button" name="file" class="button_normal" style="padding-left:1px; width:80px;" value="选择附件">　
-                                    <input id="upload" style="width:110px;" onchange="uploadFiles();"  type="file" name="file"  onmousedown="fileOnMouseDown()" onmouseup="fileOnMouseUp()" />
+                                    <input type="text" class="filename" id="file_box" readonly="readonly" style="width:75%;">
+                                    <input id="btn_select" type="button" name="file" class="button_normal" style="padding-left:1px; width:25%;" value="选择附件">　
+                                    <input id="upload" style="width:100%;" onchange="uploadFiles();"  type="file" name="file"  onmousedown="fileOnMouseDown()" onmouseup="fileOnMouseUp()" />
                                 </div>
                             </li>
 
-                            <div class="col-sm-6 form_ipt_botm"style="width:870px;padding-top:10px;">
-                                <div class="form-group" style="width:820px;">
+                            <div class="col-sm-6 form_ipt_botm"style="width:100%;">
+                                <div class="form-group" >
                                     <label class="col-xs-3 lable_top" style="width:100px;"><span class="span_require">*</span>内容</label>
-                                    <div class="col-xs-9"><textarea style="width:800px;padding-left:15px;height:600px;" class="form-control required" id="msgcontent" name="msgcontent"></textarea></div>
+                                    <div class="col-xs-9" style="width:89%;"><textarea style="width:100%;padding-left:15px;height:600px;resize:none;" class="form-control required" id="msgcontent" name="msgcontent"></textarea></div>
                                 </div>
                             </div>
 
@@ -240,12 +240,13 @@
     });
 
     function chosebox(nid, url,id, fn){
+        $("#anniu").attr("disabled",true);
         if(!layer.values)
             layer.values = {};
         var val = $("#"+id).val();
         layer.open({
             type: 2 //此处以iframe举例
-            ,title: '选择记录'
+            ,title: '选择标签'
             ,area: ['680px', '500px']
             ,shade: 0
             ,maxmin: true
@@ -267,9 +268,11 @@
                     fn(dt || [], iframeWin);
                 }
                 layer.closeAll();
+                $("#anniu").attr("disabled",false);
             }
             ,btn2: function(){
                 layer.closeAll();
+                $("#anniu").attr("disabled",false);
             }
         });
     }
