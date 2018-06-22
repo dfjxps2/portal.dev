@@ -344,6 +344,9 @@
         <if test="msg_content!=null and msg_content !='' and !'null'.equals(msg_content)">
           AND msg_content IN (${msg_content})
         </if>
+        <if test="msg_title!=null and msg_title !='' and !'null'.equals(msg_title)">
+            AND msg_title = #{msg_title}
+        </if>
         <if test="msg_type_id!=null and msg_type_id !='' and !'null'.equals(msg_type_id)">
             AND  msg_type_id = #{msg_type_id}
         </if>
@@ -355,6 +358,13 @@
         </if>
         <if test="appr_time!=null">
             <![CDATA[AND DATE_FORMAT(appr_time,'%Y-%m-%d %H:%i:%s ')= DATE_FORMAT(#{appr_time},'%Y-%m-%d %H:%i:%s')]]>
+        </if>
+        <if test="list != null">
+            AND
+            <foreach collection="list" open=" " close=" " item="item" separator="OR">
+                msg_content = ${item}
+            </foreach>
+
         </if>
         <if test="_sql_where != null and _sql_where != '' "> <![CDATA[
              ${_sql_where}
@@ -390,9 +400,8 @@
     </select>
 
     <insert id="insertMsgTy" parameterType="map" >
-        INSERT INTO portaldb.msg_type(msg_type_id, msg_type_name,sup_msg_type_id)
+        INSERT INTO portaldb.msg_type( msg_type_name,sup_msg_type_id)
         VALUES (
-        #{msg_type_id},
         #{msg_type_name},
         #{sup_msg_type_id}
         )
@@ -525,11 +534,26 @@
 
     <!--查询标签类型及对应上级标签-->
     <select id="selectTagType"  parameterType="map" resultType="map">
-        SELECT DISTINCT st.*,stt.superTypeName FROM tag_type st LEFT JOIN (SELECT ty.super_type_id,ttd.tag_type_name superTypeName FROM (SELECT tt.super_type_id FROM tag_type tt)ty
+        SELECT  st.tag_type_id,st.tag_type_name,st.super_type_id,stt.superTypeName FROM tag_type st LEFT JOIN
+        (SELECT ty.super_type_id,ttd.tag_type_name superTypeName FROM (SELECT DISTINCT tt.super_type_id FROM tag_type tt)ty
         LEFT JOIN tag_type ttd ON ty.super_type_id = ttd.tag_type_id) stt ON st.super_type_id = stt.super_type_id
-        <where>
-            <include refid="tag"/>
-        </where>
+        WHERE
+        1=1
+        <if test="tagText!=null and tagText !='' and !'null'.equals(tagText)">
+            AND  st.tag_text=#{tagText}
+        </if>
+        <if test="superTypeId!=null and superTypeId !='' and !'null'.equals(superTypeId)">
+            AND  st.super_type_id =#{superTypeId}
+        </if>
+        <if test="tagTypeId!=null and tagTypeId !='' and !'null'.equals(tagTypeId)">
+            AND  st.tag_type_id =#{tagTypeId}
+        </if>
+        <if test="tagTypeName!=null and tagTypeName !='' and !'null'.equals(tagTypeName)">
+            AND  st.tag_type_name =#{tagTypeName}
+        </if>
+        <if test="_sql_where != null and _sql_where != ''"> <![CDATA[
+             ${_sql_where}
+        ]]> </if>
     </select>
 
     <!--查询标签类型总体-->

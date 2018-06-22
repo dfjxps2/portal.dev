@@ -8,6 +8,7 @@ import com.quick.core.util.common.QCookie;
 import com.quick.core.util.common.QRequest;
 import com.quick.portal.search.infomng.SolrInfoConstants;
 import com.quick.portal.search.infomng.SolrUtils;
+import com.quick.portal.security.authority.metric.PropertiesUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -64,7 +65,7 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
             //excel转换成列表
             List<Map<String, Object> > list = getListByExcel(in, fileName, header);
             if(list.size()==0) //文件为空
-                return ActionMsg.setError("解析失败，请检查文件后重新上传");
+                return ActionMsg.setError("解析失败，请检查文件内容是否重复！");
             int countParam = mesManageDao.countParam();
             int paramId ;
             if (countParam == 0){
@@ -446,6 +447,7 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
             }
             SolrUtils.addSolrInfo(content,datacontent,type,title,attach);
             map.put("msg_content",content);
+            map.put("msg_title",title);
         }else {
             File fi = new File(msg_content);
             datacontent = parseFile(fi)+datacontent;
@@ -547,6 +549,7 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
         }
     }
     public  String createPath(HttpServletRequest request,  String tyname){
+        String baseDir = PropertiesUtil.getPropery("file.dir");
         Calendar date = Calendar.getInstance();
         String year = String.valueOf(date.get(Calendar.YEAR));
         String month = String.valueOf(date.get(Calendar.MONTH)+1);
@@ -555,9 +558,8 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
         if(mo<=9){
             month = "0"+month;
         }
-        String url =  request.getSession().getServletContext().getRealPath("/");
-        String path = url+"upload"+"\\"+tyname+"\\"+year+month+day+"\\";
-        return  path.replaceAll("\\\\","/");
+        String path = baseDir+"/"+tyname+"/"+year+month+day+"/";
+        return  path;
     }
 
     //删除指定路径下的文件
@@ -679,14 +681,14 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
 
 
 
-    public static  List<Map<String, Object>> getListByExcel(InputStream in, String fileName,List<Object> header) throws Exception{
+    public List<Map<String, Object>> getListByExcel(InputStream in, String fileName,List<Object> header) throws Exception{
         List<Map<String, Object>> result = new ArrayList<>();
         //创建Excel工作薄
         Workbook work = getWorkbook(in,fileName);
         if(null == work){
-            throw new Exception("解析失败，请检查文件后重新上传");
+            throw new Exception("上传的工作簿为空！");
         }
-        for(int a=0;a<work.getNumCellStyles();a++) {
+        for(int a=0;a<work.getNumberOfSheets();a++) {
             Sheet sheet = work.getSheetAt(a);
             if (sheet == null) {
                 throw new Exception("解析失败，请检查文件后重新上传");
@@ -695,6 +697,9 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
             int lastRow = sheet.getLastRowNum();
             Row row = null;
             Cell cell = null;
+            if(sheet.getRow(firstRow)==null){
+                continue;
+            }
             Cell cellone = sheet.getRow(firstRow).getCell(0);
             String ruleID = getCellValue(cellone).toString();
             Cell cello = sheet.getRow(firstRow).getCell(1);
@@ -703,9 +708,14 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
             String ruleParamName = getCellValue(celltwo).toString();
             Cell cellt = sheet.getRow(firstRow + 1).getCell(1);
             String ruleParamValue = getCellValue(cellt).toString();
+
             if (!ruleID.equals("规则ID：") || !ruleParamName.equals("规则参数名：")) {
                 throw new Exception("模版错误，请检查文件后重新上传");
             }
+            Map<String, Object> map = new HashMap<>();
+            map.put("rule_id", ruleIDValue);
+            map.put("param_name", ruleParamValue);
+             List<Map<String,Object>> list = mesManageDao.selectRules(map);
             for (int j = 0; j < header.size(); j++) {
                 cell = sheet.getRow(firstRow + 2).getCell(j);
                 Object value = getCellValue(cell);
@@ -721,8 +731,9 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
                         continue;
                     }
                     if (row.getFirstCellNum() != -1)
+                        map.clear();
                         for (int y = row.getFirstCellNum(); y < header.size(); y++) {
-                            Map<String, Object> map = new LinkedHashMap();
+                             map = new LinkedHashMap();
                             map.put("rule_id", ruleIDValue);
                             map.put("param_name", ruleParamValue);
                             cell = row.getCell(y);
@@ -732,11 +743,33 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
                             } else {
                                 break;
                             }
-                            map.put("param_value", value);
-                            result.add(map);
+                            for(int d=0;d<list.size();d++){
+                                Map<String,Object> da = list.get(d);
+                                String va = da.get("param_value").toString();
+                                if(value.equals(va) ){
+                                    break;
+                                }else if(d==list.size()-1){
+                                    map.put("param_value", value);
+                                }
+                            }
+                            if(result.size()!=0 && map.get("param_value")!=null && !"".equals(map.get("param_value"))){
+                                for(int t=0;t<result.size();t++){
+                                    Map<String,Object> da = result.get(t);
+                                    String va = da.get("param_value").toString();
+                                    if(value.equals(va) ){
+                                        break;
+                                    }else if(t==result.size()-1){
+                                        result.add(map);
+                                    }
+                                }
+                            }else if(result.size()==0 && map.get("param_value")!=null && !"".equals(map.get("param_value"))){
+                                result.add(map);
+                            }else if(list.size() == 0){
+                                map.put("param_value", value);
+                                result.add(map);
+                            }
                         }
                 }
-
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new Exception("解析失败，请检查文件后重新上传");
@@ -766,8 +799,6 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
         }
         return handler.toString();
     }
-
-
     //自动审核
     public static int autoFilter(List<Map<String,Object>> rules,String id) throws Exception {
         PageBounds pageBounds = new PageBounds();

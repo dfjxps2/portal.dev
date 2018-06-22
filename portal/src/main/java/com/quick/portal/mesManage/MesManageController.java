@@ -332,7 +332,6 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public String getMsgCsJson(List<Map<String,Object>> maps){
@@ -451,7 +450,48 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         }
         res.getWriter().flush();
     }
-      //新增规则参数数据上传
+    //新增标签类型检测
+    @RequestMapping(value = "checkTagType")
+    public void checkTagType(HttpServletResponse res,TagManageDo tagManageDo) throws IOException {
+        Map<String,Object> map = new HashMap<>();
+        if(tagManageDo.getTagTypeName()!=null && !tagManageDo.getTagTypeName().equals("undefined") && !tagManageDo.getTagTypeName().equals("null")){
+                 map.put("tagTypeName",tagManageDo.getTagTypeName());
+               }
+        if(tagManageDo.getSuperTypeName()!=null && !tagManageDo.getSuperTypeName().equals("undefined") && !tagManageDo.getSuperTypeName().equals("null")){
+            map.put("superTypeId",tagManageDo.getSuperTypeName());
+        }
+        List list = mesManageDao.selectTagType(map);
+        if(list.size()!=0){
+            res.getWriter().write("false");
+        }else {
+            res.getWriter().write("true");
+        }
+        res.getWriter().flush();
+
+    }
+
+    //上传资料检验
+    @RequestMapping(value = "checkUpDatum")
+    public void checkUpDatum(HttpServletResponse res,MesManageDO mesManageDO) throws IOException {
+        Map<String,Object> map = new HashMap<>();
+        if(mesManageDO.getMsg_content()!=null && !mesManageDO.getMsg_content().equals("undefined") && !mesManageDO.getMsg_content().equals("null")){
+            String content = mesManageDO.getMsg_content();
+            int a = content.lastIndexOf("\\");
+            int b = content.lastIndexOf(".");
+            String title = content.substring(a+1,b);
+            map.put("msg_title",title);
+        }
+        List list = mesManageDao.selectDataMes(map);
+        if(list.size()!=0){
+            res.getWriter().write("false");
+        }else {
+            res.getWriter().write("true");
+        }
+        res.getWriter().flush();
+
+    }
+
+    //新增规则参数数据上传
     @RequestMapping(value = "uploadRules",method={RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
     public DataStore saveRuleValues(HttpServletRequest request, HttpServletResponse response, boolean MERGE){
@@ -493,7 +533,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         String format1 = format.format(System.currentTimeMillis());
          String filename = format1+num+"规则数据";
          //表中参数名称
-             List<Object> header=Arrays.asList("参数值01","参数值02","参数值03","参数值04","参数值05","参数值06");
+            // List<Object> header=Arrays.asList("参数值01","参数值02","参数值03","参数值04","参数值05","参数值06");
             List<Map<String,Object>> dataList = mesManageDao.exportExcel();
             //生成一个表格
           Workbook wb = new HSSFWorkbook();
@@ -505,7 +545,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
                 //根据规则ID和规则类型生成表格
                 Sheet sheet = wb.createSheet(Integer.toString(i));
                 //设置表格默认列宽
-                sheet.setDefaultColumnWidth((short)20);
+                sheet.setDefaultColumnWidth((short)12);
                 //根据格式赋值
                 Row rowone = sheet.createRow(0);
                 rowone.createCell(0).setCellValue("规则ID：");
@@ -517,17 +557,16 @@ public class MesManageController extends SysBaseController<MesManageDO> {
                 rowthr.createCell(0).setCellValue("规则参数名称：");
                 rowthr.createCell(1).setCellValue(paramName);
                 Row row = sheet.createRow(3);
-                for(int j=0;j<header.size();j++){
-                    Cell cell = row.createCell(j);
-                    String value = header.get(j).toString();
-                    cell.setCellValue(value);
-                }
+                Cell cel = row.createCell(0);
+                String value = "参数值：";
+                cel.setCellValue(value);
+
                 String[] data =map.get("paramvalue").toString().split(",");
                 int index = 4;
                 int n = 0;
                 while(n<=data.length-1){
                     row = sheet.createRow(index);
-                    for(int m=0;m<header.size();m++){
+                    for(int m=0;m<15;m++){
                         Cell cell = row.createCell(m);
                         if (data[0]!=null && !"".equals(data[0]) && n<data.length ){
                             cell.setCellValue(data[n]);
@@ -924,6 +963,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
 
     //得到标签类型下数据
     @RequestMapping(value = "/getTagType")
+    @ResponseBody
     public void tagType(HttpServletResponse res,String tagTypeId) {
         HashMap<String,Object> map = new HashMap<>();
         if(tagTypeId!=null && !tagTypeId.equals("undefined") && !"null".equals(tagTypeId)){
@@ -1028,12 +1068,13 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         PageBounds pager = new PageBounds(pageNo, pageSize);
         if(keywords!=null && !keywords.equals("undefined") && !keywords.equals("")){
             String contents = "";
+            List<String> parm = new ArrayList<>();
             List<String> dataByKeyword = SolrUtils.getDataByKeyword(keywords);
             for(String data : dataByKeyword){
-                contents += ("\'"+data+"\'"+",");
+                parm.add("\'"+data+"\'");
             }
-            int index = contents.lastIndexOf(",");
-            contents = contents.substring(0,index);
+
+            queryMap.put("list",parm);
             queryMap.put("msg_content",contents);
         }
         List<Map<String,Object>> dt  = mesManageDao.selectDataMes(queryMap,pager);
