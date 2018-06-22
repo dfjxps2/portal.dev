@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html>
-  <head>
-	  <#include "/WEB-INF/include/reslist.html" />
-  </head>
+<head><#include "/WEB-INF/include/reslist.html" />
+</head>
 <style type="text/css">
 * {
 	margin: 0;
@@ -99,7 +98,7 @@ a, img {
 	position: absolute;
 	left: 0;
 	top: 31px;
-	z-index:300;
+	z-index: 300;
 }
 
 .dropdown .tit_filter {
@@ -113,64 +112,67 @@ a, img {
 	padding: 2px 5px;
 	*/
 	margin: 14px 5px;
-    border-bottom: 1px solid #000;
+	border-bottom: 1px solid #000;
 }
 
 .dropdown li {
-/*	float: left;
+	/*	float: left;
 	width: 175px;
 	*/
 	float: left;
-	width: calc(100%/5);
+	width: calc(100%/ 5);
 	padding: 0 0 0 5px;
 	font-size: 14px;
 	line-height: 32px;
 	height: 32px;
 }
+</style>
+<body class="gray-bg">
+	<div
+		class="wrapper wrapper-content wrapper-content-x animated fadeInRight">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox ibox-x">
+					<div class="ibox-content ibox-content-x">
+						<div class="panel-mar">
+							<form id="formSearch" class="form-inline">
+								<div class="form-group" style="padding: 0px; width: 96px;">
+									<select name="obj_type"
+										class="input-group form-control form-control-green select_change"
+										id="IDS_SYSPLATFORM">
+										<option value="9">全部</option>
+										<option value="4">未阅</option>
+										<option value="5">已阅</option>
+										<option value="1">指标</option>
+										<option value="2">消息</option>
+										<option value="3">应用</option>
+										<option value="6">资料</option>
+									</select>
+								</div>
 
-  </style>
-  <body class="gray-bg">
-  <div class="wrapper wrapper-content wrapper-content-x animated fadeInRight">
-	  <div class="row">
-		  <div class="col-sm-12">
-			  <div class="ibox ibox-x">
-				  <div class="ibox-content ibox-content-x">
-					  <div class="panel-mar">
-							  <form id="formSearch" class="form-inline" >
-							  	    <div class="form-group" style="padding: 0px;width:96px;">
-                        				 <select name="obj_type" class="input-group form-control form-control-green select_change" id="IDS_SYSPLATFORM">
-										  <option value="9">全部</option>
-										  <option value="4">未阅</option>
-										  <option value="5">已阅</option>
-										  <option value="1">指标</option>
-										  <option value="2">消息</option>
-										  <option value="3">应用</option>
-										  <option value="6">资料</option>
-									  </select>
-									</div>
-								  
-								  <div class="input-group" id ="div_append" >
-    									<input name="keyword" class="form-control input-lg" type="text" autocomplete="off" value=""
-												id="keyword" style="width:400px">
-												<span class="arrowDown"></span>
-												<span id ="btn_span" class="input-group-addon btn btn-primary">搜索</span>
-								  </div>
-                                  
-							  </form>
+								<div class="input-group" id="div_append">
+									<input name="keyword" class="form-control input-lg" type="text"
+										autocomplete="off" value="" id="keyword" style="width: 400px">
+									<span class="arrowDown"></span> <span id="btn_span"
+										class="input-group-addon btn btn-primary">搜索</span>
+								</div>
+
+							</form>
 						</div>
-					  <div style ="margin:5px;">
-						  <table id="list" class="table-striped" style="table-layout:fixed"></table>
-					  </div>
-				  </div>
-			  </div>
-		  </div>
-		  <input type="hidden"  id="IDS_PAGENUM" name="IDS_PAGENUM">
-		  <input type="hidden"  id="IDS_PAGESIZE" name="IDS_PAGENUM">
-	  </div>
-  </div>
-  </body>
+						<div style="margin: 5px;">
+							<table id="list" class="table-striped"
+								style="table-layout: fixed"></table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<input type="hidden" id="IDS_PAGENUM" name="IDS_PAGENUM"> <input
+				type="hidden" id="IDS_PAGESIZE" name="IDS_PAGENUM">
+		</div>
+	</div>
+</body>
 </html>
- <script>
+<script>
  var data = '${data}';
  $('#div_append').after(data);
 
@@ -198,38 +200,42 @@ a, img {
 			   height: $(document.body).height()-50,
 			   toolbar:"#formSearch",
 			   columns: [
-//				   {  checkbox: true },
-				   { field: 'title', title: '信息名称', width: 100  },
-				   /* { field: 'id', title: '信息路径', width: 100  }, */
-				   { field: 'portal_doc_class', title: '信息类别', width: 80 , formatter:function(value,row,index){
-			    	   var doc_class = '<span style="color:#9ACD32">其它</span>';  
-                	   if (row.portal_doc_class=="1") {
-                		   doc_class = '<span style="color:#9ACD32">指标</span>';  
-                	   }else if(row.portal_doc_class=="2"){
-                		   doc_class = '<span style="color:#9ACD32">消息</span>';
-                	   }else if(row.portal_doc_class=="3"){
-                		   doc_class = '<span style="color:#9ACD32">应用</span>';
-                	   }else if(row.portal_doc_class=="6"){
-                		   doc_class = '<span style="color:#9ACD32">资料</span>';
-                	   }
-                	   return doc_class;
-                   }},
-				   
-				   { field: 'status', title: '查阅状态', width: 80 , formatter:function(value,row,index){
-			    	   var state = '<span style="color:#CFCFCF">未阅</span>';  
-                	   if (row.status=="1") {
-                		   state = '<span style="color:#9ACD32">已阅</span>';  
-                	   }
-                	   return state;
-                   }},
-				   { field: 'CZ',  title: '操作',width: '15%', formatter:function(value,row,index){
-					   if (row.portal_doc_class=="1") {
-						return down = '<span style="color:#9ACD32"></span>';  
-                	   }else{
-//                		   var url ="D:/00-software/luna/eclipse/ws_git/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/portal/upload/mesPublish/20180525/test内容申请.txt";
-                	   return down = "<button type='button' class='btn_el' onclick='downClick(\""+row.id+"\",\""+row.portal_doc_class+"\")'>下载</button>";
-                	   }
-				   }} 
+					{ field: 'title',  title: '信息名称' ,width: '40%', formatter:function(value,row,index){
+						   if (row.portal_doc_class=="1") {
+							   return "<a href='javascript:void(0)' >"+row.title+"</a>";
+						   }else{
+							   return "<a href='javascript:void(0)' onclick=\'getInfoClick(\""+row.id+"\")\'>"+row.title+"</a>"; 
+						   }
+					   }},
+					
+					{ field: 'portal_doc_class', title: '信息类别', width: '10%' , formatter:function(value,row,index){
+						   var doc_class = '<span style="color:#9ACD32">其它</span>';  
+						   if (row.portal_doc_class=="1") {
+							   doc_class = '<span style="color:#9ACD32">指标</span>';  
+						   }else if(row.portal_doc_class=="2"){
+							   doc_class = '<span style="color:#9ACD32">消息</span>';
+						   }else if(row.portal_doc_class=="3"){
+							   doc_class = '<span style="color:#9ACD32">应用</span>';
+						   }else if(row.portal_doc_class=="6"){
+							   doc_class = '<span style="color:#9ACD32">资料</span>';
+						   }
+						   return doc_class;
+					}},
+					
+					{ field: 'status', title: '查阅状态', width:'10%', formatter:function(value,row,index){
+						   var state = '<span style="color:#CFCFCF">未阅</span>';  
+						   if (row.status=="1") {
+							   state = '<span style="color:#9ACD32">已阅</span>';  
+						   }
+						   return state;
+					}},
+					{ field: 'CZ',  title: '操作',width: '25%', formatter:function(value,row,index){
+						   if (row.portal_doc_class=="1") {
+							return down = '<span style="color:#9ACD32"></span>';  
+						   }else{
+						    return down = "<button type='button' class='btn_el' onclick='downClick(\""+row.id+"\",\""+row.aid+"\",\""+row.portal_doc_class+"\")'>下载</button>";
+						   }
+					}} 
 			   ],onPageChange:function(number, size){
                    $("#IDS_PAGESIZE").val(size);
                    $("#IDS_PAGENUM").val(number);
@@ -255,9 +261,6 @@ a, img {
 				$. layer.msg("文件路径不对，请联系管理员",{icon:1,time: 1000,skin: 'layer-ext-moon'}); 
 				return false ;
 			}
-	/*  	  type='2';	
-		  id= 'D:/upload/测试5.txt';
-		  aid='D:/upload/新建1.docx';  */
 	 	  id = encodeURI(id);
 		  aid = encodeURI(aid); 
 		  var param ='?type='+type+'&aid='+aid+'&id='+id;	  
@@ -266,6 +269,51 @@ a, img {
 		  url = encodeURI(url);
 		  window.location.href= url; 
 		}
+		
+
+		
+		function getInfoClick(id){
+			var msgID;
+			var uid = encodeURI(id);
+			 $.ajax({
+				  type: "post",
+				  async:false,
+				  url:  quick.serverUrl+'/getMsgIDByID?T='+Math.random(),
+				  data:{uid:uid},
+				  success: function(data){
+					  msgID = data;
+				  }
+			  });
+			 var href = "${G.host}/mesManage/mesdetail?msg_id="+msgID;	
+			 openInfoBox(href)
+		}
+		
+		
+		
+		function openInfoBox(url){
+		    if(!layer.values)
+		        layer.values = {};
+		    layer.open({
+		        type: 2 //此处以iframe举例
+		        ,title: '明细信息'
+		        ,area: ['800px', '500px']
+		        ,shade: 0
+		        ,maxmin: true
+		        ,content: url
+		        ,btn: ['确认', '关闭'] //只是为了演示
+		        ,yes: function(index, layero){
+		            layer.closeAll();
+		        }
+		        ,btn2: function(){
+		            layer.closeAll();
+		        }
+		        ,zIndex: layer.zIndex //重点1
+		        ,success: function(layero){
+		            layer.setTop(layero); //重点2
+		        }
+		    });
+		}
+		
 
 
 
@@ -324,7 +372,7 @@ a, img {
 	}
 	
 	$ui.bind('mouseleave',function(){
-		$ui.find('.arrowUp').addClass('arrowDown').removeClass('arrowUp').andSelf().find('.dropdown').slideUp(500);
+		$ui.find('.arrowUp').addClass('arrowDown').removeClass('arrowUp').andSelf().find('.dropdown').slideUp(1000);
 	});
 
 	
