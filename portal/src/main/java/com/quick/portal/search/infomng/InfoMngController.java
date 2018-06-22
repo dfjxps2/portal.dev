@@ -179,9 +179,9 @@ public class InfoMngController extends SysBaseController<InfoMngDO> {
 					FileOperateUtils.download(request, response, filePath);
 				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block附件文件路径不存在，请检查附件路径
 //				throw new Exception("指标转义异常：" + e.getLocalizedMessage());
-				response.getWriter().write("<script>alert('文件路径不存在，请检查文件路径');</script>");
+				String msg = e.getLocalizedMessage();
+				response.getWriter().write("<script>alert('"+msg+"');window.history.back();</script>");
 			}
 			return null;
 		}
