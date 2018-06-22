@@ -184,7 +184,7 @@ public class MetricPrivilegeServiceImpl extends SysBaseService<MetricPrivilegeDO
 				saveMetricData(MetricPrivilegeConstants.ROOT_NODE,pid,pName);
 			}
 			//solr增加指标 演示需要暂时不SOLR
-//			SolrUtils.addSolrInfo(pid, pName, SolrInfoConstants.INDEX_OBJ_TYPE, pName,"");
+			SolrUtils.addSolrInfo(pid, pName, SolrInfoConstants.INDEX_OBJ_TYPE, pName,"");
 			List<MetricBeanVO> mList = mtcBean.getMeasures();
 			if(null != mList && mList.size()>0){
 				//保存子节点指标数据
@@ -212,7 +212,7 @@ public class MetricPrivilegeServiceImpl extends SysBaseService<MetricPrivilegeDO
 				 saveMetricData(pid,id,name);
 			 }
 			 //演示需要暂时不SOLR
-//			SolrUtils.addSolrInfo(id, name, SolrInfoConstants.INDEX_OBJ_TYPE, name,"");
+			SolrUtils.addSolrInfo(id, name, SolrInfoConstants.INDEX_OBJ_TYPE, name,"");
 		}
 	}
 	/*
