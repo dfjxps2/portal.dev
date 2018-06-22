@@ -194,7 +194,7 @@ public class FileOperateUtils {
 		String downLoadPath = filePath;
 		File file = new File(downLoadPath);
 		if (!file.exists()) {
-			throw new Exception("附件路径不存在，请检查附件路径！");
+			throw new Exception("文件路径不存在，请检查文件路径！不存在文件路径是"+downLoadPath);
 		}
 		
 		// 取得文件名。
@@ -305,12 +305,12 @@ public class FileOperateUtils {
 		String[] names = { tFileName, aFileName };
 		File tFile = new File(tFilePath);
 		if (!tFile.exists()) {
-			throw new Exception("附件路径不存在，请检查附件路径！");
+			throw new Exception("文件路径不存在，请检查文件路径！不存在文件路径是"+tFilePath);
 		}
 		
 		File aFile = new File(aFilePath);
 		if (!aFile.exists()) {
-			throw new Exception("附件路径不存在，请检查附件路径！");
+			throw new Exception("文件路径不存在，请检查文件路径！不存在文件路径是"+aFilePath);
 		}
 		
 		
