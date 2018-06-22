@@ -357,7 +357,7 @@ font-size: 14px;
 			    	if (allMetric.length>0) {
 			        	$.ajax({
 			                 url:'${G.host}/monitor/saveSetting',
-			                 data:{metric_json:JSON.stringify(removeDis(allMetric))},
+			                 data:{metric_json:JSON.stringify(allMetric)},
 			                 type:'get',
 			                 success:function(res){
 			                	 if (res.code == '1') {
@@ -421,7 +421,7 @@ font-size: 14px;
 	            var n = layout[i];
 	            var s =  layout[i].no;
 	            str.push('<div class="grid-stack-item" data-gs-x="',n.x,'" data-gs-y="',n.y,'" data-gs-width="',n.width,'" data-gs-height="',n.height,'" data-gs-auto-position="true">');
-	            str.push('<div class="grid-stack-item-content qsection" ><div class="_qborder" style = "color:#9AFF9A">栏目',n.no,'</div><div id="', n.sid,'" class="_qbody" style = "height:100%"></div></div>');
+	            str.push('<div class="grid-stack-item-content qsection" ><div class="_qborder" style = "color:#9AFF9A;z-index:3;">栏目',n.no,'</div><div id="', n.sid,'" class="_qbody" style = "height:100%"></div></div>');
 	            str.push('</div>');
 	        }
 	        $("#box").html(str.join(''));

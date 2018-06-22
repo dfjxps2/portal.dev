@@ -132,9 +132,7 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
     
     public List<Map<String,Object>> mergeData(Map<String,Object> map,String type){
     	 List<Map<String,Object>> mconfigls = dao.selectPageMetricConfig(map);
-    	 System.out.println("mconfigls========================"+mconfigls.toString());
          List<Map<String,Object>> userMconfigls = dao.selectPageMetricUserConfig(map);
-         System.out.println("userMconfigls========================"+userMconfigls.toString());
          if (type.equals("show")&&userMconfigls.size()>0) {
 	         for (int i = 0; i < userMconfigls.size(); i++) {
 	        		 if (userMconfigls.get(i).get("param_id").toString().equals("9")&&userMconfigls.get(i).get("param_value").toString().equals("1")) {

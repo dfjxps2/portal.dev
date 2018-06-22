@@ -204,7 +204,6 @@ public class PageServiceImpl extends SysBaseService<PageDO> implements IPageServ
    	 SecMetricConfigDo con = null;
    	 Date now = DateTime.Now().getTime();
    	 int s = 0;
-   	 System.out.println("metric..........................."+metric);
    	 if (metric.size()>0) {
    		for (int j = 0; j < metric.size(); j++) {
    		 	String sec_id = getSecMetricId(metric.get(j).get("section_id").toString(),metric.get(j).get("metric_id").toString()).get(0).get("sec_metric_id").toString();

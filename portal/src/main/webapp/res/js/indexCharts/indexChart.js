@@ -743,14 +743,14 @@ function set_yAxis(yAxis,data,txtSize,divhei){
 				if (data.units[yy].unit == '%') {
 					yAxis[0].axisLabel.formatter = '{value} %';
 				}else if (data.units[yy].unit != '1') {
-					yAxis[0].name ='单位：' + data.units[yy].unit;
+					yAxis[0].name =data.units[yy].unit;
 					yAxis[0].nameTextStyle.fontSize =txtSize;
 				}
 			}else{
 				if (data.units[yy].unit == '%') {
 					yAxis[0].axisLabel.formatter = '{value} %';
 				}else if (data.units[yy].unit != '1') {
-					yAxis[1].name ='单位：' +  data.units[yy].unit;
+					yAxis[1].name =data.units[yy].unit;
 					yAxis[1].nameTextStyle.fontSize =txtSize;
 				}
 			}
@@ -758,7 +758,7 @@ function set_yAxis(yAxis,data,txtSize,divhei){
 			if (data.units[yy].unit == '%') {
 				yAxis[0].axisLabel.formatter = '{value} %';
 			}else if (data.units[yy].unit != '1') {
-				yAxis[0].name ='单位：' + data.units[yy].unit;
+				yAxis[0].name =data.units[yy].unit;
 				yAxis[0].nameTextStyle.fontSize =txtSize;
 			}
 		}
