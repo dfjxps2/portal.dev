@@ -145,29 +145,29 @@ function gosearch(){
 	if(is_search)
 		return ;
 	is_search = true;
+	if(!layer.values)
+        layer.values = {};
 	layer.open({
 		type: 2
-		,title: false //不显示标题栏
-		,area: ['780px', '600px']
+		,title: "信息搜索" //不显示标题栏
+		,area: ['780px', '500px']
 		,shade: 0
-		,skin:'addwin'
 		,maxmin: true
 		,content: _host+'/home/listinfo'
-		,btn: ['关闭']
 		,yes: function(index, layero){
-			layer.closeAll();
-		}
-		,btn2: function(){
-			layer.closeAll();
-		},end:function(){
-			is_search = false;
-		}
-		,zIndex: layer.zIndex
-		,success: function(layero){
-			layer.setTop(layero);
-		}
-	});
+            layer.closeAll();
+        }
+        ,btn2: function(){
+            layer.closeAll();
+        }
+        ,zIndex: layer.zIndex //重点1
+        ,success: function(layero){
+            layer.setTop(layero); //重点2
+        }
+    });
 }
+
+
 
 function adddel(){
 	var o = $(".apps:visible").find(".cell");
