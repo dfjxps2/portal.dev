@@ -152,7 +152,7 @@ a, img {
 
 								<div class="input-group" id="div_append">
 									<input name="keyword" class="form-control input-lg" type="text"
-										autocomplete="off" value="" id="keyword" style="width: 400px">
+									 value="" id="keyword" style="width: 400px">
 									<span class="arrowDown"></span> <span id="btn_span"
 										class="input-group-addon btn btn-primary">搜索</span>
 								</div>
@@ -208,7 +208,7 @@ a, img {
 						   }
 					   }},
 					
-					{ field: 'portal_doc_class', title: '信息类别', width: '10%' , formatter:function(value,row,index){
+					{ field: 'portal_doc_class', title: '信息类别', width: '20%' , formatter:function(value,row,index){
 						   var doc_class = '<span style="color:#9ACD32">其它</span>';  
 						   if (row.portal_doc_class=="1") {
 							   doc_class = '<span style="color:#9ACD32">指标</span>';  
@@ -222,7 +222,7 @@ a, img {
 						   return doc_class;
 					}},
 					
-					{ field: 'status', title: '查阅状态', width:'10%', formatter:function(value,row,index){
+					{ field: 'status', title: '查阅状态', width:'15%', formatter:function(value,row,index){
 						   var state = '<span style="color:#CFCFCF">未阅</span>';  
 						   if (row.status=="1") {
 							   state = '<span style="color:#9ACD32">已阅</span>';  
@@ -247,7 +247,7 @@ a, img {
                    }
 			   }
 		   });
-
+			
            if(RFlag==1){
                requery();
            }else{
@@ -284,7 +284,7 @@ a, img {
 					  msgID = data;
 				  }
 			  });
-			 var href = "${G.host}/mesManage/mesdetail?msg_id="+msgID;	
+			 var href = "${G.host}/mesManage/mesdetail?fg=i&msg_id="+msgID;	
 			 openInfoBox(href)
 		}
 		
