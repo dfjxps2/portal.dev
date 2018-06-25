@@ -23,9 +23,9 @@
 
 	<jaxws:endpoint id="intlDataSynchronizedService"
 		implementor="com.quick.portal.security.synchrodata.internal.DataSynchronizedWsdlImpl"
-		address="http://127.0.0.1:18001/portal/intlDataSynchronizedService" />
+		address="${portal.webservice}/portal/intlDataSynchronizedService" />
 	<jaxws:endpoint id="dataSynchronizedService"
 		implementor="com.quick.portal.security.synchrodata.bjcadata.DataSynchronizedServiceImpl"
-		address="http://127.0.0.1:18001/portal/dataSynchronizedService" />
+		address="${portal.webservice}/portal/dataSynchronizedService" />
 
 </beans>
