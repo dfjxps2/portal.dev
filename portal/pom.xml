@@ -416,6 +416,13 @@
                 <profiles.active>demo</profiles.active>
             </properties>
         </profile>
+        <!--泰豪演示环境-->
+        <profile>
+            <id>tellhow</id>
+            <properties>
+                <profiles.active>tellhow</profiles.active>
+            </properties>
+        </profile>
         <!--生产环境-->
         <profile>
             <id>pro</id>
