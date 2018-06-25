@@ -74,29 +74,27 @@
                                 </div>
                             </div>
 
-                            <div class="col-sm-6 form_ipt_botm"style="padding-left:19px;width:33%;">
+                            <div class="col-sm-6 form_ipt_botm"style="padding-left:15px;width:33%;">
                                 <div class="form-group">
-                                    <label class="col-xs-4 lable_top" style="width:26%;"><span></span>标签</label>
-                                    <div class="col-xs-8" style="padding-left:2px;width:73%;">
-                                        <div style="position:absolute;cursor:pointer;display:none;left:128px;z-index:999;padding-top:7px;" align="center"  class="input_clear">
+                                    <label class="col-xs-3 lable_top" style="width:28%;"><span></span>标签</label>
+                                    <div class="col-xs-9" style="padding-left:2px;width:78%;">
+                                        <div style="position:absolute;cursor:pointer;display:none;left:55%;z-index:999;padding-top:7px;" align="center"  class="input_clear">
                                             <button type="button" class="close" data-dismiss="modal" style="text-align: center" aria-hidden="true" >×</button>
                                         </div>
-                                        <div class="input-group" style="width:100%;">
-                                            <input type="text" style="width:100%;"  placeholder="标签" id="tag_text" readOnly="readOnly" class="form-control required"/>
-                                            <span class="input-group-btn"><button class="btn btn-default" type="button" id="anniu" onclick="chosebox('tag_text', '${G.serverUrl}/mespubtags','tagId');">...</button></span>
-                                        </div>
+                                        <input type="text"  placeholder="标签" id="tag_text" readOnly="readOnly" style="height:35px;width:70%;padding-right:0px;border:1px solid #cccccc;background:#f5f5f5;"  class=" required"/>
+                                        <input  class="button_normal pull-right" style="width:30%;padding:0px;" id="anniu" type="button" value="选择标签" onclick="chosebox('tag_text', '${G.serverUrl}/mespubtags','tagId');">
+                                    </div>
                                 </div>
-                            </div>
                             </div>
 
                             <li class="li_file"  >
                                 <div class="uploader white"style="width:25%;padding-left:18px;" >
-                                    <div style="position:absolute;cursor:pointer;display:none;left:172px;z-index:999;padding-top:7px;" align="center"  class="input_clear">
+                                    <div style="position:absolute;cursor:pointer;display:none;left:70%;z-index:999;padding-top:7px;" align="center"  class="input_clear">
                                         <button type="button" class="close" data-dismiss="modal" style="text-align: center" aria-hidden="true" >×</button>
                                     </div>
-                                    <input type="text" class="filename" id="file_box" name="msg_attachment" readonly="readonly" style="width:75%;">
+                                    <input type="text" class="filename" id="file_box" name="msg_attachment"  style="width:75%;">
                                     <input id="btn_select" type="button" name="file" class="button_normal" style="padding-left:1px; width:25%;" value="选择附件">　
-                                    <input id="upload" style="width:100%;" onchange="uploadFiles();"  type="file" name="file"  onmousedown="fileOnMouseDown()" onmouseup="fileOnMouseUp()" />
+                                    <input id="upload" style="width:25%;" onchange="uploadFiles();"  type="file" name="file"  onmousedown="fileOnMouseDown()" onmouseup="fileOnMouseUp()" />
                                 </div>
                             </li>
 
@@ -243,8 +241,6 @@
             async:false,
             dataType:"json",
             success:function (data) {
-
-
                 console.log(JSON.stringify(data));
                 $("#msg_class_id").append("<option selected hidden value=''>密级</option><option value= ''>密级</option>");
                 for(var i=0;i<data.length;i++){
@@ -256,33 +252,6 @@
     }
     SelectMsgCs();
 
-    //文本框删除按钮
-    //当通过鼠标点击选中元素或通过 tab 键定位到元素时，该元素就会获得焦点
-    $("input").focus(function () {
-        $(this).parents(".col-xs-8").children(".input_clear").show();
-        $(this).parent().children(".input_clear").show();
-    });
-    //当元素失去焦点时发生 blur 事件。
-    $("input").blur(function(){
-        if($(this).val()=='')
-        {
-            $(this).parents(".col-xs-8").children(".input_clear").hide();
-            $(this).parent().children(".input_clear").hide();
-        }
-    });
-    $(".input_clear").click(function(){
-        var tag=  $(this).parents(".col-xs-8").find('input[id=tag_text]').val();
-        var file=  $(this).parent().find('input[id=upload]').val();
-        if(tag){
-            $("#tag_text").val(null);
-        }
-
-        if(file){
-            $("#upload").val(null);
-            $("#file_box").val(null);
-        }
-        $(this).hide();
-    });
 
     $(document).ready(function () {
         $("#pubform").validate({
@@ -392,5 +361,34 @@
         var url = quick.serverUrl+"/list";
         window.location.href = url;
     }
+
+    //文本框删除按钮
+    //当通过鼠标点击选中元素或通过 tab 键定位到元素时，该元素就会获得焦点
+    $("input").focus(function () {
+        $(this).parents(".col-xs-9").children(".input_clear").show();
+        $(this).parent().children(".input_clear").show();
+    });
+    //当元素失去焦点时发生 blur 事件。
+    $("input").blur(function(){
+        if($(this).val()=='')
+        {
+            $(this).parents(".col-xs-9").children(".input_clear").hide();
+            $(this).parent().children(".input_clear").hide();
+        }
+    });
+    $(".input_clear").click(function(){
+        var tag=  $(this).parents(".col-xs-9").find('input[id=tag_text]').val();
+        var file=  $(this).parent().find('input[id=upload]').val();
+        var filename=  $(this).parent().find('input[id=file_box]').val();
+        if(tag){
+            $("#tag_text").val(null);
+        }
+
+        if(file || filename){
+            $("#upload").val(null);
+            $("#file_box").val(null);
+        }
+        $(this).hide();
+    });
 </script>
 </html>
