@@ -350,12 +350,13 @@ public class FileOperateUtils {
 		zout.close();
 
 		response.setContentType("text/html;charset=UTF-8");
+		
 		request.setCharacterEncoding("UTF-8");
 		FileInputStream zipInput = new FileInputStream(zipPath);
 		OutputStream out = response.getOutputStream();
 		response.setContentType("application/octet-stream");
-		response.setHeader("Content-Disposition", "attachment; filename="
-				+ outFileName);
+		response.setHeader("Content-disposition", "attachment; filename="
+				+ new String(outFileName.getBytes("utf-8"), "ISO8859-1"));
 		while ((len = zipInput.read(buf)) != -1) {
 			out.write(buf, 0, len);
 		}

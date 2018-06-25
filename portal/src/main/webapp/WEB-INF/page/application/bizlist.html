@@ -40,6 +40,7 @@
 		   ],onCheck:function(row,$e) {
 			   queryPage(row.app_id, row.app_name);
 		   },onUncheck:function(row,$e) {
+			   _appid = '';
 			   $("#plist").bootstrapTable("destroy");
 		   },onPageChange:function(number, size){
 				$("#IDS_PAGESIZE").val(size);
@@ -237,7 +238,7 @@
 					  <div id="d2" style="float:right;width:37%;">
 						  <div id="formSearch1" class="form-inline" style="height:36px;">
 							  <div class="form-group" style="width:100px;float:right;">
-								  <button type="button" class="btn btn-primary" onclick="location.href='${G.host}/page/edit?app_id='+_appid;"> 新增页面</button>
+								  <button type="button" class="btn btn-primary" onclick="add_page(_appid);"> 新增页面</button>
 							  </div>
 						  </div>
 						  <table id="plist" class="table-striped" style="table-layout:fixed"></table>

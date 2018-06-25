@@ -243,8 +243,23 @@ public class InfoMngServiceImpl extends SysBaseService<InfoMngDO> implements IIn
 		String retStr = InfoMngUtils.formatPersonalHabitsInfo2String(personalDataList,hotDataList);
 		return retStr;
 	}
+
+
+
+
+	@Override
+	public String getMsgIDByID(String uid) {
+		// TODO Auto-generated method stub
+		String msgID = "0";
+		List<Map<String, Object>> msgList = dao.getMsgIDByID(uid);
+		if(null != msgList && msgList.size()>0){
+			Map<String, Object> mp = msgList.get(0);
+			msgID = mp.get("MSG_ID").toString();
+		}
+		return msgID;
+	}
 	
-	
+
 	
 	
 }
