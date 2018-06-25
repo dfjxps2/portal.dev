@@ -193,20 +193,7 @@
     </filter-mapping>
 
     <!-- CAS融合 配置 End -->
-    <!--
-    <filter-mapping>
-        <filter-name>SessionValidFilter</filter-name>
-        <url-pattern>*.html</url-pattern>
-    </filter-mapping>
-    <filter-mapping>
-        <filter-name>SessionValidFilter</filter-name>
-        <url-pattern>*.do</url-pattern>
-    </filter-mapping>
-    <filter-mapping>
-        <filter-name>SessionValidFilter</filter-name>
-        <url-pattern>/page/*</url-pattern>
-    </filter-mapping>
-    -->
+
     <servlet>    
         <description>Apache CXF Endpoint</description>    
         <display-name>cxfService</display-name>    
