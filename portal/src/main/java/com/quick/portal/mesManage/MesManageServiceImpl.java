@@ -614,13 +614,13 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
             msgapprstate="审核通过";
         }
         String msgappr = "审核状态："+ msgapprstate;
-        String secondrow = "     "+currenttime+"     "+msgsource+"           "+msgclass+"       "+msgappr;
+        String secondrow = "       "+currenttime+"     "+msgsource+"           "+msgclass+"       "+msgappr;
         StringBuffer buffer = new StringBuffer();
-        buffer.append(mesManageDO.getMsg_title());
+        buffer.append("                                   "+mesManageDO.getMsg_title());
         buffer.append(System.getProperty("line.separator"));
         buffer.append(secondrow);
         buffer.append(System.getProperty("line.separator"));
-        buffer.append(mesManageDO.getMsg_digest());
+        buffer.append("    摘要："+mesManageDO.getMsg_digest());
         buffer.append(System.getProperty("line.separator"));
         buffer.append(mesManageDO.getMsgcontent());
         fos = new FileOutputStream(file);
