@@ -156,7 +156,9 @@ function gosearch(){
 		,content: _host+'/home/listinfo'
 		,yes: function(index, layero){
             layer.closeAll();
-        }
+        },end:function(){
+			is_search = false;
+		}
         ,btn2: function(){
             layer.closeAll();
         }
