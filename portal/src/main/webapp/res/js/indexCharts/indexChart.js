@@ -1051,8 +1051,7 @@ function add_table(data,name,dimension){
 	}
 	times.sort(compare);
 	var width = 90/(times.length+1);
-	var str = '<p style="width:100%;text-align:center;font-size:15px;color:#fff;margin-top:2%;">'+name+'</p>'+
-		'<table style="border:1px solid #00FFFF;margin-left:5%;width:90%;margin-top:1%;margin-bottom:4%;">'+
+	var str = '<table id = "f_table" style="border:1px solid #00FFFF;margin-left:2%;margin-top:3%;margin-bottom:4%;">'+
 		'<tr style = "height:33px;border:2px solid #00FFFF;">'+
 		'<td style="width:'+width+'%;border:1px solid #00FFFF;text-align:center;color:#00FFFF;font-size:16px;">对象</td>';
 	for (var a = 0; a < times.length; a++) {
@@ -1239,7 +1238,7 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 			}
 		}else{
 			if (divwid>divhei) {
-				str='<div id = "'+div1+'"  style="width: 49%;height:99.5%;float: left;">'+
+				str='<div id = "'+div1+'"  style="width: 50%;height:99.5%;float: left;">'+
 				'</div>'+
 				'<div id = "'+div2+'div" style="width: 50%;height:99.5%;float: left;">'+
 				'</div>';
@@ -1312,7 +1311,9 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 				if (pieData[j].type=='pie') {
 					pie_echart(pieData[j].value,pieData[j].name,ids,pieData[j].time,pieData[j].unit);
 				}else if (pieData[j].type=='table'){
-					var tables=window.document.getElementById(ids);
+					ps(ids,pieData[j].name);
+					var ida1 = 'd'+ids;
+					var tables=window.document.getElementById(ida1);
 					tables.innerHTML = pieData[j].value;
 				}else if (pieData[j].type=='gauge'){
 					gauge(pieData[j].value,pieData[j].name,ids,pieData[j].dimension,pieData[j].time_dim,pieData[j].time,pieData[j].unit);
@@ -1322,7 +1323,9 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 			if (pieData[0].type=='pie') {
 				pie_echart(pieData[0].value,pieData[0].name,divs,pieData[0].time,pieData[0].unit);
 			}else if (pieData[0].type=='table'){
-				var table1=window.document.getElementById(divs);
+				ps(divs,pieData[0].name);
+				var ida2 = 'd'+divs;
+				var table1=window.document.getElementById(ida2);
 				table1.innerHTML = pieData[0].value;
 			}else if (pieData[0].type=='gauge'){
 				gauge(pieData[0].value,pieData[0].name,divs,pieData[0].dimension,pieData[0].time_dim,pieData[0].time,pieData[0].unit);
@@ -1390,7 +1393,9 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 					if (pieData[j].type=='pie') {
 						pie_echart(pieData[j].value,pieData[j].name,ids2,pieData[j].time,pieData[j].unit);
 					}else if (pieData[j].type=='table'){
-						var tables=window.document.getElementById(ids2);
+						ps(ids2,pieData[j].name);
+						var ida3 = 'd'+ids2;
+						var tables=window.document.getElementById(ida3);
 						tables.innerHTML = pieData[j].value;
 					}else if (pieData[j].type=='gauge'){
 						gauge(pieData[j].value,pieData[j].name,ids2,pieData[j].dimension,pieData[j].time_dim,pieData[j].time,pieData[j].unit);
@@ -1403,7 +1408,9 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 				if (pieData[0].type=='pie') {
 					pie_echart(pieData[0].value,pieData[0].name,div3,pieData[0].time,pieData[0].unit);
 				}else if (pieData[0].type=='table'){
-					var table1=window.document.getElementById(div3);
+					ps(div3,pieData[0].name);
+					var ida4 = 'd'+div3;
+					var table1=window.document.getElementById(ida4);
 					table1.innerHTML = pieData[0].value;
 				}else if (pieData[0].type=='gauge'){
 					gauge(pieData[0].value,pieData[0].name,div3,pieData[0].dimension,pieData[0].time_dim,pieData[0].time,pieData[0].unit);
@@ -1473,6 +1480,32 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 				bar_echart(barData[0],name,div3);
 			}
 		}
+	}
+	var idf = '#qsection_'+id;
+	$(idf).css('overflow','hidden');
+	$('.ps__thumb-y').css('display','none');
+}
+
+function ps(id,name) {
+	var op1 = document.getElementById(id);
+	var op2 = document.getElementById('f_table');
+	var wid1= op1.offsetWidth; //宽度
+	var wid2= op1.offsetWidth; //宽度
+	var str = "";
+	var tables=window.document.getElementById(id);
+	var idd = 'd'+id;
+	var idds = 'dd'+id;
+	str = '<div id = "'+idds+'" style = "width:'+wid1+'px;height:100%;margin-top:2%">'+
+	'<div style = "text-align:center;color:#FFF;font-size:16px;">'+name+'</div>'+
+	'<div id = "'+idd+'" class = "innerbox" style = "width:'+wid1+'px;height:90%;position: absolute;">'+
+	'</div></div>';
+	tables.innerHTML = str;
+	var ids = "#"+idd;
+	new PerfectScrollbar(ids);
+	var idss = ids+' .ps__rail-x';
+	$(idss).css('display','none');
+	if (wid1<wid2) {
+		$(idss).css('display','');	
 	}
 }
 

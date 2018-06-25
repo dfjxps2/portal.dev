@@ -4,6 +4,7 @@
 	<#include "/WEB-INF/include/resedit.html" />
     <link href="${G.host}/res/script/home/gridstack.min.css" rel="stylesheet" type="text/css" />
 	<link href="${G.host}/upload/pageTemplate/t1/style.css" rel="stylesheet" type="text/css" />
+	<link href="${G.host}/res/js/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet" type="text/css" />
     <script src="${G.host}/res/js/jquery-ui.min.js" type="text/javascript"></script>
     <script src="${G.host}/res/script/home/lodash.min.js" type="text/javascript"></script>
     <script src="${G.host}/res/script/home/knockout.min.js" type="text/javascript"></script>
@@ -11,6 +12,7 @@
     <script src="${G.host}/res/js/echarts/echarts.js"></script>
 	<script src="${G.host}/res/js/indexCharts/indexChart.js"></script>
 	<script src="${G.host}/res/js/My97DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript" src="${G.host}/res/js/perfect-scrollbar/js/perfect-scrollbar.min.js" charset="utf-8"></script>
 </head>
 <script>
 
@@ -186,7 +188,7 @@ var name = "";
 					h = xh;
 			});
 			if(h>12) h = 12;
-			return $(window).height() /h*0.97 - 20;
+			return $(window).height() /h*0.93 - 20;
 		}
     }
 
