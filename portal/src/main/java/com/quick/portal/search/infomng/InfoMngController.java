@@ -179,8 +179,9 @@ public class InfoMngController extends SysBaseController<InfoMngDO> {
 					FileOperateUtils.download(request, response, filePath);
 				}
 			} catch (Exception e) {
-//				throw new Exception("指标转义异常：" + e.getLocalizedMessage());
 				String msg = e.getLocalizedMessage();
+//				String resultStr = "<script>message('"+msg+"');</script>";
+//				response.getWriter().write(resultStr);
 				response.getWriter().write("<script>alert('"+msg+"');window.history.back();</script>");
 			}
 			return null;

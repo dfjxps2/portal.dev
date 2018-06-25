@@ -345,13 +345,14 @@ public class FileOperateUtils {
 				zout.write(buf, 0, len);
 			}
 			zout.closeEntry();
+			zout.setEncoding("gbk");
+//			zout.setEncoding("UTF-8");
 			in.close();
 		}
 		zout.close();
-
 		response.setContentType("text/html;charset=UTF-8");
-		
 		request.setCharacterEncoding("UTF-8");
+		
 		FileInputStream zipInput = new FileInputStream(zipPath);
 		OutputStream out = response.getOutputStream();
 		response.setContentType("application/octet-stream");
