@@ -2,6 +2,7 @@
 <html>
 <head>
 	<#include "/WEB-INF/include/resedit.html" />
+	<title>个性化配置</title>
    <link href="${G.host}/res/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 	<link href="${G.host}/res/css/animate.min.css" rel="stylesheet">
 	<link href="${G.host}/res/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
@@ -41,7 +42,7 @@ font-size: 14px;
         <div class="col-sm-9">
             <div class="container-fluid lbox" style="min-height:360px;width:99%;">
                 <div class="lbox-title">
-                    <div style="float:left;width: 100%;text-align: center;"><h3 id = "p_name" style="color:#fff;text-align: center;"></h3></div>
+                    <div style="float:left;width: 100%;text-align: center;"><h3 id = "p_name" style="color:#333333;text-align: center;"></h3></div>
                 </div>
                  <div class="col-sm-12" style = "padding-right: 0px;">
 		            <div class="container-fluid qmain ">
@@ -441,7 +442,7 @@ font-size: 14px;
 	            var n = layout[i];
 	            var s =  layout[i].no;
 	            str.push('<div class="grid-stack-item" data-gs-x="',n.x,'" data-gs-y="',n.y,'" data-gs-width="',n.width,'" data-gs-height="',n.height,'" data-gs-auto-position="true">');
-	            str.push('<div class="grid-stack-item-content qsection" ><div class="_qborder"><p  style = "color:#9AFF9A;z-index:3;">栏目',n.no,'</p></div><div id="', n.sid,'" class="_qbody" style = "height:100%"></div></div>');
+	            str.push('<div class="grid-stack-item-content qsection" ><div class="_qborder"><p  style = "color:#333333;z-index:3;margin-left:8px;margin-top:3px">栏目',n.no,'</p></div><div id="', n.sid,'" class="_qbody" style = "height:100%"></div></div>');
 	            str.push('</div>');
 	        }
 	        $("#box").html(str.join(''));
@@ -460,6 +461,8 @@ font-size: 14px;
 	            if(h>12) h = 12;
 	            return ($(window).height() - 68) / h*0.8 - 20;
 	        }
+	        $('.qsection').css('overflow','hidden');
+	    	$('.ps__thumb-y').css('display','none');
 	    }
     
     //获取需要查询的指标

@@ -2,6 +2,7 @@
 <html>
 <head>
 	<#include "/WEB-INF/include/resedit.html" />
+	<title>预览</title>
     <link href="${G.host}/res/script/home/gridstack.min.css" rel="stylesheet" type="text/css" />
 	<link href="${G.host}/upload/pageTemplate/t1/style.css" rel="stylesheet" type="text/css" />
 	<link href="${G.host}/res/js/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet" type="text/css" />
@@ -21,14 +22,14 @@ var name = "";
 <body class="qbody">
 <div class="wrapper wrapper-content animated fadeInRight qpage">
 	<div class="row">
-		<div class="col-sm-12" style="color: #fff">
-			<div id = "date_div" style = "display: none">
-				<input id="submit-form" type="button"  value="查询" onclick="getByTime();"  style="float: right;margin-right: 50px;background-color: #337ab7;border: 1px solid #97FFFF;height:24px;">
-			   	 <input class="input_date time1" id="enddate" name="enddate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyy'})" readonly="readonly" style="background-color: transparent;float: right;margin-right: 20px;width:85px;border: 1px solid #97FFFF;text-align: center;display: none"/>
-			   	 <input class="input_date time2" id="enddate1" name="enddate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyyMM'})" readonly="readonly" style="background-color: transparent;float: right;margin-right: 20px;width:85px;border: 1px solid #97FFFF;text-align: center;display: none"/>
+		<div class="col-sm-12"  style="height:25px">
+    		<div id = "date_div" style = "color:#999999;display: none;">
+				<input id="submit-form" type="button"  value="查询" onclick="getByTime();"  style="float: right;margin-right: 50px;background-color: #2ca4b0;border:1px solid #2ca4b0;height:24px;color:#fff">
+			   	 <input class="input_date time1" id="enddate" name="enddate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyy'})" readonly="readonly" style="background-color: transparent;float: right;margin-right: 20px;width:85px;border: 1px solid #d2d2d2;text-align: center;display: none"/>
+			   	 <input class="input_date time2" id="enddate" name="enddate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyyMM'})" readonly="readonly" style="background-color: transparent;float: right;margin-right: 20px;width:85px;border: 1px solid #d2d2d2;text-align: center;display: none"/>
 			     <label style="float: right;margin-right: 10px;">结束时间</label>
-			     <input class="input_date time1" id="statedate" name="statedate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyy'})" readonly="readonly" style="background-color: transparent;float: right;margin-right:20px;width:85px;border: 1px solid #97FFFF;text-align: center;display: none"/>
-			     <input class="input_date time2" id="statedate1" name="statedate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyyMM'})" readonly="readonly" style="background-color: transparent;float: right;margin-right:20px;width:85px;border: 1px solid #97FFFF;text-align: center;display: none"/>
+			     <input class="input_date time1" id="statedate" name="statedate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyy'})" readonly="readonly" style="background-color: transparent;float: right;margin-right:20px;width:85px;border: 1px solid #d2d2d2;text-align: center;display: none"/>
+			     <input class="input_date time2" id="statedate" name="statedate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyyMM'})" readonly="readonly" style="background-color: transparent;float: right;margin-right:20px;width:85px;border: 1px solid #d2d2d2;text-align: center;display: none"/>
 			     <label style="float: right;margin-right: 10px;">开始时间</label>
 	    	</div>
         </div>
@@ -190,6 +191,8 @@ var name = "";
 			if(h>12) h = 12;
 			return $(window).height() /h*0.93 - 20;
 		}
+		$('.qsection').css('overflow','hidden');
+    	$('.ps__thumb-y').css('display','none');
     }
 
     function find_sec(no){
@@ -215,10 +218,10 @@ var name = "";
     	if (id_s!='') {
     		if (id_s == id) {
     			id_s = ''
-    				$(id).css('border-color','#17397f');
+    				$(id).css('border-color','#fff');
     				$("#date_div").css('display','none');
 			}else {
-				$(id_s).css('border-color','#17397f');
+				$(id_s).css('border-color','#fff');
 				id_s = id;
 				$(id).css('border-color','#09a5ab');
 				$("#date_div").css('display','');
