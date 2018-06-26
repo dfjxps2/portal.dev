@@ -498,7 +498,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         try {
             //表头
             MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-            List<Object> header=Arrays.asList("参数值01","参数值02","参数值03","参数值04","参数值05","参数值06");
+            List<Object> header=Arrays.asList("参数值:");
             InputStream in = null;
             List<Map<String,Object>> listob = null;
             MultipartFile file = multipartRequest.getFile("file");
@@ -558,7 +558,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
                 rowthr.createCell(1).setCellValue(paramName);
                 Row row = sheet.createRow(3);
                 Cell cel = row.createCell(0);
-                String value = "参数值：";
+                String value = "规则参数值：";
                 cel.setCellValue(value);
 
                 String[] data =map.get("paramvalue").toString().split(",");
@@ -566,7 +566,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
                 int n = 0;
                 while(n<=data.length-1){
                     row = sheet.createRow(index);
-                    for(int m=0;m<15;m++){
+                    for(int m=0;m<10;m++){
                         Cell cell = row.createCell(m);
                         if (data[0]!=null && !"".equals(data[0]) && n<data.length ){
                             cell.setCellValue(data[n]);
