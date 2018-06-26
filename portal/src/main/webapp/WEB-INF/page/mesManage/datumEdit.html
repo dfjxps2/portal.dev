@@ -69,8 +69,8 @@
                             </div>
 
                             <li class="li_file" style="width: 100%;"  >
-                                <div class="uploader white" style="padding-left:50px;padding-top:25px;height:60px;width:55%;" >
-                                    <div style="position:absolute;cursor:pointer;display:none;left:85%;z-index:999;padding-top:7px;" align="center"  class="input_clear">
+                                <div class="uploader white" style="padding-left:50px;padding-top:25px;height:65px;width:65%;" >
+                                    <div style="position:absolute;cursor:pointer;display:none;left:71%;z-index:999;padding-top:7px;" align="center"  class="input_clear">
                                         <button type="button" class="close" data-dismiss="modal" style="text-align: center" aria-hidden="true" >×</button>
                                     </div>
                                     <label class="col-xs-3 lable_top" style="width:114px;padding-left:0px;"><span class="span_require">*</span>资料文件</label>
@@ -128,8 +128,37 @@
             },
             rules: {
                 keywords: {
+                    required:true,
                     keyword:true
                 } ,
+                file:{
+                    required:true,
+                    remote:{
+                        url:quick.serverUrl+"/checkUpDatum",
+                        dataType:"json",
+                        type:"post",
+                        data:{
+                            msg_content:function(){
+                                return $("#msg_content").val();
+                            }
+                        },
+                        dataFilter:function (data,type) {
+                            if ( data =="false") {
+                                return false;
+                            }else{
+                                return true;
+                            }
+                        }
+                    },
+                }
+            },
+            messages:{
+                file:{
+                    remote:"存在同名的资料，请您检查后再上传！"
+                },
+                keywords:{
+                    remote:" "
+                }
             }
         });
         var mode = $.request.queryString["mode"];
@@ -175,11 +204,6 @@
             return;
         }
         $("#errorMsg").html("").hide();
-        if (file.size > 1024 * 1024 * 5) {
-            $("#errorMsg").html("文件超过5M，请重新上传").show();
-            $("#fat-btn").attr("disabled", "true");
-            return;
-        }
         var uploadValue = $("#upload").val();
         if (uploadValue != "" && uploadValue != null) {
             $(".btn").click(function () {

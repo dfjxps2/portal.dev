@@ -78,7 +78,7 @@
                success:function (data) {
                    $("#paramValue").empty();
                    console.log(JSON.stringify(data));
-                   if(data!=null&&data.length>0) {
+                   if(data!=null && data.length>0) {
                        $.each(data, function (i, item) {
                            $("#paramValue").append(
                                "<input id=\"param"+ item.param_id+"\" title=\"params\" class=\"ck_qx\" type=\"checkbox\" name=\"paramvalue\" value=\"" +  item.param_id+ "\" >"+"&nbsp;"+ "<label for=" + item.param_id + ">" + item.param_value +"</label>"+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
