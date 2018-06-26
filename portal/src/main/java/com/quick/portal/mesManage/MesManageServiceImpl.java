@@ -142,11 +142,13 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
             List<Map<String,Object>> rules=  mesManageDao.selectRules(map);
         String attach = mesManageDO.getMsg_attachment();
         int lab = 0;
+        String content = combinFile(fa,mesManageDO);
+        String type = SolrInfoConstants.MSG_OBJ_TYPE;
             if(rules.size()>0){
-                String content = combinFile(fa,mesManageDO);
-                String type = SolrInfoConstants.MSG_OBJ_TYPE;
                 SolrUtils.addSolrInfo(id,content,type,title,attach);
                 lab = autoFilter(rules,id);
+            }else {
+                SolrUtils.addSolrInfo(id,content,type,title,attach);
             }
             if(lab ==1){
                 deleteFile(id);
@@ -226,9 +228,6 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
             String attName = file.getOriginalFilename(); //附件文件名
             fa = createFile(path+"attachment/",attName);
             file.transferTo(fa);
-//            if (attName != null && !attName.equals("")) {
-//                title = attName.split("\\.")[0];
-//            }
             map.put("msg_attachment",path+"attachment/"+attName);
         }else if(newattachment!= null && !newattachment.equals(" ") && !"null".equals(newattachment)){
             fa = new File(msg_attachment);
@@ -261,11 +260,13 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
         }
         Map<String,Object> mapone = new HashMap<>();
         List<Map<String,Object>> rules=  mesManageDao.selectRules(mapone);
+        String type = SolrInfoConstants.MSG_OBJ_TYPE;
+        String content = combinFile(fa,mesManageDO);
         if(rules.size()>0){
-            String type = SolrInfoConstants.MSG_OBJ_TYPE;
-            String content = combinFile(fa,mesManageDO);
             SolrUtils.addSolrInfo(id,content,type,title,attach);
             lab  = autoFilter(rules,id);
+        }else {
+            SolrUtils.addSolrInfo(id,content,type,title,attach);
         }
         if(lab ==1){
             deleteFile(id);
@@ -645,7 +646,7 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
         }else{
             nei = "";
         }
-        String content = mesManageDO.getMsg_title()+  mesManageDO.getMsg_digest()+mesManageDO.getMsgcontent()+nei;
+        String content = mesManageDO.getMsg_title()+  mesManageDO.getMsg_digest()+mesManageDO.getMsgcontent()+nei+mesManageDO.getTag_text();
         return content;
     }
 

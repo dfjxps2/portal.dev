@@ -205,7 +205,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
    }
 
    //发布内容
-   @RequestMapping(value="addMes",method={RequestMethod.GET,RequestMethod.POST})
+   @RequestMapping(value="addMes")
    @ResponseBody
    public void publishMes(MesManageDO mesManageDO,String[] tagId,HttpServletRequest request,HttpServletResponse response,boolean MERGE) throws Exception {
       mesManageService.publishMes(mesManageDO,tagId,request,response,MERGE);
@@ -219,14 +219,14 @@ public class MesManageController extends SysBaseController<MesManageDO> {
     }
 
     //内容管理-修改
-    @RequestMapping(value="editMes",method={RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value="editMes")
     @ResponseBody
     public void editMes(MesManageDO mesManageDO,String[] tagId,HttpServletRequest request,HttpServletResponse response,boolean MERGE) throws Exception {
       mesManageService.editMes(mesManageDO,tagId,request,response,MERGE);
     }
 
     //内容管理修改-获得初始数据
-    @RequestMapping(value = "/getEditMes", method= RequestMethod.POST)
+    @RequestMapping(value = "/getEditMes")
     @ResponseBody
     public Map<String,Object> getEditMes() throws Exception {
         String msgId = QRequest.getString(request,"msg_id");
@@ -520,7 +520,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
     }
 
     //新增规则参数数据上传
-    @RequestMapping(value = "uploadRules",method={RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value = "uploadRules")
     @ResponseBody
     public DataStore saveRuleValues(HttpServletRequest request, HttpServletResponse response, boolean MERGE){
         try {
@@ -965,7 +965,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
     }
 
 
-    @RequestMapping(value = "/getTagObj", method= RequestMethod.POST)
+    @RequestMapping(value = "/getTagObj")
     @ResponseBody
     public Map<String,Object> getTagObj() throws Exception {
 
@@ -977,7 +977,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
     }
 
     //
-    @RequestMapping(value = "/getEditTag", method= RequestMethod.POST)
+    @RequestMapping(value = "/getEditTag")
     @ResponseBody
     public Map<String,Object> editTagType() throws Exception {
 
@@ -1248,13 +1248,13 @@ public class MesManageController extends SysBaseController<MesManageDO> {
     }
 
     //新增资料
-    @RequestMapping(value="addData",method={RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value="addData")
     @ResponseBody
     public void addDatum(MesManageDO mesManageDO,String keywords,HttpServletRequest request,HttpServletResponse response,boolean MERGE) throws IOException, TikaException, SAXException {
        mesManageService.addDatum(mesManageDO,keywords,request,response,MERGE);
     }
     //编辑资料-获取编辑对象的数据
-    @RequestMapping(value = "/getEditDatum", method= RequestMethod.POST)
+    @RequestMapping(value = "/getEditDatum")
     @ResponseBody
     public Map<String,Object> getEditDatum() throws Exception {
         String msgId = QRequest.getString(request,"msg_id");
@@ -1272,7 +1272,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         return a;
     }
 
-    @RequestMapping(value = "/editSubClassData", method= RequestMethod.POST)
+    @RequestMapping(value = "/editSubClassData")
     @ResponseBody
     public Map<String,Object> editSubClassData() throws Exception {
         String msgTyId = QRequest.getString(request,"msg_type_id");
@@ -1286,7 +1286,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
 
 
     //资料编辑
-    @RequestMapping(value="editDatum",method={RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value="editDatum")
     @ResponseBody
     public void editDatum(MesManageDO mesManageDO,String keywords,HttpServletRequest request,HttpServletResponse response,boolean MERGE) throws Exception {
        mesManageService.editDatum(mesManageDO,keywords,request,response,MERGE);
