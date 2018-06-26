@@ -61,7 +61,7 @@
         	document.getElementById("btn_cancel").style.display="none"; 
         }
         if (sysid) {
-            $('#pagename').html("内容管理详细");
+            $('#pagename').html("内容详细");
             $("input,textarea").attr("placeholder", "");
             $(".hidefield").show();
             $.post(quick.serverUrl + '/getMsgDetail?msg_id=' + sysid + "&i=" + Math.random(), function (data) {
@@ -77,7 +77,7 @@
         }
     };
     function cancel(){
-        var url = quick.serverUrl+"/list";
+        var url = quick.serverUrl+"/mesappr";
         window.location.href = url;
     }
     function downAttachement() {

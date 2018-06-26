@@ -77,8 +77,8 @@
 
                             <div class="col-sm-6 form_ipt_botm"style="padding-left:15px;width:33%;">
                                 <div class="form-group">
-                                    <label class="col-xs-3 lable_top" style="width:28%;"><span class="span_require">*</span>标签</label>
-                                    <div class="col-xs-9" style="padding-left:2px;width:80%;">
+                                    <label class="col-xs-3 lable_top" style="width:25%;padding-right:2px;"><span class="span_require">*</span>标签</label>
+                                    <div class="col-xs-9" style="padding-left:5px;width:80%;">
                                         <div style="position:absolute;cursor:pointer;display:none;left:55%;z-index:999;padding-top:7px;" align="center"  class="input_clear">
                                             <button type="button" class="close" data-dismiss="modal" style="text-align: center" aria-hidden="true" >×</button>
                                         </div>
@@ -112,6 +112,7 @@
                                     <input id="fat-btn"  class=" btn btn-primary"  type="button" onclick="formCommit()" value="上传"/>
                                     <input  id="reset" type="button" class=" btn btn-primary"  value="重置">
                                     <input type="hidden" id="tagId" name="tagId" class="form-control" />
+                                    <input type="hidden" id="tag" name="tag_text" class="form-control" />
                                     <input type="hidden" id="msg_content" name="msg_content" class="form-control" />
                                     <input type="hidden" id="msg_attachment" name="msg_attachment" class="form-control" />
                                     <input type="hidden" id="pub_user_id" name="pub_user_id" class="form-control" />
@@ -230,6 +231,7 @@
                     return;
                 }
                 if(id){
+                    $("#tag").val(iframeWin._chosenName);
                     $("#"+nid).val(iframeWin._chosenName);
                     $("#"+id).val(iframeWin._chosenAllId);
                 }
