@@ -65,7 +65,11 @@
             $("input,textarea").attr("placeholder", "");
             $(".hidefield").show();
             $.post(quick.serverUrl + '/getMsgDetail?msg_id=' + sysid + "&i=" + Math.random(), function (data) {
-                setForm(data);
+                if(data.flag == "0"){
+                	  layer.msg(data.msg,{icon:1,time: 2000,skin: 'layer-ext-moon'}); 
+    				  return ;
+                }
+            	setForm(data);
                 if (mode == "browse") {
                     viewRead();
                 }
