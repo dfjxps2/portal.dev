@@ -151,7 +151,7 @@
                     $(".no-records-found td").html('您还没有添加相关信息，请点击<a onclick=quick.serverUrl+"/mesappr" href="javascript:void(0);">返回</a>');
                 }
             },onClickCell:function (field,value,row,e) {
-                if(value.length > 8){
+                if( value.length >8 && field != "msg_title"){
                     var data = "<div align='center' style='margin-top:15px;'>"+"<p style='font-size:16px;color:#0d509a'>"+value+"</p>"+"</div>";
                     layer.open({
                         type: 1//此处以iframe举例
