@@ -284,6 +284,10 @@ a, img {
 					  msgID = data;
 				  }
 			  });
+			 if(msgID == "0"){
+				  layer.msg('信息编号不存在,请查询信息链接是否正确!',{icon:1,time: 1000,skin: 'layer-ext-moon'}); 
+				  return ;
+			  }
 			 var href = "${G.host}/mesManage/mesdetail?fg=i&msg_id="+msgID;	
 			 openInfoBox(href)
 		}
