@@ -210,7 +210,8 @@ function dataType(data,typeData,stateTime,endTime){
 				} else if (typeData[j].charts!="line"&&typeData[j].charts!="bar") {
 					if (typeData[j].charts=="table") {
 						tmp = {};
-						tmp.value = add_table(data[i].measures,data[i].measure_name,typeData[j].dimension,stateTime,endTime);
+						tmp.value = data[i].measures;
+							//add_table(data[i].measures,data[i].measure_name,typeData[j].dimension,stateTime,endTime);
 						tmp.name = data[i].measure_name;
 						tmp.type = 'table';
 						tmp.dimension = typeData[j].dimension;
@@ -1027,19 +1028,12 @@ function bar_echart(data,name,id){
 	 myChart.setOption (option);
 }
 
-//生成表格方法
-function add_table(data,name,dimension){
-	//data = setData(data, dimension);/
+function getT(data){
 	var times = [];
-	var names = [];
 	for (var i = 0; i < data.length; i++) {
-		if (data[0].month_id == data[i].month_id) {
-			names.push(data[i].object_name);	
-		}
 		times.push(data[i].month_id);
 	}
 	times = onlyData(times);
-	//对日期进行降序排序
 	var compare = function (x, y) {//降序排序
 		 if (x < y) {
 		        return 1;
@@ -1050,13 +1044,31 @@ function add_table(data,name,dimension){
 		    }
 	}
 	times.sort(compare);
-	var width = 90/(times.length+1);
-	var str = '<table id = "f_table" style="border:1px solid #00FFFF;margin-left:2%;margin-top:3%;margin-bottom:4%;">'+
-		'<tr style = "height:33px;border:2px solid #00FFFF;">'+
-		'<td style="width:'+width+'%;border:1px solid #00FFFF;text-align:center;color:#00FFFF;font-size:16px;">对象</td>';
-	for (var a = 0; a < times.length; a++) {
-		 str =  str + '<td style="width:'+width+'%;border:1px solid #00FFFF;text-align:center;color:#00FFFF;font-size:16px;">'+times[a]+'</td>';
+	return times;
+}
+
+//生成表格方法
+function add_table(data,name,dimension,id){
+	var op = document.getElementById(id);
+	var wid= op.offsetWidth; //宽度
+	var times = getT(data);
+	var names = [];
+	for (var i = 0; i < data.length; i++) {
+		if (data[0].month_id == data[i].month_id) {
+			names.push(data[i].object_name);	
+		}
 	}
+	var leng = 2;
+	for (var l = 0; l < times.length; l++) {
+		leng = leng+times[l].length;
+	}
+	var siz = parseInt(wid/times.length/17);
+	var width = 90/(times.length+1);
+	var str = '<table id = "f_table" style="border:1px solid #00FFFF;margin-left:5%;width:92%;margin-top:0px;margin-bottom:7%;">';
+		var s='<tr style = "height:33px;border:2px solid #00FFFF;">'+
+		'<td style="width:'+width+'%;border:1px solid #00FFFF;text-align:center;color:#00FFFF;font-size:16px;">对象</td>';
+
+	str =  str + '</tr>';
 	//吧数据解析成  需要的格式
 	var tableData = [];
 	for (var a = 0; a < times.length; a++) {
@@ -1080,12 +1092,15 @@ function add_table(data,name,dimension){
 	}
 	//数据根据第一列数据降序排序
 	var tData = changeData(ss,1);
-	str =  str + '</tr>';
 	for (var j = 0; j < tData.length; j++) {
 		str = str + '<tr style = "height:25px">'+
 		'<td style="width:'+width+'%;border:1px solid #00FFFF;font-size:12px;text-align:center;color:#fff">'+tData[j][0]+'</td>';
 		for (var k = 0; k < tableData.length; k++) {
-			str = str + '<td style="width:'+width+'%;border:1px solid #00FFFF;text-align:center;font-size:12px;color:#fff">'+tData[j][k+1]+'</td>';
+			if (leng*17>wid) {
+				str = str + '<td style="width:'+width+'%;border:1px solid #00FFFF;text-align:center;font-size:12px;color:#fff">'+wrap(tData[j][k+1],siz)+'</td>';
+			}else{
+				str = str + '<td style="width:'+width+'%;border:1px solid #00FFFF;text-align:center;font-size:12px;color:#fff">'+tData[j][k+1]+'</td>';
+			}
 		}
 		str =  str + '</tr>';
 	}
@@ -1093,6 +1108,18 @@ function add_table(data,name,dimension){
 	return str;
 }
 
+function nName(value){
+	var name = value+"";
+	var str= '';
+	if (name.length>2) {
+		for (var i = 0; i < name.length; i++) {
+			str +=name[i]+'\n';
+		}
+	}else {
+		return name;
+	}
+	return str;
+}
 
 
 //向页面添加图表方法  data--指标数据   name--栏目名称       typeData--栏目图表信息   id--栏目的div的id
@@ -1311,10 +1338,10 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 				if (pieData[j].type=='pie') {
 					pie_echart(pieData[j].value,pieData[j].name,ids,pieData[j].time,pieData[j].unit);
 				}else if (pieData[j].type=='table'){
-					ps(ids,pieData[j].name);
+					ps(ids,pieData[j].name,pieData[j].value);
 					var ida1 = 'd'+ids;
 					var tables=window.document.getElementById(ida1);
-					tables.innerHTML = pieData[j].value;
+					tables.innerHTML =add_table(pieData[j].value,pieData[j].name,pieData[j].dimension,ida1);
 				}else if (pieData[j].type=='gauge'){
 					gauge(pieData[j].value,pieData[j].name,ids,pieData[j].dimension,pieData[j].time_dim,pieData[j].time,pieData[j].unit);
 				}
@@ -1323,10 +1350,10 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 			if (pieData[0].type=='pie') {
 				pie_echart(pieData[0].value,pieData[0].name,divs,pieData[0].time,pieData[0].unit);
 			}else if (pieData[0].type=='table'){
-				ps(divs,pieData[0].name);
+				ps(divs,pieData[0].name,pieData[0].value);
 				var ida2 = 'd'+divs;
 				var table1=window.document.getElementById(ida2);
-				table1.innerHTML = pieData[0].value;
+				table1.innerHTML = add_table(pieData[0].value,pieData[0].name,pieData[0].dimension,ida2);
 			}else if (pieData[0].type=='gauge'){
 				gauge(pieData[0].value,pieData[0].name,divs,pieData[0].dimension,pieData[0].time_dim,pieData[0].time,pieData[0].unit);
 			}
@@ -1393,10 +1420,10 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 					if (pieData[j].type=='pie') {
 						pie_echart(pieData[j].value,pieData[j].name,ids2,pieData[j].time,pieData[j].unit);
 					}else if (pieData[j].type=='table'){
-						ps(ids2,pieData[j].name);
+						ps(ids2,pieData[j].name,pieData[j].value);
 						var ida3 = 'd'+ids2;
 						var tables=window.document.getElementById(ida3);
-						tables.innerHTML = pieData[j].value;
+						tables.innerHTML = add_table(pieData[j].value,pieData[j].name,pieData[j].dimension,ida3);
 					}else if (pieData[j].type=='gauge'){
 						gauge(pieData[j].value,pieData[j].name,ids2,pieData[j].dimension,pieData[j].time_dim,pieData[j].time,pieData[j].unit);
 					}
@@ -1408,10 +1435,10 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 				if (pieData[0].type=='pie') {
 					pie_echart(pieData[0].value,pieData[0].name,div3,pieData[0].time,pieData[0].unit);
 				}else if (pieData[0].type=='table'){
-					ps(div3,pieData[0].name);
+					ps(div3,pieData[0].name,pieData[0].value);
 					var ida4 = 'd'+div3;
 					var table1=window.document.getElementById(ida4);
-					table1.innerHTML = pieData[0].value;
+					table1.innerHTML = add_table(pieData[0].value,pieData[0].name,pieData[0].dimension,ida4);
 				}else if (pieData[0].type=='gauge'){
 					gauge(pieData[0].value,pieData[0].name,div3,pieData[0].dimension,pieData[0].time_dim,pieData[0].time,pieData[0].unit);
 				}
@@ -1481,26 +1508,55 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 			}
 		}
 	}
-	var idf = '#qsection_'+id;
-	$(idf).css('overflow','hidden');
-	$('.ps__thumb-y').css('display','none');
 }
 
-function ps(id,name) {
+function ps(id,name,data) {
+	var idf = '#qsection_'+id;
+	$(idf).css('overflow','hidden');
+	$('.qsection').css('overflow','hidden');
+	$('.ps__thumb-y').css('display','none');
+	
 	var op1 = document.getElementById(id);
 	var op2 = document.getElementById('f_table');
 	var wid1= op1.offsetWidth; //宽度
+	var hei1= op1.offsetHeight; //高度
 	var wid2= op1.offsetWidth; //宽度
 	var str = "";
 	var tables=window.document.getElementById(id);
 	var idd = 'd'+id;
 	var idds = 'dd'+id;
+	var times = getT(data);
+	var leng = 2;
+	for (var l = 0; l < times.length; l++) {
+		leng = leng+times[l].length;
+	}
+	var siz = parseInt(wid1/times.length/17);
+	var width = 90/(times.length+1);
 	str = '<div id = "'+idds+'" style = "width:'+wid1+'px;height:100%;margin-top:2%">'+
-	'<div style = "text-align:center;color:#FFF;font-size:16px;">'+name+'</div>'+
-	'<div id = "'+idd+'" class = "innerbox" style = "width:'+wid1+'px;height:90%;position: absolute;">'+
+	'<div id = "s_dv"><p style = "text-align:center;color:#FFF;font-size:16px;">'+name+'</p>'+
+	'<table id = "f_table" style="border:1px solid #00FFFF;margin-left:5%;width:92%;margin-top:3%;margin-bottom:0px;">'+
+	'<tr style = "height:33px;border:2px solid #00FFFF;">'+
+	'<td style="width:'+width+'%;border:1px solid #00FFFF;text-align:center;color:#00FFFF;font-size:16px;">对象</td>';
+
+for (var a = 0; a < times.length; a++) {
+	if (leng*17>wid1) {
+		 str =  str + '<td style="width:'+width+'%;border:1px solid #00FFFF;text-align:center;color:#00FFFF;font-size:16px;">'+wrap(times[a],siz)+'</td>';	
+	}else{
+		 str =  str + '<td style="width:'+width+'%;border:1px solid #00FFFF;text-align:center;color:#00FFFF;font-size:16px;">'+times[a]+'</td>';
+	}
+}
+//var hei = hei1*0.85;
+str =  str + '</tr></table>'+
+	'</div>'+
+	'<div id = "'+idd+'" class = "innerbox" style = "width:'+wid1+'px;height:80%;position: absolute;">'+
 	'</div></div>';
 	tables.innerHTML = str;
+	var op3 = document.getElementById("s_dv");
+	var hei2= op3.offsetHeight; //宽度
+	var hei = hei1-hei2-3+'px';
 	var ids = "#"+idd;
+	$(ids).css('height',hei);
+	
 	new PerfectScrollbar(ids);
 	var idss = ids+' .ps__rail-x';
 	$(idss).css('display','none');
@@ -1511,7 +1567,7 @@ function ps(id,name) {
 
 //文字换行方法
 function wrap(name,size) {
-	var s3= name;
+	var s3= name+"";
 	 var newParamsName = "";// 最终拼接成的字符串
 	var paramsNameNumber = s3.length;// 实际标签的个数
 	var provideNumber =size;// 每行能显示的字的个数

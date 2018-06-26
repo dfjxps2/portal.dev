@@ -441,7 +441,7 @@ font-size: 14px;
 	            var n = layout[i];
 	            var s =  layout[i].no;
 	            str.push('<div class="grid-stack-item" data-gs-x="',n.x,'" data-gs-y="',n.y,'" data-gs-width="',n.width,'" data-gs-height="',n.height,'" data-gs-auto-position="true">');
-	            str.push('<div class="grid-stack-item-content qsection" ><div class="_qborder" style = "color:#9AFF9A;z-index:3;">栏目',n.no,'</div><div id="', n.sid,'" class="_qbody" style = "height:100%"></div></div>');
+	            str.push('<div class="grid-stack-item-content qsection" ><div class="_qborder"><p  style = "color:#9AFF9A;z-index:3;">栏目',n.no,'</p></div><div id="', n.sid,'" class="_qbody" style = "height:100%"></div></div>');
 	            str.push('</div>');
 	        }
 	        $("#box").html(str.join(''));
