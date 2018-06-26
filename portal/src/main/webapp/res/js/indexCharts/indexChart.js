@@ -1,4 +1,10 @@
 var colo = ['rgb(255,0,0)','rgb(0,128,0)','rgb(255,140,0)','rgb(0,0,255)','rgb(128,0,128)','rgb(255,0,255)','rgb(0,255,255)'];
+//标题和图例字体颜色
+var titleColor = '#333333';
+//图表中字体颜色
+var textColor = '#999999';
+//表格边框颜色
+var tableLine = '#d3d3d3';
 
 //添加柱状图
 function bar(data,settingData,name,num,dimension,stateTime,endTime){
@@ -100,7 +106,7 @@ function pie(data,settingData,name,dimension,stateTime,endTime){
                 		return name;
                 	},*/
                 	 textStyle: {			   
-	  		  		      color: '#fff',
+	  		  		      color: textColor,
 	  		  		      fontSize:8
 	  		                }
                 },
@@ -136,7 +142,7 @@ function pie(data,settingData,name,dimension,stateTime,endTime){
 	                		return name;
 	                	},*/
 	                	 textStyle: {			   
-		  		  		      color: '#fff',
+		  		  		      color: textColor,
 		  		  		      fontSize:16
 		  		                }
 	                },
@@ -359,8 +365,8 @@ function getxAxis(data,dimension,timeType,stateTime,endTime){
 		data: xData,
 		axisLine:{
 			lineStyle:{
-				color:'#87CEFF'
-				//width:8,//这里是为了突出显示加上的，可以去掉
+				color:'#ebebeb',
+				width:2//这里是为了突出显示加上的，可以去掉
 			}
 		},
 		axisLabel : {
@@ -371,7 +377,7 @@ function getxAxis(data,dimension,timeType,stateTime,endTime){
           	 return value;
 				},
 			textStyle: {
-				color: '#fff',
+				color: textColor,
 				fontSize:10 // 让字体变大
 			}
 		}
@@ -393,7 +399,7 @@ function getyAxis(data){
 		nameLocation: 'end',
 	    nameGap: 8,
 		nameTextStyle: {
-             color: '#fff',
+             color: textColor,
              fontSize: 10
          },
     	splitLine:{show: false},//去除网格线
@@ -405,14 +411,14 @@ function getyAxis(data){
 	      },
 	      axisLine:{
               lineStyle:{
-                  color:'#87CEFF'
-                  //width:8,//这里是为了突出显示加上的，可以去掉
+                  color:'#ebebeb',
+                  width:2//这里是为了突出显示加上的，可以去掉
               }
           },
 	      axisLabel: {
               show: true,
               textStyle: {
-                  color: '#fff',
+                  color: textColor,
                   fontSize:8
               },
               formatter:'{value}'
@@ -425,7 +431,7 @@ function getyAxis(data){
 			nameLocation: 'end',
 		    nameGap: 8,
 			nameTextStyle: {
-	             color: '#fff',
+	             color: textColor,
 	             fontSize: 10
 	         },
 	    	splitLine:{show: false},//去除网格线
@@ -437,14 +443,14 @@ function getyAxis(data){
 		      },
 		      axisLine:{
 	              lineStyle:{
-	                  color:'#87CEFF'
-	                  //width:8,//这里是为了突出显示加上的，可以去掉
+	                  color:'#ebebeb',
+	                  width:2,//这里是为了突出显示加上的，可以去掉
 	              }
 	          },
 		      axisLabel: {
 	              show: true,
 	              textStyle: {
-	                  color: '#fff',
+	                  color: textColor,
 	                  fontSize:8
 	              },
 	              formatter:'{value}'
@@ -454,7 +460,7 @@ function getyAxis(data){
 			nameLocation: 'end',
 		    nameGap: 8,
 			nameTextStyle: {
-	             color: '#fff',
+	             color: textColor,
 	             fontSize: 10
 	         },
 	    	splitLine:{show: false},//去除网格线
@@ -466,14 +472,14 @@ function getyAxis(data){
 		      },
 		      axisLine:{
 	              lineStyle:{
-	                  color:'#87CEFF'
-	                  //width:8,//这里是为了突出显示加上的，可以去掉
+	                  color:'#ebebeb',
+	                  width:2,//这里是为了突出显示加上的，可以去掉
 	              }
 	          },
 		      axisLabel: {
 	              show: true,
 	              textStyle: {
-	                  color: '#fff',
+	                  color: textColor,
 	                  fontSize:8
 	              },
 	              formatter:'{value}'
@@ -588,7 +594,7 @@ var option = {
 	        left:'center',
             subtextStyle: {
                 fontSize: titleSize,
-               color:'#fff'
+               color:titleColor
             }
         },
         tooltip : {
@@ -624,7 +630,7 @@ var option = {
                 splitNumber: 10,    // 每份split细分多少段
                 length:3,         // 属性length控制线长
                 lineStyle: {       // 属性lineStyle控制线条样式
-                    color: '#fff',
+                    color: textColor,
                     width: 1,
                     type: 'solid'
                 }
@@ -633,7 +639,7 @@ var option = {
                 show: true,        // 默认显示，属性show控制显示与否
                 length:15,         // 属性length控制线长
                 lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
-                    color: '#fff',
+                    color: textColor,
                     width: 1,
                     type: 'solid'
                 }
@@ -645,8 +651,8 @@ var option = {
             	offsetCenter: [0, '80%'],
                 textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
                     fontSize:txtSize,
-                    color: '#fff',
-                    shadowColor : '#fff', //默认透明
+                    color: textColor,
+                    shadowColor : textColor, //默认透明
                     shadowBlur: 10
                 }
             },
@@ -655,7 +661,7 @@ var option = {
                 textStyle: {
                     fontSize: txtSize,
                     fontWeight: "",
-                    color: '#fff', 
+                    color: textColor, 
                 }
             },
            
@@ -710,7 +716,7 @@ function pie_echart(series,name,id,time,unit){
 		        top:top,
 		        left:'center',
 		        subtextStyle: {			   
-		  		      color: '#fff',
+		  		      color: titleColor,
 		  		      fontSize:size+2
 		        }
 		  	 }],
@@ -930,7 +936,8 @@ function bar_echart(data,name,id){
 	            
 	        },
 	           textStyle:{
-	            color:"#fff"},
+	            color:textColor
+	            },
 	           borderColor:"#eee"
 	    },
 	    {
@@ -981,7 +988,7 @@ function bar_echart(data,name,id){
 			   top:subtop,
 			   right:'6%',
 			   subtextStyle: {			   
-			  		color: '#fff',
+			  		color: titleColor,
 			  		fontSize:txtSize
 			        }
 			  }],
@@ -1009,7 +1016,7 @@ function bar_echart(data,name,id){
 		    	  data:legendData,
 		    	  right:'3%',
 		    	  textStyle: {			   
-		  		      color: '#fff',
+		  		      color: titleColor,
 		  		      fontSize:txtSize
 		        }
 		   },
@@ -1064,10 +1071,7 @@ function add_table(data,name,dimension,id){
 	}
 	var siz = parseInt(wid/times.length/17);
 	var width = 90/(times.length+1);
-	var str = '<table id = "f_table" style="border:1px solid #00FFFF;margin-left:5%;width:92%;margin-top:0px;margin-bottom:7%;">';
-		var s='<tr style = "height:33px;border:2px solid #00FFFF;">'+
-		'<td style="width:'+width+'%;border:1px solid #00FFFF;text-align:center;color:#00FFFF;font-size:16px;">对象</td>';
-
+	var str = '<table id = "f_table" style="border:1px solid '+tableLine+';margin-left:5%;width:92%;margin-top:0px;margin-bottom:7%;">';
 	str =  str + '</tr>';
 	//吧数据解析成  需要的格式
 	var tableData = [];
@@ -1094,12 +1098,12 @@ function add_table(data,name,dimension,id){
 	var tData = changeData(ss,1);
 	for (var j = 0; j < tData.length; j++) {
 		str = str + '<tr style = "height:25px">'+
-		'<td style="width:'+width+'%;border:1px solid #00FFFF;font-size:12px;text-align:center;color:#fff">'+tData[j][0]+'</td>';
+		'<td style="width:'+width+'%;border:1px solid '+tableLine+';font-size:12px;text-align:center;color:'+titleColor+'">'+tData[j][0]+'</td>';
 		for (var k = 0; k < tableData.length; k++) {
 			if (leng*17>wid) {
-				str = str + '<td style="width:'+width+'%;border:1px solid #00FFFF;text-align:center;font-size:12px;color:#fff">'+wrap(tData[j][k+1],siz)+'</td>';
+				str = str + '<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;font-size:12px;color:'+titleColor+'">'+wrap(tData[j][k+1],siz)+'</td>';
 			}else{
-				str = str + '<td style="width:'+width+'%;border:1px solid #00FFFF;text-align:center;font-size:12px;color:#fff">'+tData[j][k+1]+'</td>';
+				str = str + '<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;font-size:12px;color:'+titleColor+'">'+tData[j][k+1]+'</td>';
 			}
 		}
 		str =  str + '</tr>';
@@ -1534,15 +1538,15 @@ function ps(id,name,data) {
 	var width = 90/(times.length+1);
 	str = '<div id = "'+idds+'" style = "width:'+wid1+'px;height:100%;margin-top:2%">'+
 	'<div id = "s_dv"><p style = "text-align:center;color:#FFF;font-size:16px;">'+name+'</p>'+
-	'<table id = "f_table" style="border:1px solid #00FFFF;margin-left:5%;width:92%;margin-top:3%;margin-bottom:0px;">'+
-	'<tr style = "height:33px;border:2px solid #00FFFF;">'+
-	'<td style="width:'+width+'%;border:1px solid #00FFFF;text-align:center;color:#00FFFF;font-size:16px;">对象</td>';
+	'<table id = "f_table" style="height:30px;border:1px solid #00FFFF;margin-left:5%;width:92%;margin-bottom:0px;">'+
+	'<tr style = "border:1px solid '+tableLine+';">'+
+	'<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;color:'+titleColor+';font-size:16px;">对象</td>';
 
 for (var a = 0; a < times.length; a++) {
 	if (leng*17>wid1) {
-		 str =  str + '<td style="width:'+width+'%;border:1px solid #00FFFF;text-align:center;color:#00FFFF;font-size:16px;">'+wrap(times[a],siz)+'</td>';	
+		 str =  str + '<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;color:'+titleColor+';font-size:16px;">'+wrap(times[a],siz)+'</td>';	
 	}else{
-		 str =  str + '<td style="width:'+width+'%;border:1px solid #00FFFF;text-align:center;color:#00FFFF;font-size:16px;">'+times[a]+'</td>';
+		 str =  str + '<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;color:'+titleColor+';font-size:16px;">'+times[a]+'</td>';
 	}
 }
 //var hei = hei1*0.85;
