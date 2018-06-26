@@ -38,8 +38,8 @@
     -webkit-text-fill-color: transparent;
 }
 .qheader-title2{
-    font-size: 1.8em;
-    line-height: 1em;
+    font-size: 1.2em;
+    line-height: 1.5em;
     text-align: center;
     color: #fafafa;
     font-weight: 900;
@@ -111,7 +111,9 @@
     cursor: pointer;
     padding: 10px 20px;
     line-height: 24px;
-    color: #493fd2;
+/*    color: #493fd2;
+*/
+    color: #ffffff;
     font-size:24px;
 }
 .qmenu{
