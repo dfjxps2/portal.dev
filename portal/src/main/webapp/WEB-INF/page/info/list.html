@@ -261,7 +261,7 @@ a, img {
 	//查看详细信息
 	function downClick(id,aid,type){
 		if(id ==null ||id =="" || id=="undefined"){
-			$. layer.msg("文件路径不对，请联系管理员",{icon:1,time: 1000,skin: 'layer-ext-moon'}); 
+			layer.msg("文件路径不对，请联系管理员",{icon:1,time: 1000,skin: 'layer-ext-moon'}); 
 			return false ;
 		}
  	  id = encodeURI(id);
@@ -287,6 +287,10 @@ a, img {
 				  msgID = data;
 			  }
 		  });
+		 if(msgID == "0"){
+			  layer.msg('信息编号不存在,请查询信息链接是否正确!',{icon:1,time: 1000,skin: 'layer-ext-moon'}); 
+			  return ;
+		  }
 		 var href = "${G.host}/mesManage/mesdetail?fg=i&msg_id="+msgID;	
 		 openInfoBox(href)
 	}
