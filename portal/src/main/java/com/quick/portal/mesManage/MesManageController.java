@@ -9,6 +9,7 @@ import com.quick.core.util.common.QCookie;
 import com.quick.core.util.common.QRequest;
 import com.quick.portal.search.infomng.SolrInfoConstants;
 import com.quick.portal.search.infomng.SolrUtils;
+
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -41,6 +42,7 @@ import org.xml.sax.SAXException;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -255,52 +257,78 @@ public class MesManageController extends SysBaseController<MesManageDO> {
     }
 
     //内容详细
-    @RequestMapping(value = "getMsgDetail", method= RequestMethod.POST)
+    @RequestMapping(value = "getMsgDetail")
     @ResponseBody
-    public Map<String,Object> getMsgDetail() throws IOException {
-        String msgId = QRequest.getString(request,"msg_id");
-        Map<String,Object> map = new HashMap<>();
-        map.put("msg_id",msgId);
-        List<Map<String,Object>> obj = mesManageDao.selectMes(map);
-        Map<String,Object> a =obj.get(0);
-        String msgcontent = a.get("msg_content").toString();
-        String msgtext = null;
-        if(msgcontent!= null && !msgcontent.equals("undefined") && !"null".equals(msgcontent)){
-            msgtext = LoadContentByPath(msgcontent,3);
-        }
-            String pubtime = a.get("pub_time").toString();
-            String title = a.get("msg_title").toString();
-            String msgsource = a.get("msg_src_name").toString();
-            String msgclass = "密级："+a.get("msg_class_name").toString();
-            String msgapprstate = null;
-            String  appstate = null;
-            if(a.get("appr_state").toString() != null && !a.get("appr_state").toString().equals("")){
-                appstate = a.get("appr_state").toString();
-                switch (appstate){
-                    case "1":
-                        msgapprstate = "人工审核通过";
-                        break;
-                    case "2":
-                        msgapprstate = "人工审核拒绝";
-                        break;
-                    case "3":
-                        msgapprstate = "审核通过";
-                        break;
-                    case "4":
-                        msgapprstate = "审核拒绝";
-                        break;
-                }}else {
-                msgapprstate="审核通过";
-            }
-            String msgappr = "审核状态："+ msgapprstate;
-            String secondrow = pubtime+"     "+msgsource+"           "+msgclass+"       "+msgappr;
-            String msgdetail = title+"\r\n"+secondrow+"\r\n"+ msgtext;
-            a.put("msg_content",msgdetail);
-            return a;
+    public Map<String,Object> getMsgDetail() throws Exception {
+		String msgId = QRequest.getString(request, "msg_id");
+		Map<String, Object> map = new HashMap<>();
+		map.put("msg_id", msgId);
+		List<Map<String, Object>> obj = mesManageDao.selectMes(map);
+		Map<String, Object> msgMap = null;
+		String msg = null;
+		if (null == obj || obj.size()==0) {
+			msgMap = new HashMap();
+		    msg = "查询信息数据为空!";
+			msgMap.put(FLAG_KEY, FAIL_FLAG_VAL);
+			msgMap.put(FAIL_FLAG_MSG, msg);
+			return msgMap;
+		}
+		Map<String, Object> a = obj.get(0);
+		String msgcontent = a.get("msg_content").toString();
+		String msgtext = null;
+		if (msgcontent != null && !msgcontent.equals("undefined")
+				&& !"null".equals(msgcontent)) {
+			try {
+				msgtext = LoadContentByPath(msgcontent, 3);
+			} catch (Exception e) {
+				msgMap = new HashMap();
+			    msg = e.getLocalizedMessage();
+				msgMap.put(FLAG_KEY, FAIL_FLAG_VAL);
+				msgMap.put(FAIL_FLAG_MSG, msg);
+				return msgMap;
+			}
+		}
+		String pubtime = a.get("pub_time").toString();
+		String title = a.get("msg_title").toString();
+		String msgsource = a.get("msg_src_name").toString();
+		String msgclass = "密级：" + a.get("msg_class_name").toString();
+		String msgapprstate = null;
+		String appstate = null;
+		if (a.get("appr_state").toString() != null
+				&& !a.get("appr_state").toString().equals("")) {
+			appstate = a.get("appr_state").toString();
+			switch (appstate) {
+			case "1":
+				msgapprstate = "人工审核通过";
+				break;
+			case "2":
+				msgapprstate = "人工审核拒绝";
+				break;
+			case "3":
+				msgapprstate = "审核通过";
+				break;
+			case "4":
+				msgapprstate = "审核拒绝";
+				break;
+			}
+		} else {
+			msgapprstate = "审核通过";
+		}
+		String msgappr = "审核状态：" + msgapprstate;
+		String secondrow = pubtime + "     " + msgsource + "           "
+				+ msgclass + "       " + msgappr;
+		String msgdetail = title + "\r\n" + secondrow + "\r\n" + msgtext;
+		a.put("msg_content", msgdetail);
+		a.put(FLAG_KEY, SUCCESS_FLAG_VAL);
+		return a;
     }
 
-    public static String LoadContentByPath(String path,int index) throws IOException {
-        InputStream is = new FileInputStream(path);
+    public static String LoadContentByPath(String path,int index) throws Exception {
+    	File aFile = new File(path);
+		if (!aFile.exists()) {
+			throw new Exception("文件路径不存在，请检查文件路径！不存在文件路径是"+path);
+		}
+    	InputStream is = new FileInputStream(path);
         BufferedReader in = new BufferedReader(new InputStreamReader(is));
         StringBuffer buffer = new StringBuffer();
         String line = "";
@@ -1297,5 +1325,11 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         in.close();
         return "1";
     }
+    
+    
+    private final static String FLAG_KEY = "flag";
+    private final static String FAIL_FLAG_VAL = "0";
+    private final static String SUCCESS_FLAG_VAL = "1";
+    private final static String FAIL_FLAG_MSG = "msg";
 
 }
