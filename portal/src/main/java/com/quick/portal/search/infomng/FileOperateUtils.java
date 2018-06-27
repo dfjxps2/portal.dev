@@ -193,6 +193,10 @@ public class FileOperateUtils {
 		BufferedOutputStream bos = null;
 		String downLoadPath = filePath;
 		File file = new File(downLoadPath);
+		if (!file.exists()) {
+			throw new Exception("文件路径不存在，请检查文件路径！不存在文件路径是"+downLoadPath);
+		}
+		
 		// 取得文件名。
 		String filename = file.getName();
 		long fileLength = file.length();
@@ -294,12 +298,22 @@ public class FileOperateUtils {
 
 	public static void download(HttpServletRequest request,
 			HttpServletResponse response, String tFilePath, String aFilePath)
-			throws IOException {
+			throws Exception {
 		// 文件名称
 		String tFileName = new File(tFilePath).getName();
 		String aFileName = new File(aFilePath).getName();
-		;
 		String[] names = { tFileName, aFileName };
+		File tFile = new File(tFilePath);
+		if (!tFile.exists()) {
+			throw new Exception("文件路径不存在，请检查文件路径！不存在文件路径是"+tFilePath);
+		}
+		
+		File aFile = new File(aFilePath);
+		if (!aFile.exists()) {
+			throw new Exception("文件路径不存在，请检查文件路径！不存在文件路径是"+aFilePath);
+		}
+		
+		
 		// 四个文件流
 		FileInputStream input1 = new FileInputStream(new File(tFilePath));
 		FileInputStream input2 = new FileInputStream(new File(aFilePath));
@@ -331,17 +345,19 @@ public class FileOperateUtils {
 				zout.write(buf, 0, len);
 			}
 			zout.closeEntry();
+			zout.setEncoding("gbk");
+//			zout.setEncoding("UTF-8");
 			in.close();
 		}
 		zout.close();
-
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("UTF-8");
+		
 		FileInputStream zipInput = new FileInputStream(zipPath);
 		OutputStream out = response.getOutputStream();
 		response.setContentType("application/octet-stream");
-		response.setHeader("Content-Disposition", "attachment; filename="
-				+ outFileName);
+		response.setHeader("Content-disposition", "attachment; filename="
+				+ new String(outFileName.getBytes("utf-8"), "ISO8859-1"));
 		while ((len = zipInput.read(buf)) != -1) {
 			out.write(buf, 0, len);
 		}

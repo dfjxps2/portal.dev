@@ -48,4 +48,6 @@ public interface IInfoMngDao<InfoMngDO> extends ISysBaseDao<SysUserDO> {
 	public void updSearchTermsInfo(InfoMngDO info);
 	
 	public void saveSearchTermsInfo(InfoMngDO info);
+	
+	public List<Map<String, Object>> getMsgIDByID (String uid);
 }

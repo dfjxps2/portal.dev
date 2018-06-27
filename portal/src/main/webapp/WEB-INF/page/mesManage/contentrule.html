@@ -13,7 +13,7 @@
 </head>
 <body class="gray-bg">
 <div class="wrapper wrapper-content wrapper-content-x animated fadeInRight">
-    <div class="row">
+    <div class="row" style="width:1025px; float: left;margin-left:50px;">
     <div class="col-sm-12">
             <div class="ibox ibox-x">
                 <div class="ibox-content ibox-content-x" style="margin-top: 50px">
@@ -40,9 +40,9 @@
                     </div>
             </div>
         </div>
-           <div class="tabs-container" >
+           <div class="tabs-container"  >
                                <ul class="nav nav-tabs">
-                                <li class="active col-sm-12 "><a data-toggle="tab" href="#tab-1" aria-expanded="true" style="font-size: 16px;">参数值</a>
+                                <li class="active col-sm-12 " style="margin-top:10px;"><a data-toggle="tab" href="#tab-1" aria-expanded="true" style="font-size: 16px;">参数值</a>
                                 </li>
                                </ul>
                           <div class="col-sm-12">
@@ -78,7 +78,7 @@
                success:function (data) {
                    $("#paramValue").empty();
                    console.log(JSON.stringify(data));
-                   if(data!=null&&data.length>0) {
+                   if(data!=null && data.length>0) {
                        $.each(data, function (i, item) {
                            $("#paramValue").append(
                                "<input id=\"param"+ item.param_id+"\" title=\"params\" class=\"ck_qx\" type=\"checkbox\" name=\"paramvalue\" value=\"" +  item.param_id+ "\" >"+"&nbsp;"+ "<label for=" + item.param_id + ">" + item.param_value +"</label>"+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");

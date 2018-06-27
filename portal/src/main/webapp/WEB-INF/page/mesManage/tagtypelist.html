@@ -5,11 +5,9 @@
 </head>
 <body class="gray-bg">
 <div class="wrapper wrapper-content wrapper-content-x animated fadeInRight">
-    <div  class="row">
         <div class="col-sm-12">
             <div class="ibox ibox-x">
-                <div class="ibox-content ibox-content-x">
-                    <div  class="panel-mar">
+                <div class="ibox-content ibox-content-x" style="margin-top:35px;width:1025px;margin-left:30px;">
                         <form id="formSearch" class="form-inline">
                             <div class="form-group" style="left:50px;width:90px;">
                                 <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="addTagType();"> 新增标签类型</button> </span>
@@ -23,14 +21,12 @@
                         </form>
 
                         <div style ="margin:5px;">
-                            <table id="list" class="table-striped" style="table-layout:fixed"></table>
+                            <table id="list" class="table-striped" style="table-layout:fixed;margin-top:5px;"></table>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
     </div>
-</div>
 </body>
 <script>
     var pageNum=1;
@@ -63,10 +59,10 @@
                     formatter:function(value,rec){
                         return "<input id=\"tags"+rec.tag_type_id+"\" title=\"tags\" class=\"ck_qx\" type=\"checkbox\" name=\"tag\" value=\"" + rec.tag_type_id+ "\" >";
                     }  },
-                { field: 'tag_type_id',  title:'标签类型ID',width:'10%'},
-                { field: 'superTypeName', title: '上级标签类型', width: '35%'  },
-                { field: 'tag_type_name', title: '标签类型', width: '35%'  },
-                { field: 'CZ',  title: '操作',width: '10%', formatter:function(value,row,index){
+                { field: 'tag_type_id',  title:'标签类型ID',align: 'center',width:'10%'},
+                { field: 'superTypeName', title: '上级标签类型', align: 'center',width: '35%'  },
+                { field: 'tag_type_name', title: '标签类型',align: 'center', width: '35%'  },
+                { field: 'CZ',  title: '操作',width: '10%', align: 'center',formatter:function(value,row,index){
                     return "<button type='button' class='btn_el' onclick='editTagType(\""+row.tag_type_id+"\")'>编辑</button>";
                 }},
             ],onPageChange:function(number, size){

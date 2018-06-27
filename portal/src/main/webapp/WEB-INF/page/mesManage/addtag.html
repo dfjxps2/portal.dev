@@ -15,12 +15,12 @@
 
             <div class="ibox">
                 <div class="ibox-content ibox-content-ad" style="margin-top: 25px;">
-                    <form id="form" name="form" method="post" action="${G.serverUrl}/save" class="wizard-big addForm" enctype="multipart/form-data" accept="image/jpg, image/png">
+                    <form id="form" name="form" onkeydown="if(event.keyCode==13){return false;}" method="post" action="${G.serverUrl}/save" class="wizard-big addForm" enctype="multipart/form-data" accept="image/jpg, image/png">
                         <div class="row">
                             <div class="col-sm-6 form_ipt_botm">
                                 <div class="form-group">
                                     <label class="col-xs-4 lable_top"><span class="span_require">*</span>标签类型</label>
-                                    <div class="col-xs-8" style="width:316px;"><div class="input-group" style="width:316px;"><input type="text" id="tag_type_name" readOnly="readOnly" class="form-control required"/><span class="input-group-btn"><button class="btn btn-default" type="button" onclick="chosebox('tag_type_name', '${G.serverUrl}/tagchose','tag_type_id');">...</button></span></div></div>
+                                    <div class="col-xs-8" style="width:316px;"><div class="input-group" style="width:316px;"><input type="text" id="tag_type_name" readOnly="readOnly" class="form-control required"/><span class="input-group-btn"><button class="btn btn-default" id="anniu" type="button" onclick="chosebox('tag_type_name', '${G.serverUrl}/tagchose','tag_type_id');">...</button></span></div></div>
                                 </div>
                             </div>
 
@@ -99,6 +99,7 @@
         window.location.href = url;
     }
     function chosebox(nid, url,id, fn){
+        $("#anniu").attr("disabled",true);
         if(!layer.values)
             layer.values = {};
         var val = $("#"+id).val();
@@ -127,9 +128,11 @@
                 }
 
                 layer.closeAll();
+                $("#anniu").attr("disabled",false);
             }
             ,btn2: function(){
                 layer.closeAll();
+                $("#anniu").attr("disabled",false);
             }
         });
     }

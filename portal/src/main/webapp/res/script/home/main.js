@@ -117,7 +117,7 @@ function playnext(){
 }
 function bindsearch(){
 	var $ui = $('#div_append');
-//    $("#txtico").after(txtdata);
+	//$("#txtico").after(txtdata);
 	var w = $("#div_append").width();
 	$("#div_data ul").width(w);
 	$("#div_data ul li.tit_filter").width(w - 10);
@@ -138,42 +138,38 @@ function click_event(str){
 	$("#txt").val(str);
 	$ui.find('.arrowUp').addClass('arrowDown').removeClass('arrowUp').andSelf().find('.dropdown').slideUp(10);
 }
-function query(){
-	var t = $("#txt").val();
-	$.post('getUserApp',{'t':t}, function(d){
-		if(d == null || d.length == 0){
-			$("#apps").html('');
-			loadpg(1);
-			play(1);
-			return;
-		}
-		loadapp('#apps',d);
-	});
-}
+var is_search = false;
 function gosearch(){
-	var $ui = $('#div_append');
-	$ui.find('.arrowUp').addClass('arrowDown').removeClass('arrowUp').andSelf().find('.dropdown').slideUp(10);
+	//var $ui = $('#div_append');
+	//$ui.find('.arrowUp').addClass('arrowDown').removeClass('arrowUp').andSelf().find('.dropdown').slideUp(10);
+	if(is_search)
+		return ;
+	is_search = true;
+	if(!layer.values)
+        layer.values = {};
 	layer.open({
 		type: 2
-		,title: false //不显示标题栏
-		,area: ['780px', '600px']
+		,title: "信息搜索" //不显示标题栏
+		,area: ['780px', '500px']
 		,shade: 0
-		,skin:'addwin'
 		,maxmin: true
 		,content: _host+'/home/listinfo'
-		,btn: ['关闭']
 		,yes: function(index, layero){
-			layer.closeAll();
+            layer.closeAll();
+        },end:function(){
+			is_search = false;
 		}
-		,btn2: function(){
-			layer.closeAll();
-		}
-		,zIndex: layer.zIndex
-		,success: function(layero){
-			layer.setTop(layero);
-		}
-	});
+        ,btn2: function(){
+            layer.closeAll();
+        }
+        ,zIndex: layer.zIndex //重点1
+        ,success: function(layero){
+            layer.setTop(layero); //重点2
+        }
+    });
 }
+
+
 
 function adddel(){
 	var o = $(".apps:visible").find(".cell");

@@ -416,6 +416,13 @@
                 <profiles.active>demo</profiles.active>
             </properties>
         </profile>
+        <!--泰豪演示环境-->
+        <profile>
+            <id>tellhow</id>
+            <properties>
+                <profiles.active>tellhow</profiles.active>
+            </properties>
+        </profile>
         <!--生产环境-->
         <profile>
             <id>pro</id>
@@ -426,7 +433,7 @@
     </profiles>
     <!--不同环境切换配置参数1 End -->
     <build>
-        <finalName>portal</finalName>
+        <finalName>portal_${profiles.active}</finalName>
         <plugins>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>

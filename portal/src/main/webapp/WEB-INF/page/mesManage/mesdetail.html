@@ -18,11 +18,17 @@
                     <label id="pagename" class="col-xs-8" style="text-align:center;font-size: 22px;color:blue;margin-left: 180px"></label>
                 </div>
             </div>
+            <!--<div class="col-sm-2">-->
+                <!--<div class="pull-right ibox-toolbars hidefield" style="margin-right:100px;margin-top:2px;">-->
+                    <!--<button type="button" class="btn btn-primary" onclick="downAttachement();">下载附件</button>-->
+                <!--</div>-->
+            <!--</div>-->
             <div class="col-sm-2">
-                <div class="pull-right ibox-toolbars hidefield" style="margin-right: -14px;margin-top: 2px;">
-                    <button type="button" class="btn btn-primary" onclick="cancel();">返回</button>
+                <div class="pull-right ibox-toolbars hidefield" style="margin-right: -1px;margin-top: 2px;">
+                    <button type="button" id ="btn_cancel" class="btn btn-primary" style="display:block;" onclick="cancel();">返回</button>
                 </div>
             </div>
+
 
             <div class="ibox">
                 <div class="ibox-content ibox-content-ad" style="margin-top: 25px;">
@@ -31,6 +37,7 @@
                             <div class="col-xs-9 param"><textarea  class="param" id="msg_content" name="msg_content"></textarea></div>
                         </div>
                     </form>
+                    <input id="msg_attachment" name="msg_attachment" type="hidden"/>
                 </div>
             </div>
         </div>
@@ -49,12 +56,20 @@
         /*加载数据*/
         var mode = $.request.queryString["mode"];
         var sysid = $.request.queryString["msg_id"];
+        var fg = $.request.queryString["fg"];
+        if(fg =="i"){
+        	document.getElementById("btn_cancel").style.display="none"; 
+        }
         if (sysid) {
-            $('#pagename').html("内容管理详细");
+            $('#pagename').html("内容详细");
             $("input,textarea").attr("placeholder", "");
             $(".hidefield").show();
             $.post(quick.serverUrl + '/getMsgDetail?msg_id=' + sysid + "&i=" + Math.random(), function (data) {
-                setForm(data);
+                if(data.flag == "0"){
+                	  layer.msg(data.msg,{icon:1,time: 2000,skin: 'layer-ext-moon'}); 
+    				  return ;
+                }
+            	setForm(data);
                 if (mode == "browse") {
                     viewRead();
                 }
@@ -62,8 +77,12 @@
         }
     };
     function cancel(){
-        var url = quick.serverUrl+"/list";
+        var url = quick.serverUrl+"/mesappr";
         window.location.href = url;
+    }
+    function downAttachement() {
+        var a = $("#msg_attachment").val()
+        window.location.href = quick.serverUrl+"/downloadFile?msg_content="+a ;
     }
 </script>
 </html>

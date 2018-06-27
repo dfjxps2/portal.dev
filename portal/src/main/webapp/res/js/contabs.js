@@ -1,6 +1,7 @@
 
 $(function () {
     //计算元素集合的总宽度
+	var minMarginLetVal = 990;
     function calSumWidth(elements) {
         var width = 0;
         $(elements).each(function () {
@@ -37,6 +38,7 @@ $(function () {
     }
     //查看左侧隐藏的选项卡
     function scrollTabLeft() {
+    	
         var marginLeftVal = Math.abs(parseInt($('.page-tabs-content').css('margin-left')));
         // 可视区域非tab宽度
         var tabOuterWidth = calSumWidth($(".content-tabs").children().not(".J_menuTabs"));
@@ -44,16 +46,19 @@ $(function () {
         var visibleWidth = $(".content-tabs").outerWidth(true) - tabOuterWidth;
         //实际滚动宽度
         var scrollVal = 0;
-        if ($(".page-tabs-content").width() < visibleWidth) {
+        var cw =$(".page-tabs-content").width(); 
+        if (($(".page-tabs-content").width() < visibleWidth) && (marginLeftVal < minMarginLetVal)) {
             return false;
         } else {
             var tabElement = $(".J_menuTab:first");
             var offsetVal = 0;
-            while ((offsetVal + $(tabElement).outerWidth(true)) <= marginLeftVal) {//找到离当前tab最近的元素
+            var b =$(tabElement).outerWidth(true);
+            while ((offsetVal + $(tabElement).outerWidth(true)) < marginLeftVal) {//找到离当前tab最近的元素
                 offsetVal += $(tabElement).outerWidth(true);
                 tabElement = $(tabElement).next();
             }
             offsetVal = 0;
+            var c =calSumWidth($(tabElement).prevAll());
             if (calSumWidth($(tabElement).prevAll()) > visibleWidth) {
                 while ((offsetVal + $(tabElement).outerWidth(true)) < (visibleWidth) && tabElement.length > 0) {
                     offsetVal += $(tabElement).outerWidth(true);

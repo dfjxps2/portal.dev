@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.quick.core.base.AppResource;
 import com.quick.core.util.common.QCommon;
 import com.quick.core.util.common.QCookie;
+import com.quick.portal.security.authority.metric.PropertiesUtil;
 import com.quick.portal.sysUser.ISysUserService;
 import com.quick.portal.sysUser.SysUserDO;
 import com.quick.portal.userAccessLog.IUserAccessLogService;
@@ -153,12 +154,13 @@ public class WebLoginController {
         QCookie.remove(response, request, "sbd.role" );
         QCookie.remove(response, request, "sbd.gid" );
         QCookie.remove(response, request, "sbd.tk" );
-//        QCookie.clearAll(request,response);
-
+        String casUrl = PropertiesUtil.getPropery("cas.serverUrl");
         String url = request.getScheme() + "://" + request.getServerName()
                 + ":" + request.getServerPort() + request.getContextPath()
                 + "/";
-        return "redirect:https://cas4.example.org:8443/cas/logout?service=" + QCommon.urlEncode(url);
+        
+        String retUrl ="redirect:".concat(casUrl).concat("/logout?service=").concat(QCommon.urlEncode(url));
+        return retUrl;
     }
 
     public void saveSession(SysUserDO loginUser,List<Map<String,Object>> roles, HttpServletRequest request, HttpServletResponse response){

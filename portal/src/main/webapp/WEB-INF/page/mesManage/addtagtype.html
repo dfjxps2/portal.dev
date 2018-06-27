@@ -15,7 +15,7 @@
 
             <div class="ibox">
                 <div class="ibox-content ibox-content-ad" style="margin-top: 25px;">
-                    <form id="form" name="form" method="post" action="${G.serverUrl}/save" class="wizard-big addForm" enctype="multipart/form-data" accept="image/jpg, image/png">
+                    <form id="form"  onkeydown="if(event.keyCode==13){return false;}" name="form" method="post" action="${G.serverUrl}/save" class="wizard-big addForm" enctype="multipart/form-data" accept="image/jpg, image/png">
                         <div class="row">
                             <div class="col-sm-6 form_ipt_botm">
                                 <div class="form-group">
@@ -60,7 +60,36 @@
             errorPlacement: function(error, element) {
                 element.parent().append(error);
             },
-            rules: {}
+            rules:{
+                tag_type_name:{
+                    required:true,
+                    remote:{
+                        url: quick.serverUrl+"/checkTagType",
+                        type:"post",
+                        dataType:"json",
+                        data:{
+                            superTypeName:function () {
+                                return $("#superTypeName").val();
+                            },
+                            tagTypeName:function () {
+                                return $("#tag_type_name").val();
+                            }
+                        },
+                        dataFilter:function (data,type) {
+                            if(data =="true"){
+                                return true;
+                            }else{
+                                return false;
+                            }
+                        }
+                    }
+                },
+            },
+            messages:{
+                tag_type_name:{
+                    remote:"该标签类型已存在！"
+                }
+            }
         });
     };
 
@@ -72,7 +101,7 @@
             async:false,
             dataType: "json",
             success: function(data){
-                $("#superTypeName").append("<option selected hidden value=''>选择上级标签类型</option>");
+                $("#superTypeName").append("<option selected hidden value=''>选择上级标签类型</option><option value=''>上级标签类型(空值)</option> ");
                 for (var i = 0; i < data.length; i++) {
                     var item = data[i];
                     $("#superTypeName").append("<option  value=" +item.tagTypeId+ ">"+  item.tagTypeName+"</option>");

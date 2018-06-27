@@ -9,6 +9,7 @@ import com.quick.core.util.common.QCookie;
 import com.quick.core.util.common.QRequest;
 import com.quick.portal.search.infomng.SolrInfoConstants;
 import com.quick.portal.search.infomng.SolrUtils;
+
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -41,6 +42,7 @@ import org.xml.sax.SAXException;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -203,7 +205,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
    }
 
    //发布内容
-   @RequestMapping(value="addMes",method={RequestMethod.GET,RequestMethod.POST})
+   @RequestMapping(value="addMes")
    @ResponseBody
    public void publishMes(MesManageDO mesManageDO,String[] tagId,HttpServletRequest request,HttpServletResponse response,boolean MERGE) throws Exception {
       mesManageService.publishMes(mesManageDO,tagId,request,response,MERGE);
@@ -217,14 +219,14 @@ public class MesManageController extends SysBaseController<MesManageDO> {
     }
 
     //内容管理-修改
-    @RequestMapping(value="editMes",method={RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value="editMes")
     @ResponseBody
     public void editMes(MesManageDO mesManageDO,String[] tagId,HttpServletRequest request,HttpServletResponse response,boolean MERGE) throws Exception {
       mesManageService.editMes(mesManageDO,tagId,request,response,MERGE);
     }
 
     //内容管理修改-获得初始数据
-    @RequestMapping(value = "/getEditMes", method= RequestMethod.POST)
+    @RequestMapping(value = "/getEditMes")
     @ResponseBody
     public Map<String,Object> getEditMes() throws Exception {
         String msgId = QRequest.getString(request,"msg_id");
@@ -255,52 +257,78 @@ public class MesManageController extends SysBaseController<MesManageDO> {
     }
 
     //内容详细
-    @RequestMapping(value = "getMsgDetail", method= RequestMethod.POST)
+    @RequestMapping(value = "getMsgDetail")
     @ResponseBody
-    public Map<String,Object> getMsgDetail() throws IOException {
-        String msgId = QRequest.getString(request,"msg_id");
-        Map<String,Object> map = new HashMap<>();
-        map.put("msg_id",msgId);
-        List<Map<String,Object>> obj = mesManageDao.selectMes(map);
-        Map<String,Object> a =obj.get(0);
-        String msgcontent = a.get("msg_content").toString();
-        String msgtext = null;
-        if(msgcontent!= null && !msgcontent.equals("undefined") && !"null".equals(msgcontent)){
-            msgtext = LoadContentByPath(msgcontent,3);
-        }
-            String pubtime = a.get("pub_time").toString();
-            String title = a.get("msg_title").toString();
-            String msgsource = a.get("msg_src_name").toString();
-            String msgclass = "密级："+a.get("msg_class_name").toString();
-            String msgapprstate = null;
-            String  appstate = null;
-            if(a.get("appr_state").toString() != null && !a.get("appr_state").toString().equals("")){
-                appstate = a.get("appr_state").toString();
-                switch (appstate){
-                    case "1":
-                        msgapprstate = "人工审核通过";
-                        break;
-                    case "2":
-                        msgapprstate = "人工审核拒绝";
-                        break;
-                    case "3":
-                        msgapprstate = "审核通过";
-                        break;
-                    case "4":
-                        msgapprstate = "审核拒绝";
-                        break;
-                }}else {
-                msgapprstate="审核通过";
-            }
-            String msgappr = "审核状态："+ msgapprstate;
-            String secondrow = pubtime+"     "+msgsource+"           "+msgclass+"       "+msgappr;
-            String msgdetail = title+"\r\n"+secondrow+"\r\n"+ msgtext;
-            a.put("msg_content",msgdetail);
-            return a;
+    public Map<String,Object> getMsgDetail() throws Exception {
+		String msgId = QRequest.getString(request, "msg_id");
+		Map<String, Object> map = new HashMap<>();
+		map.put("msg_id", msgId);
+		List<Map<String, Object>> obj = mesManageDao.selectMes(map);
+		Map<String, Object> msgMap = null;
+		String msg = null;
+		if (null == obj || obj.size()==0) {
+			msgMap = new HashMap();
+		    msg = "查询信息数据为空!";
+			msgMap.put(FLAG_KEY, FAIL_FLAG_VAL);
+			msgMap.put(FAIL_FLAG_MSG, msg);
+			return msgMap;
+		}
+		Map<String, Object> a = obj.get(0);
+		String msgcontent = a.get("msg_content").toString();
+		String msgtext = null;
+		if (msgcontent != null && !msgcontent.equals("undefined")
+				&& !"null".equals(msgcontent)) {
+			try {
+				msgtext = LoadContentByPath(msgcontent, 3);
+			} catch (Exception e) {
+				msgMap = new HashMap();
+			    msg = e.getLocalizedMessage();
+				msgMap.put(FLAG_KEY, FAIL_FLAG_VAL);
+				msgMap.put(FAIL_FLAG_MSG, msg);
+				return msgMap;
+			}
+		}
+		String pubtime = a.get("pub_time").toString();
+		String title = a.get("msg_title").toString();
+		String msgsource = a.get("msg_src_name").toString();
+		String msgclass = "密级：" + a.get("msg_class_name").toString();
+		String msgapprstate = null;
+		String appstate = null;
+		if (a.get("appr_state").toString() != null
+				&& !a.get("appr_state").toString().equals("")) {
+			appstate = a.get("appr_state").toString();
+			switch (appstate) {
+			case "1":
+				msgapprstate = "人工审核通过";
+				break;
+			case "2":
+				msgapprstate = "人工审核拒绝";
+				break;
+			case "3":
+				msgapprstate = "审核通过";
+				break;
+			case "4":
+				msgapprstate = "审核拒绝";
+				break;
+			}
+		} else {
+			msgapprstate = "审核通过";
+		}
+		String msgappr = "审核状态：" + msgapprstate;
+		String secondrow = pubtime + "     " + msgsource + "           "
+				+ msgclass + "       " + msgappr;
+		String msgdetail = title + "\r\n" + secondrow + "\r\n" + msgtext;
+		a.put("msg_content", msgdetail);
+		a.put(FLAG_KEY, SUCCESS_FLAG_VAL);
+		return a;
     }
 
-    public static String LoadContentByPath(String path,int index) throws IOException {
-        InputStream is = new FileInputStream(path);
+    public static String LoadContentByPath(String path,int index) throws Exception {
+    	File aFile = new File(path);
+		if (!aFile.exists()) {
+			throw new Exception("文件路径不存在，请检查文件路径！不存在文件路径是"+path);
+		}
+    	InputStream is = new FileInputStream(path);
         BufferedReader in = new BufferedReader(new InputStreamReader(is));
         StringBuffer buffer = new StringBuffer();
         String line = "";
@@ -332,7 +360,6 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public String getMsgCsJson(List<Map<String,Object>> maps){
@@ -451,14 +478,55 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         }
         res.getWriter().flush();
     }
-      //新增规则参数数据上传
-    @RequestMapping(value = "uploadRules",method={RequestMethod.GET,RequestMethod.POST})
+    //新增标签类型检测
+    @RequestMapping(value = "checkTagType")
+    public void checkTagType(HttpServletResponse res,TagManageDo tagManageDo) throws IOException {
+        Map<String,Object> map = new HashMap<>();
+        if(tagManageDo.getTagTypeName()!=null && !tagManageDo.getTagTypeName().equals("undefined") && !tagManageDo.getTagTypeName().equals("null")){
+                 map.put("tagTypeName",tagManageDo.getTagTypeName());
+               }
+        if(tagManageDo.getSuperTypeName()!=null && !tagManageDo.getSuperTypeName().equals("undefined") && !tagManageDo.getSuperTypeName().equals("null")){
+            map.put("superTypeId",tagManageDo.getSuperTypeName());
+        }
+        List list = mesManageDao.selectTagType(map);
+        if(list.size()!=0){
+            res.getWriter().write("false");
+        }else {
+            res.getWriter().write("true");
+        }
+        res.getWriter().flush();
+
+    }
+
+    //上传资料检验
+    @RequestMapping(value = "checkUpDatum")
+    public void checkUpDatum(HttpServletResponse res,MesManageDO mesManageDO) throws IOException {
+        Map<String,Object> map = new HashMap<>();
+        if(mesManageDO.getMsg_content()!=null && !mesManageDO.getMsg_content().equals("undefined") && !mesManageDO.getMsg_content().equals("null")){
+            String content = mesManageDO.getMsg_content();
+            int a = content.lastIndexOf("\\");
+            int b = content.lastIndexOf(".");
+            String title = content.substring(a+1,b);
+            map.put("msg_title",title);
+        }
+        List list = mesManageDao.selectDataMes(map);
+        if(list.size()!=0){
+            res.getWriter().write("false");
+        }else {
+            res.getWriter().write("true");
+        }
+        res.getWriter().flush();
+
+    }
+
+    //新增规则参数数据上传
+    @RequestMapping(value = "uploadRules")
     @ResponseBody
     public DataStore saveRuleValues(HttpServletRequest request, HttpServletResponse response, boolean MERGE){
         try {
             //表头
             MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-            List<Object> header=Arrays.asList("参数值01","参数值02","参数值03","参数值04","参数值05","参数值06");
+            List<Object> header=Arrays.asList("参数值:");
             InputStream in = null;
             List<Map<String,Object>> listob = null;
             MultipartFile file = multipartRequest.getFile("file");
@@ -493,7 +561,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         String format1 = format.format(System.currentTimeMillis());
          String filename = format1+num+"规则数据";
          //表中参数名称
-             List<Object> header=Arrays.asList("参数值01","参数值02","参数值03","参数值04","参数值05","参数值06");
+            // List<Object> header=Arrays.asList("参数值01","参数值02","参数值03","参数值04","参数值05","参数值06");
             List<Map<String,Object>> dataList = mesManageDao.exportExcel();
             //生成一个表格
           Workbook wb = new HSSFWorkbook();
@@ -505,7 +573,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
                 //根据规则ID和规则类型生成表格
                 Sheet sheet = wb.createSheet(Integer.toString(i));
                 //设置表格默认列宽
-                sheet.setDefaultColumnWidth((short)20);
+                sheet.setDefaultColumnWidth((short)12);
                 //根据格式赋值
                 Row rowone = sheet.createRow(0);
                 rowone.createCell(0).setCellValue("规则ID：");
@@ -517,17 +585,16 @@ public class MesManageController extends SysBaseController<MesManageDO> {
                 rowthr.createCell(0).setCellValue("规则参数名称：");
                 rowthr.createCell(1).setCellValue(paramName);
                 Row row = sheet.createRow(3);
-                for(int j=0;j<header.size();j++){
-                    Cell cell = row.createCell(j);
-                    String value = header.get(j).toString();
-                    cell.setCellValue(value);
-                }
+                Cell cel = row.createCell(0);
+                String value = "规则参数值：";
+                cel.setCellValue(value);
+
                 String[] data =map.get("paramvalue").toString().split(",");
                 int index = 4;
                 int n = 0;
                 while(n<=data.length-1){
                     row = sheet.createRow(index);
-                    for(int m=0;m<header.size();m++){
+                    for(int m=0;m<10;m++){
                         Cell cell = row.createCell(m);
                         if (data[0]!=null && !"".equals(data[0]) && n<data.length ){
                             cell.setCellValue(data[n]);
@@ -898,7 +965,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
     }
 
 
-    @RequestMapping(value = "/getTagObj", method= RequestMethod.POST)
+    @RequestMapping(value = "/getTagObj")
     @ResponseBody
     public Map<String,Object> getTagObj() throws Exception {
 
@@ -910,7 +977,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
     }
 
     //
-    @RequestMapping(value = "/getEditTag", method= RequestMethod.POST)
+    @RequestMapping(value = "/getEditTag")
     @ResponseBody
     public Map<String,Object> editTagType() throws Exception {
 
@@ -924,6 +991,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
 
     //得到标签类型下数据
     @RequestMapping(value = "/getTagType")
+    @ResponseBody
     public void tagType(HttpServletResponse res,String tagTypeId) {
         HashMap<String,Object> map = new HashMap<>();
         if(tagTypeId!=null && !tagTypeId.equals("undefined") && !"null".equals(tagTypeId)){
@@ -1028,12 +1096,13 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         PageBounds pager = new PageBounds(pageNo, pageSize);
         if(keywords!=null && !keywords.equals("undefined") && !keywords.equals("")){
             String contents = "";
+            List<String> parm = new ArrayList<>();
             List<String> dataByKeyword = SolrUtils.getDataByKeyword(keywords);
             for(String data : dataByKeyword){
-                contents += ("\'"+data+"\'"+",");
+                parm.add("\'"+data+"\'");
             }
-            int index = contents.lastIndexOf(",");
-            contents = contents.substring(0,index);
+
+            queryMap.put("list",parm);
             queryMap.put("msg_content",contents);
         }
         List<Map<String,Object>> dt  = mesManageDao.selectDataMes(queryMap,pager);
@@ -1179,13 +1248,13 @@ public class MesManageController extends SysBaseController<MesManageDO> {
     }
 
     //新增资料
-    @RequestMapping(value="addData",method={RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value="addData")
     @ResponseBody
     public void addDatum(MesManageDO mesManageDO,String keywords,HttpServletRequest request,HttpServletResponse response,boolean MERGE) throws IOException, TikaException, SAXException {
        mesManageService.addDatum(mesManageDO,keywords,request,response,MERGE);
     }
     //编辑资料-获取编辑对象的数据
-    @RequestMapping(value = "/getEditDatum", method= RequestMethod.POST)
+    @RequestMapping(value = "/getEditDatum")
     @ResponseBody
     public Map<String,Object> getEditDatum() throws Exception {
         String msgId = QRequest.getString(request,"msg_id");
@@ -1203,7 +1272,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         return a;
     }
 
-    @RequestMapping(value = "/editSubClassData", method= RequestMethod.POST)
+    @RequestMapping(value = "/editSubClassData")
     @ResponseBody
     public Map<String,Object> editSubClassData() throws Exception {
         String msgTyId = QRequest.getString(request,"msg_type_id");
@@ -1217,7 +1286,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
 
 
     //资料编辑
-    @RequestMapping(value="editDatum",method={RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value="editDatum")
     @ResponseBody
     public void editDatum(MesManageDO mesManageDO,String keywords,HttpServletRequest request,HttpServletResponse response,boolean MERGE) throws Exception {
        mesManageService.editDatum(mesManageDO,keywords,request,response,MERGE);
@@ -1256,5 +1325,11 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         in.close();
         return "1";
     }
+    
+    
+    private final static String FLAG_KEY = "flag";
+    private final static String FAIL_FLAG_VAL = "0";
+    private final static String SUCCESS_FLAG_VAL = "1";
+    private final static String FAIL_FLAG_MSG = "msg";
 
 }

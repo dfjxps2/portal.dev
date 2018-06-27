@@ -8,6 +8,7 @@ import com.quick.core.util.common.QCookie;
 import com.quick.core.util.common.QRequest;
 import com.quick.portal.search.infomng.SolrInfoConstants;
 import com.quick.portal.search.infomng.SolrUtils;
+import com.quick.portal.security.authority.metric.PropertiesUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -64,7 +65,7 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
             //excel转换成列表
             List<Map<String, Object> > list = getListByExcel(in, fileName, header);
             if(list.size()==0) //文件为空
-                return ActionMsg.setError("解析失败，请检查文件后重新上传");
+                return ActionMsg.setError("请检查上传的数据是否已经存在！");
             int countParam = mesManageDao.countParam();
             int paramId ;
             if (countParam == 0){
@@ -141,11 +142,13 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
             List<Map<String,Object>> rules=  mesManageDao.selectRules(map);
         String attach = mesManageDO.getMsg_attachment();
         int lab = 0;
+        String content = combinFile(fa,mesManageDO);
+        String type = SolrInfoConstants.MSG_OBJ_TYPE;
             if(rules.size()>0){
-                String content = combinFile(fa,mesManageDO);
-                String type = SolrInfoConstants.MSG_OBJ_TYPE;
                 SolrUtils.addSolrInfo(id,content,type,title,attach);
                 lab = autoFilter(rules,id);
+            }else {
+                SolrUtils.addSolrInfo(id,content,type,title,attach);
             }
             if(lab ==1){
                 deleteFile(id);
@@ -180,7 +183,6 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
         String tyname = "mesPublish";
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         MultipartFile file = multipartRequest.getFile("file");
-//        String msg_attachment = multipartRequest.getParameter("msg_attachment");
         String msg_attachment = "";
         if(mesManageDO.getMsg_attachment()!= null && !mesManageDO.getMsg_attachment().equals("undefined") && !"null".equals(mesManageDO.getMsg_attachment())){
             String[]  msgatt = mesManageDO.getMsg_attachment().split(",");
@@ -226,9 +228,6 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
             String attName = file.getOriginalFilename(); //附件文件名
             fa = createFile(path+"attachment/",attName);
             file.transferTo(fa);
-            if (attName != null && !attName.equals("")) {
-                title = attName.split("\\.")[0];
-            }
             map.put("msg_attachment",path+"attachment/"+attName);
         }else if(newattachment!= null && !newattachment.equals(" ") && !"null".equals(newattachment)){
             fa = new File(msg_attachment);
@@ -261,11 +260,13 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
         }
         Map<String,Object> mapone = new HashMap<>();
         List<Map<String,Object>> rules=  mesManageDao.selectRules(mapone);
+        String type = SolrInfoConstants.MSG_OBJ_TYPE;
+        String content = combinFile(fa,mesManageDO);
         if(rules.size()>0){
-            String type = SolrInfoConstants.MSG_OBJ_TYPE;
-            String content = combinFile(fa,mesManageDO);
             SolrUtils.addSolrInfo(id,content,type,title,attach);
             lab  = autoFilter(rules,id);
+        }else {
+            SolrUtils.addSolrInfo(id,content,type,title,attach);
         }
         if(lab ==1){
             deleteFile(id);
@@ -338,7 +339,6 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
                 mesManageDO.setMsg_type_id(mesManageDO.getSup_msg_type_id());
             }
             mesManageDao.insert(mesManageDO);
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
            Map<String,Object> mas = new HashMap<>();
         Integer result = mesManageDao.selectMsgId(mas);
             msgId = result;
@@ -420,6 +420,7 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
             String[]  msgatt = mesManageDO.getMsg_content().split(",");
             if (msgatt.length>1){
                 msg_content = msgatt[1];
+                SolrUtils.deleteSolrInfo(msgatt[1]);
                 map.put("msg_content",msg_content);
             }
         }
@@ -444,18 +445,20 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
             if (attName != null && !attName.equals("")) {
                 title = attName.split("\\.")[0];
             }
+
             SolrUtils.addSolrInfo(content,datacontent,type,title,attach);
             map.put("msg_content",content);
+            map.put("msg_title",title);
         }else {
             File fi = new File(msg_content);
             datacontent = parseFile(fi)+datacontent;
             SolrUtils.addSolrInfo(msg_content,datacontent,type,title,attach);
         }
-        Date date = new Date();
         String useId = QCookie.getValue(request,"ids");
         map.put("pub_user_id",Integer.parseInt(useId));
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-HH hh:mm:ss");
-        map.put("appr_time",format.format(date.getTime()));
+        Calendar calendar = Calendar.getInstance();
+        Date date = calendar.getTime();
+        map.put("appr_time",date);
         mesManageDao.msgedit(map);
         List<Integer> tagid = mesManageDao.selectMesByTag(list);
         if(tagid.size()>0){
@@ -547,6 +550,7 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
         }
     }
     public  String createPath(HttpServletRequest request,  String tyname){
+        String baseDir = PropertiesUtil.getPropery("file.dir");
         Calendar date = Calendar.getInstance();
         String year = String.valueOf(date.get(Calendar.YEAR));
         String month = String.valueOf(date.get(Calendar.MONTH)+1);
@@ -555,9 +559,8 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
         if(mo<=9){
             month = "0"+month;
         }
-        String url =  request.getSession().getServletContext().getRealPath("/");
-        String path = url+"upload"+"\\"+tyname+"\\"+year+month+day+"\\";
-        return  path.replaceAll("\\\\","/");
+        String path = baseDir+"/"+tyname+"/"+year+month+day+"/";
+        return  path;
     }
 
     //删除指定路径下的文件
@@ -612,13 +615,13 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
             msgapprstate="审核通过";
         }
         String msgappr = "审核状态："+ msgapprstate;
-        String secondrow = "     "+currenttime+"     "+msgsource+"           "+msgclass+"       "+msgappr;
+        String secondrow = "       "+currenttime+"         "+msgsource+"           "+msgclass+"         "+msgappr;
         StringBuffer buffer = new StringBuffer();
         buffer.append(mesManageDO.getMsg_title());
         buffer.append(System.getProperty("line.separator"));
         buffer.append(secondrow);
         buffer.append(System.getProperty("line.separator"));
-        buffer.append(mesManageDO.getMsg_digest());
+        buffer.append("摘要： "+mesManageDO.getMsg_digest());
         buffer.append(System.getProperty("line.separator"));
         buffer.append(mesManageDO.getMsgcontent());
         fos = new FileOutputStream(file);
@@ -643,7 +646,7 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
         }else{
             nei = "";
         }
-        String content = mesManageDO.getMsg_title()+  mesManageDO.getMsg_digest()+mesManageDO.getMsgcontent()+nei;
+        String content = mesManageDO.getMsg_title()+  mesManageDO.getMsg_digest()+mesManageDO.getMsgcontent()+nei+mesManageDO.getTag_text();
         return content;
     }
 
@@ -679,64 +682,110 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
 
 
 
-    public static  List<Map<String, Object>> getListByExcel(InputStream in, String fileName,List<Object> header) throws Exception{
+    public List<Map<String, Object>> getListByExcel(InputStream in, String fileName,List<Object> header) throws Exception{
         List<Map<String, Object>> result = new ArrayList<>();
         //创建Excel工作薄
         Workbook work = getWorkbook(in,fileName);
         if(null == work){
-            throw new Exception("解析失败，请检查文件后重新上传");
+            throw new Exception("上传的工作簿为空！");
         }
-        for(int a=0;a<work.getNumCellStyles();a++) {
+        for(int a=0;a<work.getNumberOfSheets();a++) {
             Sheet sheet = work.getSheetAt(a);
-            if (sheet == null) {
-                throw new Exception("解析失败，请检查文件后重新上传");
+            if (sheet == null || sheet.getLastRowNum()==0 && sheet.getPhysicalNumberOfRows() == 0) {
+                break;
             }
             int firstRow = sheet.getFirstRowNum();
             int lastRow = sheet.getLastRowNum();
             Row row = null;
             Cell cell = null;
+            if(sheet.getRow(firstRow)==null){
+                continue;
+            }
             Cell cellone = sheet.getRow(firstRow).getCell(0);
             String ruleID = getCellValue(cellone).toString();
+            if(ruleID.equals("") || ruleID==null || ruleID.equals("undefined")){
+                break;
+            }
             Cell cello = sheet.getRow(firstRow).getCell(1);
             Integer ruleIDValue = Integer.parseInt(getCellValue(cello).toString());
-            Cell celltwo = sheet.getRow(firstRow + 1).getCell(0);
+            Cell celltwo = sheet.getRow(firstRow + 2).getCell(0);
             String ruleParamName = getCellValue(celltwo).toString();
-            Cell cellt = sheet.getRow(firstRow + 1).getCell(1);
+            Cell cellt = sheet.getRow(firstRow + 2).getCell(1);
             String ruleParamValue = getCellValue(cellt).toString();
-            if (!ruleID.equals("规则ID：") || !ruleParamName.equals("规则参数名：")) {
+            Cell cellthr = sheet.getRow(firstRow + 1).getCell(0);
+            String ruleStyle = getCellValue(cellthr).toString();
+            Cell cellfiv = sheet.getRow(firstRow + 3).getCell(0);
+            String ruleValue = getCellValue(cellfiv).toString();
+
+            if (!ruleID.equals("规则ID：") || !ruleParamName.equals("规则参数名称：")|| !ruleStyle.equals("规则类型：")||!ruleValue.equals("规则参数值：")) {
                 throw new Exception("模版错误，请检查文件后重新上传");
             }
-            for (int j = 0; j < header.size(); j++) {
-                cell = sheet.getRow(firstRow + 2).getCell(j);
-                Object value = getCellValue(cell);
-                if (!value.toString().equals(header.get(j))) {
-                    throw new Exception("模版错误，请检查文件后重新上传");
-                }
-            }
+            Map<String, Object> map = new HashMap<>();
+            map.put("rule_id", ruleIDValue);
+            map.put("param_name", ruleParamValue);
+             List<Map<String,Object>> list = mesManageDao.selectRules(map);
+//            for (int j = 0; j < header.size(); j++) {
+//                cell = sheet.getRow(firstRow + 2).getCell(j);
+//                Object value = getCellValue(cell);
+//                if (!value.toString().equals(header.get(j))) {
+//                    throw new Exception("模版错误，请检查文件后重新上传");
+//                }
+//            }
             try {
                 //遍历当前sheet中的所有行
-                for (int i = firstRow + 3; i < lastRow + 1; i++) {
+                for (int i = firstRow + 4; i < lastRow + 1; i++) {
                     row = sheet.getRow(i);
                     if (row == null) {
                         continue;
                     }
                     if (row.getFirstCellNum() != -1)
-                        for (int y = row.getFirstCellNum(); y < header.size(); y++) {
-                            Map<String, Object> map = new LinkedHashMap();
+//                        map.clear();
+                        for (int y = row.getFirstCellNum(); y < 10; y++) {
+                             map = new LinkedHashMap();
                             map.put("rule_id", ruleIDValue);
                             map.put("param_name", ruleParamValue);
                             cell = row.getCell(y);
                             Object value;
-                            if (cell != null && !"".equals(cell)) {
-                                value = cell == null ? "" : getCellValue(cell);
+                            Object cellValue = getCellValue(cell);
+                            if (null != cell && !cellValue.equals("") ) {
+                                value = cell == null ? "" : cellValue;
                             } else {
                                 break;
                             }
-                            map.put("param_value", value);
-                            result.add(map);
+                            //初始上传，数据库中没有需要过滤的数据
+                            if(list.size() == 0 && result.size()==0){
+                                map.put("param_value", value);
+                                result.add(map);
+                                continue;
+                            }else if(list.size() == 0 && result.size() !=0){
+                                map.put("param_value", value);
+                            }
+                            //过滤上传数据是否和数据库中数据重复
+                            for(int d=0;d<list.size();d++){
+                                Map<String,Object> da = list.get(d);
+                                String va = da.get("param_value").toString();
+                                if(value.equals(va) ){
+                                    break;
+                                }else if(d==list.size()-1){
+                                    map.put("param_value", value);
+                                }
+                            }
+                          //过滤上传的数据中是否有重复的
+                            if(result.size()!=0 && map.get("param_value")!=null && !"".equals(map.get("param_value"))){
+                                for(int t=0;t<result.size();t++){
+                                    Map<String,Object> da = result.get(t);
+                                    String va = da.get("param_value").toString();
+                                    if(value.equals(va) ){
+                                        break;
+                                    }else if(t==result.size()-1){
+                                        result.add(map);
+                                    }
+                                }
+                            }else if(result.size()==0 && map.get("param_value")!=null && !"".equals(map.get("param_value"))){
+                                result.add(map);
+                            }
                         }
                 }
-
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new Exception("解析失败，请检查文件后重新上传");
@@ -766,8 +815,6 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
         }
         return handler.toString();
     }
-
-
     //自动审核
     public static int autoFilter(List<Map<String,Object>> rules,String id) throws Exception {
         PageBounds pageBounds = new PageBounds();

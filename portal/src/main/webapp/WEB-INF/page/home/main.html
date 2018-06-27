@@ -98,10 +98,10 @@
 </div>
 <div class="main">
 	<div class="bar btn-group">
-		<div id="div_append" class="btn-group barbtn" style="width:30%;min-width:220px;padding:0px 20px;">
+		<!--<div id="div_append" class="btn-group barbtn" style="width:30%;min-width:220px;padding:0px 20px;">
 			<input type="text" placeholder="请输入搜索内容" class="form-control" style="width:100%;" id="txt" name="txt">
 			<span id="txtico" class="arrowDown"></span>
-		</div>
+		</div>-->
 
 		<div class="btn-group barbtn" style="width:100px;">
 			<button class="btn btn-base1" type="button" onclick="gosearch();">&nbsp;&nbsp;&nbsp;&nbsp;搜索&nbsp;&nbsp;&nbsp;&nbsp;</button>
@@ -161,9 +161,6 @@
 	$(function() {
 		loadapp('#apps',apps);
 //		bindsearch();
-		$('#txt').click(function(){
-			gosearch();
-		});
 		//回车查询
 		document.onkeydown=function(event){
 			var e = event || window.event || arguments.callee.caller.arguments[0];
