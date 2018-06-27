@@ -1105,7 +1105,7 @@ function add_table(data,name,dimension,id){
 	//数据根据第一列数据降序排序
 	var tData = changeData(ss,1);
 	for (var j = 0; j < tData.length; j++) {
-		str = str + '<tr style = "height:25px">'+
+		str = str + '<tr style = "height:20px">'+
 		'<td style="width:'+width+'%;border:1px solid '+tableLine+';font-size:12px;text-align:center;color:'+titleColor+'">'+tData[j][0]+'</td>';
 		for (var k = 0; k < tableData.length; k++) {
 			var tValue = tData[j][k+1];
@@ -1545,9 +1545,9 @@ function ps(id,name,data,unit) {
 	var width = 90/(times.length+1);
 	str = '<div id = "'+idds+'" style = "width:'+wid1+'px;height:100%;margin-top:2%">'+
 	'<div id = "s_dv"><p style = "text-align:center;color:#333333;font-size:16px;">'+name+'</p>'+
-	'<table id = "f_table" style="height:30px;border:1px solid #00FFFF;margin-left:5%;width:92%;margin-bottom:0px;">'+
+	'<table id = "f_table" style="height:24px;border:1px solid #00FFFF;margin-left:5%;width:92%;margin-bottom:0px;">'+
 	'<tr style = "border:1px solid '+tableLine+';">'+
-	'<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;color:'+titleColor+';font-size:16px;">对象</td>';
+	'<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;color:'+titleColor+';font-size:14px;">对象</td>';
 	if (unit == '1') {
 		unit = '';
 	}else {
@@ -1555,11 +1555,7 @@ function ps(id,name,data,unit) {
 	}
 for (var a = 0; a < times.length; a++) {
 	var t_name = times[a]+unit;
-	/*if (leng*17>wid1) {
-		 str =  str + '<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;color:'+titleColor+';font-size:16px;">'+wrap(t_name,siz)+'</td>';	
-	}else{*/
-		 str =  str + '<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;color:'+titleColor+';font-size:16px;">'+t_name+'</td>';
-	//}
+	str =  str + '<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;color:'+titleColor+';font-size:14px;">'+t_name+'</td>';
 }
 //var hei = hei1*0.85;
 str =  str + '</tr></table>'+

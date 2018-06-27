@@ -37,21 +37,21 @@ font-size: 14px;
 </head>
 
 <body class="qbody">
-<div class="wrapper wrapper-content animated fadeInRight">
-	<div class="row" style="margin-left: -110px;margin-right: -50px">
-        <div class="col-sm-9">
-            <div class="container-fluid lbox" style="min-height:360px;width:99%;">
+<div class="wrapper wrapper-content animated fadeInRight" style="padding-left:20px;padding-right: 40px ">
+	<div class="row">
+        <div class="col-sm-8" style="padding-left: 0px;padding-right: 0px">
+            <div class="container-fluid lbox" style="min-height:360px;width:99%;padding-right: 0px">
                 <div class="lbox-title">
                     <div style="float:left;width: 100%;text-align: center;"><h3 id = "p_name" style="color:#333333;text-align: center;"></h3></div>
                 </div>
-                 <div class="col-sm-12" style = "padding-right: 0px;">
+                 <div class="col-sm-12" style = "padding-right: 0px;padding-left: 0px">
 		            <div class="container-fluid qmain ">
 		                <div id="box" class="grid-stack qbox" data-bind="component: {name: 'dashboard-grid', params: $data}"></div>
 		            </div>
         		</div>
             </div>
         </div>
-		<div class="col-sm-3" style="margin-top: 67px;margin-left: -43px;width:28%">
+		<div class="col-sm-4" style="margin-top: 65px">
            <!--  <form id="form" name="form" method="post" action="${G.host}/monitor/saveSetting" class="wizard-big" enctype="multipart/form-data" accept="image/jpg, image/png"> -->
 			<div class="ibox">
                 <div class="ibox-content ibox-content-ad">
@@ -221,6 +221,14 @@ font-size: 14px;
 		var table=window.document.getElementById("tb");
 		var str="";
 		var color = '';
+		for (var j = 0; j < _layout.length; j++) {
+			for (var k = 0; k < metric.length; k++) {
+				if (metric[k].section_id == _layout[j].no) {
+					metric[k].snum = _layout[j].snu;
+				}
+			}
+		}
+		JsonUp(metric,'snum');
 		for (var i = 0; i < metric.length; i++) {
 			var cha = getChart(metric[i].charts);
 			var dis = "隐藏";
@@ -232,7 +240,7 @@ font-size: 14px;
 				color = 'red';
 			}
 			var idd = 'c'+i;
-			var lm =  '栏目'+metric[i].section_id;
+			var lm =  '栏目'+metric[i].snum;
 			str = str+	 '<tr>'+
 		      '<td data-label="名称">'+metric[i].measure_name+'</td>'+
 		      '<td data-label="所属栏目">'+lm+'</td>'+
@@ -434,15 +442,14 @@ font-size: 14px;
     }
     //加载页面栏目框
 	 function initLayout(layout){
-	        for(var i = 0; i < layout.length;i++){
-	        	layout[i].sid = 's'+layout[i].no;
-	        }
 	        var str = [];
 	        for(var i = 0; i < layout.length; i++){
+	        	layout[i].sid = 's'+layout[i].no;
 	            var n = layout[i];
-	            var s =  layout[i].no;
+	            var j = i+1;
+	            layout[i].snu = j;
 	            str.push('<div class="grid-stack-item" data-gs-x="',n.x,'" data-gs-y="',n.y,'" data-gs-width="',n.width,'" data-gs-height="',n.height,'" data-gs-auto-position="true">');
-	            str.push('<div class="grid-stack-item-content qsection" ><div class="_qborder"><p  style = "color:#333333;z-index:3;margin-left:8px;margin-top:3px">栏目',n.no,'</p></div><div id="', n.sid,'" class="_qbody" style = "height:100%"></div></div>');
+	            str.push('<div class="grid-stack-item-content qsection" ><div class="_qborder"><p  style = "color:#333333;z-index:3;margin-left:8px;margin-top:3px">栏目',j,'</p></div><div id="', n.sid,'" class="_qbody" style = "height:100%"></div></div>');
 	            str.push('</div>');
 	        }
 	        $("#box").html(str.join(''));
