@@ -1,4 +1,5 @@
-var colo = ['rgb(255,0,0)','rgb(0,128,0)','rgb(255,140,0)','rgb(0,0,255)','rgb(128,0,128)','rgb(255,0,255)','rgb(0,255,255)'];
+//var colo = ['rgb(255,0,0)','rgb(0,128,0)','rgb(255,140,0)','rgb(0,0,255)','rgb(128,0,128)','rgb(255,0,255)','rgb(0,255,255)'];
+var colo =['rgb(19,182,179)','rgb(99,187,241)','rgb(242,173,57)','rgb(250,133,100)','rgb(71,200,241)','rgb(108,226,224)','rgb(252,150,38)','rgb(95,159,242)','rgb(168,217,72)','rgb(233,70,124)','rgb(255,193,0)','rgb(126,221,151)','rgb(245,76,96)','rgb(218,98,104)','rgb(109,219,200)'];
 //标题和图例字体颜色
 var titleColor = '#333333';
 //图表中字体颜色
@@ -402,13 +403,18 @@ function getyAxis(data){
              color: textColor,
              fontSize: 10
          },
-    	splitLine:{show: false},//去除网格线
+    	splitLine:{
+    		show: true,
+    		lineStyle:{
+                color:'rgba(160,160,160,0.3)',
+            }},//去除网格线
         type: 'value',
          boundaryGap: [0, 0.01],
-          splitLine :
-	      {
-		      show : false
-	      },
+         splitLine:{
+     		show: true,
+     		lineStyle:{
+                 color:'rgba(160,160,160,0.3)',
+             }},
 	      axisLine:{
               lineStyle:{
                   color:'#ebebeb',
@@ -437,10 +443,11 @@ function getyAxis(data){
 	    	splitLine:{show: false},//去除网格线
 	        type: 'value',
 	         boundaryGap: [0, 0.01],
-	          splitLine :
-		      {
-			      show : false
-		      },
+	         splitLine:{
+	     		show: false,
+	     		lineStyle:{
+	                 color:'rgba(160,160,160,0.3)',
+	             }},
 		      axisLine:{
 	              lineStyle:{
 	                  color:'#ebebeb',
@@ -466,10 +473,11 @@ function getyAxis(data){
 	    	splitLine:{show: false},//去除网格线
 	        type: 'value',
 	         boundaryGap: [0, 0.01],
-	          splitLine :
-		      {
-			      show : false
-		      },
+	         splitLine:{
+	     		show: false,
+	     		lineStyle:{
+	                 color:'rgba(160,160,160,0.3)',
+	             }},
 		      axisLine:{
 	              lineStyle:{
 	                  color:'#ebebeb',
@@ -615,7 +623,7 @@ var option = {
             axisLine: {            // 坐标轴线
                 show: true,        // 默认显示，属性show控制显示与否
                 lineStyle: {       // 属性lineStyle控制线条样式
-                    color: [[0.5, '#00EFC9'],[1, '#00BCF2']], 
+                    color: [[0.5, '#94e9f5'],[1, '#5f9ff2']], 
                     width: 10
                 }
             },
@@ -724,7 +732,7 @@ function pie_echart(series,name,id,time,unit){
 		        trigger: 'item',
 		        formatter: "{a}<br/>{b}: {c} "+unit+" <br/>占比：{d}%"
 		    },
-		    color:['#1d33b5','#4169E1','#0f9aff','#48D1CC','#3CB371','#369e3b','#95c20f','#DAA520','#fcbc31','#6A5ACD','#9370DB','#9932CC'],
+		    color:colo,
 		    calculable : true,
 		    series : series
 		};
@@ -1100,10 +1108,11 @@ function add_table(data,name,dimension,id){
 		str = str + '<tr style = "height:25px">'+
 		'<td style="width:'+width+'%;border:1px solid '+tableLine+';font-size:12px;text-align:center;color:'+titleColor+'">'+tData[j][0]+'</td>';
 		for (var k = 0; k < tableData.length; k++) {
+			var tValue = tData[j][k+1];
 			if (leng*17>wid) {
-				str = str + '<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;font-size:12px;color:'+titleColor+'">'+wrap(tData[j][k+1],siz)+'</td>';
+				str = str + '<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;font-size:12px;color:'+titleColor+'">'+wrap(tValue,siz)+'</td>';
 			}else{
-				str = str + '<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;font-size:12px;color:'+titleColor+'">'+tData[j][k+1]+'</td>';
+				str = str + '<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;font-size:12px;color:'+titleColor+'">'+tValue+'</td>';
 			}
 		}
 		str =  str + '</tr>';
@@ -1342,7 +1351,7 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 				if (pieData[j].type=='pie') {
 					pie_echart(pieData[j].value,pieData[j].name,ids,pieData[j].time,pieData[j].unit);
 				}else if (pieData[j].type=='table'){
-					ps(ids,pieData[j].name,pieData[j].value);
+					ps(ids,pieData[j].name,pieData[j].value,pieData[j].unit);
 					var ida1 = 'd'+ids;
 					var tables=window.document.getElementById(ida1);
 					tables.innerHTML =add_table(pieData[j].value,pieData[j].name,pieData[j].dimension,ida1);
@@ -1354,7 +1363,7 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 			if (pieData[0].type=='pie') {
 				pie_echart(pieData[0].value,pieData[0].name,divs,pieData[0].time,pieData[0].unit);
 			}else if (pieData[0].type=='table'){
-				ps(divs,pieData[0].name,pieData[0].value);
+				ps(divs,pieData[0].name,pieData[0].value,pieData[0].unit);
 				var ida2 = 'd'+divs;
 				var table1=window.document.getElementById(ida2);
 				table1.innerHTML = add_table(pieData[0].value,pieData[0].name,pieData[0].dimension,ida2);
@@ -1424,7 +1433,7 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 					if (pieData[j].type=='pie') {
 						pie_echart(pieData[j].value,pieData[j].name,ids2,pieData[j].time,pieData[j].unit);
 					}else if (pieData[j].type=='table'){
-						ps(ids2,pieData[j].name,pieData[j].value);
+						ps(ids2,pieData[j].name,pieData[j].value,pieData[j].unit);
 						var ida3 = 'd'+ids2;
 						var tables=window.document.getElementById(ida3);
 						tables.innerHTML = add_table(pieData[j].value,pieData[j].name,pieData[j].dimension,ida3);
@@ -1439,7 +1448,7 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 				if (pieData[0].type=='pie') {
 					pie_echart(pieData[0].value,pieData[0].name,div3,pieData[0].time,pieData[0].unit);
 				}else if (pieData[0].type=='table'){
-					ps(div3,pieData[0].name,pieData[0].value);
+					ps(div3,pieData[0].name,pieData[0].value,pieData[0].unit);
 					var ida4 = 'd'+div3;
 					var table1=window.document.getElementById(ida4);
 					table1.innerHTML = add_table(pieData[0].value,pieData[0].name,pieData[0].dimension,ida4);
@@ -1514,11 +1523,9 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 	}
 }
 
-function ps(id,name,data) {
+function ps(id,name,data,unit) {
 	var idf = '#qsection_'+id;
 	$(idf).css('overflow','hidden');
-	$('.qsection').css('overflow','hidden');
-	$('.ps__thumb-y').css('display','none');
 	
 	var op1 = document.getElementById(id);
 	var op2 = document.getElementById('f_table');
@@ -1537,17 +1544,22 @@ function ps(id,name,data) {
 	var siz = parseInt(wid1/times.length/17);
 	var width = 90/(times.length+1);
 	str = '<div id = "'+idds+'" style = "width:'+wid1+'px;height:100%;margin-top:2%">'+
-	'<div id = "s_dv"><p style = "text-align:center;color:#FFF;font-size:16px;">'+name+'</p>'+
+	'<div id = "s_dv"><p style = "text-align:center;color:#333333;font-size:16px;">'+name+'</p>'+
 	'<table id = "f_table" style="height:30px;border:1px solid #00FFFF;margin-left:5%;width:92%;margin-bottom:0px;">'+
 	'<tr style = "border:1px solid '+tableLine+';">'+
 	'<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;color:'+titleColor+';font-size:16px;">对象</td>';
-
-for (var a = 0; a < times.length; a++) {
-	if (leng*17>wid1) {
-		 str =  str + '<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;color:'+titleColor+';font-size:16px;">'+wrap(times[a],siz)+'</td>';	
-	}else{
-		 str =  str + '<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;color:'+titleColor+';font-size:16px;">'+times[a]+'</td>';
+	if (unit == '1') {
+		unit = '';
+	}else {
+		unit = '('+unit+')';
 	}
+for (var a = 0; a < times.length; a++) {
+	var t_name = times[a]+unit;
+	/*if (leng*17>wid1) {
+		 str =  str + '<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;color:'+titleColor+';font-size:16px;">'+wrap(t_name,siz)+'</td>';	
+	}else{*/
+		 str =  str + '<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;color:'+titleColor+';font-size:16px;">'+t_name+'</td>';
+	//}
 }
 //var hei = hei1*0.85;
 str =  str + '</tr></table>'+
