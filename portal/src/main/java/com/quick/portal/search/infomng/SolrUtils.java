@@ -202,7 +202,7 @@ public class SolrUtils {
 		}  
 		// query.addFilterQuery("description:演员");
 		// 排序 如果按照blogId 排序，那么将blogId desc(or asc) 改成 id desc(or asc)
-		query.addSort("create_time", ORDER.asc);
+//		query.addSort("create_time", ORDER.asc);
 		return query;
 	}
 	
