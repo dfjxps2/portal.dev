@@ -533,3 +533,10 @@ function clearContext(type){
 		ctx_bak.clearRect(0,0,canvasWidth,canvasHeight);
 	}
 }
+function logout() {
+	layer.confirm("您好,确定退出吗?", {
+		btnAlign : 'c'
+	}, function() {
+		location.href = "logout";
+	});
+}
