@@ -24,9 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.json.Json;
 
-import org.json.JSONArray;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,7 +37,6 @@ import com.quick.core.base.SysWebController;
 import com.quick.core.base.model.DataStore;
 import com.quick.core.util.common.JsonUtil;
 import com.quick.core.util.common.QCommon;
-import com.quick.core.util.common.QCookie;
 import com.quick.core.util.type.TypeUtil;
 import com.quick.portal.application.ApplicationDO;
 import com.quick.portal.application.IApplicationService;
@@ -104,6 +101,7 @@ public class MonitorController extends SysWebController {
     public String setting(Model model) {
         Integer app_id = rint("t", 0);
         Integer page_id = rint("p", 0);
+        String user_id = rstr("u", loginer.getUser_id().toString());
         List<Map<String, Object>> plist = getPage(app_id);
         if(page_id == 0 && plist != null && plist.size() > 0){
             page_id = (Integer)TypeUtil.parse(Integer.class, plist.get(0).get("page_id"));
@@ -111,7 +109,7 @@ public class MonitorController extends SysWebController {
         ApplicationDO app = applicationService.selectObj(app_id.toString());
 
         Object layoutJson = getPageJson(page_id);
-        Object metricJson = getMetricJson(page_id);
+        Object metricJson = getMetricJson(page_id,user_id);
        /* String urlShow = PropertiesUtil.getPropery("index.service.showURL");
     	model.addAttribute("urlShow", urlShow);*/
         String url = PropertiesUtil.getPropery("index.service.url");
@@ -129,6 +127,7 @@ public class MonitorController extends SysWebController {
     @RequestMapping(value = "/settingUser")
   	@ResponseBody
       public Object settingUser(Integer app_id,Integer page_id) {
+    	String user_id = rstr("u", loginer.getUser_id().toString());
         List<Map<String, Object>> plist = getPage(app_id);
         if(page_id == 0 && plist != null && plist.size() > 0){
             page_id = (Integer)TypeUtil.parse(Integer.class, plist.get(0).get("page_id"));
@@ -136,17 +135,18 @@ public class MonitorController extends SysWebController {
         ApplicationDO app = applicationService.selectObj(app_id.toString());
 
         Object layoutJson = getPageJson(page_id);
-        Object metricJson = getMetricJson(page_id);
+        Object metricJson = getMetricJson(page_id,user_id);
         String url = PropertiesUtil.getPropery("index.service.url");
     	String port = PropertiesUtil.getPropery("index.service.port");
     	String urlShow = url.concat(MetricPrivilegeConstants.SERVICE_PORT).concat(port).concat(MetricPrivilegeConstants.GET_MEASURES_SERVICE_NAME);
         Map<String, Object> map = new HashMap<String, Object>();
+        
         map.put("urlShow", urlShow);
         map.put("page_id", page_id);
-        map.put("app", app);
         map.put("page", JsonUtil.serialize(plist));
-        map.put("metric", metricJson);
+        map.put("metric",  metricJson);
         map.put("layout", layoutJson);
+        map.put("app", JsonUtil.serialize(app));
         return map;
     }
     
@@ -167,7 +167,7 @@ public class MonitorController extends SysWebController {
     @ResponseBody
     public Object getLayout(Integer p){
     	//获取当前用户id
-   	 	String user_id = QCookie.getValue(request, "ids");
+    	String user_id = rstr("u", loginer.getUser_id().toString());
         String layout = "[{id:0, no:1,x: 0, y: 0, width: 12, height: 6, metric:[]}]";
         if(p != null && p > 0){
             String res = sectionService.selectLayoutJson(p,Integer.parseInt(user_id));
@@ -204,8 +204,7 @@ public class MonitorController extends SysWebController {
         return layout;
     }
 
-    public Object getMetricJson(Integer page_id){
-    	String user_id = QCookie.getValue(request, "ids");
+    public Object getMetricJson(Integer page_id,String user_id){
         String json = "[]";
         if(page_id != null && page_id > 0){
             String res = sectionService.selectMetricJson(page_id,Integer.parseInt(user_id));
@@ -218,7 +217,7 @@ public class MonitorController extends SysWebController {
     @RequestMapping(value = "/getEditionMetric")
 	@ResponseBody
     public Object  getEditionMetric(Integer app_id) {
-    	String user_id = QCookie.getValue(request, "ids");
+    	String user_id = rstr("u", loginer.getUser_id().toString());
     	String json = "";
          if(app_id!= null && app_id > 0){
         	 String res = sectionService.getEditionMetricJson(app_id,Integer.parseInt(user_id));
@@ -236,7 +235,7 @@ public class MonitorController extends SysWebController {
     @RequestMapping(value ="/saveSetting")
     @ResponseBody
     public DataStore saveSetting( String metric_json) {
-    	String user_id = QCookie.getValue(request, "ids");
+    	String user_id = rstr("u", loginer.getUser_id().toString());
     	return saveAfter(pageService.addUserConfig(metric_json,user_id));
     }
 
