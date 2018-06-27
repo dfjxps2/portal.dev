@@ -37,6 +37,7 @@ public class FileOperateUtils {
 	private static final String CONTENTTYPE = "contentType";
 	private static final String CREATETIME = "createTime";
 	private static final String UPLOADDIR = "uploadDir/";
+    private static final String CHINESE_CHARSET = "GBK"; 
 
 	/**
 	 * 将上传的文件进行重命名
@@ -292,9 +293,6 @@ public class FileOperateUtils {
 		fis.close();
 	}
 
-	public static void main(String[] args) throws IOException {
-		doCompress("D:/java/", "D:/java.zip");
-	}
 
 	public static void download(HttpServletRequest request,
 			HttpServletResponse response, String tFilePath, String aFilePath)
@@ -312,7 +310,6 @@ public class FileOperateUtils {
 		if (!aFile.exists()) {
 			throw new Exception("文件路径不存在，请检查文件路径！不存在文件路径是"+aFilePath);
 		}
-		
 		
 		// 四个文件流
 		FileInputStream input1 = new FileInputStream(new File(tFilePath));
@@ -344,9 +341,8 @@ public class FileOperateUtils {
 			while ((len = in.read(buf)) > 0) {
 				zout.write(buf, 0, len);
 			}
+			zout.setEncoding(CHINESE_CHARSET);
 			zout.closeEntry();
-			zout.setEncoding("gbk");
-//			zout.setEncoding("UTF-8");
 			in.close();
 		}
 		zout.close();
@@ -367,6 +363,8 @@ public class FileOperateUtils {
 		// 删除压缩包
 		tmpZipFile.delete();
 	}
+	
+
 
 	/**
 	 * 压缩并导出文件
