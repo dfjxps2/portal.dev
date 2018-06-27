@@ -74,7 +74,7 @@
                                         <button type="button" class="close" data-dismiss="modal" style="text-align: center" aria-hidden="true" >×</button>
                                     </div>
                                     <label class="col-xs-3 lable_top" style="width:114px;padding-left:0px;"><span class="span_require">*</span>资料文件</label>
-                                    <input id="upload"  onchange="uploadFiles();"  type="file" name="file"  style="width:90px;padding-top:20px;height:55px;left:50px;margin-left:90px;"  onmousedown="fileOnMouseDown()" onmouseup="fileOnMouseUp()" />
+                                    <input id="upload"  onchange="uploadFiles();"  type="file" name="file" class="required" style="width:90px;padding-top:20px;height:55px;left:50px;margin-left:90px;"  onmousedown="fileOnMouseDown()" onmouseup="fileOnMouseUp()" />
                                     <input id="btn_select" type="button" name="file" class="button_normal"  value="上传">
                                     <input id="msg_content"  name="msg_content" type="text" class="filename required" style="border-right-width:1px;border-right-style:solid;border-right-color:rgb(204,204,204);" readonly="readonly">
 
@@ -86,7 +86,7 @@
                         <div ibox-toolbars hidefield  style="float:left;width:62%;height:80px;margin-top:60px;">
                             <li class="li_bom" style="height:70px;">
                                 <span class="input-group-btn" style="width:9%;" ><input  id="fat-btn" type="button" class="pull-right btn btn-primary" onclick="formCommit()" value="确认"/> </span>
-                                <span class="input-group-btn"  ><input id="reset" class="pull-right btn btn-primary"  type="button"  value="放弃"/></span>
+                                <span class="input-group-btn"  ><input id="reset" class="pull-right btn btn-primary"  type="button"  value="返回"/></span>
                                 <input type="hidden" id="msgattachment" name="msg_content" class="form-control"/>
                                 <input type="hidden" id="msg_id" name="msg_id" class="form-control"/>
                                 <input type="hidden" id="msg_title" name="msg_title" class="form-control"/>
@@ -132,7 +132,6 @@
                     keyword:true
                 } ,
                 file:{
-                    required:true,
                     remote:{
                         url:quick.serverUrl+"/checkUpDatum",
                         dataType:"json",
@@ -172,6 +171,9 @@
                 if (mode == "browse") {
                     viewRead();
                 }
+                if($("#msg_content").val()!= null){
+                   $("#upload").removeClass("required")
+                }
             });
         }
     };
@@ -198,6 +200,7 @@
         $("input[type=file]").change(function(){$(this).parents(".uploader").find(".filename").val($(this).val());});
     });
     function uploadFiles() {/*上传文件*/
+        $("#upload").addClass("required");
         var file = document.getElementById("upload").files[0];
         if (typeof(file) == "undefined") {
             $("#fat-btn").attr("disabled", "true");
@@ -212,7 +215,8 @@
             });
         } else {
             $("#fat-btn").attr("disabled", "true");
-        }
+        };
+//        $("#msg_content").addClass("required");
     }
 
     //下拉框联动

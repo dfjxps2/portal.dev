@@ -160,7 +160,7 @@
             async:false,
             dataType:"json",
             success:function (data) {
-                $("#msg_class_name").append("<option selected hidden value=''>密级</option><option value= ''>密级</option>");
+//                $("#msg_class_name").append("<option selected hidden value=''>密级</option><option value= ''>密级</option>");
                 for(var i=0;i<data.length;i++){
                     var item = data[i];
                     $("#msg_class_name").append("<option value="+item.msg_class_name+","+item.msg_class_id+"> "+item.msg_class_name+"</option>")
