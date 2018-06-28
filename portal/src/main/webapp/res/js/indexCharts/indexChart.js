@@ -1,4 +1,11 @@
-var colo = ['rgb(255,0,0)','rgb(0,128,0)','rgb(255,140,0)','rgb(0,0,255)','rgb(128,0,128)','rgb(255,0,255)','rgb(0,255,255)'];
+//var colo = ['rgb(255,0,0)','rgb(0,128,0)','rgb(255,140,0)','rgb(0,0,255)','rgb(128,0,128)','rgb(255,0,255)','rgb(0,255,255)'];
+var colo =['rgb(19,182,179)','rgb(99,187,241)','rgb(242,173,57)','rgb(250,133,100)','rgb(71,200,241)','rgb(108,226,224)','rgb(252,150,38)','rgb(95,159,242)','rgb(168,217,72)','rgb(233,70,124)','rgb(255,193,0)','rgb(126,221,151)','rgb(245,76,96)','rgb(218,98,104)','rgb(109,219,200)'];
+//标题和图例字体颜色
+var titleColor = '#333333';
+//图表中字体颜色
+var textColor = '#999999';
+//表格边框颜色
+var tableLine = '#d3d3d3';
 
 //添加柱状图
 function bar(data,settingData,name,num,dimension,stateTime,endTime){
@@ -100,7 +107,7 @@ function pie(data,settingData,name,dimension,stateTime,endTime){
                 		return name;
                 	},*/
                 	 textStyle: {			   
-	  		  		      color: '#fff',
+	  		  		      color: textColor,
 	  		  		      fontSize:8
 	  		                }
                 },
@@ -136,7 +143,7 @@ function pie(data,settingData,name,dimension,stateTime,endTime){
 	                		return name;
 	                	},*/
 	                	 textStyle: {			   
-		  		  		      color: '#fff',
+		  		  		      color: textColor,
 		  		  		      fontSize:16
 		  		                }
 	                },
@@ -210,7 +217,8 @@ function dataType(data,typeData,stateTime,endTime){
 				} else if (typeData[j].charts!="line"&&typeData[j].charts!="bar") {
 					if (typeData[j].charts=="table") {
 						tmp = {};
-						tmp.value = add_table(data[i].measures,data[i].measure_name,typeData[j].dimension,stateTime,endTime);
+						tmp.value = data[i].measures;
+							//add_table(data[i].measures,data[i].measure_name,typeData[j].dimension,stateTime,endTime);
 						tmp.name = data[i].measure_name;
 						tmp.type = 'table';
 						tmp.dimension = typeData[j].dimension;
@@ -358,23 +366,19 @@ function getxAxis(data,dimension,timeType,stateTime,endTime){
 		data: xData,
 		axisLine:{
 			lineStyle:{
-				color:'#87CEFF'
-				//width:8,//这里是为了突出显示加上的，可以去掉
+				color:'#ebebeb',
+				width:2//这里是为了突出显示加上的，可以去掉
 			}
-		},    
+		},
 		axisLabel : {
 			nterval: 0,//标签设置为全部显示
 			margin: 12,
 			interval:0 ,
 			formatter:function(value){
-          	  if (value.length>4) {
-          		  return (value.substring(0,3)).split("").join("\n")+'\n'+'…';
-				}else{
-					return value.split("").join("\n");	
-				}
+          	 return value;
 				},
 			textStyle: {
-				color: '#fff',
+				color: textColor,
 				fontSize:10 // 让字体变大
 			}
 		}
@@ -396,26 +400,31 @@ function getyAxis(data){
 		nameLocation: 'end',
 	    nameGap: 8,
 		nameTextStyle: {
-             color: '#fff',
+             color: textColor,
              fontSize: 10
          },
-    	splitLine:{show: false},//去除网格线
+    	splitLine:{
+    		show: true,
+    		lineStyle:{
+                color:'rgba(160,160,160,0.3)',
+            }},//去除网格线
         type: 'value',
          boundaryGap: [0, 0.01],
-          splitLine :
-	      {
-		      show : false
-	      },
+         splitLine:{
+     		show: true,
+     		lineStyle:{
+                 color:'rgba(160,160,160,0.3)',
+             }},
 	      axisLine:{
               lineStyle:{
-                  color:'#87CEFF'
-                  //width:8,//这里是为了突出显示加上的，可以去掉
+                  color:'#ebebeb',
+                  width:2//这里是为了突出显示加上的，可以去掉
               }
           },
 	      axisLabel: {
               show: true,
               textStyle: {
-                  color: '#fff',
+                  color: textColor,
                   fontSize:8
               },
               formatter:'{value}'
@@ -428,26 +437,27 @@ function getyAxis(data){
 			nameLocation: 'end',
 		    nameGap: 8,
 			nameTextStyle: {
-	             color: '#fff',
+	             color: textColor,
 	             fontSize: 10
 	         },
 	    	splitLine:{show: false},//去除网格线
 	        type: 'value',
 	         boundaryGap: [0, 0.01],
-	          splitLine :
-		      {
-			      show : false
-		      },
+	         splitLine:{
+	     		show: false,
+	     		lineStyle:{
+	                 color:'rgba(160,160,160,0.3)',
+	             }},
 		      axisLine:{
 	              lineStyle:{
-	                  color:'#87CEFF'
-	                  //width:8,//这里是为了突出显示加上的，可以去掉
+	                  color:'#ebebeb',
+	                  width:2,//这里是为了突出显示加上的，可以去掉
 	              }
 	          },
 		      axisLabel: {
 	              show: true,
 	              textStyle: {
-	                  color: '#fff',
+	                  color: textColor,
 	                  fontSize:8
 	              },
 	              formatter:'{value}'
@@ -457,26 +467,27 @@ function getyAxis(data){
 			nameLocation: 'end',
 		    nameGap: 8,
 			nameTextStyle: {
-	             color: '#fff',
+	             color: textColor,
 	             fontSize: 10
 	         },
 	    	splitLine:{show: false},//去除网格线
 	        type: 'value',
 	         boundaryGap: [0, 0.01],
-	          splitLine :
-		      {
-			      show : false
-		      },
+	         splitLine:{
+	     		show: false,
+	     		lineStyle:{
+	                 color:'rgba(160,160,160,0.3)',
+	             }},
 		      axisLine:{
 	              lineStyle:{
-	                  color:'#87CEFF'
-	                  //width:8,//这里是为了突出显示加上的，可以去掉
+	                  color:'#ebebeb',
+	                  width:2,//这里是为了突出显示加上的，可以去掉
 	              }
 	          },
 		      axisLabel: {
 	              show: true,
 	              textStyle: {
-	                  color: '#fff',
+	                  color: textColor,
 	                  fontSize:8
 	              },
 	              formatter:'{value}'
@@ -512,7 +523,7 @@ function gauge(data,name,id,dimension,timeType,time,unit){
 			if (divhei<120) {
 				radius = '65%'	
 			}
-		 top =-5+Math.floor((divhei-228)/5)+'%';
+		 top =-5+Math.floor((divhei-220)/5)+'%';
 	}else if (divhei>400) {
 		top =Math.floor((divhei-420)/9)+'%';
 		if (Math.floor((divhei-420)/9)>5) {
@@ -591,13 +602,13 @@ var option = {
 	        left:'center',
             subtextStyle: {
                 fontSize: titleSize,
-               color:'#fff'
+               color:titleColor
             }
         },
         tooltip : {
         	z:20,
 	        trigger: 'item',
-	        formatter:name+ "<br/>{b}: {c} "+unit+" <br/>占比：{d}%"
+	        formatter:name+ "<br/>{b}: {c} "+unit
 	    },
         series: [{
             type: 'gauge',
@@ -612,7 +623,7 @@ var option = {
             axisLine: {            // 坐标轴线
                 show: true,        // 默认显示，属性show控制显示与否
                 lineStyle: {       // 属性lineStyle控制线条样式
-                    color: [[0.5, '#00EFC9'],[1, '#00BCF2']], 
+                    color: [[0.5, '#94e9f5'],[1, '#5f9ff2']], 
                     width: 10
                 }
             },
@@ -627,7 +638,7 @@ var option = {
                 splitNumber: 10,    // 每份split细分多少段
                 length:3,         // 属性length控制线长
                 lineStyle: {       // 属性lineStyle控制线条样式
-                    color: '#fff',
+                    color: textColor,
                     width: 1,
                     type: 'solid'
                 }
@@ -636,7 +647,7 @@ var option = {
                 show: true,        // 默认显示，属性show控制显示与否
                 length:15,         // 属性length控制线长
                 lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
-                    color: '#fff',
+                    color: textColor,
                     width: 1,
                     type: 'solid'
                 }
@@ -648,8 +659,8 @@ var option = {
             	offsetCenter: [0, '80%'],
                 textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
                     fontSize:txtSize,
-                    color: '#fff',
-                    shadowColor : '#fff', //默认透明
+                    color: textColor,
+                    shadowColor : textColor, //默认透明
                     shadowBlur: 10
                 }
             },
@@ -658,7 +669,7 @@ var option = {
                 textStyle: {
                     fontSize: txtSize,
                     fontWeight: "",
-                    color: '#fff', 
+                    color: textColor, 
                 }
             },
            
@@ -713,7 +724,7 @@ function pie_echart(series,name,id,time,unit){
 		        top:top,
 		        left:'center',
 		        subtextStyle: {			   
-		  		      color: '#fff',
+		  		      color: titleColor,
 		  		      fontSize:size+2
 		        }
 		  	 }],
@@ -721,7 +732,7 @@ function pie_echart(series,name,id,time,unit){
 		        trigger: 'item',
 		        formatter: "{a}<br/>{b}: {c} "+unit+" <br/>占比：{d}%"
 		    },
-		    color:['#1d33b5','#4169E1','#0f9aff','#48D1CC','#3CB371','#369e3b','#95c20f','#DAA520','#fcbc31','#6A5ACD','#9370DB','#9932CC'],
+		    color:colo,
 		    calculable : true,
 		    series : series
 		};
@@ -743,14 +754,14 @@ function set_yAxis(yAxis,data,txtSize,divhei){
 				if (data.units[yy].unit == '%') {
 					yAxis[0].axisLabel.formatter = '{value} %';
 				}else if (data.units[yy].unit != '1') {
-					yAxis[0].name ='单位：' + data.units[yy].unit;
+					yAxis[0].name =data.units[yy].unit;
 					yAxis[0].nameTextStyle.fontSize =txtSize;
 				}
 			}else{
 				if (data.units[yy].unit == '%') {
 					yAxis[0].axisLabel.formatter = '{value} %';
 				}else if (data.units[yy].unit != '1') {
-					yAxis[1].name ='单位：' +  data.units[yy].unit;
+					yAxis[1].name =data.units[yy].unit;
 					yAxis[1].nameTextStyle.fontSize =txtSize;
 				}
 			}
@@ -758,7 +769,7 @@ function set_yAxis(yAxis,data,txtSize,divhei){
 			if (data.units[yy].unit == '%') {
 				yAxis[0].axisLabel.formatter = '{value} %';
 			}else if (data.units[yy].unit != '1') {
-				yAxis[0].name ='单位：' + data.units[yy].unit;
+				yAxis[0].name =data.units[yy].unit;
 				yAxis[0].nameTextStyle.fontSize =txtSize;
 			}
 		}
@@ -810,14 +821,17 @@ function bar_echart(data,name,id){
 	var wid= getPX(id,'width'); //宽度
 	var divhei= getPX(id,'height'); //高度
 	//根据容器高度自动调整x轴和y轴字体大小
-	var txtSize = Math.floor((divhei - 160)/40)+8
-	if (txtSize>16) {
+	var txtSize = Math.floor(divhei*0.25/4);
+	if (txtSize>15) {
 		txtSize = 15;
+	}
+	if (txtSize<9) {
+		txtSize = 9;
 	}
 	//根据容器大小自动调整标注的位置和显示隐藏
 	var show = true;
 	var sh = true;
-	var top = '17%';
+	var top = '20%';
 	//根据容器高度调整时间标题的位置
 	var subtop = '0%';
 	if (divhei<410&&divhei>200) {
@@ -828,13 +842,13 @@ function bar_echart(data,name,id){
 		sh = false;
 	}
 	if (wid<100) {
-		top = '13%';
+		top = '15%';
 		show = false;
 	}
 	
 	if (divhei<100) {
 		subtop = '-38%';
-		top = '13%';
+		top = '15%';
 		show = false;
 		sh = false;
 	}
@@ -930,7 +944,8 @@ function bar_echart(data,name,id){
 	            
 	        },
 	           textStyle:{
-	            color:"#fff"},
+	            color:textColor
+	            },
 	           borderColor:"#eee"
 	    },
 	    {
@@ -953,20 +968,35 @@ function bar_echart(data,name,id){
 		end = xAxis[0].data.length;
 	}
 	//当x轴的分割宽度大于字段的占用宽度时 地段横向全部展示
-	if (wid/(end+1)>xAxis[0].axisLabel.textStyle.fontSize*1*le) {
-		xAxis[0].axisLabel.formatter = function(value){
-					return value;
-				};
-	}
+	//if (wid/(end+3)<txtSize*1*le) {
+		var lz = Math.floor(divhei*0.2/txtSize);
+
+			if (txtSize*1*le<wid/(end+3)) {
+				xAxis[0].axisLabel.formatter = function(value){
+					return value;	
+				}
+			}else {
+				xAxis[0].axisLabel.formatter = function(value){
+					if (lz == 0) {
+						return '';
+					}
+					if (value.length<=lz+1) {
+						return value.split("").join("\n");	
+					}else{
+						 return (value.substring(0,lz)).split("").join("\n")+'\n'+'…';
+					}
+				}
+			}
+	//}
 	var myChart = echarts.init(document.getElementById(id));
 	option = {
 		    title: [{
 		  	   show:sh,
 			   subtext:'时间：'+data.time[0]+'-'+data.time[1],
 			   top:subtop,
-			   right:'3%',
+			   right:'6%',
 			   subtextStyle: {			   
-			  		color: '#fff',
+			  		color: titleColor,
 			  		fontSize:txtSize
 			        }
 			  }],
@@ -994,7 +1024,7 @@ function bar_echart(data,name,id){
 		    	  data:legendData,
 		    	  right:'3%',
 		    	  textStyle: {			   
-		  		      color: '#fff',
+		  		      color: titleColor,
 		  		      fontSize:txtSize
 		        }
 		   },
@@ -1013,19 +1043,12 @@ function bar_echart(data,name,id){
 	 myChart.setOption (option);
 }
 
-//生成表格方法
-function add_table(data,name,dimension){
-	//data = setData(data, dimension);/
+function getT(data){
 	var times = [];
-	var names = [];
 	for (var i = 0; i < data.length; i++) {
-		if (data[0].month_id == data[i].month_id) {
-			names.push(data[i].object_name);	
-		}
 		times.push(data[i].month_id);
 	}
 	times = onlyData(times);
-	//对日期进行降序排序
 	var compare = function (x, y) {//降序排序
 		 if (x < y) {
 		        return 1;
@@ -1036,14 +1059,28 @@ function add_table(data,name,dimension){
 		    }
 	}
 	times.sort(compare);
-	var width = 90/(times.length+1);
-	var str = '<p style="width:100%;text-align:center;font-size:15px;color:#fff;margin-top:2%;">'+name+'</p>'+
-		'<table style="border:1px solid #00FFFF;margin-left:5%;width:90%;margin-top:1%;margin-bottom:4%;">'+
-		'<tr style = "height:33px;border:2px solid #00FFFF;">'+
-		'<td style="width:'+width+'%;border:1px solid #00FFFF;text-align:center;color:#00FFFF;font-size:16px;">对象</td>';
-	for (var a = 0; a < times.length; a++) {
-		 str =  str + '<td style="width:'+width+'%;border:1px solid #00FFFF;text-align:center;color:#00FFFF;font-size:16px;">'+times[a]+'</td>';
+	return times;
+}
+
+//生成表格方法
+function add_table(data,name,dimension,id){
+	var op = document.getElementById(id);
+	var wid= op.offsetWidth; //宽度
+	var times = getT(data);
+	var names = [];
+	for (var i = 0; i < data.length; i++) {
+		if (data[0].month_id == data[i].month_id) {
+			names.push(data[i].object_name);	
+		}
 	}
+	var leng = 2;
+	for (var l = 0; l < times.length; l++) {
+		leng = leng+times[l].length;
+	}
+	var siz = parseInt(wid/times.length/17);
+	var width = 90/(times.length+1);
+	var str = '<table id = "f_table" style="border:1px solid '+tableLine+';margin-left:5%;width:92%;margin-top:0px;margin-bottom:7%;">';
+	str =  str + '</tr>';
 	//吧数据解析成  需要的格式
 	var tableData = [];
 	for (var a = 0; a < times.length; a++) {
@@ -1067,12 +1104,16 @@ function add_table(data,name,dimension){
 	}
 	//数据根据第一列数据降序排序
 	var tData = changeData(ss,1);
-	str =  str + '</tr>';
 	for (var j = 0; j < tData.length; j++) {
-		str = str + '<tr style = "height:25px">'+
-		'<td style="width:'+width+'%;border:1px solid #00FFFF;font-size:12px;text-align:center;color:#fff">'+tData[j][0]+'</td>';
+		str = str + '<tr style = "height:20px">'+
+		'<td style="width:'+width+'%;border:1px solid '+tableLine+';font-size:12px;text-align:center;color:'+titleColor+'">'+tData[j][0]+'</td>';
 		for (var k = 0; k < tableData.length; k++) {
-			str = str + '<td style="width:'+width+'%;border:1px solid #00FFFF;text-align:center;font-size:12px;color:#fff">'+tData[j][k+1]+'</td>';
+			var tValue = tData[j][k+1];
+			if (leng*17>wid) {
+				str = str + '<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;font-size:12px;color:'+titleColor+'">'+wrap(tValue,siz)+'</td>';
+			}else{
+				str = str + '<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;font-size:12px;color:'+titleColor+'">'+tValue+'</td>';
+			}
 		}
 		str =  str + '</tr>';
 	}
@@ -1080,6 +1121,18 @@ function add_table(data,name,dimension){
 	return str;
 }
 
+function nName(value){
+	var name = value+"";
+	var str= '';
+	if (name.length>2) {
+		for (var i = 0; i < name.length; i++) {
+			str +=name[i]+'\n';
+		}
+	}else {
+		return name;
+	}
+	return str;
+}
 
 
 //向页面添加图表方法  data--指标数据   name--栏目名称       typeData--栏目图表信息   id--栏目的div的id
@@ -1225,7 +1278,7 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 			}
 		}else{
 			if (divwid>divhei) {
-				str='<div id = "'+div1+'"  style="width: 49%;height:99.5%;float: left;">'+
+				str='<div id = "'+div1+'"  style="width: 50%;height:99.5%;float: left;">'+
 				'</div>'+
 				'<div id = "'+div2+'div" style="width: 50%;height:99.5%;float: left;">'+
 				'</div>';
@@ -1298,8 +1351,10 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 				if (pieData[j].type=='pie') {
 					pie_echart(pieData[j].value,pieData[j].name,ids,pieData[j].time,pieData[j].unit);
 				}else if (pieData[j].type=='table'){
-					var tables=window.document.getElementById(ids);
-					tables.innerHTML = pieData[j].value;
+					ps(ids,pieData[j].name,pieData[j].value,pieData[j].unit);
+					var ida1 = 'd'+ids;
+					var tables=window.document.getElementById(ida1);
+					tables.innerHTML =add_table(pieData[j].value,pieData[j].name,pieData[j].dimension,ida1);
 				}else if (pieData[j].type=='gauge'){
 					gauge(pieData[j].value,pieData[j].name,ids,pieData[j].dimension,pieData[j].time_dim,pieData[j].time,pieData[j].unit);
 				}
@@ -1308,8 +1363,10 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 			if (pieData[0].type=='pie') {
 				pie_echart(pieData[0].value,pieData[0].name,divs,pieData[0].time,pieData[0].unit);
 			}else if (pieData[0].type=='table'){
-				var table1=window.document.getElementById(divs);
-				table1.innerHTML = pieData[0].value;
+				ps(divs,pieData[0].name,pieData[0].value,pieData[0].unit);
+				var ida2 = 'd'+divs;
+				var table1=window.document.getElementById(ida2);
+				table1.innerHTML = add_table(pieData[0].value,pieData[0].name,pieData[0].dimension,ida2);
 			}else if (pieData[0].type=='gauge'){
 				gauge(pieData[0].value,pieData[0].name,divs,pieData[0].dimension,pieData[0].time_dim,pieData[0].time,pieData[0].unit);
 			}
@@ -1376,8 +1433,10 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 					if (pieData[j].type=='pie') {
 						pie_echart(pieData[j].value,pieData[j].name,ids2,pieData[j].time,pieData[j].unit);
 					}else if (pieData[j].type=='table'){
-						var tables=window.document.getElementById(ids2);
-						tables.innerHTML = pieData[j].value;
+						ps(ids2,pieData[j].name,pieData[j].value,pieData[j].unit);
+						var ida3 = 'd'+ids2;
+						var tables=window.document.getElementById(ida3);
+						tables.innerHTML = add_table(pieData[j].value,pieData[j].name,pieData[j].dimension,ida3);
 					}else if (pieData[j].type=='gauge'){
 						gauge(pieData[j].value,pieData[j].name,ids2,pieData[j].dimension,pieData[j].time_dim,pieData[j].time,pieData[j].unit);
 					}
@@ -1389,8 +1448,10 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 				if (pieData[0].type=='pie') {
 					pie_echart(pieData[0].value,pieData[0].name,div3,pieData[0].time,pieData[0].unit);
 				}else if (pieData[0].type=='table'){
-					var table1=window.document.getElementById(div3);
-					table1.innerHTML = pieData[0].value;
+					ps(div3,pieData[0].name,pieData[0].value,pieData[0].unit);
+					var ida4 = 'd'+div3;
+					var table1=window.document.getElementById(ida4);
+					table1.innerHTML = add_table(pieData[0].value,pieData[0].name,pieData[0].dimension,ida4);
 				}else if (pieData[0].type=='gauge'){
 					gauge(pieData[0].value,pieData[0].name,div3,pieData[0].dimension,pieData[0].time_dim,pieData[0].time,pieData[0].unit);
 				}
@@ -1462,9 +1523,63 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 	}
 }
 
+function ps(id,name,data,unit) {
+	var idf = '#qsection_'+id;
+	$(idf).css('overflow','hidden');
+	
+	var op1 = document.getElementById(id);
+	var op2 = document.getElementById('f_table');
+	var wid1= op1.offsetWidth; //宽度
+	var hei1= op1.offsetHeight; //高度
+	var wid2= op1.offsetWidth; //宽度
+	var str = "";
+	var tables=window.document.getElementById(id);
+	var idd = 'd'+id;
+	var idds = 'dd'+id;
+	var times = getT(data);
+	var leng = 2;
+	for (var l = 0; l < times.length; l++) {
+		leng = leng+times[l].length;
+	}
+	var siz = parseInt(wid1/times.length/17);
+	var width = 90/(times.length+1);
+	str = '<div id = "'+idds+'" style = "width:'+wid1+'px;height:100%;margin-top:2%">'+
+	'<div id = "s_dv"><p style = "text-align:center;color:#333333;font-size:16px;">'+name+'</p>'+
+	'<table id = "f_table" style="height:24px;border:1px solid #00FFFF;margin-left:5%;width:92%;margin-bottom:0px;">'+
+	'<tr style = "border:1px solid '+tableLine+';">'+
+	'<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;color:'+titleColor+';font-size:14px;">对象</td>';
+	if (unit == '1') {
+		unit = '';
+	}else {
+		unit = '('+unit+')';
+	}
+for (var a = 0; a < times.length; a++) {
+	var t_name = times[a]+unit;
+	str =  str + '<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;color:'+titleColor+';font-size:14px;">'+t_name+'</td>';
+}
+//var hei = hei1*0.85;
+str =  str + '</tr></table>'+
+	'</div>'+
+	'<div id = "'+idd+'" class = "innerbox" style = "width:'+wid1+'px;height:80%;position: absolute;">'+
+	'</div></div>';
+	tables.innerHTML = str;
+	var op3 = document.getElementById("s_dv");
+	var hei2= op3.offsetHeight; //宽度
+	var hei = hei1-hei2-3+'px';
+	var ids = "#"+idd;
+	$(ids).css('height',hei);
+	
+	new PerfectScrollbar(ids);
+	var idss = ids+' .ps__rail-x';
+	$(idss).css('display','none');
+	if (wid1<wid2) {
+		$(idss).css('display','');	
+	}
+}
+
 //文字换行方法
 function wrap(name,size) {
-	var s3= name;
+	var s3= name+"";
 	 var newParamsName = "";// 最终拼接成的字符串
 	var paramsNameNumber = s3.length;// 实际标签的个数
 	var provideNumber =size;// 每行能显示的字的个数

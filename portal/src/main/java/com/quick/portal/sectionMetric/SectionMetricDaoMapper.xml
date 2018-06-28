@@ -70,14 +70,7 @@
             order by ${_sql_order}
         </if>
 	</select> -->
-	
-		<!--查询页面所有关联信息源 -->
-	<select id="getSecId" parameterType="map" resultType="map">
-		select * from section_metric
-where 1=1 
-and section_id = #{section_id}
-and  metric_id = (select metric_id from metric where src_metric_id =#{src_metric_id})
-	</select>
+
 	
 	<!-- 查询总记录数 -->
 	<select id="count" parameterType="map" resultType="int">

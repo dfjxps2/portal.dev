@@ -7,6 +7,7 @@
 <link href="${G.host}/res/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <link href="${G.host}/res/css/animate.min.css" rel="stylesheet">
 <link href="${G.host}/res/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<link href="${G.host}/res/js/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet" type="text/css" />
 <link href="${G.host}/res/script/home/gridstack.min.css" rel="stylesheet" type="text/css" />
 <link href="${G.host}/res/layer/skin/moon/style.css" rel="stylesheet" type="text/css" />
 <link href="${G.host}/upload/pageTemplate/t1/style.css" rel="stylesheet" type="text/css" />
@@ -18,6 +19,7 @@
 <script src="${G.host}/res/js/echarts/echarts.js"></script>
 <script src="${G.host}/res/js/indexCharts/indexChart.js"></script>
 <script src="${G.host}/res/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${G.host}/res/js/perfect-scrollbar/js/perfect-scrollbar.min.js" charset="utf-8"></script>
 
 </head>
 
@@ -25,15 +27,15 @@
 <div class="qheader-title"><div class="qheader-title1">${app.app_name}</div><div id="qt2" class="qheader-title2"></div></div>
 <div class="qheader"><div class="qmenu-ico" onclick="$('.qmenu').toggle();"><i class="fa fa-list-ul"></i></div></div>
 <div class="qpage animated fadeInRight">
-    <div class="row"  style="margin-top: 5px">
-    	<div class="col-sm-12"  style="color: #fff">
-    		<div id = "date_div" style = "display: none">
-				<input id="submit-form" type="button"  value="查询" onclick="getByTime();"  style="float: right;margin-right: 50px;background-color: #337ab7;border: 1px solid #97FFFF;height:24px;">
-			   	 <input class="input_date time1" id="enddate" name="enddate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyy'})" readonly="readonly" style="background-color: transparent;float: right;margin-right: 20px;width:85px;border: 1px solid #97FFFF;text-align: center;display: none"/>
-			   	 <input class="input_date time2" id="enddate" name="enddate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyyMM'})" readonly="readonly" style="background-color: transparent;float: right;margin-right: 20px;width:85px;border: 1px solid #97FFFF;text-align: center;display: none"/>
+    <div class="row"  style="margin-top: 2px">
+    	<div class="col-sm-12"  style="height:25px">
+    		<div id = "date_div" style = "color:#999999;display: none;">
+				<input id="submit-form" type="button"  value="查询" onclick="getByTime();"  style="float: right;margin-right: 50px;background-color: #2ca4b0;border:1px solid #2ca4b0;height:24px;color:#fff">
+			   	 <input class="input_date time1" id="enddate" name="enddate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyy'})" readonly="readonly" style="background-color: transparent;float: right;margin-right: 20px;width:85px;border: 1px solid #d2d2d2;text-align: center;display: none"/>
+			   	 <input class="input_date time2" id="enddate" name="enddate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyyMM'})" readonly="readonly" style="background-color: transparent;float: right;margin-right: 20px;width:85px;border: 1px solid #d2d2d2;text-align: center;display: none"/>
 			     <label style="float: right;margin-right: 10px;">结束时间</label>
-			     <input class="input_date time1" id="statedate" name="statedate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyy'})" readonly="readonly" style="background-color: transparent;float: right;margin-right:20px;width:85px;border: 1px solid #97FFFF;text-align: center;display: none"/>
-			     <input class="input_date time2" id="statedate" name="statedate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyyMM'})" readonly="readonly" style="background-color: transparent;float: right;margin-right:20px;width:85px;border: 1px solid #97FFFF;text-align: center;display: none"/>
+			     <input class="input_date time1" id="statedate" name="statedate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyy'})" readonly="readonly" style="background-color: transparent;float: right;margin-right:20px;width:85px;border: 1px solid #d2d2d2;text-align: center;display: none"/>
+			     <input class="input_date time2" id="statedate" name="statedate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyyMM'})" readonly="readonly" style="background-color: transparent;float: right;margin-right:20px;width:85px;border: 1px solid #d2d2d2;text-align: center;display: none"/>
 			     <label style="float: right;margin-right: 10px;">开始时间</label>
 	    	</div>
         </div>
@@ -99,6 +101,8 @@
             if(h>12) h = 12;
             return ($(window).height() - 68) / h - 20;
         }
+        $('.qsection').css('overflow','hidden');
+    	$('.ps__thumb-y').css('display','none');
     }
     function initChart(){
         for(var m = 0; m < _layout.length; m++){
@@ -172,12 +176,12 @@
     	if (id_s!='') {
     		if (id_s == id) {
     			id_s = ''
-    				$(id).css('border-color','#17397f');
+    				$(id).css('border-color','#fff');
     				$("#date_div").css('display','none');
 			}else {
-				$(id_s).css('border-color','#17397f');
+				$(id_s).css('border-color','#fff');
 				id_s = id;
-				$(id).css('border-color','#fff');
+				$(id).css('border-color','#09a5ab');
 				$("#date_div").css('display','');
 				if (f == true) {
 					$('.time2').css('display','');
@@ -191,7 +195,7 @@
 			}
 		}else {
 			id_s = id;
-			$(id).css('border-color','#fff');
+			$(id).css('border-color','#09a5ab');
 			$("#date_div").css('display','');
 			if (f == true) {
 				$('.time2').css('display','');

@@ -77,8 +77,9 @@
         }
     };
     function cancel(){
-        var url = quick.serverUrl+"/mesappr";
-        window.location.href = url;
+//        var url = quick.serverUrl+"/mesappr";
+//        window.location.href = url;
+        window.history.back();
     }
     function downAttachement() {
         var a = $("#msg_attachment").val()

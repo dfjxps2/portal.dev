@@ -138,13 +138,11 @@ function click_event(str){
 	$("#txt").val(str);
 	$ui.find('.arrowUp').addClass('arrowDown').removeClass('arrowUp').andSelf().find('.dropdown').slideUp(10);
 }
-var is_search = false;
+var is_lock = false;
 function gosearch(){
-	//var $ui = $('#div_append');
-	//$ui.find('.arrowUp').addClass('arrowDown').removeClass('arrowUp').andSelf().find('.dropdown').slideUp(10);
-	if(is_search)
+	if(is_lock)
 		return ;
-	is_search = true;
+	is_lock = true;
 	if(!layer.values)
         layer.values = {};
 	layer.open({
@@ -157,7 +155,7 @@ function gosearch(){
 		,yes: function(index, layero){
             layer.closeAll();
         },end:function(){
-			is_search = false;
+			is_lock = false;
 		}
         ,btn2: function(){
             layer.closeAll();
@@ -168,8 +166,6 @@ function gosearch(){
         }
     });
 }
-
-
 
 function adddel(){
 	var o = $(".apps:visible").find(".cell");
@@ -199,6 +195,9 @@ function delend(){
 	}
 }
 function addnew(){
+	if(is_lock)
+		return false;
+	is_lock = true;
 	layer.open({
 		type: 2
 		//,title: '添加应用'
@@ -206,7 +205,6 @@ function addnew(){
 		,area: ['680px', '500px']
 		,shade: 0
 		,skin:'addwin'
-		,maxmin: true
 		,content: _host+'/home/addapp'
 		,btn: ['添加', '取消'] //只是为了演示
 		,yes: function(index, layero){
@@ -228,6 +226,8 @@ function addnew(){
 		,zIndex: layer.zIndex
 		,success: function(layero){
 			layer.setTop(layero);
+		},end:function(){
+			is_lock = false;
 		}
 	});
 }
@@ -532,4 +532,11 @@ function clearContext(type){
 		context.clearRect(0,0,canvasWidth,canvasHeight);
 		ctx_bak.clearRect(0,0,canvasWidth,canvasHeight);
 	}
+}
+function logout() {
+	layer.confirm("您好,确定退出吗?", {
+		btnAlign : 'c'
+	}, function() {
+		location.href = "logout";
+	});
 }
