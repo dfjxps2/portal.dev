@@ -18,37 +18,17 @@
  */
 package com.quick.portal.sysUser;
 
-import com.quick.core.base.ISysBaseService;
-import com.quick.core.base.SysBaseController;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.quick.core.base.model.DataStore;
-import com.quick.core.base.model.JsonDataGrid;
-import com.quick.core.base.model.PageBounds;
-import com.quick.core.util.User.UserUtil;
-<<<<<<< .mine
-import com.quick.core.util.common.QCookie;
-||||||| .r316
-=======
-import com.quick.core.util.common.MD5Util;
->>>>>>> .r325
-import com.quick.core.util.common.QRequest;
-import com.quick.portal.mesManage.MesManageDO;
-import com.quick.portal.userDepartment.IUserDepartmentDao;
-import com.quick.portal.userJob.IUserJobDao;
-import com.quick.portal.userRole.IUserRoleDao;
-import com.quick.portal.userRoleRela.IUserRoleRelaDao;
-import com.quick.portal.userRoleRela.UserRoleRelaDO;
-<<<<<<< .mine
-import com.seaboxdata.portal.PortalPasswordEncoder;
-||||||| .r316
-=======
-
->>>>>>> .r325
-import org.apache.poi.ss.formula.functions.T;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,13 +38,20 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.text.MessageFormat;
-import java.util.*;
+import com.quick.core.base.ISysBaseService;
+import com.quick.core.base.SysBaseController;
+import com.quick.core.base.model.JsonDataGrid;
+import com.quick.core.base.model.PageBounds;
+import com.quick.core.util.common.QCookie;
+import com.quick.core.util.common.QRequest;
+import com.quick.portal.userDepartment.IUserDepartmentDao;
+import com.quick.portal.userJob.IUserJobDao;
+import com.quick.portal.userRole.IUserRoleDao;
+import com.quick.portal.userRoleRela.IUserRoleRelaDao;
+import com.quick.portal.userRoleRela.UserRoleRelaDO;
+import com.seaboxdata.portal.PortalPasswordEncoder;
 
 /**
  * sys_user请求类
