@@ -60,9 +60,9 @@
                           <div class="left"><a href="main"><img align ="left" src="${G.host}/res/script/home/images/logo2.png" title="系统首页"></a></div>
 					</div>
 					<ul class="nav navbar-top-links navbar-right">
-						<li class="hidden-xs"><a href="javascript:void(0);"
-							onclick="javascript:location.href='home/main';"
-							class="J_menuItem" data-index="0"><i
+						
+					  <li class="hidden-xs"><a href="javascript:void(0);"
+							onclick="javascript:location.href='home/main';"><i
 								class="fa fa-cart-arrow-down"></i> 返回领导驾驶舱</a></li>
 						<li class="dropdown hidden-xs"><a
 							class="right-sidebar-toggle" aria-expanded="false"> <i
@@ -259,6 +259,11 @@
 		}, function() {
 			window.location.href = "home/logout";
 		});
+	}
+	
+	function goMain() {
+		window.location.href = "home/main";
+		
 	}
 </script>
 
