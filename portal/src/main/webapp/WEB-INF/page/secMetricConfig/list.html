@@ -56,8 +56,7 @@
 							  // +"<button type='button' class='btn_el' onclick='del(\""+row.config_id+"\",\""+row.config_id+"\")'>删除</button>";
 					   ;
 					   if(row.is_active==1){
-						   state= "<button type='button' class='btn_el' onclick='use(\""+row.config_id+"\",\""+row.user_id+"\",\""+row.cre_time+"\",\""+row.is_active+"\")'>禁用</button>| "
-								   +"<button type='button' class='btn_el' onclick='edit(\""+row.cre_id+"\",\""+row.version_num+"\",\""+row.cre_time+"\")'>编辑版本号</button> ";
+						   state="<button type='button' class='btn_el' onclick='edit(\""+row.cre_id+"\",\""+row.version_num+"\",\""+row.cre_time+"\")'>编辑版本号</button> ";
 
 					   }
 					   return state;
