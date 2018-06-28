@@ -494,8 +494,9 @@ public class SysUserController extends SysBaseController<SysUserDO> {
     @RequestMapping(value = "/decPwdCase")
     @ResponseBody
     public void decPwdCase(String pwd,HttpServletResponse res) throws IOException {
-    	 String conPwd = MD5Util.convertMD5(pwd);
-         String decPwd =  MD5Util.convertMD5(conPwd);
+/*    	 String conPwd = MD5Util.convertMD5(pwd);
+         String decPwd =  MD5Util.convertMD5(conPwd);*/
+         String decPwd = null;
         try {
             res.getWriter().write(decPwd);
             res.getWriter().flush();
@@ -510,7 +511,8 @@ public class SysUserController extends SysBaseController<SysUserDO> {
     @RequestMapping(value = "/enPwdCase")
     @ResponseBody
     public void enPwdCase(String pwd,HttpServletResponse res) throws IOException {
-         String enPwd =  MD5Util.string2MD5(pwd);
+//         String enPwd =  MD5Util.string2MD5(pwd);
+    	String enPwd = null;
         try {
             res.getWriter().write(enPwd);
             res.getWriter().flush();
