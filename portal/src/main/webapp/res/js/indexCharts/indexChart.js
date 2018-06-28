@@ -13,7 +13,7 @@ function bar(data,settingData,name,num,dimension,stateTime,endTime){
 	//添加数据
 	var datas = [];
 	for (var i = 0; i < data.length; i++) {
-		datas.push(data[i].value);
+			datas.push(data[i].value);
 	}
 	var bars = {
         name:name,
@@ -33,6 +33,7 @@ function bar(data,settingData,name,num,dimension,stateTime,endTime){
        };
 	return bars;
 }
+
 
 //给rgb颜色添加透明度
 function changeColor(color,num){
@@ -77,9 +78,11 @@ function pie(data,settingData,name,dimension,stateTime,endTime){
 	//添加数据
 	for (var i = 0; i < data.length; i++) {
 		tmp = {};
-		tmp.value=data[i].value;
-		tmp.name=data[i].object_name;
-		datas.push(tmp);
+		if (data[i].value>0) {
+			tmp.value=data[i].value;
+			tmp.name=data[i].object_name;
+			datas.push(tmp);
+		}
 	}
 //	对数据进行排序
 	datas = JsonDown(datas,'value');
@@ -102,10 +105,10 @@ function pie(data,settingData,name,dimension,stateTime,endTime){
             },	
             label: {
                 normal: {
-                	/*formatter:function(v) {
-                		var name=wrap(v.name,8);
+                	formatter:function(v) {
+                		var name=wrap(v.name,6);
                 		return name;
-                	},*/
+                	},
                 	 textStyle: {			   
 	  		  		      color: textColor,
 	  		  		      fontSize:8
@@ -138,10 +141,10 @@ function pie(data,settingData,name,dimension,stateTime,endTime){
 	            },	
 	            label: {
 	                normal: {
-	                	/*formatter:function(v) {
-	                		var name=wrap(v.name,8);
+	                	formatter:function(v) {
+	                		var name=wrap(v.name,6);
 	                		return name;
-	                	},*/
+	                	},
 	                	 textStyle: {			   
 		  		  		      color: textColor,
 		  		  		      fontSize:16
@@ -561,7 +564,7 @@ function gauge(data,name,id,dimension,timeType,time,unit){
 	}else if (unit != '%') {
 		unit = '('+unit+')';
 	}
-	var formatter = '{value}'+unit;
+	var formatter = '{value} '+unit;
 	if (Math.max.apply(null, dx)<100) {
 		max = 100;
 		//formatter = '{value}%';
@@ -582,7 +585,17 @@ function gauge(data,name,id,dimension,timeType,time,unit){
         series: series
     });
 }
-
+	var tooltip = {
+        trigger: 'item',
+        formatter:name+ "<br/>{b}: {c} "+unit
+    };
+if (divwid<200||divhei<200) {
+	tooltip = {
+	    	position:'',
+	        trigger: 'item',
+	        formatter:name+ "<br/>{b}: {c} "+unit
+	    };
+}
 var option = {
     baseOption: {
         timeline: {
@@ -605,11 +618,7 @@ var option = {
                color:titleColor
             }
         },
-        tooltip : {
-        	z:20,
-	        trigger: 'item',
-	        formatter:name+ "<br/>{b}: {c} "+unit
-	    },
+        tooltip : tooltip,
         series: [{
             type: 'gauge',
             center: ['50%', '60%'],
@@ -708,13 +717,15 @@ function pie_echart(series,name,id,time,unit){
 	if (hei<80) {
 		show = false;
 	}
-	if (unit == '1') {
-		unit = '';
-	}else if (unit != '%') {
-		unit = '('+unit+')';
-	}
+	var tooltip = pieTooltip(wid,hei,unit,series[0].data,name,'json');
 	//修改饼图提示信息的字体大小
 	var size = Math.floor((wh-180)/26+10);
+	if (size>16) {
+		size = 16;
+	}
+	if (size<9) {
+		size = 9;
+	}
 	 series[0].label.normal.textStyle.fontSize = size;
 	var myChart = echarts.init(document.getElementById(id));	
 	option = {
@@ -728,17 +739,86 @@ function pie_echart(series,name,id,time,unit){
 		  		      fontSize:size+2
 		        }
 		  	 }],
-		    tooltip : {
-		        trigger: 'item',
-		        formatter: "{a}<br/>{b}: {c} "+unit+" <br/>占比：{d}%"
-		    },
+		    tooltip : tooltip,
 		    color:colo,
 		    calculable : true,
 		    series : series
 		};
 	 myChart.setOption (option);
 }
+function ifInteger (data,type){
+	if (type == 'json') {
+		for (var i = 0; i < data.length; i++) {
+			if ((data[i].value*1)%1 != 0) {
+				return false;
+			}
+		}
+	}else {
+		for (var j = 0; j < data.length; j++) {
+			var dd = data[j].data;
+			for (var k = 0; k < dd.length; k++) {
+				if ((dd[k]*1)%1 != 0) {
+					return false;
+				}	
+			}
+		}
+	}
+	return true;
+}
 
+function pieTooltip(wid,hei,unit,data,name,type){
+		var f = ifInteger (data,type);
+		var sum = 0;
+		for (var k = 0; k < data.length; k++) {
+			sum +=data[k].value*1;
+		}
+		if (unit == '1') {
+			unit = '';
+		}else if (unit != '%') {
+			unit = '('+unit+')';
+		}
+		var si = 2;
+		if (f) {
+			si = 0;
+		}
+		var tooltip = {
+		        trigger: 'item',
+		        formatter: function (param){
+		        	var l=param.name.length+param.value.length;
+		        	var pro = '';
+		        	var va =  (param.value*1).toFixed(si);
+		        	if (unit != '%') {
+		        		pro = '<br/>占比：'+(va/sum*100).toFixed(2)+'%';
+					}
+		        	return name+'<br/>'+ param.name + ': '+va+' '+unit+pro;
+		        },
+		        textStyle: {
+		        	fontSize:12
+		        }
+		    };
+		if (wid<200||hei<200) {
+			tooltip = {
+					position:'',
+			        trigger: 'item',
+			        formatter: function (param){
+			        	var l=param.name.length+param.value.length/2;
+			        	var val =  (param.value*1).toFixed(si);
+			        	var pro = '';
+			        	if (unit != '%') {
+			        		pro = '<br/>占比：'+(val/sum*100).toFixed(2)+'%';
+						}
+			        	if (l*13>wid) {
+							return name+'<br/>'+ param.name + ': <br/>'+val+' '+unit+pro;
+						}
+			        	return name+'<br/>'+ param.name + ': '+val+' '+unit+pro;
+			        },
+			        textStyle: {
+			        	fontSize:12
+			        }
+			    };
+		}
+	return tooltip;
+}
 //修改y轴的元素
 function set_yAxis(yAxis,data,txtSize,divhei){
 	//修改y轴字体大小
@@ -812,6 +892,8 @@ function set_series(series){
 	}
 	return series;
 }
+
+
 
 //生成柱状图和折线图方法
 function bar_echart(data,name,id){
@@ -987,7 +1069,11 @@ function bar_echart(data,name,id){
 					}
 				}
 			}
-	//}
+			var siz = 2;
+		if (ifInteger(series,'')) {
+			siz = 0;
+		}	
+			
 	var myChart = echarts.init(document.getElementById(id));
 	option = {
 		    title: [{
@@ -1000,7 +1086,7 @@ function bar_echart(data,name,id){
 			  		fontSize:txtSize
 			        }
 			  }],
-		  	tooltip: {
+		  	tooltip:{
 		  		 trigger: 'axis',
 		         axisPointer: {
 		             type: 'shadow'
@@ -1014,7 +1100,7 @@ function bar_echart(data,name,id){
 						}else if (ui != '%') {
 							ui = '('+ui+')';
 						}
-		        		 str =str+series[i].name+':'+params[i].value+' '+ui+'<br/>';
+		        		 str =str+series[i].name+': '+(params[i].value*1).toFixed(siz)+' '+ui+'<br/>';
 					}
 						return str;
 					}
