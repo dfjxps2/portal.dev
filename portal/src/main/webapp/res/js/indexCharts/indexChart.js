@@ -225,6 +225,7 @@ function dataType(data,typeData,stateTime,endTime){
 						tmp.name = data[i].measure_name;
 						tmp.type = 'table';
 						tmp.dimension = typeData[j].dimension;
+						tmp.timeType = typeData[j].time_dim;
 						tmp.time = getTime(data[i].measures,typeData[j].time_dim,stateTime,endTime);
 						tmp.unit = typeData[j].unit;
 						series2.push(tmp);
@@ -796,7 +797,7 @@ function pieTooltip(wid,hei,unit,data,name,type){
 		        	fontSize:12
 		        }
 		    };
-		if (wid<200||hei<200) {
+		if (wid<200||hei<150) {
 			tooltip = {
 					position:'',
 			        trigger: 'item',
@@ -1129,10 +1130,12 @@ function bar_echart(data,name,id){
 	 myChart.setOption (option);
 }
 
-function getT(data){
+function getT(data,stateTime,endTime){
 	var times = [];
 	for (var i = 0; i < data.length; i++) {
-		times.push(data[i].month_id);
+		if (data[i].month_id*1>=stateTime*1&&data[i].month_id*1<=endTime*1) {
+			times.push(data[i].month_id);
+		}
 	}
 	times = onlyData(times);
 	var compare = function (x, y) {//降序排序
@@ -1149,10 +1152,11 @@ function getT(data){
 }
 
 //生成表格方法
-function add_table(data,name,dimension,id){
+function add_table(data,name,dimension,id,stateTime,endTime){
+	//data = setData(data,dimension,timeType,stateTime,endTime);
 	var op = document.getElementById(id);
 	var wid= op.offsetWidth; //宽度
-	var times = getT(data);
+	var times = getT(data,stateTime,endTime);
 	var names = [];
 	for (var i = 0; i < data.length; i++) {
 		if (data[0].month_id == data[i].month_id) {
@@ -1437,10 +1441,10 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 				if (pieData[j].type=='pie') {
 					pie_echart(pieData[j].value,pieData[j].name,ids,pieData[j].time,pieData[j].unit);
 				}else if (pieData[j].type=='table'){
-					ps(ids,pieData[j].name,pieData[j].value,pieData[j].unit);
+					ps(ids,pieData[j].name,pieData[j].value,pieData[j].unit,pieData[j].time[0],pieData[j].time[1]);
 					var ida1 = 'd'+ids;
 					var tables=window.document.getElementById(ida1);
-					tables.innerHTML =add_table(pieData[j].value,pieData[j].name,pieData[j].dimension,ida1);
+					tables.innerHTML =add_table(pieData[j].value,pieData[j].name,pieData[j].dimension,ida1,pieData[j].time[0],pieData[j].time[1]);
 				}else if (pieData[j].type=='gauge'){
 					gauge(pieData[j].value,pieData[j].name,ids,pieData[j].dimension,pieData[j].time_dim,pieData[j].time,pieData[j].unit);
 				}
@@ -1449,10 +1453,10 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 			if (pieData[0].type=='pie') {
 				pie_echart(pieData[0].value,pieData[0].name,divs,pieData[0].time,pieData[0].unit);
 			}else if (pieData[0].type=='table'){
-				ps(divs,pieData[0].name,pieData[0].value,pieData[0].unit);
+				ps(divs,pieData[0].name,pieData[0].value,pieData[0].unit,pieData[0].time[0],pieData[0].time[1]);
 				var ida2 = 'd'+divs;
 				var table1=window.document.getElementById(ida2);
-				table1.innerHTML = add_table(pieData[0].value,pieData[0].name,pieData[0].dimension,ida2);
+				table1.innerHTML = add_table(pieData[0].value,pieData[0].name,pieData[0].dimension,ida2,pieData[0].time[0],pieData[0].time[1]);
 			}else if (pieData[0].type=='gauge'){
 				gauge(pieData[0].value,pieData[0].name,divs,pieData[0].dimension,pieData[0].time_dim,pieData[0].time,pieData[0].unit);
 			}
@@ -1519,10 +1523,10 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 					if (pieData[j].type=='pie') {
 						pie_echart(pieData[j].value,pieData[j].name,ids2,pieData[j].time,pieData[j].unit);
 					}else if (pieData[j].type=='table'){
-						ps(ids2,pieData[j].name,pieData[j].value,pieData[j].unit);
+						ps(ids2,pieData[j].name,pieData[j].value,pieData[j].unit,pieData[j].time[0],pieData[j].time[1]);
 						var ida3 = 'd'+ids2;
 						var tables=window.document.getElementById(ida3);
-						tables.innerHTML = add_table(pieData[j].value,pieData[j].name,pieData[j].dimension,ida3);
+						tables.innerHTML = add_table(pieData[j].value,pieData[j].name,pieData[j].dimension,ida3,pieData[j].time[0],pieData[j].time[1]);
 					}else if (pieData[j].type=='gauge'){
 						gauge(pieData[j].value,pieData[j].name,ids2,pieData[j].dimension,pieData[j].time_dim,pieData[j].time,pieData[j].unit);
 					}
@@ -1534,10 +1538,10 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 				if (pieData[0].type=='pie') {
 					pie_echart(pieData[0].value,pieData[0].name,div3,pieData[0].time,pieData[0].unit);
 				}else if (pieData[0].type=='table'){
-					ps(div3,pieData[0].name,pieData[0].value,pieData[0].unit);
+					ps(div3,pieData[0].name,pieData[0].value,pieData[0].unit,pieData[0].time[0],pieData[0].time[1]);
 					var ida4 = 'd'+div3;
 					var table1=window.document.getElementById(ida4);
-					table1.innerHTML = add_table(pieData[0].value,pieData[0].name,pieData[0].dimension,ida4);
+					table1.innerHTML = add_table(pieData[0].value,pieData[0].name,pieData[0].dimension,ida4,pieData[0].time[0],pieData[0].time[1]);
 				}else if (pieData[0].type=='gauge'){
 					gauge(pieData[0].value,pieData[0].name,div3,pieData[0].dimension,pieData[0].time_dim,pieData[0].time,pieData[0].unit);
 				}
@@ -1609,7 +1613,7 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 	}
 }
 
-function ps(id,name,data,unit) {
+function ps(id,name,data,unit,stateTime,endTime) {
 	var idf = '#qsection_'+id;
 	$(idf).css('overflow','hidden');
 	
@@ -1622,12 +1626,12 @@ function ps(id,name,data,unit) {
 	var tables=window.document.getElementById(id);
 	var idd = 'd'+id;
 	var idds = 'dd'+id;
-	var times = getT(data);
+	var times = getT(data,stateTime,endTime);
 	var leng = 2;
 	for (var l = 0; l < times.length; l++) {
 		leng = leng+times[l].length;
 	}
-	var siz = parseInt(wid1/times.length/17);
+	var siz = parseInt(wid1/times.length/14);
 	var width = wid1*0.9/(times.length+1);
 	str = '<div id = "'+idds+'" style = "width:'+wid1+'px;height:100%;margin-top:2%">'+
 	'<div id = "s_dv"><p style = "text-align:center;color:#333333;font-size:16px;">'+name+'</p>'+
