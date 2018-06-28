@@ -29,14 +29,25 @@ import com.quick.core.base.model.DataStore;
 import com.quick.core.base.model.JsonDataGrid;
 import com.quick.core.base.model.PageBounds;
 import com.quick.core.util.User.UserUtil;
+<<<<<<< .mine
+import com.quick.core.util.common.QCookie;
+||||||| .r316
+=======
 import com.quick.core.util.common.MD5Util;
+>>>>>>> .r325
 import com.quick.core.util.common.QRequest;
+import com.quick.portal.mesManage.MesManageDO;
 import com.quick.portal.userDepartment.IUserDepartmentDao;
 import com.quick.portal.userJob.IUserJobDao;
 import com.quick.portal.userRole.IUserRoleDao;
 import com.quick.portal.userRoleRela.IUserRoleRelaDao;
 import com.quick.portal.userRoleRela.UserRoleRelaDO;
+<<<<<<< .mine
+import com.seaboxdata.portal.PortalPasswordEncoder;
+||||||| .r316
+=======
 
+>>>>>>> .r325
 import org.apache.poi.ss.formula.functions.T;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -51,6 +62,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.text.MessageFormat;
 import java.util.*;
 
@@ -175,36 +187,41 @@ public class SysUserController extends SysBaseController<SysUserDO> {
     }
 
      //修改密码
-     @RequestMapping(value = "/changePw")
-     public void changePassword(Model model, String old_password, String new_password,String re_new_pw,Integer user_id, HttpServletResponse res) throws IOException {
-         Map<String,Object> map = new HashMap<String,Object>();
+     @RequestMapping(value = "/changPw")
+     @ResponseBody
+     public void changePassword(Model model,String new_password, HttpServletResponse res) throws IOException {
          SysUserDO sysUserDO = new SysUserDO();
          res.setContentType("text/html");
          res.setCharacterEncoding("utf-8");
-         JSONArray json = new JSONArray();
-         map.put("user_id",user_id);
-         map.put("user_password",old_password);
-         List<Map<String,Object>> result = sysUserService.select(map);
-
-         if(result.size()!= 0){
-             if (new_password.equals(re_new_pw)){
-                 sysUserDO.setUser_password(new_password);
-                 sysUserDO.setUser_id(user_id);
-                 iSysUserDao.updatePassword(sysUserDO);
-                 json.put("1");
-                 res.getWriter().write(json.toString());
-             }else{
-                 json.put("-1");
-                 res.getWriter().write(json.toString());
-                 System.out.println("您输入的新密码不一致！");
-             }
-         }else {
-             System.out.println("原密码错误！");
-             json.put("-1");
-             res.getWriter().write(json.toString());
-         }
+         Integer user_id = Integer.parseInt(QCookie.getValue(request,"ids")) ;
+         String newPw = URLEncoder.encode(new_password,"UTF-8");
+         PortalPasswordEncoder passwordEncoder = new PortalPasswordEncoder("MD5","");
+         String password = passwordEncoder.encode(newPw);
+         sysUserDO.setUser_password(password);
+         sysUserDO.setUser_id(user_id);
+         iSysUserDao.updatePassword(sysUserDO);
+        res.getWriter().write(1);
+        res.getWriter().flush();
 
      }
+     //密码更改--旧密码校验
+    @RequestMapping(value="checkOldPw")
+    public void checkParamName(HttpServletResponse res,String user_old_pw) throws IOException {
+        Map<String,Object> map = new HashMap<>();
+        String oldPw = URLEncoder.encode(user_old_pw,"UTF-8");
+        PortalPasswordEncoder passwordEncoder = new PortalPasswordEncoder("MD5","");
+        String oldps = passwordEncoder.encode(oldPw);
+        map.put("user_password",oldps);
+        Integer user_id = Integer.parseInt(QCookie.getValue(request,"ids")) ;
+        map.put("user_id",user_id);
+        List<Map<String,Object>> result = sysUserService.select(map);
+        if(result.size()!= 0){
+            res.getWriter().write("true");
+        }else {
+            res.getWriter().write("false");
+        }
+        res.getWriter().flush();
+    }
 
     //部门下拉框数据
     @RequestMapping(value = "/getDep")
@@ -360,12 +377,8 @@ public class SysUserController extends SysBaseController<SysUserDO> {
         if(usrDetail.getUser_real_name() != null && !usrDetail.getUser_real_name().equals ("undefined") && !"null".equals(usrDetail.getUser_real_name())){
             sysUserDO.setUser_real_name(usrDetail.getUser_real_name());//真实名称
         }
-
         if(usrDetail.getDep_id() != null && !usrDetail.getDep_id().equals ("undefined") && !"null".equals(usrDetail.getDep_id())){
             sysUserDO.setDep_id(usrDetail.getDep_id());//部门名称
-        }
-        if(usrDetail.getRela_id() != null && !usrDetail.getRela_id().equals ("undefined") && !"null".equals(usrDetail.getRela_id())){
-            sysUserDO.setRela_id(usrDetail.getRela_id());//用户-部门 id
         }
         if(usrDetail.getJob_id() != null && !usrDetail.getJob_id().equals ("undefined") && !"null".equals(usrDetail.getJob_id())){
             sysUserDO.setJob_id(usrDetail.getJob_id());//岗位名称
@@ -384,8 +397,12 @@ public class SysUserController extends SysBaseController<SysUserDO> {
         if (!usrDetail.getUser_id().equals("")&& !usrDetail.getUser_id().equals ("undefined") && !"null".equals(usrDetail.getUser_id())){
             sysUserDO.setUser_id(usrDetail.getUser_id());//用户ID
         }
+        if(usrDetail.getRela_id() != null && !usrDetail.getRela_id().equals ("undefined") && !"null".equals(usrDetail.getRela_id())){
+            iSysUserDao.updateUserDepRela(sysUserDO);
+        }else{
+           iSysUserDao.insertUserDepRela(sysUserDO);
+        }
         iSysUserDao.update(sysUserDO);
-        iSysUserDao.updateUserDepRela(sysUserDO);
         //将角色和用户关系放入user_role_rela中
         UserRoleRelaDO userRoleRelaDO = new UserRoleRelaDO();
         UserRoleRelaDO ui = new UserRoleRelaDO();
@@ -393,17 +410,22 @@ public class SysUserController extends SysBaseController<SysUserDO> {
             userRoleRelaDO.setUser_id(usrDetail.getUser_id());
             ui  = iSysUserDao.getUserRoleRe(usrDetail.getUser_id().toString());  //角色ID
         }
-        if(ui.getCre_time() != null && !ui.getCre_time().equals ("undefined") && !"null".equals(ui.getCre_time())) {
+        if(ui!=null && ui.getCre_time() != null && !ui.getCre_time().equals ("undefined") && !"null".equals(ui.getCre_time())) {
             userRoleRelaDO.setCre_time(ui.getCre_time());
-        }else {
+        }else{
             userRoleRelaDO.setCre_time(date);
         }//创建时间
         userRoleRelaDO.setUpd_time(date);
         if(usrDetail.getRole_id() != null && !usrDetail.getRole_id().equals ("undefined") && !"null".equals(usrDetail.getRole_id())){
             userRoleRelaDO.setRole_id(usrDetail.getRole_id());
         }
-        userRoleRelaDO.setRel_id(ui.getRel_id());
-        iUserRoleRelaDao.update(userRoleRelaDO);
+        if(ui!=null && ui.getRel_id() != null && !ui.getRel_id().equals ("undefined") && !"null".equals(ui.getRel_id())) {
+            userRoleRelaDO.setRel_id(ui.getRel_id());
+            iUserRoleRelaDao.update(userRoleRelaDO);
+        }else{
+            iUserRoleRelaDao.insert(userRoleRelaDO);
+        }
+
         json.put("1");
         res.getWriter().write(json.toString());
 
