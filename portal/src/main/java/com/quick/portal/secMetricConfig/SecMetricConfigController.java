@@ -159,16 +159,20 @@ public class SecMetricConfigController extends SysBaseController<SecMetricConfig
     @RequestMapping(value = "/use")    //启用指标配置
     @ResponseBody
     public Object use() throws Exception {
+        String userId = QCookie.getValue(request, "ids");//获取当前用户id
+
         int term_type_id = 0;//获取终端设备类型id  0 电脑 1手机 2 pad 9 全部
        String is_active=request.getParameter("is_active");
         Map<String, Object> queryMap = getQueryMap(request);
         queryMap.put("term_type_id",term_type_id);//参数列表增加设备终端id
+        queryMap.put("user_id", userId);//user_id 存入参数
         if(is_active.equals("undefined") ||is_active.equals("")||is_active.equals("0")){
             queryMap.put("is_active",'1');//启用
         }else{
             queryMap.put("is_active",'0');//禁用
         }
-        int count=secMetricConfigService.selectUAC(queryMap);
+        int result;
+        /*int count=secMetricConfigService.selectUAC(queryMap);
         int result;
         if(count==0){
             //数据库没有相应记录 新增
@@ -176,7 +180,9 @@ public class SecMetricConfigController extends SysBaseController<SecMetricConfig
         }else{
             //数据库有相应记录 更新
             result=secMetricConfigService.updateUAC_Active(queryMap);
-        }
+        }*/
+        result=secMetricConfigService.updateUAC_Active(queryMap);
+
         return result;
     }
     @RequestMapping(value = "/updateVerNa")    //修改版本号

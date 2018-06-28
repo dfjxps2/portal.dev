@@ -147,18 +147,18 @@ public class WebLoginController {
         String ids = QCookie.getValue(request, "ids");
         if(ids != null && ids.length() > 0)
             userAccessLogService.saveLog(request, UserAccessLogConstants.SYS_LOG_TYPE_ID, UserAccessLogConstants.LOGOUT_USER_OP_TYPE,UserAccessLogConstants.FUN_MENU_ID, UserAccessLogConstants.LOGOUT_USER_OP_DESC,ids,"");
-
         QCookie.remove(response, request, AppResource.COOKIE_LOGINER );
         QCookie.remove(response, request, "ids" );
         QCookie.remove(response, request, "sbd.user" );
         QCookie.remove(response, request, "sbd.role" );
         QCookie.remove(response, request, "sbd.gid" );
         QCookie.remove(response, request, "sbd.tk" );
+        QCookie.remove(response, request, "JSESSIONID" );
+        request.getSession().invalidate();
         String casUrl = PropertiesUtil.getPropery("cas.serverUrl");
         String url = request.getScheme() + "://" + request.getServerName()
                 + ":" + request.getServerPort() + request.getContextPath()
-                + "/";
-        
+                + "/"; 
         String retUrl ="redirect:".concat(casUrl).concat("/logout?service=").concat(QCommon.urlEncode(url));
         return retUrl;
     }

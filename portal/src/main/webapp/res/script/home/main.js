@@ -140,31 +140,13 @@ function click_event(str){
 }
 var is_lock = false;
 function gosearch(){
-	if(is_lock)
-		return ;
-	is_lock = true;
 	if(!layer.values)
-        layer.values = {};
-	layer.open({
-		type: 2
-		,title: "信息搜索" //不显示标题栏
+		layer.values = {};
+	openWin({
+		title: "信息搜索"
 		,area: ['780px', '500px']
-		,shade: 0
-		,maxmin: true
 		,content: _host+'/home/listinfo'
-		,yes: function(index, layero){
-            layer.closeAll();
-        },end:function(){
-			is_lock = false;
-		}
-        ,btn2: function(){
-            layer.closeAll();
-        }
-        ,zIndex: layer.zIndex //重点1
-        ,success: function(layero){
-            layer.setTop(layero); //重点2
-        }
-    });
+	});
 }
 
 function adddel(){
@@ -206,7 +188,7 @@ function addnew(){
 		,shade: 0
 		,skin:'addwin'
 		,content: _host+'/home/addapp'
-		,btn: ['添加', '取消'] //只是为了演示
+		,btn: ['添加', '取消']
 		,yes: function(index, layero){
 			var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
 			var appids = iframeWin.ids;
@@ -230,6 +212,46 @@ function addnew(){
 			is_lock = false;
 		}
 	});
+}
+function usrpwd(){
+	openWin({
+		title: "修改密码"
+		,area: ['780px', '500px']
+		,content: _host+'/sysUser/changepw'
+	});
+}
+function usrver(){
+	openWin({
+		title: "配置版本"
+		,area: [$(window).width(), $(window).height()]
+		,isfull:true
+		,content: _host+'/secMetricConfig/list'
+	});
+}
+function openWin(o){
+	if(is_lock)
+		return ;
+	is_lock = true;
+	var opt = $.extend({
+		type: 2
+		,shade: 0
+		,maxmin: true
+		,yes: function(index, layero){
+			layer.closeAll();
+		},end:function(){
+			is_lock = false;
+		}
+		,btn2: function(){
+			layer.closeAll();
+		}
+		,zIndex: layer.zIndex //重点1
+		,success: function(layero){
+			layer.setTop(layero); //重点2
+		}
+	},o);
+	var idx = layer.open(opt);
+	if(o.isfull)
+		layer.full(idx);
 }
 function savecomm(){
 	var txt = $("#ppcomm").val();
@@ -532,4 +554,11 @@ function clearContext(type){
 		context.clearRect(0,0,canvasWidth,canvasHeight);
 		ctx_bak.clearRect(0,0,canvasWidth,canvasHeight);
 	}
+}
+function logout() {
+	layer.confirm("您好,确定退出吗?", {
+		btnAlign : 'c'
+	}, function() {
+		location.href = "logout";
+	});
 }
