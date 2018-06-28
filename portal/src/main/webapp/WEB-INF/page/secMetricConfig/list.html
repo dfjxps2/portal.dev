@@ -85,7 +85,7 @@
     function use(configID,userID,time,active){
        layer.confirm(
 		   "确认将生效【"+time+"】指标配置版本吗？<br/>",
-		   {icon:3,title:"生效配置",skin: 'layer-ext-moon'},
+		   {icon:1,title:"生效配置",skin: 'layer-ext-moon'},
 		   function(){
 			   $.ajax({
 				   type: "post",
@@ -132,7 +132,7 @@
 		//alert(version_num);
 		layer.open({
 			type: 1,
-			closeBtn: true,
+			closeBtn: false,
 			shift: 7,
 			shadeClose: true,
 			content: "<div style='width:350px;'><div style='width:320px;margin-left: 3%;' class='form-group has-feedback'><p>请输入版本号</p><input id='version_num' class='form-control' type='text' name='version_num' placeholder='"+version_num+"'/></div>" +
@@ -233,10 +233,10 @@
                                   <!--<div class="form-group" style="padding: 0px;width:180px;">
                                       <input id="start_time" name="start_time" class="form-control" type="text" placeholder="开始时间" /> <label onclick="layerDateTime();" style="position: absolute;top: 0px;right: 15px;background-position-x: center;" class="laydate-icon inline demoicon layer_date"></label>
 								  </div>-->
-								  <div class="form-group" style="padding: 0px;width:130px;">
+								  <div class="form-group" style="padding: 0px;width:150px;">
 									  <input id="start_time" name="start_time" class="form-control" onfocus="(this.type='date')" type="text" placeholder="开始时间" />
 								  </div>
-                                  <div class="form-group" style="padding: 0px;width:130px;">
+                                  <div class="form-group" style="padding: 0px;width:150px;">
 								  <input id="end_time" name="end_time" class="input-sm form-control" onfocus="(this.type='date')" type="text" placeholder="截止时间" />
 								  </div>
 								  <div class="form-group" style="padding: 0px;width:180px;">

@@ -22,7 +22,6 @@
 								<select class="form-control form-control-green select_change" id="job_id" name="job_id">
 								</select>
 							</div>
-
 							<div class="form-group" style="left: auto;width:90px;">
 								<span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="query();"> 查询</button> </span>
 							</div>
@@ -82,12 +81,11 @@
                 { field: 'rela_id',  visible:false },
                 { field: 'rel_id',  visible:false },
                 { field: 'upd_time', title: '更新时间', width: 110 ,align: 'center'},
-                { field: 'CZ',  title: '操作',width: '25%',align: 'center', formatter:function(value,row,index){
+                { field: 'CZ',  title: '操作',width: '20%',align: 'center', formatter:function(value,row,index){
                     return "<button type='button' class='btn_el' onclick='edit(\""+row.user_id+"\",\""+row.user_name+"\")'>编辑</button>| "
                         +"<button type='button' class='btn_el' onclick='del(\""+row.user_id+"\",\""+row.user_name+"\",\""+row.rela_id+"\",\""+row.rel_id+"\")'>删除</button>|"
-                        +"<button type='button' class='btn_el' onclick='repw(\""+row.user_id+"\",\""+row.user_name+"\",\""+row.user_state+"\")'>密码重置</button>"
-
-                        ;
+					    +"<button type='button' class='btn_el' onclick='repw(\""+row.user_id+"\",\""+row.user_name+"\",\""+row.user_state+"\")'>密码重置</button>"
+						;
                 }}
             ],onPageChange:function(number, size){
                 pageNum=number;
@@ -138,7 +136,7 @@
                 $("#job_id").append("<option selected hidden value=''>选择岗位</option><option value= ''>选择岗位</option>");
                 for (var i = 0; i < data.length; i++) {
                     var item = data[i];
-                    $("#job_id").append("<option  value=" +item.jobid+">"+item.jobid+"  "+item.jobname+"</option>");
+                    $("#job_id").append("<option  value=" +item.jobid+"> "+item.jobname+"</option>");
                 }
             }
         });
@@ -268,6 +266,10 @@
         var s= queryParm + "&IpageNum="+pageNum+"&IpageSize="+pageSize;
         return s;
     }
+
+    function modipw(){
+        window.location.href=quick.serverUrl + "/changepw";
+	}
 </script>
 
 </html>
