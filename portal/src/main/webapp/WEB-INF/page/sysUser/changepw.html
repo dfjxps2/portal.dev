@@ -23,7 +23,7 @@
                             <div class="col-sm-6 form_ipt_botm">
                                 <div class="form-group">
                                     <label class="col-xs-3 lable_top"><span></span>新口令</label>
-                                    <div class="col-xs-9"><input type="text" id="user_new_pw" name="new_password" class="form-control" /></div>
+                                    <div class="col-xs-9"><input type="text" id="user_new_pw" name="new_password" class="form-control required" /></div>
                                 </div>
                             </div>
 
@@ -55,37 +55,88 @@
 </div>
 </body>
 <script>
+
+    var sysid=$.request.queryString["user_id"];
+       quick.serverUrl = "${G.serverUrl}";  // /sysUser
     window.onload = function() {
         /*自定义错误提示信息的方法*/
-
-
+        jQuery.validator.addMethod("newPassword", function (value, element) {
+            var flag = true;
+            if (value != $("#user_new_pw").val()) {
+                flag = false
+            }
+            return this.optional(element) || flag;
+        }, "您输入的新密码不一致！");
+        jQuery.validator.addMethod("passwordFuc", function (value, element) {//密码验证
+            var tel = /^[0-9a-zA-Z]{5,12}$/;
+            return this.optional(element) || (tel.test(value));
+        }, "6-12位英文字母或者数字的组合");
         $("#form").validate({
-            errorPlacement: function(error, element) {
+            errorPlacement: function (error, element) {
                 element.parent().append(error);
             },
-            ignore : ":disabled",
             rules: {
+                re_new_pw: {
+                    required: true,
+                    newPassword: true,
+                    passwordFuc: true
+                },
+                old_password: {
+                    required: true,
+                    passwordFuc: true,
+                    remote: {
+                        url: quick.serverUrl + "/checkOldPw",     //后台处理程序
+                        type: "post",               //数据发送方式
+                        dataType: "json",           //接受数据格式
+                        data: {                     //要传递的数据
+                            user_old_pw: function () {
+                                return encodeURI($("#user_old_pw").val());
+                            }
+                        },
+                        dataFilter: function (data, type) {//判断控制器返回的内容
+                            //console.log(data);
+                            if (data == "false") {
+                                return false;
+                            } else {
+                                return true;
+                            }
+                        }
+                    }
+                },
+                new_password:{
+                    required: true,
+                    passwordFuc: true
+                }
+            },
+            messages:{
+                old_password:{
+                    remote:"您输入的密码不存在！"
+                },
+                re_new_pw:{
+                    remote: " ni"
+                },
+                new_password:{
+                    remote: " de"
+                }
             }
 
         });
+    }
 
-        var sysid=$.request.queryString["user_id"];
 
         /*保存*/
         $("#submit-form").click(function () {
             if(!($("#form").valid())){
                 return false;
             }
+
             var subData={
                 user_id :sysid,
-                old_password :$("#user_old_pw").val(),
-                new_password:$("#user_new_pw").val(),
-                re_new_pw:$("#user_renew_pw").val(),
-
+                new_password:encodeURI($("#user_new_pw").val())
             }
             $.ajax({
                 type: "post",
-                url: "changePw",
+                url:"changPw",
                 data:subData,
                 dataType: "json",
                 success: function(data){
@@ -100,10 +151,10 @@
                 }
             });
         })
-    }
+
 
     function cancel(){
-        var url = quick.listUrl + urlDel(location.search, 'mode','user_id') + '&RFlag=1';
+        var url = quick.serverUrl+"/list";
         window.location.href = url;
     }
 </script>
