@@ -29,6 +29,24 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import com.quick.core.base.model.DataStore;
+import com.quick.core.base.model.JsonDataGrid;
+import com.quick.core.base.model.PageBounds;
+import com.quick.core.util.User.UserUtil;
+import com.quick.core.util.common.QCookie;
+
+
+import com.quick.core.util.common.QRequest;
+import com.quick.portal.mesManage.MesManageDO;
+import com.quick.portal.userDepartment.IUserDepartmentDao;
+import com.quick.portal.userJob.IUserJobDao;
+import com.quick.portal.userRole.IUserRoleDao;
+import com.quick.portal.userRoleRela.IUserRoleRelaDao;
+import com.quick.portal.userRoleRela.UserRoleRelaDO;
+
+import com.seaboxdata.portal.PortalPasswordEncoder;
+
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -176,19 +194,23 @@ public class SysUserController extends SysBaseController<SysUserDO> {
      //修改密码
      @RequestMapping(value = "/changPw")
      @ResponseBody
-     public void changePassword(Model model,String new_password, HttpServletResponse res) throws IOException {
+     public void changePassword(Model model,String new_password, HttpServletResponse res)  {
          SysUserDO sysUserDO = new SysUserDO();
-         res.setContentType("text/html");
-         res.setCharacterEncoding("utf-8");
-         Integer user_id = Integer.parseInt(QCookie.getValue(request,"ids")) ;
-         String newPw = URLEncoder.encode(new_password,"UTF-8");
-         PortalPasswordEncoder passwordEncoder = new PortalPasswordEncoder("MD5","");
-         String password = passwordEncoder.encode(newPw);
-         sysUserDO.setUser_password(password);
-         sysUserDO.setUser_id(user_id);
-         iSysUserDao.updatePassword(sysUserDO);
-        res.getWriter().write(1);
-        res.getWriter().flush();
+         try{
+             res.setContentType("text/html");
+             res.setCharacterEncoding("utf-8");
+             Integer user_id = Integer.parseInt(QCookie.getValue(request,"ids")) ;
+             String newPw = URLEncoder.encode(new_password,"UTF-8");
+             PortalPasswordEncoder passwordEncoder = new PortalPasswordEncoder("MD5","");
+             String password = passwordEncoder.encode(newPw);
+             sysUserDO.setUser_password(password);
+             sysUserDO.setUser_id(user_id);
+             iSysUserDao.updatePassword(sysUserDO);
+             res.getWriter().write("1");
+             res.getWriter().flush();
+         }catch (Exception e){
+             e.printStackTrace();
+         }
 
      }
      //密码更改--旧密码校验
@@ -385,6 +407,7 @@ public class SysUserController extends SysBaseController<SysUserDO> {
             sysUserDO.setUser_id(usrDetail.getUser_id());//用户ID
         }
         if(usrDetail.getRela_id() != null && !usrDetail.getRela_id().equals ("undefined") && !"null".equals(usrDetail.getRela_id())){
+             sysUserDO.setRela_id(usrDetail.getRela_id());
             iSysUserDao.updateUserDepRela(sysUserDO);
         }else{
            iSysUserDao.insertUserDepRela(sysUserDO);
@@ -475,37 +498,69 @@ public class SysUserController extends SysBaseController<SysUserDO> {
     public String userEndecrypt(ModelMap model) {
         return view();
     }
-    /*
-     * 解密
-     */
-    @RequestMapping(value = "/decPwdCase")
-    @ResponseBody
-    public void decPwdCase(String pwd,HttpServletResponse res) throws IOException {
-/*    	 String conPwd = MD5Util.convertMD5(pwd);
-         String decPwd =  MD5Util.convertMD5(conPwd);*/
-         String decPwd = null;
-        try {
-            res.getWriter().write(decPwd);
-            res.getWriter().flush();
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    
-    /*
-     * 加密
-     */
-    @RequestMapping(value = "/enPwdCase")
-    @ResponseBody
-    public void enPwdCase(String pwd,HttpServletResponse res) throws IOException {
+//    /*
+//     * 解密
+//     */
+//    @RequestMapping(value = "/decPwdCase")
+//    @ResponseBody
+//    public void decPwdCase(String pwd,HttpServletResponse res) throws IOException {
+//    	 String conPwd = MD5Util.convertMD5(pwd);
+//         String decPwd =  MD5Util.convertMD5(conPwd);
+//        try {
+//            res.getWriter().write(decPwd);
+//            res.getWriter().flush();
+//        }catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    /*
+//     * 加密
+//     */
+//    @RequestMapping(value = "/enPwdCase")
+//    @ResponseBody
+//    public void enPwdCase(String pwd,HttpServletResponse res) throws IOException {
 //         String enPwd =  MD5Util.string2MD5(pwd);
-    	String enPwd = null;
-        try {
-            res.getWriter().write(enPwd);
-            res.getWriter().flush();
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//        try {
+//            res.getWriter().write(enPwd);
+//            res.getWriter().flush();
+//        }catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//=======
+//    /*
+//     * 解密
+//     */
+//    @RequestMapping(value = "/decPwdCase")
+//    @ResponseBody
+//    public void decPwdCase(String pwd,HttpServletResponse res) throws IOException {
+///*    	 String conPwd = MD5Util.convertMD5(pwd);
+//         String decPwd =  MD5Util.convertMD5(conPwd);*/
+//         String decPwd = null;
+//        try {
+//            res.getWriter().write(decPwd);
+//            res.getWriter().flush();
+//        }catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    /*
+//     * 加密
+//     */
+//    @RequestMapping(value = "/enPwdCase")
+//    @ResponseBody
+//    public void enPwdCase(String pwd,HttpServletResponse res) throws IOException {
+////         String enPwd =  MD5Util.string2MD5(pwd);
+//    	String enPwd = null;
+//        try {
+//            res.getWriter().write(enPwd);
+//            res.getWriter().flush();
+//        }catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//>>>>>>> .r335
 
 }
