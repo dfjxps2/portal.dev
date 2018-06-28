@@ -20,6 +20,7 @@ package com.quick.portal.sysUser;
 
 import com.quick.core.base.ISysBaseService;
 import com.quick.core.base.SysBaseController;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,12 +29,14 @@ import com.quick.core.base.model.DataStore;
 import com.quick.core.base.model.JsonDataGrid;
 import com.quick.core.base.model.PageBounds;
 import com.quick.core.util.User.UserUtil;
+import com.quick.core.util.common.MD5Util;
 import com.quick.core.util.common.QRequest;
 import com.quick.portal.userDepartment.IUserDepartmentDao;
 import com.quick.portal.userJob.IUserJobDao;
 import com.quick.portal.userRole.IUserRoleDao;
 import com.quick.portal.userRoleRela.IUserRoleRelaDao;
 import com.quick.portal.userRoleRela.UserRoleRelaDO;
+
 import org.apache.poi.ss.formula.functions.T;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -452,6 +455,42 @@ public class SysUserController extends SysBaseController<SysUserDO> {
         }
         try {
             res.getWriter().write("1");
+            res.getWriter().flush();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
+    @RequestMapping(value = "/userEndecrypt")
+    public String userEndecrypt(ModelMap model) {
+        return view();
+    }
+    /*
+     * 解密
+     */
+    @RequestMapping(value = "/decPwdCase")
+    @ResponseBody
+    public void decPwdCase(String pwd,HttpServletResponse res) throws IOException {
+    	 String conPwd = MD5Util.convertMD5(pwd);
+         String decPwd =  MD5Util.convertMD5(conPwd);
+        try {
+            res.getWriter().write(decPwd);
+            res.getWriter().flush();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    /*
+     * 加密
+     */
+    @RequestMapping(value = "/enPwdCase")
+    @ResponseBody
+    public void enPwdCase(String pwd,HttpServletResponse res) throws IOException {
+         String enPwd =  MD5Util.string2MD5(pwd);
+        try {
+            res.getWriter().write(enPwd);
             res.getWriter().flush();
         }catch (IOException e) {
             e.printStackTrace();
