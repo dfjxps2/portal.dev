@@ -47,15 +47,16 @@
     GROUP BY a.cre_time order by a.cre_time DESC
 	</select>-->
 	<select id="select" parameterType="map" resultType="map">
-		SELECT f.cre_time,f.details,f.version_num,f.is_active from (
+		SELECT f.cre_time,f.details,f.version_num,f.is_active,j.page_name from (
 		select
+	  sec_metric_id,
      C.cre_time
     ,C.metric_names as details
 ,coalesce(V.version_num, '') as version_num
 ,coalesce(V.is_active, 0) as is_active
 from
 ( -- 该用户所有指标配置历史
-select cre_time, group_concat(distinct m.metric_name) as metric_names
+select c.sec_metric_id,cre_time, group_concat(distinct m.metric_name) as metric_names
 from sec_metric_config c, section_metric r, metric m
 where
 (
@@ -87,11 +88,14 @@ and e.term_type_id = 0 -- PC
 on C.cre_time = V.cre_time
 order by cre_time desc
 		)f
+		left join section_metric h on f.sec_metric_id=h.sec_metric_id
+		left join page_section  i  on  h.section_id=i.section_id
+		left join page j  on  i.page_id=j.page_id
 		where 1=1
 		<if test="config_ver != null and config_ver != '' and config_ver != 'null'"><![CDATA[
 	      and f.version_num !=''
 	    ]]></if>
-
+		order by f.cre_time desc
 	</select>
 	<!-- 查询总记录数 -->
 	<select id="count" parameterType="map" resultType="int">
