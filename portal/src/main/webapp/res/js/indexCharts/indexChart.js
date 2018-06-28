@@ -1164,7 +1164,7 @@ function add_table(data,name,dimension,id){
 		leng = leng+times[l].length;
 	}
 	var siz = parseInt(wid/times.length/17);
-	var width = 90/(times.length+1);
+	var width = wid*0.9/(times.length+1);
 	var str = '<table id = "f_table" style="border:1px solid '+tableLine+';margin-left:5%;width:92%;margin-top:0px;margin-bottom:7%;">';
 	str =  str + '</tr>';
 	//吧数据解析成  需要的格式
@@ -1192,13 +1192,13 @@ function add_table(data,name,dimension,id){
 	var tData = changeData(ss,1);
 	for (var j = 0; j < tData.length; j++) {
 		str = str + '<tr style = "height:20px">'+
-		'<td style="width:'+width+'%;border:1px solid '+tableLine+';font-size:12px;text-align:center;color:'+titleColor+'">'+tData[j][0]+'</td>';
+		'<td style="width:'+width+'px;border:1px solid '+tableLine+';font-size:12px;text-align:center;color:'+titleColor+'">'+tData[j][0]+'</td>';
 		for (var k = 0; k < tableData.length; k++) {
 			var tValue = tData[j][k+1];
 			if (leng*17>wid) {
-				str = str + '<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;font-size:12px;color:'+titleColor+'">'+wrap(tValue,siz)+'</td>';
+				str = str + '<td style="width:'+width+'px;border:1px solid '+tableLine+';text-align:center;font-size:12px;color:'+titleColor+'">'+wrap(tValue,siz)+'</td>';
 			}else{
-				str = str + '<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;font-size:12px;color:'+titleColor+'">'+tValue+'</td>';
+				str = str + '<td style="width:'+width+'px;border:1px solid '+tableLine+';text-align:center;font-size:12px;color:'+titleColor+'">'+tValue+'</td>';
 			}
 		}
 		str =  str + '</tr>';
@@ -1628,20 +1628,21 @@ function ps(id,name,data,unit) {
 		leng = leng+times[l].length;
 	}
 	var siz = parseInt(wid1/times.length/17);
-	var width = 90/(times.length+1);
+	var width = wid1*0.9/(times.length+1);
 	str = '<div id = "'+idds+'" style = "width:'+wid1+'px;height:100%;margin-top:2%">'+
 	'<div id = "s_dv"><p style = "text-align:center;color:#333333;font-size:16px;">'+name+'</p>'+
 	'<table id = "f_table" style="height:24px;border:1px solid #00FFFF;margin-left:5%;width:92%;margin-bottom:0px;">'+
 	'<tr style = "border:1px solid '+tableLine+';">'+
-	'<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;color:'+titleColor+';font-size:14px;">对象</td>';
+	'<td style="width:'+width+'px;border:1px solid '+tableLine+';text-align:center;color:'+titleColor+';font-size:14px;">对象</td>';
 	if (unit == '1') {
 		unit = '';
 	}else {
 		unit = '('+unit+')';
 	}
 for (var a = 0; a < times.length; a++) {
-	var t_name = times[a]+unit;
-	str =  str + '<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;color:'+titleColor+';font-size:14px;">'+t_name+'</td>';
+	var t_name = times[a]+unit+'';
+		t_name = wrap(t_name,siz);
+	str =  str + '<td style="width:'+width+'px;border:1px solid '+tableLine+';text-align:center;color:'+titleColor+';font-size:14px;">'+t_name+'</td>';
 }
 //var hei = hei1*0.85;
 str =  str + '</tr></table>'+
