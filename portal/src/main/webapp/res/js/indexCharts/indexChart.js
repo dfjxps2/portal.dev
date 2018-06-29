@@ -688,6 +688,7 @@ var option = {
     	options: os
 	};
 	 myChart.setOption (option);
+	 setCanvas(id);
 }
 
 
@@ -746,7 +747,9 @@ function pie_echart(series,name,id,time,unit){
 		    series : series
 		};
 	 myChart.setOption (option);
+	 setCanvas(id);
 }
+
 function ifInteger (data,type){
 	if (type == 'json') {
 		for (var i = 0; i < data.length; i++) {
@@ -1026,9 +1029,7 @@ function bar_echart(data,name,id){
 	            borderWidth:15
 	            
 	        },
-	           textStyle:{
-	            color:textColor
-	            },
+	           textStyle:false,
 	           borderColor:"#eee"
 	    },
 	    {
@@ -1128,6 +1129,14 @@ function bar_echart(data,name,id){
 		    series: series
 		};
 	 myChart.setOption (option);
+	 setCanvas(id);
+}
+
+function setCanvas(id){
+	var idds = '#'+id+' div';
+	var iddss = '#'+id+' div canvas';
+	$(idds).css('width','100%');
+	$(iddss).css('width','100%');
 }
 
 function getT(data,stateTime,endTime){
@@ -1168,8 +1177,8 @@ function add_table(data,name,dimension,id,stateTime,endTime){
 		leng = leng+times[l].length;
 	}
 	var siz = parseInt(wid/times.length/17);
-	var width = wid*0.9/(times.length+1);
-	var str = '<table id = "f_table" style="border:1px solid '+tableLine+';margin-left:5%;width:92%;margin-top:0px;margin-bottom:7%;">';
+	var width = 90/(times.length+1);
+	var str = '<table id = "f_table" style="border:1px solid '+tableLine+';margin-left:5%;width:91%;margin-top:0px;margin-bottom:7%;">';
 	str =  str + '</tr>';
 	//吧数据解析成  需要的格式
 	var tableData = [];
@@ -1196,13 +1205,13 @@ function add_table(data,name,dimension,id,stateTime,endTime){
 	var tData = changeData(ss,1);
 	for (var j = 0; j < tData.length; j++) {
 		str = str + '<tr style = "height:20px">'+
-		'<td style="width:'+width+'px;border:1px solid '+tableLine+';font-size:12px;text-align:center;color:'+titleColor+'">'+tData[j][0]+'</td>';
+		'<td style="width:'+width+'%;border:1px solid '+tableLine+';font-size:12px;text-align:center;color:'+titleColor+'">'+tData[j][0]+'</td>';
 		for (var k = 0; k < tableData.length; k++) {
 			var tValue = tData[j][k+1];
 			if (leng*17>wid) {
-				str = str + '<td style="width:'+width+'px;border:1px solid '+tableLine+';text-align:center;font-size:12px;color:'+titleColor+'">'+wrap(tValue,siz)+'</td>';
+				str = str + '<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;font-size:12px;color:'+titleColor+'">'+wrap(tValue,siz)+'</td>';
 			}else{
-				str = str + '<td style="width:'+width+'px;border:1px solid '+tableLine+';text-align:center;font-size:12px;color:'+titleColor+'">'+tValue+'</td>';
+				str = str + '<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;font-size:12px;color:'+titleColor+'">'+tValue+'</td>';
 			}
 		}
 		str =  str + '</tr>';
@@ -1251,8 +1260,11 @@ function add(data,name,typeData,sectionData,stateTime,endTime,ids){
 		if (dats.length>0) {
 			addEchart(data,name,dats,ids,stateTime,endTime);	
 		}
+		/*window.onresize=function(){
+			alert(JSON.stringify(data));
+			addEchart(data,name,dats,ids,stateTime,endTime);	
+	  	}*/
 	}
-	
 }
 
 
@@ -1441,7 +1453,7 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 				if (pieData[j].type=='pie') {
 					pie_echart(pieData[j].value,pieData[j].name,ids,pieData[j].time,pieData[j].unit);
 				}else if (pieData[j].type=='table'){
-					ps(ids,pieData[j].name,pieData[j].value,pieData[j].unit,pieData[j].time[0],pieData[j].time[1]);
+					ps(ids,pieData[j].name,pieData[j].value,pieData[j].unit,pieData[j].time[0],pieData[j].time[1],id);
 					var ida1 = 'd'+ids;
 					var tables=window.document.getElementById(ida1);
 					tables.innerHTML =add_table(pieData[j].value,pieData[j].name,pieData[j].dimension,ida1,pieData[j].time[0],pieData[j].time[1]);
@@ -1453,7 +1465,7 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 			if (pieData[0].type=='pie') {
 				pie_echart(pieData[0].value,pieData[0].name,divs,pieData[0].time,pieData[0].unit);
 			}else if (pieData[0].type=='table'){
-				ps(divs,pieData[0].name,pieData[0].value,pieData[0].unit,pieData[0].time[0],pieData[0].time[1]);
+				ps(divs,pieData[0].name,pieData[0].value,pieData[0].unit,pieData[0].time[0],pieData[0].time[1],id);
 				var ida2 = 'd'+divs;
 				var table1=window.document.getElementById(ida2);
 				table1.innerHTML = add_table(pieData[0].value,pieData[0].name,pieData[0].dimension,ida2,pieData[0].time[0],pieData[0].time[1]);
@@ -1523,7 +1535,7 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 					if (pieData[j].type=='pie') {
 						pie_echart(pieData[j].value,pieData[j].name,ids2,pieData[j].time,pieData[j].unit);
 					}else if (pieData[j].type=='table'){
-						ps(ids2,pieData[j].name,pieData[j].value,pieData[j].unit,pieData[j].time[0],pieData[j].time[1]);
+						ps(ids2,pieData[j].name,pieData[j].value,pieData[j].unit,pieData[j].time[0],pieData[j].time[1],id);
 						var ida3 = 'd'+ids2;
 						var tables=window.document.getElementById(ida3);
 						tables.innerHTML = add_table(pieData[j].value,pieData[j].name,pieData[j].dimension,ida3,pieData[j].time[0],pieData[j].time[1]);
@@ -1538,7 +1550,7 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 				if (pieData[0].type=='pie') {
 					pie_echart(pieData[0].value,pieData[0].name,div3,pieData[0].time,pieData[0].unit);
 				}else if (pieData[0].type=='table'){
-					ps(div3,pieData[0].name,pieData[0].value,pieData[0].unit,pieData[0].time[0],pieData[0].time[1]);
+					ps(div3,pieData[0].name,pieData[0].value,pieData[0].unit,pieData[0].time[0],pieData[0].time[1],id);
 					var ida4 = 'd'+div3;
 					var table1=window.document.getElementById(ida4);
 					table1.innerHTML = add_table(pieData[0].value,pieData[0].name,pieData[0].dimension,ida4,pieData[0].time[0],pieData[0].time[1]);
@@ -1613,7 +1625,8 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 	}
 }
 
-function ps(id,name,data,unit,stateTime,endTime) {
+function ps(id,name,data,unit,stateTime,endTime,ids1) {
+	var wids = document.getElementById(ids1).offsetWidth;
 	var idf = '#qsection_'+id;
 	$(idf).css('overflow','hidden');
 	
@@ -1631,13 +1644,13 @@ function ps(id,name,data,unit,stateTime,endTime) {
 	for (var l = 0; l < times.length; l++) {
 		leng = leng+times[l].length;
 	}
-	var siz = parseInt(wid1/times.length/14);
-	var width = wid1*0.9/(times.length+1);
-	str = '<div id = "'+idds+'" style = "width:'+wid1+'px;height:100%;margin-top:2%">'+
+	var siz = parseInt(wid1/(times.length+1)/14);
+	var width = 90/(times.length+1);
+	str = '<div id = "'+idds+'" style = "width:99%;height:100%;margin-top:2%;">'+
 	'<div id = "s_dv"><p style = "text-align:center;color:#333333;font-size:16px;">'+name+'</p>'+
 	'<table id = "f_table" style="height:24px;border:1px solid #00FFFF;margin-left:5%;width:92%;margin-bottom:0px;">'+
 	'<tr style = "border:1px solid '+tableLine+';">'+
-	'<td style="width:'+width+'px;border:1px solid '+tableLine+';text-align:center;color:'+titleColor+';font-size:14px;">对象</td>';
+	'<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;color:'+titleColor+';font-size:14px;">对象</td>';
 	if (unit == '1') {
 		unit = '';
 	}else {
@@ -1646,12 +1659,21 @@ function ps(id,name,data,unit,stateTime,endTime) {
 for (var a = 0; a < times.length; a++) {
 	var t_name = times[a]+unit+'';
 		t_name = wrap(t_name,siz);
-	str =  str + '<td style="width:'+width+'px;border:1px solid '+tableLine+';text-align:center;color:'+titleColor+';font-size:14px;">'+t_name+'</td>';
+	str =  str + '<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;color:'+titleColor+';font-size:14px;">'+t_name+'</td>';
 }
-//var hei = hei1*0.85;
+var cw = (wid1/wids)*100;
+if (100-cw<5) {
+	cw = 99;
+}else if (50 - cw <5) {
+	cw = 49.5;
+}else if (34 - cw <5){
+	cw = 33;
+}else if (25 - cw <5){
+	cw = 24.75;
+}
 str =  str + '</tr></table>'+
 	'</div>'+
-	'<div id = "'+idd+'" class = "innerbox" style = "width:'+wid1+'px;height:80%;position: absolute;">'+
+	'<div id = "'+idd+'" class = "innerbox" style = "width:'+cw+'%;height:80%;position: absolute;">'+
 	'</div></div>';
 	tables.innerHTML = str;
 	var op3 = document.getElementById("s_dv");
