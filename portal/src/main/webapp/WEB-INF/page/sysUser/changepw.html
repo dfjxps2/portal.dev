@@ -3,6 +3,7 @@
 <head>
     <#include "/WEB-INF/include/reslist.html" />
 </head>
+<script src="${G.host}/res/js/jQuery.md5.js"></script>
 
 <body class="gray-bg">
 <div class="wrapper wrapper-content wrapper-content-x animated fadeInRight">
@@ -17,13 +18,13 @@
                             <div class="col-sm-6 form_ipt_botm" style="width:100%;position: relative;">
                                 <div class="form-group" style="width:100%;">
                                     <label class="col-xs-3 lable_top" style="width:35%;padding-right:44px;"><span class="span_require">*</span>原密码</label>
-                                    <div class="col-xs-9" style="width:66%;"><input placeholder="请输入原密码" type="text" id="user_old_pw" name="old_password" class="form-control" style="width:60%;"/></div>
+                                    <div class="col-xs-9" style="width:66%;"><input placeholder="请输入原密码" type="password" id="user_old_pw" name="old_password" class="form-control" style="width:60%;"/></div>
                                 </div>
                             </div>
                             <div class="col-sm-6 form_ipt_botm" style="width:100%;position: relative;margin-bottom:20px;">
                                 <div class="form-group" style="width:100%;">
                                     <label class="col-xs-3 lable_top" style="width:35%;"><span class="span_require">*</span>设置新密码</label>
-                                    <div class="col-xs-9" style="width:66%;"><input placeholder="请输入密码" type="text" id="user_new_pw" name="new_password" class="form-control required" style="width:60%;"/></div>
+                                    <div class="col-xs-9" style="width:66%;"><input placeholder="请输入密码" type="password" id="user_new_pw" name="new_password" class="form-control required" style="width:60%;"/></div>
                                     <div class="col-xs-6" style="margin-top:5px;margin-left:34%;">
                                         <span class="help-block ediefield" style="margin:1px;font-size:12px;">密码由5-12位字母(区分大小写)、数字组成</span>
                                     </div>
@@ -33,7 +34,7 @@
                             <div class="col-sm-6 form_ipt_botm" style="width:100%;position: relative;">
                                 <div class="form-group" style="width:100%;">
                                     <label class="col-xs-3 lable_top" style="width:35%;"><span class="span_require">*</span>确认新密码</label>
-                                    <div class="col-xs-9" style="width:66%;"><input placeholder="请输入密码" type="text" id="user_renew_pw" name="re_new_pw" class="form-control" style="width:60%;"/></div>
+                                    <div class="col-xs-9" style="width:66%;"><input placeholder="请输入密码" type="password" id="user_renew_pw" name="re_new_pw" class="form-control" style="width:60%;"/></div>
                                 </div>
                             </div>
 
@@ -87,7 +88,7 @@
                         dataType: "json",           //接受数据格式
                         data: {                     //要传递的数据
                             user_old_pw: function () {
-                                return encodeURI($("#user_old_pw").val());
+                                return $.md5($("#user_old_pw").val());
                             }
                         },
                         dataFilter: function (data, type) {//判断控制器返回的内容
@@ -127,8 +128,7 @@
                 return false;
             }
             var subData={
-                user_id :sysid,
-                new_password:encodeURI($("#user_new_pw").val())
+                new_password:$.md5($("#user_new_pw").val())
             }
             $.ajax({
                 type: "post",
