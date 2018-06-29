@@ -9,7 +9,7 @@
 	       and a.cre_time >= #{start_time}
 	    ]]></if>
 		<if test="end_time != null and end_time != '' and end_time != 'null'"><![CDATA[
-	       and a.cre_time <= #{end_time}
+	       and date(a.cre_time) <= #{end_time}
 	    ]]></if>
 		<if test="config_ver != null and config_ver != '' and config_ver != 'null'"><![CDATA[
 	       and c.version_num !='' Or c.version_num!= null
@@ -47,7 +47,7 @@
     GROUP BY a.cre_time order by a.cre_time DESC
 	</select>-->
 	<select id="select" parameterType="map" resultType="map">
-		SELECT f.cre_time,f.details,f.version_num,f.is_active,j.page_name from (
+		SELECT f.cre_time,f.details,f.version_num,f.is_active,j.page_name ,i.page_id ,l.app_name from (
 		select
 	  sec_metric_id,
      C.cre_time
@@ -72,9 +72,8 @@ and c.sec_metric_id = r.sec_metric_id
 	       and c.cre_time >= #{start_time}
 	    ]]></if>
 		<if test="end_time != null and end_time != '' and end_time != 'null'"><![CDATA[
-	       and c.cre_time <= #{end_time}
+	       and date(c.cre_time) <= #{end_time}
 	    ]]></if>
-
 and r.metric_id = m.metric_id
 group by cre_time
 ) C
@@ -91,6 +90,8 @@ order by cre_time desc
 		left join section_metric h on f.sec_metric_id=h.sec_metric_id
 		left join page_section  i  on  h.section_id=i.section_id
 		left join page j  on  i.page_id=j.page_id
+		left join app_page k  on  i.page_id=k.page_id
+		left join application l  on  k.app_id=l.app_id
 		where 1=1
 		<if test="config_ver != null and config_ver != '' and config_ver != 'null'"><![CDATA[
 	      and f.version_num !=''

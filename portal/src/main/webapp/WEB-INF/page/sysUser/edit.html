@@ -15,7 +15,7 @@
             </div>
 
             <div class="ibox">
-				<div class="ibox-content ibox-content-ad" style="margin-top: 25px;">
+				<div class="ibox-content ibox-content-ad" style="margin-top:55px;">
 					<form id="form" name="form" method="post" action="${G.serverUrl}/save" class="wizard-big addForm" enctype="multipart/form-data" accept="image/jpg, image/png">
 				    <div class="row">
                         <div class="col-sm-6 form_ipt_botm">
@@ -85,13 +85,7 @@
                                         <span>否</span></label></div>
                             </div>
                         </div>
-
-                        <div class="row">
-                            <div >
-
-                            </div>
-                        </div>
-                        <div ibox-toolbars hidefield  style="float:left;width:62%;height:80px;margin-top:60px;">
+                        <div ibox-toolbars hidefield  style="float:left;width:62%;height:80px;margin-top:30px;">
                             <li class="li_bom" style="height:70px;">
                                 <span class="input-group-btn" style="width:9%;" > <input id="submit-form" type="button" class="pull-right  btn btn-primary"  value="保存"/> </span>
                                 <span class="input-group-btn"  ><input id="reset" class="pull-right btn btn-primary"  type="button"  value="返回"/></span>
@@ -239,7 +233,7 @@ function selectData(){
             $("#job_id").append("<option selected hidden value=''>jobid</option><option value= ''>选择岗位</option>");
             for (var i = 0; i < data.length; i++) {
                 var item = data[i];
-                $("#job_id").append("<option  value=" +item.jobid+ ">"+item.jobid+"  "+item.jobname+"</option>");
+                $("#job_id").append("<option  value=" +item.jobid+ "> "+item.jobname+"</option>");
             }
         }
     });
@@ -256,7 +250,7 @@ function selectDep(){
             $("#dep_id").append("<option selected hidden value=''>depid</option><option value= ''>选择部门</option>");
             for (var i = 0; i < data.length; i++) {
                 var item = data[i];
-                $("#dep_id").append("<option  value=" +item.depid+ ">"+item.depid+"  "+  item.depname+"</option>");
+                $("#dep_id").append("<option  value=" +item.depid+ ">  "+  item.depname+"</option>");
             }
         }
     });
@@ -274,7 +268,7 @@ function selectRole(){
             $("#role_id").append("<option selected hidden value=''>roleid</option><option value= ''>选择用户角色</option>");
             for (var i = 0; i < data.length; i++) {
                 var item = data[i];
-                $("#role_id").append("<option  value=" +item.roleid+">"+item.roleid+"  "+item.rolename+"</option>");
+                $("#role_id").append("<option  value=" +item.roleid+"> "+item.rolename+"</option>");
             }
         }
     });

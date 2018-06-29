@@ -160,7 +160,7 @@
                 if (etype == "checkbox") {
                     CheckBoxInit(name, val);
                 } else if (etype == "radio") {
-                    _selector.each(function () {
+                    _selector.each(function (){
                         if ($(this).val() == encodeURI(val)) {
                             $(this).attr("checked", "checked");
                             if (typeof ($(this).parent().parent().attr("data-toggle")) != "undefined") {

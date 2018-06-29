@@ -80,12 +80,11 @@
                 { field: 'user_addr',  visible:false },
                 { field: 'rela_id',  visible:false },
                 { field: 'rel_id',  visible:false },
-                { field: 'upd_time', title: '更新时间', width: 110 ,align: 'center'},
-                { field: 'CZ',  title: '操作',width: '20%',align: 'center', formatter:function(value,row,index){
+                { field: 'upd_time', title: '更新时间', width: 110,align: 'center'},
+                { field: 'CZ',  title: '操作',width: '25%',align: 'center', formatter:function(value,row,index){
                     return "<button type='button' class='btn_el' onclick='edit(\""+row.user_id+"\",\""+row.user_name+"\")'>编辑</button>| "
                         +"<button type='button' class='btn_el' onclick='del(\""+row.user_id+"\",\""+row.user_name+"\",\""+row.rela_id+"\",\""+row.rel_id+"\")'>删除</button>|"
-					    +"<button type='button' class='btn_el' onclick='repw(\""+row.user_id+"\",\""+row.user_name+"\",\""+row.user_state+"\")'>密码重置</button>"
-						;
+                        +"<button type='button' class='btn_el' onclick='repw(\""+row.user_id+"\",\""+row.user_name+"\",\""+row.user_state+"\")'>密码重置</button>";
                 }}
             ],onPageChange:function(number, size){
                 pageNum=number;
@@ -267,6 +266,7 @@
         return s;
     }
 
+    //密码修改
     function modipw(){
         window.location.href=quick.serverUrl + "/changepw";
 	}
