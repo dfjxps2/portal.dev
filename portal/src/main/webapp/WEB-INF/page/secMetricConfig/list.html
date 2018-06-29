@@ -36,8 +36,10 @@
 				   { field: 'version_num', title: '版本号', width: 30   },
 
                    { field: 'cre_time', title: '配置修改时间', width: 50  },
-				   { field: 'page_name', title: '页面名称',  width: 30   },
-				   { field: 'details', title: '指标配置详情' ,width: 130},
+				   { field: 'app_name', title: '应用名称',  width: 50   },
+
+				   { field: 'page_name', title: '页面名称',  width: 50   },
+				   { field: 'details', title: '指标配置详情' ,width: 70},
 
 				   { field: 'is_active', title: '生效状态', width: 25 ,formatter:function(value,row,index){
 					   var state = '<span style="color:#CFCFCF">未生效</span>';
@@ -50,7 +52,7 @@
 				   { field: 'valid_status', title: '版本状态', width: 40  },*/
 
 				   { field: 'cz', align:'center', title: '操作',width: 50, formatter:function(value,row,index){
-					   var state= "<button type='button' class='btn_el' onclick='use(\""+row.config_id+"\",\""+row.user_id+"\",\""+row.cre_time+"\")'>启用</button>| "
+					   var state= "<button type='button' class='btn_el' onclick='use(\""+row.config_id+"\",\""+row.user_id+"\",\""+row.cre_time+"\",\""+row.page_id+"\")'>启用</button>| "
 					          +"<button type='button' class='btn_el' onclick='edit(\""+row.cre_id+"\",\""+row.version_num+"\",\""+row.cre_time+"\")'>编辑版本号</button> "
 
 							  // +"<button type='button' class='btn_el' onclick='del(\""+row.config_id+"\",\""+row.config_id+"\")'>删除</button>";
