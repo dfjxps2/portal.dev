@@ -138,7 +138,7 @@ function click_event(str){
 	$("#txt").val(str);
 	$ui.find('.arrowUp').addClass('arrowDown').removeClass('arrowUp').andSelf().find('.dropdown').slideUp(10);
 }
-var is_lock = false;
+var is_lock = false, is_btn = false;
 function gosearch(){
 	if(!layer.values)
 		layer.values = {};
@@ -190,9 +190,13 @@ function addnew(){
 		,content: _host+'/home/addapp'
 		,btn: ['添加', '取消']
 		,yes: function(index, layero){
+			if(is_btn)
+				return;
+			is_btn = true;
 			var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
 			var appids = iframeWin.ids;
 			if(!appids){
+				is_btn = false;
 				layer.msg('请您点击要添加的应用', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
 				return;
 			}
@@ -210,6 +214,7 @@ function addnew(){
 			layer.setTop(layero);
 		},end:function(){
 			is_lock = false;
+			is_btn = false;
 		}
 	});
 }
