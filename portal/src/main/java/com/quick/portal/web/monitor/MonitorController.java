@@ -75,12 +75,12 @@ public class MonitorController extends SysWebController {
         Integer app_id = rint("t", 0);
         Integer page_id = rint("p", 0);
         List<Map<String, Object>> plist = queryPage(app_id);
-        String time = rint("time",0).toString();
+        String time = rstr("time","0");
         if(page_id == 0 && plist != null && plist.size() > 0){
             page_id = (Integer)TypeUtil.parse(Integer.class, plist.get(0).get("page_id"));
         }
         ApplicationDO app = applicationService.selectObj(app_id.toString());
-        DataResult layout = getLayout(page_id);
+        DataResult layout = getLayout(page_id,time);
         
         String url = PropertiesUtil.getPropery("index.service.url");
     	String port = PropertiesUtil.getPropery("index.service.port");
@@ -169,12 +169,12 @@ public class MonitorController extends SysWebController {
      */
     @PostMapping
     @ResponseBody
-    public DataResult getLayout(Integer p){
+    public DataResult getLayout(Integer p,String time){
     	//获取当前用户id
     	String user_id = rstr("u", loginer.getUser_id().toString());
         String layout = "[{id:0, no:1,x: 0, y: 0, width: 12, height: 6, metric:[]}]";
         if(p != null && p > 0){
-            String res = sectionService.selectLayoutJson(p,Integer.parseInt(user_id));
+            String res = sectionService.selectLayoutJson(p,Integer.parseInt(user_id),time);
             if(!QCommon.isNullOrEmpty(res))
                 layout = res;
         }

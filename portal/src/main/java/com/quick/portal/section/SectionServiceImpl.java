@@ -102,21 +102,21 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
         return dao.selectPageSection(page_id);
     }
     @Override
-    public String selectLayoutJson(Integer page_id,Integer user_id){
+    public String selectLayoutJson(Integer page_id,Integer user_id,String cre_time){
         List<Map<String, Object>> ls = dao.selectPageSection(page_id);
         List<Map<String,Object>> metricls = dao.selectPageMetric(page_id);
         
-        List<Map<String,Object>> li = configDao.selectTime(user_id);
         Map<String, Object> map1 = new HashMap<String, Object>();
     	map1.put("user_id", user_id);
     	map1.put("page_id", page_id);
-        String cre_time = "";
+    	if(cre_time .equals("0") && cre_time != null){
+    		 List<Map<String,Object>> li = configDao.selectTime(user_id);
+     		cre_time = li.get(0).get("cre_time").toString();
+        }
         List<Map<String,Object>> mconfigls = dao.selectPageMetricConfig(map1);
-        if (li.size()>0) {
-        	cre_time = li.get(0).get("cre_time").toString();
-        	map1.put("cre_time", cre_time);
-        	mconfigls = mergeData(map1,"show");
-		}
+        map1.put("cre_time", cre_time);
+        mconfigls = mergeData(map1,"show");
+        
         //mergeData(mconfigls,page_id,user_id);
         if(ls == null || ls.size() == 0)
             return "[]";
@@ -178,10 +178,8 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
      		cre_time = li.get(0).get("cre_time").toString();
         }
          List<Map<String,Object>> mconfiglst = dao.selectPageMetricConfig(map1);
-         if (li.size()>0) {
          	map1.put("cre_time", cre_time);
          	mconfiglst = mergeData(map1,"set");
- 		}
         if(metriclst == null || metriclst.size() == 0 || mconfiglst == null || mconfiglst.size() == 0)
             return "[]";
         String json = "";
@@ -213,7 +211,8 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
         return "{\"id\":" + m.get("section_id") + "," + json.substring(1);
     }
     private String getMetricConfig(Object section_value, List<Map<String,Object>> metrics, List<Map<String,Object>> config,Integer user_id){
-        String section_id = section_value.toString();
+    	
+    	String section_id = section_value.toString();
         String json = "";
         if (user_id.equals(0)==false) {
         	List<Map<String,Object>> metric_role = dao.getMetricRoleByUserId(user_id);
