@@ -24,6 +24,7 @@ import com.quick.core.util.common.JsonUtil;
 import com.quick.core.util.common.QCommon;
 import com.quick.portal.menuPrivilege.IMenuPrivilegeService;
 import com.quick.portal.search.infomng.IInfoMngService;
+import com.quick.portal.web.model.DataResult;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -74,11 +75,11 @@ public class HomeController extends SysWebController {
             isadmin = 1;
         }
         //获取用户应用列表,如果没有，从menu_privilege表读取对应角色默认应用列表
-        List<Map<String, Object>> apps = getUserApp();
+        List<Map<String, Object>> apps = queryUserApp();
         if(apps == null || apps.size() == 0){
             //如果没有用户桌面，就添加一个
             homeService.addDashboard(parm);
-            apps = getUserApp();
+            apps = queryUserApp();
         }
 
         String habitInfo = infoMngService.getPersonalHabitsInfo(loginer.getUser_id().toString());
@@ -154,7 +155,10 @@ public class HomeController extends SysWebController {
      */
     @PostMapping
     @ResponseBody
-    public List<Map<String, Object>> getUserApp(){
+    public DataResult getUserApp(){
+        return new DataResult(queryUserApp());
+    }
+    private List<Map<String, Object>> queryUserApp(){
         String app_name = rstr("t");
         if(app_name.length() > 0)
             urlMap.put("app_name", app_name);
