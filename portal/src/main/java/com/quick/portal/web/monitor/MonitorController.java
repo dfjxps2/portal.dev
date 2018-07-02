@@ -74,6 +74,7 @@ public class MonitorController extends SysWebController {
         Integer app_id = rint("t", 0);
         Integer page_id = rint("p", 0);
         List<Map<String, Object>> plist = getPage(app_id);
+        String time = rint("time",0).toString();
         if(page_id == 0 && plist != null && plist.size() > 0){
             page_id = (Integer)TypeUtil.parse(Integer.class, plist.get(0).get("page_id"));
         }
@@ -88,7 +89,7 @@ public class MonitorController extends SysWebController {
         model.addAttribute("page_id", page_id);
         model.addAttribute("pageJson", JsonUtil.serialize(plist));
         model.addAttribute("layout", layout);
-        
+        model.addAttribute("time", time);
         return view();
     }
     
@@ -102,6 +103,7 @@ public class MonitorController extends SysWebController {
         Integer app_id = rint("t", 0);
         Integer page_id = rint("p", 0);
         String user_id = rstr("u", loginer.getUser_id().toString());
+        String time = rint("time",0).toString();
         List<Map<String, Object>> plist = getPage(app_id);
         if(page_id == 0 && plist != null && plist.size() > 0){
             page_id = (Integer)TypeUtil.parse(Integer.class, plist.get(0).get("page_id"));
@@ -109,7 +111,7 @@ public class MonitorController extends SysWebController {
         ApplicationDO app = applicationService.selectObj(app_id.toString());
 
         Object layoutJson = getPageJson(page_id);
-        Object metricJson = getMetricJson(page_id,user_id);
+        Object metricJson = getMetricJson(page_id,user_id,time);
        /* String urlShow = PropertiesUtil.getPropery("index.service.showURL");
     	model.addAttribute("urlShow", urlShow);*/
         String url = PropertiesUtil.getPropery("index.service.url");
@@ -128,6 +130,7 @@ public class MonitorController extends SysWebController {
   	@ResponseBody
       public Object settingUser(Integer app_id,Integer page_id) {
     	String user_id = rstr("u", loginer.getUser_id().toString());
+    	String time = rint("time",0).toString();
         List<Map<String, Object>> plist = getPage(app_id);
         if(page_id == 0 && plist != null && plist.size() > 0){
             page_id = (Integer)TypeUtil.parse(Integer.class, plist.get(0).get("page_id"));
@@ -135,7 +138,7 @@ public class MonitorController extends SysWebController {
         ApplicationDO app = applicationService.selectObj(app_id.toString());
 
         Object layoutJson = getPageJson(page_id);
-        Object metricJson = getMetricJson(page_id,user_id);
+        Object metricJson = getMetricJson(page_id,user_id,time);
         String url = PropertiesUtil.getPropery("index.service.url");
     	String port = PropertiesUtil.getPropery("index.service.port");
     	String urlShow = url.concat(MetricPrivilegeConstants.SERVICE_PORT).concat(port).concat(MetricPrivilegeConstants.GET_MEASURES_SERVICE_NAME);
@@ -204,10 +207,10 @@ public class MonitorController extends SysWebController {
         return layout;
     }
 
-    public Object getMetricJson(Integer page_id,String user_id){
+    public Object getMetricJson(Integer page_id,String user_id,String time){
         String json = "[]";
         if(page_id != null && page_id > 0){
-            String res = sectionService.selectMetricJson(page_id,Integer.parseInt(user_id));
+            String res = sectionService.selectMetricJson(page_id,Integer.parseInt(user_id),time);
             if(!QCommon.isNullOrEmpty(res))
                 json = res;
         }

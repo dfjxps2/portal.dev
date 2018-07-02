@@ -134,10 +134,11 @@ public class PageController extends SysBaseController<PageDO> {
     @PostMapping
     @ResponseBody
     public Object getMetricJson(Integer page_id){
-    	String user_id = QCookie.getValue(request, "ids");
+    	String user_id = rstr("u", loginer.getUser_id().toString());
+    	String time = rint("time",0).toString();
         String json = "[]";
         if(page_id != null && page_id > 0){
-            String res = sectionService.selectMetricJson(page_id,Integer.parseInt(user_id));
+            String res = sectionService.selectMetricJson(page_id,Integer.parseInt(user_id),time);
             if(!QCommon.isNullOrEmpty(res))
                 json = res;
         }

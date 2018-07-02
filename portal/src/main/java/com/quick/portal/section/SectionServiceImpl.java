@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.quick.core.base.model.DataStore;
 import com.quick.core.util.common.DateTime;
+import com.quick.core.util.type.TypeUtil;
 import com.quick.portal.secMetricConfig.ISecMetricConfigDao;
 
 import java.util.ArrayList;
@@ -167,16 +168,17 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
     }
 
     @Override
-    public String selectMetricJson(Integer page_id,Integer user_id) {
+    public String selectMetricJson(Integer page_id,Integer user_id,String cre_time) {
         List<Map<String,Object>> metriclst = dao.selectPageMetric(page_id);
         List<Map<String,Object>> li = configDao.selectTime(user_id);
     	 Map<String, Object> map1 = new HashMap<String, Object>();
      	map1.put("user_id", user_id);
      	map1.put("page_id", page_id);
-         String cre_time = "";
+     	if(cre_time .equals("0") && cre_time != null){
+     		cre_time = li.get(0).get("cre_time").toString();
+        }
          List<Map<String,Object>> mconfiglst = dao.selectPageMetricConfig(map1);
          if (li.size()>0) {
-         	cre_time = li.get(0).get("cre_time").toString();
          	map1.put("cre_time", cre_time);
          	mconfiglst = mergeData(map1,"set");
  		}

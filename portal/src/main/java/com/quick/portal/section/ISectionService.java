@@ -32,7 +32,7 @@ public interface ISectionService extends ISysBaseService<SectionDO> {
 
     String selectSectionJson(Integer page_id);
 
-    String selectMetricJson(Integer page_id, Integer user_id);
+    String selectMetricJson(Integer page_id, Integer user_id,String time);
 
     String selectLayoutJson(Integer page_id,Integer user_id);
     

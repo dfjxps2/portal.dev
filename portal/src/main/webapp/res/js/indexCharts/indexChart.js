@@ -1075,6 +1075,10 @@ function bar_echart(data,name,id){
 		if (ifInteger(series,'')) {
 			siz = 0;
 		}	
+		var position = '';
+		if (wid<180||divhei<150) {
+			position = ['0%','0%'];
+		}
 			
 	var myChart = echarts.init(document.getElementById(id));
 	option = {
@@ -1089,6 +1093,7 @@ function bar_echart(data,name,id){
 			        }
 			  }],
 		  	tooltip:{
+		  		position:position,
 		  		 trigger: 'axis',
 		         axisPointer: {
 		             type: 'shadow'
@@ -1207,7 +1212,7 @@ function add_table(data,name,dimension,id,stateTime,endTime){
 		str = str + '<tr style = "height:20px">'+
 		'<td style="width:'+width+'%;border:1px solid '+tableLine+';font-size:12px;text-align:center;color:'+titleColor+'">'+tData[j][0]+'</td>';
 		for (var k = 0; k < tableData.length; k++) {
-			var tValue = tData[j][k+1];
+			var tValue = tData[j][k+1]+'';
 			if (leng*17>wid) {
 				str = str + '<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;font-size:12px;color:'+titleColor+'">'+wrap(tValue,siz)+'</td>';
 			}else{
