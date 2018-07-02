@@ -52,7 +52,7 @@
 				   { field: 'valid_status', title: '版本状态', width: 40  },*/
 
 				   { field: 'cz', align:'center', title: '操作',width: 50, formatter:function(value,row,index){
-					   var state= "<button type='button' class='btn_el' onclick='use(\""+row.config_id+"\",\""+row.user_id+"\",\""+row.cre_time+"\",\""+row.page_id+"\")'>启用</button>| "
+					   var state= "<button type='button' class='btn_el' onclick='use(\""+row.config_id+"\",\""+row.user_id+"\",\""+row.cre_time+"\",\""+row.is_active+"\")'>启用</button>| "
 					          +"<button type='button' class='btn_el' onclick='edit(\""+row.cre_id+"\",\""+row.version_num+"\",\""+row.cre_time+"\")'>编辑版本号</button> "
 
 							  // +"<button type='button' class='btn_el' onclick='del(\""+row.config_id+"\",\""+row.config_id+"\")'>删除</button>";

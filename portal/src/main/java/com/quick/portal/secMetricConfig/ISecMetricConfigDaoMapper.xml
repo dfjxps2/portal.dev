@@ -33,21 +33,9 @@
 	</delete>
     
     <!--查询-->
-	<!--<select id="select" parameterType="map" resultType="map">
-		select a.config_id config_id,a.user_id user_id,c.version_num version_num,
-		GROUP_CONCAT(a.param_value  ORDER BY a.config_id)  as details,
-		 c.is_active as is_active ,
-		a.cre_time cre_time
-		from sec_metric_config a
-		left join sys_user b on a.user_id=b.user_id
-		left join user_config_version c on a.cre_time=c.cre_time
-		<where>
-			<include refid="where" />
-		</where>
-    GROUP BY a.cre_time order by a.cre_time DESC
-	</select>-->
+
 	<select id="select" parameterType="map" resultType="map">
-		SELECT f.cre_time,f.details,f.version_num,f.is_active,j.page_name ,i.page_id ,l.app_name from (
+		SELECT f.cre_time,f.details,f.version_num,f.is_active,j.page_name ,group_concat(distinct k.page_id)as page_id ,group_concat(distinct l.app_name) as app_name from (
 		select
 	  sec_metric_id,
      C.cre_time
@@ -61,11 +49,11 @@ from sec_metric_config c, section_metric r, metric m
 where
 (
 c.user_id = #{user_id}
-or c.user_id in
+/*or c.user_id in
 		(select u.user_id from sys_user u, user_role_rela re
 			where u.user_id = re.user_id
 			and re.role_id = 1
-		)
+		)*/
 )
 and c.sec_metric_id = r.sec_metric_id
 		<if test="start_time != null and start_time != '' and start_time != 'null'"><![CDATA[
@@ -74,8 +62,8 @@ and c.sec_metric_id = r.sec_metric_id
 		<if test="end_time != null and end_time != '' and end_time != 'null'"><![CDATA[
 	       and date(c.cre_time) <= #{end_time}
 	    ]]></if>
-and r.metric_id = m.metric_id
-group by cre_time
+        and r.metric_id = m.metric_id
+        group by cre_time
 ) C
 left outer join (
 select cre_time, version_num, is_active -- 该用户设置过的版本号
@@ -96,6 +84,7 @@ order by cre_time desc
 		<if test="config_ver != null and config_ver != '' and config_ver != 'null'"><![CDATA[
 	      and f.version_num !=''
 	    ]]></if>
+		group by f.cre_time
 		order by f.cre_time desc
 	</select>
 	<!-- 查询总记录数 -->
