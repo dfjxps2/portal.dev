@@ -239,6 +239,16 @@ function dataType(data,typeData,stateTime,endTime){
 						tmp.time = getTime(data[i].measures,typeData[j].time_dim,stateTime,endTime);
 						tmp.unit = typeData[j].unit;
 						series2.push(tmp);
+					}else if (typeData[j].charts=="map") {
+						tmp = {};
+						tmp.value = '';
+						tmp.name = '';
+						tmp.type = 'map';
+						tmp.dimension = typeData[j].dimension;
+						tmp.time_dim = typeData[j].time_dim;
+						tmp.time = getTime(data[i].measures,typeData[j].time_dim,stateTime,endTime);
+						tmp.unit = typeData[j].unit;
+						series2.push(tmp);
 					}else {
 						tmp = {};
 						tmp.value = chartType(data[i].measures,typeData[j],typeData,data[i].measure_name,i,typeData[j].dimension,stateTime,endTime);
@@ -1464,6 +1474,8 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 					tables.innerHTML =add_table(pieData[j].value,pieData[j].name,pieData[j].dimension,ida1,pieData[j].time[0],pieData[j].time[1]);
 				}else if (pieData[j].type=='gauge'){
 					gauge(pieData[j].value,pieData[j].name,ids,pieData[j].dimension,pieData[j].time_dim,pieData[j].time,pieData[j].unit);
+				}else if (pieData[j].type=='map'){
+					map(ids);
 				}
 			}
 		}else{
@@ -1476,6 +1488,8 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 				table1.innerHTML = add_table(pieData[0].value,pieData[0].name,pieData[0].dimension,ida2,pieData[0].time[0],pieData[0].time[1]);
 			}else if (pieData[0].type=='gauge'){
 				gauge(pieData[0].value,pieData[0].name,divs,pieData[0].dimension,pieData[0].time_dim,pieData[0].time,pieData[0].unit);
+			}else if (pieData[0].type=='map'){
+				map(divs);
 			}
 		}
 	}else if ((a==true&&c==false)||(a==false&&c==true)) {
@@ -1546,6 +1560,8 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 						tables.innerHTML = add_table(pieData[j].value,pieData[j].name,pieData[j].dimension,ida3,pieData[j].time[0],pieData[j].time[1]);
 					}else if (pieData[j].type=='gauge'){
 						gauge(pieData[j].value,pieData[j].name,ids2,pieData[j].dimension,pieData[j].time_dim,pieData[j].time,pieData[j].unit);
+					}else if (pieData[j].type=='map'){
+						map(ids2);
 					}
 				}
 			}else{
@@ -1561,6 +1577,8 @@ function addEchart(data,name,typeData,id,stateTime,endTime){
 					table1.innerHTML = add_table(pieData[0].value,pieData[0].name,pieData[0].dimension,ida4,pieData[0].time[0],pieData[0].time[1]);
 				}else if (pieData[0].type=='gauge'){
 					gauge(pieData[0].value,pieData[0].name,div3,pieData[0].dimension,pieData[0].time_dim,pieData[0].time,pieData[0].unit);
+				}else if (pieData[0].type=='map'){
+					map(div3);
 				}
 			}
 		}else{
@@ -1886,4 +1904,337 @@ function listDown(data,j){
 		data[k+1] = temp;
 	}
     return data;
+}
+
+function map(id){
+	//var ZJData = [{name:'国兴',value:1123},{name:'海甸',value:1111},{name:'三江镇',value:12345},{name:'府城',value:1133}]
+	/*var type=$('#type').val();
+	var textValue='';
+	
+	var mapDate=ZJData;
+	var typeDate=ZJData;
+	var maxvalue=100000;
+	$.get('../res/json/zhenjie.json', function (geoJson) {
+	centerChart = echarts.init(document.getElementById(id));
+		echarts.registerMap('HK', geoJson);  
+		
+		var data = mapDate;
+		var geoCoordMap = {
+				"府城":[110.3445532,20.00562671],    
+				"国兴":[110.3552658,20.01236262],
+				"凤翔":[110.3609191,19.97671455],
+				"滨江":[110.3805182,19.98728897],
+				"海垦":[110.30295,20.01056487],
+				"蓝天":[110.3518399,20.02325471],
+				"海府":[110.3436092,20.03031908],
+				"大同":[110.3270185,20.02582861],
+				"白龙":[110.3705342,20.03041917],
+				"和平南":[110.3533697,20.03442907],
+				"金贸":[110.3056685,20.03722482],
+				"滨海":[110.3228992,20.04183737],
+				"人民":[110.3209014,20.06398956],
+				"灵山镇":[110.407732,19.99270435],
+				"新埠":[110.3610253,20.05684642],
+				"中山":[110.3372821,20.04063975],
+				"博爱":[110.3452467,20.04288751],
+				"演丰镇":[110.5141668,19.91292948],
+				"龙塘镇":[110.4108057,19.94365269],
+				"城西镇":[110.3155341,19.97811432],
+				"白沙":[110.362777,20.0446944],
+				"海甸":[110.3437266,20.06347735],
+				"东山镇":[110.22654,19.789795],
+				"永兴镇":[110.262497,19.91938],
+				"石山镇":[110.2061123,19.93716871],
+				"秀英":[110.2680681,20.00439491],
+				"海秀镇":[110.263421,19.98049745],
+				"金宇":[110.3239242,20.01042402],
+				"海秀":[110.2646378,20.01726804],
+				"西秀镇":[110.1641691,20.01545109],
+				"长流镇":[110.2120886,20.01097338]
+			};
+		var rawData = typeDate;
+	    	option = {
+	    		title: {
+	    			text: textValue,
+	    		    top:2,
+	    		    left:'4%',
+	    		    textStyle: {			   
+	    		  	   color: '#fff',
+	    		  	   fontSize:24
+	    		        }
+	    		  	 },
+	    	    tooltip : {
+	    	        trigger: 'item',
+	    	        formatter: function(params){
+		    	        	var values=params.value;
+		    	        	if (isNaN(params.value)) {
+		    	        		values=0;
+							}
+		    	        	var res = params.name+":"+values+"<br>";
+	    	        	echarts.util.each(rawData, function (dataItem, idx) {
+	    	        		if(params.name==dataItem[0]){
+	    	        			var value1='';
+	    	        			var value2='';
+	    	        			var value3='';
+	    	        			if (dataItem[1]!=null) {
+	    	        				value1=dataItem[1]+":"+dataItem[2]+"(件)<br>";
+								}
+	    	        			if (dataItem[3]!=null) {
+	    	        				value2=dataItem[3]+":"+dataItem[4]+"(件)<br>";
+								}
+	    	        			if (dataItem[5]!=null) {
+	    	        				value3=dataItem[5]+":"+dataItem[6]+"(件)<br>";
+								}
+	    	        			res = res+value1+value2+value3;
+	    	        		}
+	    	        	});
+	    	        	return res;
+	    	        }
+	    	    },
+	    	   
+	    	    dataRange: {
+	    	        min : 0,
+	    	        max : maxvalue,
+	    	        textStyle: {			   
+		    		  	   color: '#fff'
+		    		        },
+	    	        calculable : true,
+	    	        color: ['#006edd','#e0ffff']
+	    	    },
+	    	    geo:{
+	    	    	show:true,
+	    	    	map:'HK',
+	                label: {
+	                    normal: {
+	                        show: true,
+	                        textStyle: {
+	                            color: 'rgba(0,0,0,0.4)'
+	                        }
+	                    }
+	                },
+	                roam: true,
+	                zoom:3.5,
+		            left:'40%',
+		            top:'100%',
+	                itemStyle: {  
+	                  normal: {
+	                    areaColor: '#5c8bb7',  
+	                    borderColor: '#404a59'  
+	                  },  
+	                  emphasis: {
+	                	areaColor:'#32CD32'
+	                  }  
+	               }
+	    	    },
+	    	     series : [{
+	    	    	 name: 'categoryA',
+	    	            type: 'map',
+	    	            geoIndex: 0,
+	    	            data:data
+	    	     }]
+	    	};
+	    	centerChart.setOption(option);
+	    	
+	    	function renderEachCity() {
+	    	    var option = {xAxis: [], yAxis: [], grid: [], series: []};
+	    	    
+	    	    echarts.util.each(rawData, function (dataItem, idx) {
+	    	    	alert(JSON.stringify(dataItem));
+	    	    	var xAxisCategory = [dataItem[1],dataItem[3],dataItem[5]];
+	    	        var geoCoord = geoCoordMap[dataItem[0]];
+	    	        var coord = centerChart.convertToPixel('geo', geoCoord);
+	    	        idx += '';
+	    	        inflationData = [];
+	    	        inflationData.push(dataItem[2]);
+	    	        inflationData.push(dataItem[4]);
+	    	        inflationData.push(dataItem[6]);
+	    	        
+	    	        option.xAxis.push({
+	    	            id: idx,
+	    	            gridId: idx,
+	    	            type: 'category',
+	    	            name: dataItem[0],
+	    	            show:false,
+	    	            nameStyle: {
+	    	                color: '#ddd',
+	    	                fontSize: 12
+	    	            },
+	    	            nameLocation: 'middle',
+	    	            nameGap: 3,
+	    	            splitLine: {show: false},
+	    	            axisTick: {show: false},
+	    	            axisLabel: {show: false},
+	    	            axisLine: {
+	    	                onZero: false,
+	    	                lineStyle: {
+	    	                    color: '#bbb'
+	    	                }  
+	    	            },
+	    	            data: xAxisCategory,
+	    	            z: 100
+	    	        });
+	    	        option.yAxis.push({
+	    	            id: idx,
+	    	            gridId: idx,
+	    	            show:false,
+	    	            splitLine: {show: false},
+	    	            axisTick: {show: false},
+	    	            axisLabel: {show: false},
+	    	            axisLine: {
+	    	                lineStyle: {
+	    	                    color: '#bbb'
+	    	                }  
+	    	            },
+	    	            z: 100
+	    	        });
+	    	        option.grid.push({
+	    	            id: idx,
+	    	            width: 30,
+	    	            height: 30,
+	    	            left: coord[0] - 15,
+	    	            top: coord[1] - 15,
+	    	            z: 100
+	    	        });
+	    	        option.series.push({
+	    	            id: idx,
+	    	            type: 'bar',
+	    	            xAxisId: idx,
+	    	            yAxisId: idx,
+	    	            barGap: '-10%',
+	    	            itemStyle: {
+	    	                normal: {
+	    	                    color: function(params) {
+	    	                        var colorList = [
+	    	                           '#C1232B','#B5C334','#FCCE10','#E87C25','#27727B',
+	    	                           '#FE8463','#9BCA63','#FAD860','#F3A43B','#60C0DD',
+	    	                           '#D7504B','#C6E579','#F4E001','#F0805A','#26C0C0'
+	    	                        ];
+	    	                        return colorList[params.dataIndex]
+	    	                    },
+	    	                    shadowBlur: 80,
+	    	                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+	    	                }
+	    	            },
+	    	            data: inflationData,
+	    	            z: 100
+	    	        });
+	    	    });    
+	    	    console.time('a');
+	    	    centerChart.setOption(option);
+	    	    console.timeEnd('a');
+	    	}
+	    	
+	    	setTimeout(renderEachCity, 10);
+
+	    	function throttle(fn, delay, debounce) {
+
+	    	    var currCall;
+	    	    var lastCall = 0;
+	    	    var lastExec = 0;
+	    	    var timer = null;
+	    	    var diff;
+	    	    var scope;
+	    	    var args;
+
+	    	    delay = delay || 0;
+
+	    	    function exec() {
+	    	        lastExec = (new Date()).getTime();
+	    	        timer = null;
+	    	        fn.apply(scope, args || []);
+	    	    }
+
+	    	    var cb = function () {
+	    	        currCall = (new Date()).getTime();
+	    	        scope = this;
+	    	        args = arguments;
+	    	        diff = currCall - (debounce ? lastCall : lastExec) - delay;
+
+	    	        clearTimeout(timer);
+
+	    	        if (debounce) {
+	    	            timer = setTimeout(exec, delay);
+	    	        }
+	    	        else {
+	    	            if (diff >= 0) {
+	    	                exec();
+	    	            }
+	    	            else {
+	    	                timer = setTimeout(exec, -diff);
+	    	            }
+	    	        }
+
+	    	        lastCall = currCall;
+	    	    };
+
+	    	    return cb;
+	    	}
+
+	    	var throttledRenderEachCity = throttle(renderEachCity, 130);
+	    	centerChart.on('geoRoam', throttledRenderEachCity);
+	
+	}
+	)*/
+	
+	
+	
+	
+	
+	
+	var ZJData = [{name:'国兴',value:1123},{name:'海甸',value:1111},{name:'三江镇',value:12345},{name:'府城',value:1133}]
+	$.get('../res/json/zhenjie.json', function (geoJson) {
+		var myChart = echarts.init(document.getElementById(id));
+		echarts.registerMap('HK', geoJson);
+	    	option = {
+	    	    tooltip : {
+	    	        trigger: 'item',
+	    	        formatter:function (params) {
+	    	        	var values=params.value;
+	    	        	if (isNaN(params.value)) {
+	    	        		values=0;
+						}
+	    	        	return params.name+'<br/>'+'案件数量：'+values+'件';
+	    	        }
+	    	    },
+	    	    dataRange: {
+	    	        min : 0,
+	    	        max : 10000,
+	    	        calculable : true,
+	    	        textStyle:{color:"#ffffff"},
+	    	        color: ['orangered','yellow','lightskyblue' ]
+	    	    },
+	    	     series : [
+	    	        {
+	    	            name: '海口地图',
+	    	            type: 'map',
+	    	            mapType: 'HK',// 自定义地图类型
+	    	            roam: true,
+	    	            zoom:1.2,
+	    	            label: {
+	                        normal: {
+	                            show: false,
+	                            textStyle:{color:"#3d3b3b"}
+	                        },    
+	                        emphasis: {
+	                            show: true,
+	                            textStyle:{color:"#800080"}
+	                        } 
+	                    }, 
+	    	            itemStyle:{
+	    	                normal:{
+	    	                	label:{show:true},
+	    	                	borderWidth:0.5
+	    	                    },
+	    	                emphasis:{
+	    	                	label:{show:true},
+	    	                	areaColor:'#32CD32'
+	    	                    }
+	    	            },
+	    	            data:ZJData
+	    	        }
+	    	    ]
+	    	};
+	    	myChart.setOption(option);
+	    }
+	);
 }
