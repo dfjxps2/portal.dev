@@ -250,6 +250,7 @@ function dataType(data,typeData,stateTime,endTime){
 						tmp.unit = typeData[j].unit;
 						series2.push(tmp);
 					}else {
+						
 						tmp = {};
 						tmp.value = chartType(data[i].measures,typeData[j],typeData,data[i].measure_name,i,typeData[j].dimension,stateTime,endTime);
 						tmp.name = data[i].measure_name;
@@ -570,7 +571,7 @@ function gauge(data,name,id,dimension,timeType,time,unit){
 	}
 //	获取值数据的最大值调整仪表盘的最大值
 	var max = Math.ceil(Math.max.apply(null, dx)/10)*10;
-	if (unit == '1') {
+	if (unit == '1'||typeof(unit) ==undefined||unit==null) {
 		unit = '';
 	}else if (unit != '%') {
 		unit = '('+unit+')';
@@ -786,7 +787,7 @@ function pieTooltip(wid,hei,unit,data,name,type){
 		for (var k = 0; k < data.length; k++) {
 			sum +=data[k].value*1;
 		}
-		if (unit == '1') {
+		if (unit == '1'||typeof(unit) ==undefined||unit==null) {
 			unit = '';
 		}else if (unit != '%') {
 			unit = '('+unit+')';
@@ -843,19 +844,23 @@ function set_yAxis(yAxis,data,txtSize,divhei){
 		return yAxis;
 	}
 	for (var yy = 0; yy < data.units.length; yy++) {
+		var ui = data.units[yy].unit;
+		if (ui == '1'||typeof(ui) ==undefined||ui==null) {
+			ui = '';
+		}
 		if (yAxis.length>1) {
 			if (data.units[yy].type == 'bar') {
 				if (data.units[yy].unit == '%') {
 					yAxis[0].axisLabel.formatter = '{value} %';
 				}else if (data.units[yy].unit != '1') {
-					yAxis[0].name =data.units[yy].unit;
+					yAxis[0].name =ui;
 					yAxis[0].nameTextStyle.fontSize =txtSize;
 				}
 			}else{
 				if (data.units[yy].unit == '%') {
 					yAxis[0].axisLabel.formatter = '{value} %';
 				}else if (data.units[yy].unit != '1') {
-					yAxis[1].name =data.units[yy].unit;
+					yAxis[1].name =ui;
 					yAxis[1].nameTextStyle.fontSize =txtSize;
 				}
 			}
@@ -863,7 +868,7 @@ function set_yAxis(yAxis,data,txtSize,divhei){
 			if (data.units[yy].unit == '%') {
 				yAxis[0].axisLabel.formatter = '{value} %';
 			}else if (data.units[yy].unit != '1') {
-				yAxis[0].name =data.units[yy].unit;
+				yAxis[0].name =ui;
 				yAxis[0].nameTextStyle.fontSize =txtSize;
 			}
 		}
@@ -1112,7 +1117,7 @@ function bar_echart(data,name,id){
 		        	 var str = params[0].name+'<br/>';
 		        	 for (var i = 0; i < series.length; i++) {
 		        		 var ui = data.units[i].unit;
-		        		 if (ui == '1') {
+		        		 if (ui == '1'||typeof(ui) ==undefined||ui==null) {
 							ui = '';
 						}else if (ui != '%') {
 							ui = '('+ui+')';
