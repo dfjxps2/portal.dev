@@ -19,11 +19,12 @@
            	url:_metUrl,
             type:'get',
             success:function(res){
-            	if (res.length>0) {
-                	addInfo(res); 
+            	if (res.code>0) {
+                	addInfo(res.data); 
 				}else{
-					alert('查询结果异常！');
-				}
+				      layer.alert('error:'+ls.msg);
+				      return false;
+				  }
             }
         });
     }

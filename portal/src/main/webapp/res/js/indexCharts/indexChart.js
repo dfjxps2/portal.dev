@@ -1193,7 +1193,7 @@ function add_table(data,name,dimension,id,stateTime,endTime){
 	}
 	var siz = parseInt(wid/times.length/17);
 	var width = 90/(times.length+1);
-	var str = '<table id = "f_table" style="border:1px solid '+tableLine+';margin-left:5%;width:91%;margin-top:0px;margin-bottom:7%;">';
+	var str = '<table id = "f_table" style="border:1px solid '+tableLine+';margin-left:5%;width:92%;margin-top:0px;margin-bottom:7%;">';
 	str =  str + '</tr>';
 	//吧数据解析成  需要的格式
 	var tableData = [];
@@ -1654,10 +1654,9 @@ function ps(id,name,data,unit,stateTime,endTime,ids1) {
 	$(idf).css('overflow','hidden');
 	
 	var op1 = document.getElementById(id);
-	var op2 = document.getElementById('f_table');
+	//var op2 = document.getElementById('f_table');
 	var wid1= op1.offsetWidth; //宽度
 	var hei1= op1.offsetHeight; //高度
-	var wid2= op1.offsetWidth; //宽度
 	var str = "";
 	var tables=window.document.getElementById(id);
 	var idd = 'd'+id;
@@ -1667,10 +1666,21 @@ function ps(id,name,data,unit,stateTime,endTime,ids1) {
 	for (var l = 0; l < times.length; l++) {
 		leng = leng+times[l].length;
 	}
-	var siz = parseInt(wid1/(times.length+1)/14);
+	var siz = parseInt(wid1/(times.length+1)/13);
 	var width = 90/(times.length+1);
+	var cw = (wid1/wids)*100;
+	/*var f_wid = 93
+	if (100-cw<5) {
+		cw = 99;
+	}else if (50 - cw <5) {
+		cw = 49.5;
+	}else if (34 - cw <5){
+		cw = 33;
+	}else if (25 - cw <5){
+		cw = 24.75;
+	}*/
 	str = '<div id = "'+idds+'" style = "width:99%;height:100%;margin-top:2%;">'+
-	'<div id = "s_dv"><p style = "text-align:center;color:#333333;font-size:16px;">'+name+'</p>'+
+	'<div id = "s_dv" style = "width:'+wid1+'px"><p style = "text-align:center;color:#333333;font-size:16px;">'+name+'</p>'+
 	'<table id = "f_table" style="height:24px;border:1px solid #00FFFF;margin-left:5%;width:92%;margin-bottom:0px;">'+
 	'<tr style = "border:1px solid '+tableLine+';">'+
 	'<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;color:'+titleColor+';font-size:14px;">对象</td>';
@@ -1684,19 +1694,10 @@ for (var a = 0; a < times.length; a++) {
 		t_name = wrap(t_name,siz);
 	str =  str + '<td style="width:'+width+'%;border:1px solid '+tableLine+';text-align:center;color:'+titleColor+';font-size:14px;">'+t_name+'</td>';
 }
-var cw = (wid1/wids)*100;
-if (100-cw<5) {
-	cw = 99;
-}else if (50 - cw <5) {
-	cw = 49.5;
-}else if (34 - cw <5){
-	cw = 33;
-}else if (25 - cw <5){
-	cw = 24.75;
-}
+
 str =  str + '</tr></table>'+
 	'</div>'+
-	'<div id = "'+idd+'" class = "innerbox" style = "width:'+cw+'%;height:80%;position: absolute;">'+
+	'<div id = "'+idd+'" class = "innerbox" style = "width:'+wid1+'px;height:80%;position: absolute;">'+
 	'</div></div>';
 	tables.innerHTML = str;
 	var op3 = document.getElementById("s_dv");
@@ -1708,9 +1709,9 @@ str =  str + '</tr></table>'+
 	new PerfectScrollbar(ids);
 	var idss = ids+' .ps__rail-x';
 	$(idss).css('display','none');
-	if (wid1<wid2) {
+	/*if (wid1<wid2) {
 		$(idss).css('display','');	
-	}
+	}*/
 }
 
 //文字换行方法

@@ -151,7 +151,7 @@ public class MonitorController extends SysWebController {
         map.put("metric",  metricJson);
         map.put("layout", layoutJson);
         map.put("app", JsonUtil.serialize(app));
-        return map;
+        return  new DataResult(map);
     }
     
     @RequestMapping
@@ -242,9 +242,9 @@ public class MonitorController extends SysWebController {
      */
     @RequestMapping(value ="/saveSetting")
     @ResponseBody
-    public DataStore saveSetting( String metric_json) {
+    public Object saveSetting( String metric_json) {
     	String user_id = rstr("u", loginer.getUser_id().toString());
-    	return saveAfter(pageService.addUserConfig(metric_json,user_id));
+    	return  pageService.addUserConfig(metric_json,user_id);
     }
 
 }
