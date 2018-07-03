@@ -59,11 +59,11 @@ var name = "";
             data:{meaId:metricList,to:2017,from:1990},
             type:'get',
             success:function(res){
-            	if (res.code>0) {
+            	if (res.code>100) {
             		tData = res.data.measure;
                 	add(res.data.measure,name,co,_layout,'1990','2017','');
 				}else{
-				      layer.alert('error:'+ls.msg);
+				      layer.alert('error:'+res.msg);
 				      return false;
 				  }
             }
