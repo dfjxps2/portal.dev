@@ -63,10 +63,12 @@ public class DataResult implements java.io.Serializable {
         this.version = versionNo;
     }
     public DataResult(Object data){
+        this();
         this.data = data;
         setOk("OK");
     }
     public DataResult(Integer code, String msg) {
+        this();
         this.code = code;
         this.msg = msg;
     }
