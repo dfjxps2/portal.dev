@@ -34,7 +34,7 @@ function loadapp(id, dt){
 }
 function loadctx(n){
 	var au = n.app_url;
-	var u = n.app_preview_url;
+	var u = n.app_preview_url || '';
 	if(!au){
 		u = u || _host + "/res/script/home/images/preview.png";
 		return '<div class="cell-bar ss21">'+ n.app_name +drawMenu(n)+'</div><img class="ss21" src="'+ u + '" />';
@@ -171,7 +171,8 @@ function delend(){
 	isdel = false;
 	if(ids.length >0){
 		$.post('dodel?id='+ids.join(','), function(dt){
-			loadapp('#apps',dt);
+			if(checkResult(dt))
+				loadapp('#apps',dt.data);
 		});
 		ids = [];
 	}
@@ -203,7 +204,8 @@ function addnew(){
 
 			$.post('doadd?id=' + appids.join(','), function(dt){
 				layer.closeAll();
-				loadapp('#apps',dt);
+				if(checkResult(dt))
+					loadapp('#apps',dt.data);
 			});
 		}
 		,btn2: function(){
@@ -566,4 +568,11 @@ function logout() {
 	}, function() {
 		location.href = "logout";
 	});
+}
+function checkResult(o){
+	if(o.code<1){
+		layer.alert(o.msg,{zIndex:20001234});
+		return false;
+	}
+	return o;
 }
