@@ -207,6 +207,15 @@
         <servlet-name>cxfService</servlet-name> 
         <url-pattern>/*wsdl</url-pattern> 
     </servlet-mapping>  	
-    
+     <filter>
+        <display-name>loginFilter</display-name>
+        <filter-name>loginFilter</filter-name>
+        <filter-class>com.quick.core.util.filter.LoginFilter</filter-class>   
+    </filter>
+    <filter-mapping>
+        <filter-name>loginFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping> 
+     
     
 </web-app>
