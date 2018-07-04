@@ -17,6 +17,8 @@
  */
 package com.quick.portal.web.mainframe;
 
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -155,7 +157,13 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
     //APP:1;MENU:0
     @RequestMapping(value = "/getIsAppMenuByID")
     @ResponseBody
-    public void getIsAppMenuByID(HttpServletResponse res,int menuId) throws Exception {
+    public void getIsAppMenuByID(HttpServletRequest req,HttpServletResponse res,int menuId) throws Exception {
+/*    	String userId = WebUtil.getCookieUsrid(request);
+        if("".equals(userId) || null == userId){
+        	String casLogoutUrl = getCasLogoutUrl(request);
+        		toAlert(res,req);
+        		return;
+        	}*/
     	String	flag = sysMenuService.getIsAppMenuByID(menuId);
         res.getWriter().write(flag);
     }
@@ -186,4 +194,29 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
         String casLogoutUrl =casUrl.concat("/logout?service=").concat(QCommon.urlEncode(cUrl));
         return casLogoutUrl;
    }
+    
+  //前台弹出alert框
+  	public void toAlert(HttpServletResponse response,HttpServletRequest request){
+  		String casLogoutUrl = getCasLogoutUrl(request); 
+  	    try {
+  	         response.setContentType("text/html;charset=UTF-8");
+  	         response.setCharacterEncoding("UTF-8");
+  	            
+  	         OutputStreamWriter out = new OutputStreamWriter(response.getOutputStream());   
+  	         
+  	         String msg="由于您长时间没有操作，session已过期，请重新登录！";
+  	         msg=new String(msg.getBytes("UTF-8"));
+  	         
+  	         out.write("<meta http-equiv='Content-Type' content='text/html';charset='UTF-8'>");
+  	         out.write("<script>");
+  	         out.write("alert('"+msg+"');");
+  	         out.write("top.location.href = '"+casLogoutUrl+"'; ");
+  	         out.write("</script>");
+  	         out.flush();
+  	         out.close();
+
+  	    } catch (IOException e) {
+  	        e.printStackTrace();
+  	    }
+  	}
 }
