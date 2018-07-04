@@ -34,7 +34,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.quick.core.base.ISysBaseService;
 import com.quick.core.base.SysBaseController;
 import com.quick.core.util.common.JsonUtil;
+import com.quick.core.util.common.QCommon;
 import com.quick.core.util.web.WebUtil;
+import com.quick.portal.security.authority.metric.PropertiesUtil;
 import com.quick.portal.sysMenu.ISysMenuService;
 import com.quick.portal.sysUser.ISysUserService;
 import com.quick.portal.userAccessLog.IUserAccessLogService;
@@ -83,7 +85,9 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
         if("".equals(userId) || null == userId){
         	WebLoginUser loginer = loadCASUserInfo(request,response);
         	userId = loginer.getUser_id().toString();
-//        	throw new Exception("当前用户为空，查询权限菜单异常");
+        	/*String casLogoutUrl = getCasLogoutUrl(request);
+            String retUrl ="redirect:".concat(casLogoutUrl);
+            return retUrl;*/
         }
         try{
         	 //权限菜单
@@ -172,4 +176,14 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
 		}
 		return null;
 	}
+    
+    private String getCasLogoutUrl(HttpServletRequest req){
+   	 req.getSession().invalidate();
+        String casUrl = PropertiesUtil.getPropery("cas.serverUrl");
+        String cUrl = req.getScheme() + "://" + req.getServerName()
+                + ":" + req.getServerPort() + req.getContextPath()
+                + "/"; 
+        String casLogoutUrl =casUrl.concat("/logout?service=").concat(QCommon.urlEncode(cUrl));
+        return casLogoutUrl;
+   }
 }
