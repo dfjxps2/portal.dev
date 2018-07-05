@@ -25,11 +25,18 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!--axis2版本指定-->
 		<axis2.version>1.7.5</axis2.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<quartz.version>2.2.3</quartz.version>
+		<shiro.version>1.4.0</shiro.version>
+		<pac4jVersion>2.2.1</pac4jVersion>
+		<bujiVersion>3.1.0</bujiVersion>
 
 		<spring.webservice.version>3.1.5</spring.webservice.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
+    
 
     <dependencies>
         <!-- 项目引用 -->
@@ -229,11 +236,11 @@
 		</dependency>
 
         <!-- CAS客户端 -->
-        <dependency>
+<!--         <dependency>
             <groupId>org.jasig.cas.client</groupId>
             <artifactId>cas-client-core</artifactId>
             <version>3.4.1</version>
-        </dependency>
+        </dependency> -->
 
         <!-- webservice -->
 		 <!-- cxf的jar包 -->
@@ -318,44 +325,7 @@
             <artifactId>axis-saaj</artifactId>
             <version>1.4</version>
         </dependency>
-      <!--   <dependency>
-            <groupId>wsdl4j</groupId>
-            <artifactId>wsdl4j</artifactId>
-            <version>1.4</version>
-        </dependency>
- -->        <!-- axis 1.4 jar end -->
-	    <!--<dependency>-->
-	      <!--<groupId>org.apache.axis2</groupId>-->
-	      <!--axis2-soapmonitor-servlet</artifactId>-->
-	      <!--<version>${axis2.version}</version>-->
-	    <!--</dependency>-->
-	    <!--axis2 end-->
-	    <!-- xfire start -->
-      <!-- <dependency>
-      	<groupId>org.codehaus.xfire</groupId>
-      	<artifactId>xfire-aegis</artifactId>
-      	<version>1.2.4</version>
-      	<type>pom</type>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.xfire</groupId>
-      <artifactId>xfire-spring</artifactId>
-      <version>1.2.4</version>
-      <type>pom</type>
-    </dependency>
-    <dependency>
-      <groupId>xalan</groupId>
-      <artifactId>xalan</artifactId>
-      <version>2.7.0</version>
-      <type>pom</type>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-web</artifactId>
-      <version>2.0</version>
-      <type>pom</type>
-    </dependency>   -->
-	 <!-- xfire end -->
+    
 	   <dependency>
   	   		<groupId>org.apache.solr</groupId>
   			<artifactId>solr-solrj</artifactId>
@@ -407,6 +377,78 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.4</version>
         </dependency>
+        <!-- pac4j -->
+        <dependency>
+			<groupId>io.buji</groupId>
+			<artifactId>buji-pac4j</artifactId>
+			<version>${bujiVersion}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.pac4j</groupId>
+			<artifactId>pac4j-core</artifactId>
+			<version>${pac4jVersion}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.pac4j</groupId>
+			<artifactId>pac4j-cas</artifactId>
+			<version>${pac4jVersion}</version>
+		</dependency>
+		
+		<!-- <dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+			<scope>provided</scope>
+		</dependency> -->
+		
+		<!-- quartz -->
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>${quartz.version}</version>
+		</dependency>
+		<!-- shiro -->
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-core</artifactId>
+			<version>${shiro.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-web</artifactId>
+			<version>${shiro.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-ehcache</artifactId>
+			<version>${shiro.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>ehcache-core</artifactId>
+					<groupId>net.sf.ehcache</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-spring</artifactId>
+			<version>${shiro.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-quartz</artifactId>
+			<!-- 去除maven依赖中quartz1.6.1 -->
+			<exclusions>
+				<exclusion>
+					<groupId>org.opensymphony.quartz</groupId>
+					<artifactId>quartz</artifactId>
+				</exclusion>
+			</exclusions>
+			<version>${shiro.version}</version>
+		</dependency>
+        
     </dependencies>
 
     <!--不同环境切换配置参数1 Start -->
@@ -452,7 +494,8 @@
     </profiles>
     <!--不同环境切换配置参数1 End -->
     <build>
-        <finalName>portal_${profiles.active}</finalName>
+      <!--   <finalName>portal_${profiles.active}</finalName> -->
+        <finalName>portal</finalName>
         <plugins>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -476,6 +519,7 @@
                 <configuration>
                     <webResources>
                         <resource>
+                         <!--    <directory>src/main/resources/profile/${profiles.active}/web-inf</directory> -->
                             <directory>src/main/resources/profile/${profiles.active}/web-inf</directory>
                             <targetPath>WEB-INF</targetPath>
                         </resource>
@@ -516,5 +560,5 @@
             <!--不同环境切换配置参数3 End -->
         </resources>
     </build>
-
+  
 </project>
