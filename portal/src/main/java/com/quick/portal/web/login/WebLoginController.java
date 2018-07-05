@@ -17,6 +17,8 @@
  */
 package com.quick.portal.web.login;
 
+import io.buji.pac4j.subject.Pac4jPrincipal;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +28,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.apache.shiro.SecurityUtils;
+import org.pac4j.core.profile.CommonProfile;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -141,7 +145,7 @@ public class WebLoginController {
 	    return flag;
     }
   
-    @RequestMapping(value = "/home/logout")
+/*    @RequestMapping(value = "/home/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
         //记录日志
         String ids = QCookie.getValue(request, "ids");
@@ -153,7 +157,6 @@ public class WebLoginController {
         QCookie.remove(response, request, "sbd.role" );
         QCookie.remove(response, request, "sbd.gid" );
         QCookie.remove(response, request, "sbd.tk" );
-        QCookie.remove(response, request, "JSESSIONID" );
         request.getSession().invalidate();
         String casUrl = PropertiesUtil.getPropery("cas.serverUrl");
         String url = request.getScheme() + "://" + request.getServerName()
@@ -161,7 +164,7 @@ public class WebLoginController {
                 + "/"; 
         String retUrl ="redirect:".concat(casUrl).concat("/logout?service=").concat(QCommon.urlEncode(url));
         return retUrl;
-    }
+    }*/
 
     public void saveSession(SysUserDO loginUser,List<Map<String,Object>> roles, HttpServletRequest request, HttpServletResponse response){
         String ids = "";
@@ -175,9 +178,13 @@ public class WebLoginController {
     }
     
     public WebLoginUser loadCASUserInfo(HttpServletRequest request,HttpServletResponse response){
-		if (request.getRemoteUser() != null) {
+    	//获取用户身份
+		Pac4jPrincipal p = SecurityUtils.getSubject().getPrincipals().oneByType(Pac4jPrincipal.class);
+		String account = p.getProfile().getId();
+    	if (null !=account && !"".equals(account)) {
 			Map<String, Object> parm = new HashMap<>();
-			parm.put("user_name", request.getRemoteUser());
+//			parm.put("user_name", request.getRemoteUser());
+			parm.put("user_name", account);
 			Map<String, Object> u = sysUserService.selectMap(parm);
 			WebLoginUser user = new WebLoginUser();
 			user.setRole_id( Integer.valueOf(WebLoginUitls.getVal(u, "role_id")) );

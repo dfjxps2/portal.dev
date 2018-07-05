@@ -19,6 +19,8 @@
 
 package com.quick.core.base;
 
+import io.buji.pac4j.subject.Pac4jPrincipal;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.DateFormat;
@@ -38,7 +40,9 @@ import com.fasterxml.jackson.core.io.UTF32Reader;
 import com.quick.core.util.common.QCookie;
 import com.quick.portal.sysUser.ISysUserService;
 import com.quick.portal.web.login.WebLoginUser;
+
 import org.apache.log4j.Logger;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -339,7 +343,13 @@ public abstract class SysBaseController<T> {
 	}
 
 	public WebLoginUser loadCASUserInfo(HttpServletRequest req){
-		if (req.getRemoteUser() != null) {
+	 	//获取用户身份
+			Pac4jPrincipal p = SecurityUtils.getSubject().getPrincipals().oneByType(Pac4jPrincipal.class);
+			String account = p.getProfile().getId();
+			System.out.println("----------getRemoteUser----------"+request.getRemoteUser());
+	    	if (null !=account && !"".equals(account)) {
+		
+//		if (req.getRemoteUser() != null) {
 			Map<String, Object> parm = new HashMap<>();
 			parm.put("user_name", request.getRemoteUser());
 			Map<String, Object> u = loginerService.selectMap(parm);
