@@ -18,7 +18,7 @@
 	style="overflow: hidden">
 	<div id="wrapper">
 		<!--左侧导航开始-->
-		<nav class="navbar-default navbar-static-side" role="navigation">
+		<nav class="navbar-default navbar-static-side"  role="navigation">
 			<div class="nav-close">
 				<i class="fa fa-times-circle"></i>
 			</div>
@@ -45,11 +45,13 @@
 		<!--右侧部分开始-->
 		<div id="page-wrapper" class="gray-bg dashbard-1">
 			<div class="row border-bottom">
-				<nav class="navbar navbar-static-top" role="navigation"
-					style="margin-bottom: 0">
+				<nav class="navbar navbar-static-top"  role="navigation"
+					style="margin-bottom:0;background-color:#2b5ca9 ;">
 					<div class="navbar-header">
-						<a class="navbar-minimalize minimalize-styl-2 btn btn-primary"
-							href="#"><i class="fa fa-bars"></i> </a>
+						<!--<a class="navbar-minimalize minimalize-styl-2 btn btn-primary"-->
+							<!--href="#"><i class="fa fa-bars"></i> </a>-->
+						<a class="navbar-minimalize minimalize-styl-2  btn-primary"
+						   href="#"><img  src="${G.host}/res/script/home/images/hanbao.png"> </a>
 						<!--
                         <form role="search" class="navbar-form-custom" method="post" action="search_results.html">
                             <div class="form-group">
@@ -57,9 +59,9 @@
                             </div>
                         </form>
                           -->
-                          <div class="left"><a href="main"><img align ="left" src="${G.host}/res/script/home/images/logo2.png" title="系统首页"></a></div>
+                          <div class="left" style="padding:20px;"><a href="main"><img align ="left" src="${G.host}/res/script/home/images/logo4.png" title="系统首页"></a></div>
 					</div>
-					<ul class="nav navbar-top-links navbar-right">
+					<ul class="nav navbar-top-links navbar-right" style="background-color:#204e97" >
 						
 					  <li class="hidden-xs"><a href="javascript:void(0);"
 							onclick="javascript:location.href='home/main';"><i
@@ -216,13 +218,13 @@
 				if (dt[i].depth == 1) {
 					arr.push(' <li>');
 					if (dt[i].children == null || dt[i].children.length == 0) {
-						arr.push('	<a class="J_menuItem" tabindex='+dt[i].menuId+' href="'+dt[i].menuUrl+'" ><i class="'+dt[i].menuIconUrl+'"></i> <span class="nav-label">',
+						arr.push('	<a class="J_menuItem" tabindex='+dt[i].menuId+' href="'+dt[i].menuUrl+'" ><i class="'+dt[i].menuIconUrl+'" style="color:#ffffff"></i> <span class="nav-label" style="color:#ffffff">',
 									dt[i].menuCnName, '</span>',
 									'</a> </li>');
 					}else{
-						arr.push('	<a href="#"><i class="'+dt[i].menuIconUrl+'"></i> <span class="nav-label">',
+						arr.push('	<a href="#"><i class="'+dt[i].menuIconUrl+'" style="color:#ffffff"></i> <span class="nav-label" style="color:#ffffff" >',
 							dt[i].menuCnName, '</span>',
-							' <span class="fa arrow"></span></a>');
+							' <span class="fa arrow" style="color:#ffffff"></span></a>');
 						
 						arr.push('<ul class="nav nav-second-level">');
 						drawLi(arr, dt[i].children);
