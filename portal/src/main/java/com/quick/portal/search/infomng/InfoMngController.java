@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -45,6 +46,7 @@ import com.quick.core.base.model.PageBounds;
 import com.quick.core.util.common.QCookie;
 import com.quick.core.util.common.QRequest;
 import com.quick.portal.security.authority.metric.MetricPrivilegeConstants;
+import com.quick.portal.web.model.DataResult;
 
 /**
  * sys_user请求类
@@ -87,21 +89,17 @@ public class InfoMngController extends SysBaseController<InfoMngDO> {
 		 * 
 		 * @return
 		 */
-		@RequestMapping(value = "/getInfo", method=RequestMethod.POST)
+		@RequestMapping(value = "/getInfo")
 		@ResponseBody
-		public Object getInfo(String json) {
+		public Object getInfo() {
 			String str = "[]";
 			// 默认O条数据
 			int recordCount = 0;
 			List dt = new ArrayList<>();
 			Map<String, Object> queryMap = getQueryMap(request, null,
 					null, null, null);
-			Map<String, Object> mp = new HashMap();
 			String keyword = queryMap.get(SolrInfoConstants.INDEX_KEYWORD).toString();
-	        if(null == keyword || "".equals(keyword)){
-	        	mp = new HashMap();
-	 			mp.put("rows", 0);
-	        }else{
+	        if(null != keyword && !"".equals(keyword)){
 	        	String type = QRequest.getString(request, "obj_type");
 				int pageSize = QRequest.getInteger(request, "pageSize", 10); // 获取datagrid传来的行数
 				int pageNo = QRequest.getInteger(request, "page", 1); // 获取datagrid传来的页码
@@ -109,14 +107,11 @@ public class InfoMngController extends SysBaseController<InfoMngDO> {
 				//当前用户编号
 				String ids = QCookie.getValue(request, "ids");
 				List retList = infoMngService.getSolrInfo(queryMap, pager,ids,type);
-				if(null !=retList && !retList.isEmpty()){
+				if(null !=retList && retList.size()>0){
 					dt = (List)retList.get(1);
 					recordCount = (int) retList.get(0);
 					//记录搜索信息
 					saveSearchTermsInfo(queryMap,ids);
-				}else{
-					mp = new HashMap();
-					mp.put("rows", 0);
 				}
 	        }
 	        // 日期格式
@@ -222,6 +217,42 @@ public class InfoMngController extends SysBaseController<InfoMngDO> {
 					MetricPrivilegeConstants.LANGUAGE_CODE_UTF);
 			msgID = infoMngService.getMsgIDByID(uid);
 	        res.getWriter().write(msgID);
+	    }
+	    
+	    
+	    
+	    /**
+	     * 查询用户所有应用
+	     * @return
+	     * http://localhost:8080/portal/info/getInfoApp?obj=1&keyword=北京&page=1&pageSize=10
+	     * 
+	     * portal_doc_class：信息类型
+			id:信息文档URL
+			title:信息标题
+			status:已阅(1)、未阅（0）
+	     * @throws UnsupportedEncodingException 
+
+	     */
+	   
+	    @RequestMapping(value = "/getInfoApp")
+	    @ResponseBody
+	    public DataResult getInfoApp(String obj,String keyword,Integer page,Integer pageSize) throws UnsupportedEncodingException{
+	    	Map<String, Object> queryMap  = new HashMap<String, Object>();
+	    	if(null == keyword || "".equals(keyword)){
+	    		DataResult dt = new DataResult();
+	    		dt.setError("关键字不允许为空,请输入关键字查询条件!");
+	    		return dt;
+	    	}
+	    	keyword = URLDecoder.decode(keyword, "UTF-8");
+	    	queryMap.put(SolrInfoConstants.INDEX_KEYWORD, keyword);
+	    	String type = QRequest.getString(request, "obj");
+			int pgSize = QRequest.getInteger(request, "pageSize", 10); // 获取datagrid传来的行数
+			int pageNo = QRequest.getInteger(request, "page", 1); // 获取datagrid传来的页码
+			PageBounds pager = new PageBounds(pageNo, pgSize);
+			//当前用户编号
+			String ids = QCookie.getValue(request, "ids");
+			List<Map<String, Object>> retList = infoMngService.getSolrInfo(queryMap, pager,ids,type);
+	        return new DataResult(retList);
 	    }
 	    
 	    
