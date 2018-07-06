@@ -91,7 +91,7 @@ public class Dom4jUtil {
 			sb.append("<response>").append("<status>").append(status).append("</status>")
 			 .append("<msg>").append(msg).append("</msg>")
 			 .append("<total>").append(SynchronizedDataConstants.ZERO_TOTAL).append("</total>")
-			 .append("<response>");
+			 .append("</response>");
 			String xml = sb.toString();
 		return xml;
 	}

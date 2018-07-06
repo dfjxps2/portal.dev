@@ -65,12 +65,12 @@ font-size: 14px;
                         <div class="col-sm-12 form_ipt_botm" id = "list">
                         <table  style="width: 100%">
                          <thead>
-						    <tr>
-						      <th style="width:30%">名称</th>
-						      <th style="width:20%">所属栏目</th>
-						      <th style="width:20%">图表类型</th>
-						      <th style="width:15%">状态</th>
-						      <th style="width:15%">操作</th>
+						    <tr style="border-bottom: 1px solid;">
+						      <th style="text-align:center;width:30%">名称</th>
+						      <th style="text-align:center;width:20%">所属栏目</th>
+						      <th style="text-align:center;width:20%">图表类型</th>
+						      <th style="text-align:center;width:15%">状态</th>
+						      <th style="text-align:center;width:15%">操作</th>
 						    </tr>
 						  </thead>
 						  <tbody id = "tb">
@@ -88,8 +88,8 @@ font-size: 14px;
                <input type="hidden" id="metric_json" name="metric_json" />
                <input type="hidden" id="metric_json_1" name="metric_json_1" />
                <input type="hidden" id="app_id" name="app_id" />
-            <input id="banck" type="button" class="btn btn-primary" style="margin-left: 44px" value="关闭" onclick="banck();">
-               <input id="submit-form" type="button" class="btn btn-primary" style="margin-left: 67px" value="保存" onclick="thingOver();">
+            <input id="banck" type="button" class="btn btn-primary" style="margin-left: 13%" value="关闭" onclick="banck();">
+               <input id="submit-form" type="button" class="btn btn-primary" style="margin-left: 30%" value="保存" onclick="thingOver();">
          	 </div>
            <!--  </form> -->
 		</div>
@@ -229,6 +229,7 @@ font-size: 14px;
 			}
 		}
 		JsonUp(metric,'snum');
+		var lms = '';
 		for (var i = 0; i < metric.length; i++) {
 			var cha = getChart(metric[i].charts);
 			var dis = "隐藏";
@@ -241,13 +242,21 @@ font-size: 14px;
 			}
 			var idd = 'c'+i;
 			var lm =  '栏目'+metric[i].snum;
-			str = str+	 '<tr>'+
-		      '<td data-label="名称">'+metric[i].measure_name+'</td>'+
-		      '<td data-label="所属栏目">'+lm+'</td>'+
-		      '<td data-label="图表类型">'+cha+'</td>'+
-		      '<td data-label="状态">'+dis+'</td>'+
-		      '<td data-label="操作"><a id = "'+idd+'" name = "'+metric[i].metric_id+'" value = "'+metric[i].section_id+'" onclick="change(this.id);" style = "color:'+color+'">'+chage+'</a></td>'+
+			if (i<metric.length-1) {
+				lms = '栏目'+metric[i+1].snum;
+			}
+			var bord = 'style = "text-align:center;"';
+			if (lms != lm&&lms!='') {
+				bord = 'style = "text-align:center;border-bottom: 1px solid;"';			
+			}
+			str = str+	 '<tr '+bord+'>'+
+		      '<td>'+metric[i].measure_name+'</td>'+
+		      '<td>'+lm+'</td>'+
+		      '<td>'+cha+'</td>'+
+		      '<td>'+dis+'</td>'+
+		      '<td><a id = "'+idd+'" name = "'+metric[i].metric_id+'" value = "'+metric[i].section_id+'" onclick="change(this.id);" style = "color:'+color+'">'+chage+'</a></td>'+
 		    '</tr>';
+		    
 		}
 		table.innerHTML = str;
 	}
@@ -283,25 +292,31 @@ font-size: 14px;
               url:'${G.host}/monitor/settingUser',
               data:{app_id:_aid,page_id:id},
               type:'get',
-              success:function(res){
-            	  pageId = $('#pages').val();
-            	 var cos = addPageId(getNo(JSON.parse(res.metric),JSON.parse(res.layout)));
-            	 copyData(cos);
-            	 if (ifPageMetric()) {
-            		 cos =getPageConfig(co);
-				}else {
-	            	 for (var i = 0; i < cos.length; i++) {
-	 					co.push(cos[i]);
-	 				}
-				}
-            	  url = res.urlShow;
-            	  setName(id,JSON.parse(res.page))
-            	 var lay =addPageId(setLayout(JSON.parse(res.layout)));
-            	  addLayout(lay);
-            	  initLayout(lay);
-      	          initChart(cos,lay);
-      	          addTable(cos);
-              }
+              success:function(r){
+            	  if (r.code >0) {
+            		  res = r.data;
+                	  pageId = $('#pages').val();
+                	 var cos = addPageId(getNo(JSON.parse(res.metric),JSON.parse(res.layout)));
+                	 copyData(cos);
+                	 if (ifPageMetric()) {
+                		 cos =getPageConfig(co);
+    				}else {
+    	            	 for (var i = 0; i < cos.length; i++) {
+    	 					co.push(cos[i]);
+    	 				}
+    				}
+                	  url = res.urlShow;
+                	  setName(id,JSON.parse(res.page))
+                	 var lay =addPageId(setLayout(JSON.parse(res.layout)));
+                	  addLayout(lay);
+                	  initLayout(lay);
+          	          initChart(cos,lay);
+          	          addTable(cos);
+				}else{
+				      layer.alert('error:'+r.msg);
+				      return false;
+				  }
+    	  }
           });
     }
     
@@ -371,10 +386,13 @@ font-size: 14px;
 				                 data:{metric_json:JSON.stringify(allMetric)},
 				                 type:'get',
 				                 success:function(res){
-				                	 if (res.code == '1') {
+				                	 if (res.code >0) {
 				                		 layer.msg('保存成功！', {icon:1,time: 1000,skin: 'layer-ext-moon'});
 				                		 cancel();
-				    				}
+				    				}else{
+				    				      layer.alert('error:'+ls.msg);
+				    				      return false;
+				    				  }
 				                 }
 				             });
 				   }
@@ -499,12 +517,17 @@ font-size: 14px;
 	            data:{meaId:metricList,to:'2018',from:'1900'},
 	            type:'get',
 	            success:function(res){
-	            	tData = res.measure;
-	            	$('#statedate').val('199001');
-	            	$('#enddate').val('201712');
-	            	
-	                add(res.measure,name,isShow(metricData),layoutList,'1990','2017','');
-	                hideMask();
+	            	if (res.code>0) {
+	            		tData = res.data.measure;
+	            		$('#statedate').val('199001');
+		            	$('#enddate').val('201712');
+		            	
+		                add(res.data.measure,name,isShow(metricData),layoutList,'1990','2017','');
+		                hideMask();
+					}else{
+					      layer.alert('error:'+ls.msg);
+					      return false;
+					  }
 	            },error:function(jqr){
 	                hideMask();
 	                alert("网络出错");

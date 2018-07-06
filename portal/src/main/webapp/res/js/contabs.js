@@ -1,5 +1,9 @@
 
 $(function () {
+	if (top != window){
+		 top.location.href = window.location.href;  
+	}
+	     
     //计算元素集合的总宽度
 	var minMarginLetVal = 990;
     function calSumWidth(elements) {
@@ -174,6 +178,11 @@ $(function () {
 			  data:{menuId:id},
 			  success: function(data){
 				  bool = data;
+			  },
+			  error:function(err){
+				   if(err.status ="0"){
+						top.location.href = window.location.href;  
+				   }
 			  }
 		  });
 		return bool;	

@@ -24,6 +24,7 @@ import com.quick.core.base.model.JsonDataGrid;
 import com.quick.core.base.model.PageBounds;
 import com.quick.core.util.common.QCookie;
 import com.quick.core.util.common.QRequest;
+import com.quick.portal.web.model.DataResult;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -69,6 +70,7 @@ public class SecMetricConfigController extends SysBaseController<SecMetricConfig
     public Object getList() throws Exception {
         return getData("page");
     }
+
     @RequestMapping(value = "/getData")
     @ResponseBody
     public Object getData(String json) {
@@ -206,5 +208,50 @@ public class SecMetricConfigController extends SysBaseController<SecMetricConfig
         if(result!=0)
             return true;
         return false;
+    }
+
+    //app获取配置版本接口
+    @RequestMapping(value = "/getMetricData")
+    @ResponseBody
+    public DataResult getMetricData() {
+        //用户ID
+        String userId = rstr("u", loginer.getUser_id().toString()); //用户id
+        int pageSize = QRequest.getInteger(request, "pageSize", 99999); // 获取datagrid传来的行数
+        // //每页显示条数
+        int pageNo = QRequest.getInteger(request, "page", 1); // 获取datagrid传来的页
+
+        // 表名
+        String tableName = getTableName();
+        // 主键
+        String primaryKey = getPrimaryKey();
+        // 排序处理
+        String fieldOrder = getFieldOrder();
+        String whereStr = getCondition();
+        whereStr += getFilterCondition();   // 数据必须受限
+        String fieldShow = getFieldShow();
+
+        // 日期格式
+        String dateTimeFormat = QRequest.getString(request, "dateTimeFormat",
+                "yyyy-MM-dd HH:mm:ss"); // 例：dateTimeFormat=yyyy-MM-dd HH:mm
+
+        response.setContentType(QRequest.getResponseType("json")); // 输出JS文件
+        int recordCount = 0;
+
+        Map<String, Object> queryMap = getQueryMap(request, fieldShow,
+                tableName, whereStr, fieldOrder);
+        queryMap.put("user_id", userId);//user_id 存入参数
+        PageBounds pager = new PageBounds(pageNo, pageSize);
+
+        List<Map<String, Object>> dt = getBaseService().select(queryMap, pager);
+
+        recordCount = pager.getTotal();
+        try {
+           // return new DataResult(new JsonDataGrid(recordCount, dt).toJson(dateTimeFormat));
+            return new DataResult( dt);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

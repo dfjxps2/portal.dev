@@ -200,10 +200,9 @@ public class SysUserController extends SysBaseController<SysUserDO> {
              res.setContentType("text/html");
              res.setCharacterEncoding("utf-8");
              Integer user_id = Integer.parseInt(QCookie.getValue(request,"ids")) ;
-             String newPw = URLEncoder.encode(new_password,"UTF-8");
-             PortalPasswordEncoder passwordEncoder = new PortalPasswordEncoder("MD5","");
-             String password = passwordEncoder.encode(newPw);
-             sysUserDO.setUser_password(password);
+//             PortalPasswordEncoder passwordEncoder = new PortalPasswordEncoder("MD5","");
+//             String password = passwordEncoder.encode(newPw);
+             sysUserDO.setUser_password(new_password);
              sysUserDO.setUser_id(user_id);
              iSysUserDao.updatePassword(sysUserDO);
              res.getWriter().write("1");
@@ -217,10 +216,9 @@ public class SysUserController extends SysBaseController<SysUserDO> {
     @RequestMapping(value="checkOldPw")
     public void checkParamName(HttpServletResponse res,String user_old_pw) throws IOException {
         Map<String,Object> map = new HashMap<>();
-        String oldPw = URLEncoder.encode(user_old_pw,"UTF-8");
-        PortalPasswordEncoder passwordEncoder = new PortalPasswordEncoder("MD5","");
-        String oldps = passwordEncoder.encode(oldPw);
-        map.put("user_password",oldps);
+//        PortalPasswordEncoder passwordEncoder = new PortalPasswordEncoder("MD5","");
+//        String oldps = passwordEncoder.encode(oldPw);
+        map.put("user_password",user_old_pw);
         Integer user_id = Integer.parseInt(QCookie.getValue(request,"ids")) ;
         map.put("user_id",user_id);
         List<Map<String,Object>> result = sysUserService.select(map);

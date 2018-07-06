@@ -59,14 +59,13 @@ var name = "";
             data:{meaId:metricList,to:2017,from:1990},
             type:'get',
             success:function(res){
-            	if (res.return_code=='0') {
-            		tData = res.measure;
-                	add(res.measure,name,co,_layout,'1990','2017','');
-				}else if (res.return_code=='-2') {
-					alert('查询数据为空！');
+            	if (res.code>0) {
+            		tData = res.data.measure;
+                	add(res.data.measure,name,co,_layout,'1990','2017','');
 				}else{
-					alert('查询数据失败！');
-				}
+				      layer.alert('error:'+res.msg);
+				      return false;
+				  }
             }
         });
     }

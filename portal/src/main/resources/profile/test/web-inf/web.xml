@@ -131,7 +131,10 @@
 
     <filter>
         <filter-name>CAS Authentication Filter</filter-name>
+        <!--  
         <filter-class>org.jasig.cas.client.authentication.AuthenticationFilter</filter-class>
+        -->
+        <filter-class>com.quick.core.util.filter.AbstractCasPortalUrlFilter</filter-class>
         <init-param>
             <param-name>casServerLoginUrl</param-name>
             <param-value>https://10.1.3.193:8443/cas/login?locale=zh_CN</param-value>
@@ -204,6 +207,15 @@
         <servlet-name>cxfService</servlet-name> 
         <url-pattern>/*wsdl</url-pattern> 
     </servlet-mapping>  	
-    
+     <filter>
+        <display-name>loginFilter</display-name>
+        <filter-name>loginFilter</filter-name>
+        <filter-class>com.quick.core.util.filter.LoginFilter</filter-class>   
+    </filter>
+    <filter-mapping>
+        <filter-name>loginFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping> 
+     
     
 </web-app>

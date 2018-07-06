@@ -51,7 +51,7 @@
 
 </html>
 <script>
-      var _tmpls={},_layout = ${layout},co = [],name,_page=${pageJson}, _metUrl='${MEASURES_URL}';
+      var _tmpls={},_layout = ${layout},co = [],name,_page=${pageJson}, _metUrl='${MEASURES_URL}',time='${time}';
     var tData = [];
     
     window.onload = function() {
@@ -137,11 +137,17 @@
             data:{meaId:metricList,to:'2018',from:'1900'},
             type:'get',
             success:function(res){
-            	tData = res.measure;
-            	$('#statedate').val('199001');
-            	$('#enddate').val('201712');
-                add(res.measure,name,co,_layout,'1990','2017','');
-                hideMask();
+            	if (res.code>0) {
+            		tData = res.data.measure;
+            		$('#statedate').val('199001');
+	            	$('#enddate').val('201712');
+	            	
+	            	add(res.data.measure,name,co,_layout,'1990','2017','');
+	                hideMask();
+				}else{
+				      layer.alert('error:'+res.msg);
+				      return false;
+				  }
             },error:function(jqr){
                 hideMask();
                 alert("网络出错");
@@ -151,8 +157,12 @@
     function initMenu(dt){
         var str = [];
         for(var i = 0; i <dt.length; i++){
-            str.push('<li>','<a href="${G.host}/monitor/index?t=${app.app_id}&p=', dt[i].page_id,'"><i class="fa fa-fw fa-file-o"></i>', dt[i].page_name , '</a>','</li>');
-        }
+        	if (time == 0) {
+                str.push('<li>','<a href="${G.host}/monitor/index?t=${app.app_id}&p=', dt[i].page_id,'"><i class="fa fa-fw fa-file-o"></i>', dt[i].page_name , '</a>','</li>');
+            }else {
+                str.push('<li>','<a href="${G.host}/monitor/index?t=${app.app_id}&time=',time,'&p=', dt[i].page_id,'"><i class="fa fa-fw fa-file-o"></i>', dt[i].page_name , '</a>','</li>');
+            }
+        	}
         $("#appmenu").html(str.join(''));
     }
     function showMask(){
@@ -216,4 +226,5 @@
 		alert('请先双击选中栏目！');
 	}
   }
+  
 </script>

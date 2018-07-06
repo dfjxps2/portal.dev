@@ -25,6 +25,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.quick.portal.web.model.DataResult;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -73,12 +74,13 @@ public class MonitorController extends SysWebController {
     public String index(Model model) {
         Integer app_id = rint("t", 0);
         Integer page_id = rint("p", 0);
-        List<Map<String, Object>> plist = getPage(app_id);
+        List<Map<String, Object>> plist = queryPage(app_id);
+        String time = rstr("time","0");
         if(page_id == 0 && plist != null && plist.size() > 0){
             page_id = (Integer)TypeUtil.parse(Integer.class, plist.get(0).get("page_id"));
         }
         ApplicationDO app = applicationService.selectObj(app_id.toString());
-        Object layout = getLayout(page_id);
+        DataResult layout = getLayout(page_id,time);
         
         String url = PropertiesUtil.getPropery("index.service.url");
     	String port = PropertiesUtil.getPropery("index.service.port");
@@ -87,8 +89,8 @@ public class MonitorController extends SysWebController {
         model.addAttribute("app", app);
         model.addAttribute("page_id", page_id);
         model.addAttribute("pageJson", JsonUtil.serialize(plist));
-        model.addAttribute("layout", layout);
-        
+        model.addAttribute("layout", layout.getData());
+        model.addAttribute("time", time);
         return view();
     }
     
@@ -102,14 +104,15 @@ public class MonitorController extends SysWebController {
         Integer app_id = rint("t", 0);
         Integer page_id = rint("p", 0);
         String user_id = rstr("u", loginer.getUser_id().toString());
-        List<Map<String, Object>> plist = getPage(app_id);
+        String time = rint("time",0).toString();
+        List<Map<String, Object>> plist = queryPage(app_id);
         if(page_id == 0 && plist != null && plist.size() > 0){
             page_id = (Integer)TypeUtil.parse(Integer.class, plist.get(0).get("page_id"));
         }
         ApplicationDO app = applicationService.selectObj(app_id.toString());
 
         Object layoutJson = getPageJson(page_id);
-        Object metricJson = getMetricJson(page_id,user_id);
+        Object metricJson = getMetricJson(page_id,user_id,time);
        /* String urlShow = PropertiesUtil.getPropery("index.service.showURL");
     	model.addAttribute("urlShow", urlShow);*/
         String url = PropertiesUtil.getPropery("index.service.url");
@@ -128,14 +131,15 @@ public class MonitorController extends SysWebController {
   	@ResponseBody
       public Object settingUser(Integer app_id,Integer page_id) {
     	String user_id = rstr("u", loginer.getUser_id().toString());
-        List<Map<String, Object>> plist = getPage(app_id);
+    	String time = rint("time",0).toString();
+        List<Map<String, Object>> plist = queryPage(app_id);
         if(page_id == 0 && plist != null && plist.size() > 0){
             page_id = (Integer)TypeUtil.parse(Integer.class, plist.get(0).get("page_id"));
         }
         ApplicationDO app = applicationService.selectObj(app_id.toString());
 
         Object layoutJson = getPageJson(page_id);
-        Object metricJson = getMetricJson(page_id,user_id);
+        Object metricJson = getMetricJson(page_id,user_id,time);
         String url = PropertiesUtil.getPropery("index.service.url");
     	String port = PropertiesUtil.getPropery("index.service.port");
     	String urlShow = url.concat(MetricPrivilegeConstants.SERVICE_PORT).concat(port).concat(MetricPrivilegeConstants.GET_MEASURES_SERVICE_NAME);
@@ -147,7 +151,7 @@ public class MonitorController extends SysWebController {
         map.put("metric",  metricJson);
         map.put("layout", layoutJson);
         map.put("app", JsonUtil.serialize(app));
-        return map;
+        return  new DataResult(map);
     }
     
     @RequestMapping
@@ -165,16 +169,16 @@ public class MonitorController extends SysWebController {
      */
     @PostMapping
     @ResponseBody
-    public Object getLayout(Integer p){
+    public DataResult getLayout(Integer p,String time){
     	//获取当前用户id
     	String user_id = rstr("u", loginer.getUser_id().toString());
         String layout = "[{id:0, no:1,x: 0, y: 0, width: 12, height: 6, metric:[]}]";
         if(p != null && p > 0){
-            String res = sectionService.selectLayoutJson(p,Integer.parseInt(user_id));
+            String res = sectionService.selectLayoutJson(p,Integer.parseInt(user_id),time);
             if(!QCommon.isNullOrEmpty(res))
                 layout = res;
         }
-        return layout;
+        return new DataResult(layout);
     }
 
     /**
@@ -183,7 +187,11 @@ public class MonitorController extends SysWebController {
      */
     @PostMapping
     @ResponseBody
-    public List<Map<String, Object>> getPage(Integer t){
+    public DataResult getPage(Integer t){
+        List<Map<String, Object>> ls = queryPage(t);
+        return new DataResult(ls);
+    }
+    private List<Map<String, Object>> queryPage(Integer t){
         List<Map<String, Object>> ls = new ArrayList<>();
         if(t != null && t > 0){
             Map<String, Object> p = new HashMap<>();
@@ -204,10 +212,10 @@ public class MonitorController extends SysWebController {
         return layout;
     }
 
-    public Object getMetricJson(Integer page_id,String user_id){
+    public Object getMetricJson(Integer page_id,String user_id,String time){
         String json = "[]";
         if(page_id != null && page_id > 0){
-            String res = sectionService.selectMetricJson(page_id,Integer.parseInt(user_id));
+            String res = sectionService.selectMetricJson(page_id,Integer.parseInt(user_id),time);
             if(!QCommon.isNullOrEmpty(res))
                 json = res;
         }
@@ -230,13 +238,13 @@ public class MonitorController extends SysWebController {
     
     /**
      * 添加用户指标配置
-     * @param model
+     * @param metric_json
      */
     @RequestMapping(value ="/saveSetting")
     @ResponseBody
-    public DataStore saveSetting( String metric_json) {
+    public Object saveSetting( String metric_json) {
     	String user_id = rstr("u", loginer.getUser_id().toString());
-    	return saveAfter(pageService.addUserConfig(metric_json,user_id));
+    	return  pageService.addUserConfig(metric_json,user_id);
     }
 
 }

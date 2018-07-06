@@ -34,7 +34,7 @@ function loadapp(id, dt){
 }
 function loadctx(n){
 	var au = n.app_url;
-	var u = n.app_preview_url;
+	var u = n.app_preview_url || '';
 	if(!au){
 		u = u || _host + "/res/script/home/images/preview.png";
 		return '<div class="cell-bar ss21">'+ n.app_name +drawMenu(n)+'</div><img class="ss21" src="'+ u + '" />';
@@ -138,7 +138,7 @@ function click_event(str){
 	$("#txt").val(str);
 	$ui.find('.arrowUp').addClass('arrowDown').removeClass('arrowUp').andSelf().find('.dropdown').slideUp(10);
 }
-var is_lock = false;
+var is_lock = false, is_btn = false;
 function gosearch(){
 	if(!layer.values)
 		layer.values = {};
@@ -171,7 +171,8 @@ function delend(){
 	isdel = false;
 	if(ids.length >0){
 		$.post('dodel?id='+ids.join(','), function(dt){
-			loadapp('#apps',dt);
+			if(checkResult(dt))
+				loadapp('#apps',dt.data);
 		});
 		ids = [];
 	}
@@ -190,16 +191,21 @@ function addnew(){
 		,content: _host+'/home/addapp'
 		,btn: ['添加', '取消']
 		,yes: function(index, layero){
+			if(is_btn)
+				return;
+			is_btn = true;
 			var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
 			var appids = iframeWin.ids;
 			if(!appids){
+				is_btn = false;
 				layer.msg('请您点击要添加的应用', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
 				return;
 			}
 
 			$.post('doadd?id=' + appids.join(','), function(dt){
 				layer.closeAll();
-				loadapp('#apps',dt);
+				if(checkResult(dt))
+					loadapp('#apps',dt.data);
 			});
 		}
 		,btn2: function(){
@@ -210,6 +216,7 @@ function addnew(){
 			layer.setTop(layero);
 		},end:function(){
 			is_lock = false;
+			is_btn = false;
 		}
 	});
 }
@@ -561,4 +568,11 @@ function logout() {
 	}, function() {
 		location.href = "logout";
 	});
+}
+function checkResult(o){
+	if(o.code<1){
+		layer.alert(o.msg,{zIndex:20001234});
+		return false;
+	}
+	return o;
 }

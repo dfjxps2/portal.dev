@@ -44,6 +44,7 @@ import com.quick.portal.section.ISectionDao;
 import com.quick.portal.section.SectionDO;
 import com.quick.portal.sectionMetric.ISectionMetricDao;
 import com.quick.portal.sectionMetric.SectionMetricDO;
+import com.quick.portal.web.model.DataResult;
 
 /**
  * page服务实现类
@@ -197,7 +198,7 @@ public class PageServiceImpl extends SysBaseService<PageDO> implements IPageServ
     
     //添加用户指标配置信息
     @Override
-	public DataStore addUserConfig(String metric_json, String user_id) {
+	public Object addUserConfig(String metric_json, String user_id) {
 		// TODO Auto-generated method stub
 		List<Map<String, Object>> metric = JsonUtil.fromJson(metric_json, List.class, Map.class);
    	 String[] paramKeys = new String[]{"", "metric_id","category_id","dimension","charts","numb","measure_name","time_dim","unit","display"};
@@ -233,11 +234,11 @@ public class PageServiceImpl extends SysBaseService<PageDO> implements IPageServ
        	usDO.setCre_time(now);
        	b = metricConfigDao.insertUAC_Version(usDO);
 	}
-   	if (b>0) {
-		return ActionMsg.setOk("操作成功！");
-	}else{
-		 return ActionMsg.setOk("操作失败！");
+   	 String res = "操作成功！";
+   	if (b<1) {
+   		res = "保存失败！";
 	}
+   	return new DataResult(res);
 	}
     
     //删除多余数据
