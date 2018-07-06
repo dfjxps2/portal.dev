@@ -88,7 +88,7 @@ public class SecMetricConfigController extends SysBaseController<SecMetricConfig
             pageSize = 1;
         }
         // 表名
-        String tableName = getTableName();
+         String tableName = getTableName();
         // 主键
         String primaryKey = getPrimaryKey();
         // 排序处理
@@ -253,5 +253,48 @@ public class SecMetricConfigController extends SysBaseController<SecMetricConfig
             e.printStackTrace();
         }
         return null;
+    }
+    //app启用指标配置
+    @RequestMapping(value = "/useMetricVersion")    //启用指标配置
+    @ResponseBody
+    public Object useMetricVersion() throws Exception {
+        String userId = rstr("u", loginer.getUser_id().toString());//获取当前用户id
+
+        int term_type_id = 0;//获取终端设备类型id  0 电脑 1手机 2 pad 9 全部
+        Map<String, Object> queryMap = getQueryMap(request);
+        queryMap.put("term_type_id",term_type_id);//参数列表增加设备终端id
+        queryMap.put("user_id", userId);//user_id 存入参数
+        queryMap.put("is_active",'1');//启用
+
+        int result;
+
+        result=secMetricConfigService.updateUAC_Active(queryMap);
+
+        if(result!=0)
+            return new DataResult(1,"版本激活成功");
+        return new DataResult(0,"版本激活失败");
+    }
+    //app修改版本号接口
+    @RequestMapping(value = "/updateVerNaApp")    //修改版本号
+    @ResponseBody
+    public Object updateVerNaApp() throws Exception {
+        Map<String, Object> queryMap = getQueryMap(request);
+        String userId = rstr("u", loginer.getUser_id().toString());//获取当前用户id
+        int user_id=Integer.parseInt(userId);
+        int term_type_id = 0;//获取终端设备类型id  0 电脑 1手机 2 pad 9 全部
+        queryMap.put("user_id",user_id);
+        queryMap.put("term_type_id",term_type_id);//参数列表增加设备终端id
+        int count=secMetricConfigService.selectUAC(queryMap);
+        int result;
+        if(count==0){
+            //数据库没有相应记录 新增
+            result=secMetricConfigService.insertUAC(queryMap);
+        }else{
+            //数据库有相应记录 更新
+            result=secMetricConfigService.updateUAC_Version(queryMap);
+        }
+        if(result!=0)
+            return new DataResult(1,"版本号设置成功");
+        return new DataResult(0,"版本号设置失败");
     }
 }
