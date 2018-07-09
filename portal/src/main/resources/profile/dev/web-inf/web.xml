@@ -2,16 +2,16 @@
 <web-app xmlns="http://java.sun.com/xml/ns/javaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-         version="3.0"> 
+         version="3.0">
     <!--
     <welcome-file-list>
         <welcome-file>/WEB-INF/login.html</welcome-file>
     </welcome-file-list>
     -->
-    <context-param>
-        <param-name>webAppRootKey</param-name>
-        <param-value>SIP.root</param-value>
-    </context-param>
+    <!--<context-param>-->
+    <!--<param-name>webAppRootKey</param-name>-->
+    <!--<param-value>SIP.root</param-value>-->
+    <!--</context-param>-->
     <!-- 指定Spring配置文件的位置 -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
@@ -20,11 +20,37 @@
     <!-- 配置日志信息 -->
     <context-param>
         <param-name>log4jConfigLocation</param-name>
-        <param-value>classpath:/log4j/log4j.properties</param-value>
+        <!--<param-value>classpath:/log4j/log4j.properties</param-value>-->
+        <param-value>classpath:/log4j/log4j2.xml</param-value>
     </context-param>
+
     <listener>
-        <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+        <listener-class>com.seaboxdata.portal.Log4j2ConfigListener</listener-class>
     </listener>
+
+    <!--<listener>-->
+    <!--<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>-->
+    <!--</listener>-->
+
+    <!-- log4j2-begin -->
+    <listener>
+        <listener-class>org.apache.logging.log4j.web.Log4jServletContextListener</listener-class>
+    </listener>
+
+    <filter>
+        <filter-name>log4jServletFilter</filter-name>
+        <filter-class>org.apache.logging.log4j.web.Log4jServletFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>log4jServletFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+        <dispatcher>ERROR</dispatcher>
+    </filter-mapping>
+    <!-- log4j2-end -->
+
     <!-- 配置Web应用启动时候加载Spring容器 -->
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -74,7 +100,7 @@
         <servlet-name>QuickServlet</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
-    
+
     <!--字符编码-->
     <filter>
         <filter-name>encoding</filter-name>
@@ -83,10 +109,10 @@
             <param-name>encoding</param-name>
             <param-value>UTF-8</param-value>
         </init-param>
-        <init-param>  
-            <param-name>forceEncoding</param-name>  
-            <param-value>true</param-value>  
-        </init-param> 
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
     </filter>
 
     <filter-mapping>
@@ -194,17 +220,17 @@
 
     <!-- CAS融合 配置 End -->
 
-    <servlet>    
-        <description>Apache CXF Endpoint</description>    
-        <display-name>cxfService</display-name>    
-        <servlet-name>cxfService</servlet-name>    
-        <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>    
-        <load-on-startup>1</load-on-startup>  
-    </servlet>    
-    <servlet-mapping>    
-        <servlet-name>cxfService</servlet-name> 
-        <url-pattern>/*wsdl</url-pattern> 
-    </servlet-mapping>  	
-    
-    
+    <servlet>
+        <description>Apache CXF Endpoint</description>
+        <display-name>cxfService</display-name>
+        <servlet-name>cxfService</servlet-name>
+        <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>cxfService</servlet-name>
+        <url-pattern>/*wsdl</url-pattern>
+    </servlet-mapping>
+
+
 </web-app>

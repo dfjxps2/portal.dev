@@ -19,31 +19,6 @@
 
 package com.quick.core.base;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.text.DateFormat;
-import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.fasterxml.jackson.core.io.UTF32Reader;
-import com.quick.core.util.common.QCookie;
-import com.quick.portal.sysUser.ISysUserService;
-import com.quick.portal.web.login.WebLoginUser;
-import org.apache.log4j.Logger;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.util.UrlPathHelper;
-
 import com.quick.core.base.model.DataStore;
 import com.quick.core.base.model.JsonDataGrid;
 import com.quick.core.base.model.PageBounds;
@@ -51,6 +26,24 @@ import com.quick.core.base.spring.UtilDatePropertyEditor;
 import com.quick.core.util.common.JsonUtil;
 import com.quick.core.util.common.QCommon;
 import com.quick.core.util.common.QRequest;
+import com.quick.portal.sysUser.ISysUserService;
+import com.quick.portal.web.login.WebLoginUser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.UrlPathHelper;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.DateFormat;
+import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 通用控制层抽象类
@@ -59,7 +52,7 @@ import com.quick.core.util.common.QRequest;
  */
 public abstract class SysBaseController<T> {
 
-	private final Logger logger = Logger.getLogger(getClass());
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 	//private final static String LOGIN_URL = "/";
 
 	protected HttpServletRequest request;
@@ -101,7 +94,7 @@ public abstract class SysBaseController<T> {
 					writeFatal("您的登录已过期 , 请重新登录!!");
 				}
 			} catch (Exception ex) {
-				logger.fatal("无法拦截登录退出:" + ex.getMessage());
+				logger.error("无法拦截登录退出:" + ex.getMessage());
 				ex.printStackTrace();
 			}
 		}
