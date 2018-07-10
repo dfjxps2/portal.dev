@@ -221,39 +221,6 @@ public class InfoMngController extends SysBaseController<InfoMngDO> {
 	    
 	    
 	    
-	    /**
-	     * 查询用户所有应用
-	     * @return
-	     * http://localhost:8080/portal/info/getInfoApp?obj=1&keyword=北京&page=1&pageSize=10
-	     * 
-	     * portal_doc_class：信息类型
-			id:信息文档URL
-			title:信息标题
-			status:已阅(1)、未阅（0）
-	     * @throws UnsupportedEncodingException 
 
-	     */
-	   
-	    @RequestMapping(value = "/getInfoApp")
-	    @ResponseBody
-	    public DataResult getInfoApp(String obj,String keyword,Integer page,Integer pageSize) throws UnsupportedEncodingException{
-	    	Map<String, Object> queryMap  = new HashMap<String, Object>();
-	    	if(null == keyword || "".equals(keyword)){
-	    		DataResult dt = new DataResult();
-	    		dt.setError("关键字不允许为空,请输入关键字查询条件!");
-	    		return dt;
-	    	}
-	    	keyword = URLDecoder.decode(keyword, "UTF-8");
-	    	queryMap.put(SolrInfoConstants.INDEX_KEYWORD, keyword);
-	    	String type = QRequest.getString(request, "obj");
-			int pgSize = QRequest.getInteger(request, "pageSize", 10); // 获取datagrid传来的行数
-			int pageNo = QRequest.getInteger(request, "page", 1); // 获取datagrid传来的页码
-			PageBounds pager = new PageBounds(pageNo, pgSize);
-			//当前用户编号
-			String ids = QCookie.getValue(request, "ids");
-			List<Map<String, Object>> retList = infoMngService.getSolrInfo(queryMap, pager,ids,type);
-	        return new DataResult(retList);
-	    }
-	    
 	    
 }
