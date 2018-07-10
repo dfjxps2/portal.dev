@@ -3,6 +3,9 @@ package com.seaboxdata.portal;
 import java.util.Enumeration;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+
+import org.apache.logging.log4j.core.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configurator;
 
 
@@ -17,7 +20,7 @@ public class Log4j2ConfigListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent arg0) {
         String fileName = getContextParam(arg0);
-        Configurator.initialize("Log4j2", fileName);
+        Configurator.initialize(null, fileName);
     }
 
 
