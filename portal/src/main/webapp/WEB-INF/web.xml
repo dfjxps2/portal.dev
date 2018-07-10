@@ -110,17 +110,17 @@
         <url-pattern>*.jsp</url-pattern>
     </filter-mapping>
 
-    <servlet>
-        <description>Apache CXF Endpoint</description>
-        <display-name>cxfService</display-name>
-        <servlet-name>cxfService</servlet-name>
-        <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>cxfService</servlet-name>
-        <url-pattern>/*wsdl</url-pattern>
-    </servlet-mapping>
+    <!--<servlet>-->
+        <!--<description>Apache CXF Endpoint</description>-->
+        <!--<display-name>cxfService</display-name>-->
+        <!--<servlet-name>cxfService</servlet-name>-->
+        <!--<servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>-->
+        <!--<load-on-startup>1</load-on-startup>-->
+    <!--</servlet>-->
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>cxfService</servlet-name>-->
+        <!--<url-pattern>/*wsdl</url-pattern>-->
+    <!--</servlet-mapping>-->
 
 
 </web-app>

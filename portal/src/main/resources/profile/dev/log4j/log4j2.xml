@@ -30,6 +30,7 @@
             <AppenderRef ref="running-log" /> </Logger> -->
 
         <Logger name="org.pac4j" level="debug"/>
+        <Logger name="com.seaboxdata" level="debug"/>
 
         <Root level="info">
             <!-- 这里是输入到文件，很重要-->

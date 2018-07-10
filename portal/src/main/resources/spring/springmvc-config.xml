@@ -57,7 +57,7 @@
     <!-- 默认的注解映射的支持(注册RequestMappingHandlerMapping和RequestMappingHandlerAdapter) --> 
     <!--<mvc:annotation-driven />-->
     <!-- 自动扫描且只扫描Controller -->
-    <context:component-scan base-package="com.quick" use-default-filters="false">
+    <context:component-scan base-package="com.quick,com.seaboxdata" use-default-filters="false">
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
 
@@ -163,19 +163,20 @@
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
             <mvc:exclude-mapping path="/callback"/>
+            <mvc:exclude-mapping path="/mobile/**"/>
             <bean class="org.pac4j.springframework.web.SecurityInterceptor">
                 <constructor-arg name="config" ref="config"/>
                 <constructor-arg name="clients" value="CasClient"/>
             </bean>
         </mvc:interceptor>
-        <!--<mvc:interceptor>-->
-            <!--<mvc:mapping path="/casrest/*"/>-->
-            <!--<bean class="org.pac4j.springframework.web.SecurityInterceptor">-->
-                <!--<constructor-arg name="config" ref="config"/>-->
-                <!--<constructor-arg name="clients" value="CasRestBasicAuthClient"/>-->
-                <!--<property name="securityLogic" ref="mySecurityLogic"/>-->
-            <!--</bean>-->
-        <!--</mvc:interceptor>-->
+        <mvc:interceptor>
+            <mvc:mapping path="/mobile/login"/>
+            <bean class="org.pac4j.springframework.web.SecurityInterceptor">
+                <constructor-arg name="config" ref="config"/>
+                <constructor-arg name="clients" value="CasRestBasicAuthClient"/>
+                <property name="securityLogic" ref="mySecurityLogic"/>
+            </bean>
+        </mvc:interceptor>
         <bean class="com.quick.core.base.spring.filter.ControllerBaseInterceptor" />
     </mvc:interceptors>
     
