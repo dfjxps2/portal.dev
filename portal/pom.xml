@@ -448,6 +448,19 @@
 			</exclusions>
 			<version>${shiro.version}</version>
 		</dependency>
+		
+		<!-- pac4j mvc -->
+		<dependency>
+			<groupId>org.pac4j</groupId>
+			<artifactId>pac4j-http</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		
+		 <dependency>
+	           <groupId>org.pac4j</groupId>
+	           <artifactId>spring-webmvc-pac4j</artifactId>
+	           <version>3.0.0</version>
+	     </dependency>
         
     </dependencies>
 
