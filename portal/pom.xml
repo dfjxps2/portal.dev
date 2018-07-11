@@ -22,13 +22,12 @@
         <!--jackson版本号-->
         <jackson.version>2.9.5</jackson.version>
         <cxf.version>3.0.8</cxf.version>
+        <junit.version>4.12</junit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!--axis2版本指定-->
         <axis2.version>1.7.5</axis2.version>
-
         <pac4j.version>3.0.0</pac4j.version>
         <spring-webmvc-pac4j.version>3.0.0</spring-webmvc-pac4j.version>
-
         <spring.webservice.version>3.1.5</spring.webservice.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -39,7 +38,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <!-- spring核心包 -->
@@ -127,37 +126,11 @@
             <artifactId>jstl</artifactId>
             <version>1.2</version>
         </dependency>
-        <!-- 日志文件管理包 -->
-        <!-- log start -->
-        <!--<dependency>-->
-        <!--<groupId>log4j</groupId>-->
-        <!--<artifactId>log4j</artifactId>-->
-        <!--<version>${log4j.version}</version>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.31</version>
         </dependency>
-        <!--<dependency>-->
-        <!--<groupId>org.slf4j</groupId>-->
-        <!--<artifactId>slf4j-api</artifactId>-->
-        <!--<version>${slf4j.version}</version>-->
-        <!--</dependency>-->
-
-        <!--<dependency>-->
-        <!--<groupId>org.slf4j</groupId>-->
-        <!--<artifactId>slf4j-log4j12</artifactId>-->
-        <!--<version>${slf4j.version}</version>-->
-        <!--</dependency>-->
-        <!-- log end -->
-        <!-- for fastjson
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>fastjson</artifactId>
-			<version>1.1.33</version>
-		</dependency>
-		-->
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-asl</artifactId>
