@@ -41,6 +41,9 @@ public interface IInfoMngService extends ISysBaseService<InfoMngDO> {
 	
 	
 	public String getMsgIDByID (String uid);
-
+	
+	public List<Map<String, Object>> getHotSearchInfo();
+	
+	public List<Map<String, Object>> getPerHabitsInfo(String userID);
 
 }
