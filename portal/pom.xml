@@ -13,20 +13,23 @@
 
     <properties>
         <!-- spring版本号 -->
-        <spring.version> 4.3.5.RELEASE</spring.version>
+        <spring.version>5.0.2.RELEASE</spring.version>
         <!-- mybatis版本号 -->
-        <mybatis.version> 3.4.2</mybatis.version>
+        <mybatis.version>3.4.2</mybatis.version>
         <!-- log4j日志文件管理包版本 -->
         <slf4j.version>1.7.25</slf4j.version>
-        <log4j.version>1.2.17</log4j.version>
+        <log4j.version>2.8.2</log4j.version>
         <!--jackson版本号-->
-        <jackson.version>2.8.7</jackson.version>
+        <jackson.version>2.9.5</jackson.version>
         <cxf.version>3.0.8</cxf.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<!--axis2版本指定-->
-		<axis2.version>1.7.5</axis2.version>
+        <!--axis2版本指定-->
+        <axis2.version>1.7.5</axis2.version>
 
-		<spring.webservice.version>3.1.5</spring.webservice.version>
+        <pac4j.version>3.0.0</pac4j.version>
+        <spring-webmvc-pac4j.version>3.0.0</spring-webmvc-pac4j.version>
+
+        <spring.webservice.version>3.1.5</spring.webservice.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
@@ -126,27 +129,27 @@
         </dependency>
         <!-- 日志文件管理包 -->
         <!-- log start -->
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>log4j</groupId>-->
+        <!--<artifactId>log4j</artifactId>-->
+        <!--<version>${log4j.version}</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.31</version>
         </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>org.slf4j</groupId>-->
+        <!--<artifactId>slf4j-api</artifactId>-->
+        <!--<version>${slf4j.version}</version>-->
+        <!--</dependency>-->
 
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>org.slf4j</groupId>-->
+        <!--<artifactId>slf4j-log4j12</artifactId>-->
+        <!--<version>${slf4j.version}</version>-->
+        <!--</dependency>-->
         <!-- log end -->
         <!-- for fastjson
 		<dependency>
@@ -222,11 +225,11 @@
             <version>2.3.0</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/dom4j/dom4j -->
-		<dependency>
-			<groupId>dom4j</groupId>
-			<artifactId>dom4j</artifactId>
-			<version>1.6.1</version>
-		</dependency>
+        <dependency>
+            <groupId>dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>1.6.1</version>
+        </dependency>
 
         <!-- CAS客户端 -->
         <dependency>
@@ -236,7 +239,7 @@
         </dependency>
 
         <!-- webservice -->
-		 <!-- cxf的jar包 -->
+        <!-- cxf的jar包 -->
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-frontend-jaxws</artifactId>
@@ -258,40 +261,40 @@
             <version>1.1.3</version>
         </dependency>
 
-	    <!--axis2 begin-->
-		<dependency>
-		    <groupId>org.apache.axis2</groupId>
-		    <artifactId>axis2</artifactId>
-		    <version>${axis2.version}</version>
-		    <type>pom</type>
-		</dependency>
+        <!--axis2 begin-->
+        <dependency>
+            <groupId>org.apache.axis2</groupId>
+            <artifactId>axis2</artifactId>
+            <version>${axis2.version}</version>
+            <type>pom</type>
+        </dependency>
 
-	    <dependency>
-	      <groupId>org.apache.axis2</groupId>
-	      <artifactId>axis2-spring</artifactId>
-	      <version>${axis2.version}</version>
-	    </dependency>
-	    <dependency>
-	      <groupId>org.apache.axis2</groupId>
-	      <artifactId>axis2-transport-http</artifactId>
-	      <version>${axis2.version}</version>
-	    </dependency>
-	    <dependency>
-	      <groupId>org.apache.axis2</groupId>
-	      <artifactId>axis2-transport-local</artifactId>
-	      <version>${axis2.version}</version>
-	    </dependency>
-	    <dependency>
-	      <groupId>org.apache.axis2</groupId>
-	      <artifactId>axis2-xmlbeans</artifactId>
-	      <version>${axis2.version}</version>
-	    </dependency>
-	    <dependency>
-	      <groupId>org.apache.axis2</groupId>
-	      <artifactId>axis2-json</artifactId>
-	      <version>${axis2.version}</version>
-	    </dependency>
-	    <!-- axis 1.4 jar start -->
+        <dependency>
+            <groupId>org.apache.axis2</groupId>
+            <artifactId>axis2-spring</artifactId>
+            <version>${axis2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.axis2</groupId>
+            <artifactId>axis2-transport-http</artifactId>
+            <version>${axis2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.axis2</groupId>
+            <artifactId>axis2-transport-local</artifactId>
+            <version>${axis2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.axis2</groupId>
+            <artifactId>axis2-xmlbeans</artifactId>
+            <version>${axis2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.axis2</groupId>
+            <artifactId>axis2-json</artifactId>
+            <version>${axis2.version}</version>
+        </dependency>
+        <!-- axis 1.4 jar start -->
         <dependency>
             <groupId>org.apache.axis</groupId>
             <artifactId>axis</artifactId>
@@ -318,57 +321,19 @@
             <artifactId>axis-saaj</artifactId>
             <version>1.4</version>
         </dependency>
-      <!--   <dependency>
-            <groupId>wsdl4j</groupId>
-            <artifactId>wsdl4j</artifactId>
-            <version>1.4</version>
+        <dependency>
+            <groupId>org.apache.solr</groupId>
+            <artifactId>solr-solrj</artifactId>
+            <version>7.3.0</version>
         </dependency>
- -->        <!-- axis 1.4 jar end -->
-	    <!--<dependency>-->
-	      <!--<groupId>org.apache.axis2</groupId>-->
-	      <!--axis2-soapmonitor-servlet</artifactId>-->
-	      <!--<version>${axis2.version}</version>-->
-	    <!--</dependency>-->
-	    <!--axis2 end-->
-	    <!-- xfire start -->
-      <!-- <dependency>
-      	<groupId>org.codehaus.xfire</groupId>
-      	<artifactId>xfire-aegis</artifactId>
-      	<version>1.2.4</version>
-      	<type>pom</type>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.xfire</groupId>
-      <artifactId>xfire-spring</artifactId>
-      <version>1.2.4</version>
-      <type>pom</type>
-    </dependency>
-    <dependency>
-      <groupId>xalan</groupId>
-      <artifactId>xalan</artifactId>
-      <version>2.7.0</version>
-      <type>pom</type>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-web</artifactId>
-      <version>2.0</version>
-      <type>pom</type>
-    </dependency>   -->
-	 <!-- xfire end -->
-	   <dependency>
-  	   		<groupId>org.apache.solr</groupId>
-  			<artifactId>solr-solrj</artifactId>
-  			<version>7.3.0</version>
-	   </dependency>
-	 	<!--添加公服认证本地私有包-->
-	 	<dependency>
-		    <groupId>uumsinterface</groupId>
-		    <artifactId>uumsinterface</artifactId>
-		    <scope>system</scope>
-		    <version>1.0</version>
-		    <systemPath>${basedir}\src\main\webapp\WEB-INF\lib\uumsinterface_JDK1.4.jar</systemPath>
-		</dependency>
+        <!--添加公服认证本地私有包-->
+        <dependency>
+            <groupId>uumsinterface</groupId>
+            <artifactId>uumsinterface</artifactId>
+            <scope>system</scope>
+            <version>1.0</version>
+            <systemPath>${basedir}\src\main\webapp\WEB-INF\lib\uumsinterface_JDK1.4.jar</systemPath>
+        </dependency>
 
         <!--Tika-->
         <dependency>
@@ -392,7 +357,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-crypto</artifactId>
-            <version>4.1.3.RELEASE</version>
+            <version>5.0.2.RELEASE</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
         <dependency>
@@ -407,6 +372,60 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.4</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-web</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.pac4j</groupId>
+            <artifactId>spring-webmvc-pac4j</artifactId>
+            <version>${spring-webmvc-pac4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.pac4j</groupId>
+            <artifactId>pac4j-cas</artifactId>
+            <version>${pac4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.pac4j</groupId>
+            <artifactId>pac4j-http</artifactId>
+            <version>${pac4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.pac4j</groupId>
+            <artifactId>pac4j-jwt</artifactId>
+            <version>${pac4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.pac4j</groupId>
+            <artifactId>pac4j-sql</artifactId>
+            <version>${pac4j.version}</version>
+        </dependency>
+
     </dependencies>
 
     <!--不同环境切换配置参数1 Start -->
@@ -452,7 +471,8 @@
     </profiles>
     <!--不同环境切换配置参数1 End -->
     <build>
-        <finalName>portal_${profiles.active}</finalName>
+       <!--  <finalName>portal_${profiles.active}</finalName> -->
+         <finalName>portal</finalName>
         <plugins>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -461,13 +481,13 @@
                 </configuration>
             </plugin>
             <plugin>
-              <artifactId>maven-compiler-plugin</artifactId>
-              <configuration>
-                  <encoding>UTF-8</encoding>
-                  <compilerArguments>
-                   <extdirs>src\main\webapp\WEB-INF\lib</extdirs>
-                 </compilerArguments>
-              </configuration>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <compilerArguments>
+                        <extdirs>src/main/webapp/WEB-INF/lib</extdirs>
+                    </compilerArguments>
+                </configuration>
             </plugin>
             <!--不同环境切换配置参数2 Start -->
             <plugin>
@@ -483,6 +503,18 @@
                 </configuration>
             </plugin>
             <!--不同环境切换配置参数2 End -->
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>9.4.11.v20180605</version>
+                <configuration>
+                    <webApp>
+                        <contextPath>/portal</contextPath>
+                    </webApp>
+                </configuration>
+            </plugin>
+
+
         </plugins>
         <resources>
             <resource>

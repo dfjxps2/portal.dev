@@ -20,18 +20,21 @@ package com.quick.core.base;
 
 import com.quick.core.base.model.DataStore;
 import com.quick.core.util.common.QCommon;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.ModelAndView;
-import java.util.*;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
  * @author Administrator
  */
 public abstract class SysWebController extends SysBaseController<DataStore> {
-    private final Logger logger = Logger.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     public final static int ROLEID_ADMIN = 1;
 
     /**

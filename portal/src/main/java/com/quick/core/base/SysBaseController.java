@@ -19,31 +19,6 @@
 
 package com.quick.core.base;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.text.DateFormat;
-import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.fasterxml.jackson.core.io.UTF32Reader;
-import com.quick.core.util.common.QCookie;
-import com.quick.portal.sysUser.ISysUserService;
-import com.quick.portal.web.login.WebLoginUser;
-import org.apache.log4j.Logger;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.util.UrlPathHelper;
-
 import com.quick.core.base.model.DataStore;
 import com.quick.core.base.model.JsonDataGrid;
 import com.quick.core.base.model.PageBounds;
@@ -51,6 +26,28 @@ import com.quick.core.base.spring.UtilDatePropertyEditor;
 import com.quick.core.util.common.JsonUtil;
 import com.quick.core.util.common.QCommon;
 import com.quick.core.util.common.QRequest;
+import com.quick.portal.sysUser.ISysUserService;
+import com.quick.portal.web.login.WebLoginUitls;
+import com.quick.portal.web.login.WebLoginUser;
+
+import org.pac4j.core.profile.CommonProfile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.UrlPathHelper;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.DateFormat;
+import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 通用控制层抽象类
@@ -59,7 +56,7 @@ import com.quick.core.util.common.QRequest;
  */
 public abstract class SysBaseController<T> {
 
-	private final Logger logger = Logger.getLogger(getClass());
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 	//private final static String LOGIN_URL = "/";
 
 	protected HttpServletRequest request;
@@ -91,8 +88,8 @@ public abstract class SysBaseController<T> {
 	public Boolean isLogin(HttpServletRequest request,
 			HttpServletResponse response) {
 		Boolean b = true;
-		getCurrentLoginUser(request);
-		if (loginer == null) {
+		getCurrentLoginUser(request,response);
+/*		if (loginer == null) {
 			b = false;
 			try {
 				if(isAjax(request)){
@@ -101,10 +98,10 @@ public abstract class SysBaseController<T> {
 					writeFatal("您的登录已过期 , 请重新登录!!");
 				}
 			} catch (Exception ex) {
-				logger.fatal("无法拦截登录退出:" + ex.getMessage());
+				logger.error("无法拦截登录退出:" + ex.getMessage());
 				ex.printStackTrace();
 			}
-		}
+		}*/
 		return b;
 	}
 
@@ -327,21 +324,26 @@ public abstract class SysBaseController<T> {
 		}
 	}
 
-	protected WebLoginUser getCurrentLoginUser(HttpServletRequest req) {
+	protected WebLoginUser getCurrentLoginUser(HttpServletRequest req,HttpServletResponse res) {
 		//获取本机用户信息，如无法获取，从cas反查
 		if(loginer == null){
-			loginer = new WebLoginUser().loadSession(req, response);
+			loginer = new WebLoginUser().loadSession(req, res);
 			if(loginer.getUser_id() == null || loginer.getUser_id() == 0){
-				loginer = loadCASUserInfo(req);
+				loginer = loadCASUserInfo(req,res);
 			}
 		}
 		return loginer;
 	}
 
-	public WebLoginUser loadCASUserInfo(HttpServletRequest req){
-		if (req.getRemoteUser() != null) {
+	public WebLoginUser loadCASUserInfo(HttpServletRequest request,HttpServletResponse response){
+		String account = null;
+		 List<CommonProfile> profiles = WebLoginUitls.getProfiles(request, response);
+    	 for(CommonProfile profile : profiles){
+    		 account =  profile.getId();
+    	 }
+    	 if (null !=account && !"".equals(account)) {
 			Map<String, Object> parm = new HashMap<>();
-			parm.put("user_name", request.getRemoteUser());
+			parm.put("user_name", account);
 			Map<String, Object> u = loginerService.selectMap(parm);
 			WebLoginUser user = new WebLoginUser();
 			user.setRole_id( Integer.valueOf(val(u, "role_id")) );
