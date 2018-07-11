@@ -21,7 +21,7 @@
     default-lazy-init="true"
 >
 
-    <bean id="configTool" class="com.quick.core.util.config.ConfigTool">
+	 <bean id="configTool" class="com.quick.core.util.config.ConfigTool">
         <property name="locations">
             <list>
                 <value>classpath:/properties/jdbc.properties</value>

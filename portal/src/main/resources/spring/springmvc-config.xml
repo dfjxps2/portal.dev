@@ -18,6 +18,14 @@
             http://www.springframework.org/schema/mvc
             http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd"
        default-lazy-init="true">
+       
+	   <bean id="configTool" class="com.quick.core.util.config.ConfigTool">
+        <property name="locations">
+            <list>
+                <value>classpath:/properties/config.properties</value>
+            </list>
+        </property>
+    </bean>
     
     <!--MVC-->
     <!-- COC通用映射 -->
@@ -65,7 +73,7 @@
     <context:component-scan base-package="com.seaboxdata.portal.auth"/>
 
     <bean id="formClient" class="org.pac4j.http.client.indirect.FormClient">
-        <constructor-arg name="loginUrl" value="http://localhost:8080/loginForm"/>
+        <constructor-arg name="loginUrl" value="${portal.form}"/>
         <constructor-arg name="usernamePasswordAuthenticator" ref="testAuthenticator"/>
         <property name="authorizationGenerator" ref="dbAuthGenerator"/>
     </bean>
@@ -75,10 +83,8 @@
     </bean>
 
     <bean id="casConfiguration" class="org.pac4j.cas.config.CasConfiguration">
-        <property name="loginUrl" value="https://10.1.3.193:8443/cas/login"/>
-        <property name="prefixUrl" value="https://10.1.3.193:8443/cas/"/>
-        <!--<property name="loginUrl" value="https://192.168.112.130:8443/cas/login"/>-->
-        <!--<property name="prefixUrl" value="https://192.168.112.130:8443/cas/"/>-->
+        <property name="loginUrl" value="${sso.cas.server.loginUrl}"/>
+        <property name="prefixUrl" value="${sso.cas.server.prefixUrl}"/>
     </bean>
 
     <bean id="casRestBasicAuthClient" class="org.pac4j.cas.client.rest.CasRestBasicAuthClient">
@@ -114,7 +120,7 @@
     </bean>
 
     <bean id="clients" class="org.pac4j.core.client.Clients">
-        <constructor-arg name="callbackUrl" value="http://localhost:8080/portal/callback"/>
+        <constructor-arg name="callbackUrl" value="${portal.callback}"/>
         <constructor-arg name="clients">
             <list>
                 <ref bean="formClient"/>
