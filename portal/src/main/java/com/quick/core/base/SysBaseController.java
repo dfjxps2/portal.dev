@@ -269,8 +269,8 @@ public abstract class SysBaseController<T> {
 		// 如果身份验证未通过，跳转至登录界面
 		//if(isWhiteList())
 		//	return;
-		if (!isLogin(request, response))
-			return;
+/*		if (!isLogin(request, response))
+			return;*/
 	}
 
 	@InitBinder
