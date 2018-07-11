@@ -27,7 +27,10 @@ import com.quick.core.util.common.JsonUtil;
 import com.quick.core.util.common.QCommon;
 import com.quick.core.util.common.QRequest;
 import com.quick.portal.sysUser.ISysUserService;
+import com.quick.portal.web.login.WebLoginUitls;
 import com.quick.portal.web.login.WebLoginUser;
+
+import org.pac4j.core.profile.CommonProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.WebDataBinder;
@@ -38,6 +41,7 @@ import org.springframework.web.util.UrlPathHelper;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.DateFormat;
@@ -84,8 +88,8 @@ public abstract class SysBaseController<T> {
 	public Boolean isLogin(HttpServletRequest request,
 			HttpServletResponse response) {
 		Boolean b = true;
-		getCurrentLoginUser(request);
-		if (loginer == null) {
+		getCurrentLoginUser(request,response);
+/*		if (loginer == null) {
 			b = false;
 			try {
 				if(isAjax(request)){
@@ -97,7 +101,7 @@ public abstract class SysBaseController<T> {
 				logger.error("无法拦截登录退出:" + ex.getMessage());
 				ex.printStackTrace();
 			}
-		}
+		}*/
 		return b;
 	}
 
@@ -320,21 +324,26 @@ public abstract class SysBaseController<T> {
 		}
 	}
 
-	protected WebLoginUser getCurrentLoginUser(HttpServletRequest req) {
+	protected WebLoginUser getCurrentLoginUser(HttpServletRequest req,HttpServletResponse res) {
 		//获取本机用户信息，如无法获取，从cas反查
 		if(loginer == null){
-			loginer = new WebLoginUser().loadSession(req, response);
+			loginer = new WebLoginUser().loadSession(req, res);
 			if(loginer.getUser_id() == null || loginer.getUser_id() == 0){
-				loginer = loadCASUserInfo(req);
+				loginer = loadCASUserInfo(req,res);
 			}
 		}
 		return loginer;
 	}
 
-	public WebLoginUser loadCASUserInfo(HttpServletRequest req){
-		if (req.getRemoteUser() != null) {
+	public WebLoginUser loadCASUserInfo(HttpServletRequest request,HttpServletResponse response){
+		String account = null;
+		 List<CommonProfile> profiles = WebLoginUitls.getProfiles(request, response);
+    	 for(CommonProfile profile : profiles){
+    		 account =  profile.getId();
+    	 }
+    	 if (null !=account && !"".equals(account)) {
 			Map<String, Object> parm = new HashMap<>();
-			parm.put("user_name", request.getRemoteUser());
+			parm.put("user_name", account);
 			Map<String, Object> u = loginerService.selectMap(parm);
 			WebLoginUser user = new WebLoginUser();
 			user.setRole_id( Integer.valueOf(val(u, "role_id")) );
