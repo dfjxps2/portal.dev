@@ -2,6 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:cache="http://www.springframework.org/schema/cache" xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:p="http://www.springframework.org/schema/p" xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -14,7 +15,9 @@
         http://www.springframework.org/schema/data/jpa
         http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
         http://www.springframework.org/schema/util
-	    http://www.springframework.org/schema/util/spring-util.xsd">
+	    http://www.springframework.org/schema/util/spring-util.xsd
+	    http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
 
 	<!-- pac4j configurations -->
@@ -25,7 +28,9 @@
 	    <!-- CAS server服务前缀 -->
 	   <property name="prefixUrl" value="${sso.cas.server.prefixUrl}"></property>
 	    <!-- 登出处理器，单点登出时所需要的操作在这里实现-->
+	    <!--  
 	    <property name="logoutHandler" ref="casLogoutHandler"></property>
+	    -->
 	</bean>
 
 	<!-- cas客户端配置 -->
@@ -37,10 +42,10 @@
 	</bean>
 
 	<!-- shiro登出处理器，销毁session及登录状态等-->
-	<bean id="casLogoutHandler" class="com.quick.portal.authorizer.handler.ShiroCasLogoutHandler">
+	<!-- <bean id="casLogoutHandler" class="com.quick.portal.authorizer.handler.ShiroCasLogoutHandler">
 	   <property name="destroySession" value="true"></property>
 	</bean>
-	
+	 -->
 	<bean id="sessionStore" class="com.quick.portal.authorizer.util.PortalShiroSessionStore"></bean>
 
 	<!-- pac4j配置 -->
@@ -51,7 +56,6 @@
 	
 
 	<!-- shiro configurations -->
-
     <bean id="sessionIdGenerator"
 		class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator" />
 
@@ -97,9 +101,7 @@
 				<property name="authorizationCacheName" value="authorizationCache" />
 			</bean>
 		</property>
-
 		<property name="subjectFactory" ref="pac4jSubjectFactory"></property>
-
 	</bean>
 
 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
@@ -110,7 +112,6 @@
 				<entry key="casSecurityFilter">
 					<bean class="io.buji.pac4j.filter.SecurityFilter">
 						<property name="config" ref="authcConfig"></property>
-					
 						<property name="clients" value="PortalCasClient"></property>
 							<!--  
 						<property name="clients" ref="casClient"></property>
@@ -128,7 +129,8 @@
 				<entry key="logout">
 					<!-- <bean id="logout" class="io.buji.pac4j.filter.LogoutFilter"> -->
 					<bean id="logout" class="com.quick.portal.authorizer.handler.AbLogoutFilter">
-						<!--<property name="defaultUrl" value="${sso.cas.client.callbackUrl}"></property> -->
+						<!--<property name="defaultUrl" value="${sso.cas.client.callbackUrl}"></property> 
+						-->
 					 	<property name="defaultUrl" value="${sso.cas.client.logoutUrl}"></property>
 						
 						<property name="config" ref="authcConfig"></property>
@@ -136,10 +138,10 @@
 						<property name="localLogout" value="false"></property>
 					</bean>
 				</entry>
-				<!-- 拦截/login,并作一些操作，测试用，可以忽略 -->
-				<entry key="login">
+				<!-- 拦截/login,并作一些操作 -->
+			 	<entry key="login">
 				     <bean class="com.quick.portal.authorizer.filter.Redirect2CasLoginFilter"></bean>
-				</entry>
+				</entry> 
 
 			</util:map>
 		</property>
@@ -147,10 +149,9 @@
 		<property name="filterChainDefinitions">
 			<value>
 				/= casSecurityFilter
+				/mainframe= casSecurityFilter
 				/logout = logout
 				/callback = callback
-				/login** = login
-				/login/** = login
 			</value>
 		</property>
 		
@@ -164,5 +165,58 @@
 		depends-on="lifecycleBeanPostProcessor">
 		<property name="proxyTargetClass" value="true" />
 	</bean>
+	<!-- form start -->
+	<bean id="testAuthenticator"
+          class="org.pac4j.http.credentials.authenticator.test.SimpleTestUsernamePasswordAuthenticator">
+    </bean>
+    <bean id="formClient" class="org.pac4j.http.client.indirect.FormClient">
+        <constructor-arg name="loginUrl" value="http://localhost:8080/portal/app/loginForm"/>
+        <constructor-arg name="usernamePasswordAuthenticator" ref="testAuthenticator"/>
+        <property name="authorizationGenerator" ref="dbAuthGenerator"/>
+    </bean>
+    <bean id="indirectBasicAuthClient" class="org.pac4j.http.client.indirect.IndirectBasicAuthClient">
+        <constructor-arg name="usernamePasswordAuthenticator" ref="testAuthenticator"/>
+    </bean>
+    <bean id="dbAuthGenerator" class="com.quick.portal.authorizer.DBAuthGenerator">
+    </bean>
+    <!--  form end -->
+    
+    <bean id="fmConfig" class="org.pac4j.core.config.Config">
+          <constructor-arg name="clients" ref="formClient"/>
+    
+    </bean> 
+
+    
+    <!-- mvc:interceptors  start-->
+       <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/app/form/*"/>
+            <bean class="org.pac4j.springframework.web.SecurityInterceptor">
+                <constructor-arg name="config" ref="config"/>
+                <constructor-arg name="clients" value="FormClient"/>
+            </bean>
+        </mvc:interceptor>
+        
+       <mvc:interceptor>
+            <mvc:mapping path="/api/*"/>
+            <bean class="org.pac4j.springframework.web.SecurityInterceptor">
+            <constructor-arg name="config" ref="fmConfig"/> 
+            <constructor-arg name="clients" value="FormClient"/>
+             <!--    <property name="config" ref="fmConfig"></property> -->
+            </bean>
+        </mvc:interceptor> 
+        
+        <mvc:interceptor>
+            <mvc:mapping path="/home/*"/>
+            <bean class="org.pac4j.springframework.web.SecurityInterceptor">
+                 <constructor-arg name="config" ref="authcConfig"/> 
+         		    <!--  <constructor-arg name="clients" value="CasClient"/>   -->
+                 <constructor-arg name="clients" value="PortalCasClient"/>
+             </bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+    
+    
+        <!-- mvc:interceptors  end-->
 
 </beans>
