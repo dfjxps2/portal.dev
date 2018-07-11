@@ -70,10 +70,6 @@ public class WebLoginController {
     //登录页
     @RequestMapping(value = "/")
     public String index(HttpServletRequest request, HttpServletResponse response) {
-
-        final WebContext context = new J2EContext(request, response);
-        List<CommonProfile> profiles = new ProfileManager(context).getAll(true);
-
         String rid = QCookie.getValue(request, "sbd.role");
         String uid = QCookie.getValue(request, "ids");
         //判断公服用户直接访问home/login时，跳转APP_Menu
@@ -162,9 +158,11 @@ public class WebLoginController {
         QCookie.remove(response, request, "sbd.role");
         QCookie.remove(response, request, "sbd.gid");
         QCookie.remove(response, request, "sbd.tk");
-        QCookie.remove(response, request, "JSESSIONID");
+ //       QCookie.remove(response, request, "JSESSIONID");
         request.getSession().invalidate();
-        String casUrl = PropertiesUtil.getPropery("cas.serverUrl");
+        
+
+        String casUrl = PropertiesUtil.getPropery("sso.cas.server.prefixUrl");
         String url = request.getScheme() + "://" + request.getServerName()
                 + ":" + request.getServerPort() + request.getContextPath()
                 + "/";
@@ -184,9 +182,14 @@ public class WebLoginController {
     }
 
     public WebLoginUser loadCASUserInfo(HttpServletRequest request, HttpServletResponse response) {
-        if (request.getRemoteUser() != null) {
+    	 String account = null;
+    	 List<CommonProfile> profiles = WebLoginUitls.getProfiles(request, response);
+    	 for(CommonProfile profile : profiles){
+    		 account =  profile.getId();
+    	 }
+        if (null !=account && !"".equals(account)) {
             Map<String, Object> parm = new HashMap<>();
-            parm.put("user_name", request.getRemoteUser());
+            parm.put("user_name", account);
             Map<String, Object> u = sysUserService.selectMap(parm);
             WebLoginUser user = new WebLoginUser();
             user.setRole_id(Integer.valueOf(WebLoginUitls.getVal(u, "role_id")));
@@ -221,8 +224,14 @@ public class WebLoginController {
         }
         return flag;
     }
-
-
+    
+    
+/*    private List<CommonProfile> getProfiles(HttpServletRequest request, HttpServletResponse response) {
+    	final WebContext context = new J2EContext(request, response);  
+        final ProfileManager manager = new ProfileManager(context);
+        return manager.getAll(true);
+    }
+*/
     public final static String ADMINISTRATOR_USER = "admin";
     public final static String ADMINISTRATOR_ROLE = "1";
     public final static String PORTAL_ADMINISTRATOR_ROLE = "100";

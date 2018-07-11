@@ -25,6 +25,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.pac4j.core.profile.CommonProfile;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -158,9 +159,14 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
     
     
     public WebLoginUser loadCASUserInfo(HttpServletRequest request,HttpServletResponse response){
-		if (request.getRemoteUser() != null) {
+    	 String account = null;
+    	 List<CommonProfile> profiles = WebLoginUitls.getProfiles(request, response);
+    	 for(CommonProfile profile : profiles){
+    		 account =  profile.getId();
+    	 }
+        if (null !=account && !"".equals(account)) {
 			Map<String, Object> parm = new HashMap<>();
-			parm.put("user_name", request.getRemoteUser());
+			parm.put("user_name", account);
 			Map<String, Object> u = sysUserService.selectMap(parm);
 			WebLoginUser user = new WebLoginUser();
 			user.setRole_id( Integer.valueOf(WebLoginUitls.getVal(u, "role_id")) );
