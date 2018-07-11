@@ -1,6 +1,7 @@
 package com.seaboxdata.portal.mobile;
 
 import com.quick.portal.web.model.DataResult;
+
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.WebContext;
 import org.pac4j.core.profile.CommonProfile;
@@ -12,12 +13,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.util.List;
 
 @RestController
 @RequestMapping("/mobile")
 public class MobileController {
     final private Logger logger = LoggerFactory.getLogger(getClass());
+    
+    @RequestMapping(value = "/")
+    public String index(HttpServletRequest request, HttpServletResponse response) {
+    	 return "page/home/login";
+    }
 
     @RequestMapping(value = "/login", produces = {"application/json;charset=UTF-8"})
     public DataResult login(HttpServletRequest request, HttpServletResponse response) {

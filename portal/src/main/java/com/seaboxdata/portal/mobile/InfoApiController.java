@@ -1,4 +1,4 @@
-package com.quick.api;
+package com.seaboxdata.portal.mobile;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -34,7 +34,7 @@ import com.quick.portal.web.model.DataResult;
  */
 @Controller
 @Scope("prototype")
-@RequestMapping(value = "/api/info")
+@RequestMapping(value = "/mobile/info")
 public class InfoApiController extends SysApiController {
 	
  	@Resource(name = "infoMngService")

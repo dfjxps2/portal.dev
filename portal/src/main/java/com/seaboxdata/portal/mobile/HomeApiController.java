@@ -16,7 +16,7 @@
  *
  * </p>
  */
-package com.quick.api;
+package com.seaboxdata.portal.mobile;
 
 import com.quick.core.base.SysApiController;
 import com.quick.core.base.model.DataStore;
@@ -42,7 +42,7 @@ import java.util.Map;
  */
 @Controller
 @Scope("prototype")
-@RequestMapping(value = "/api/home")
+@RequestMapping(value = "/mobile/home")
 public class HomeApiController extends SysApiController {
 
     @Resource(name = "homeService")

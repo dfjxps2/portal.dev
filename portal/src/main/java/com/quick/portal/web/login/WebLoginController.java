@@ -18,19 +18,15 @@
  */
 package com.quick.portal.web.login;
 
-import com.quick.core.base.AppResource;
-import com.quick.core.util.common.QCommon;
-import com.quick.core.util.common.QCookie;
-import com.quick.portal.security.authority.metric.PropertiesUtil;
-import com.quick.portal.sysUser.ISysUserService;
-import com.quick.portal.sysUser.SysUserDO;
-import com.quick.portal.userAccessLog.IUserAccessLogService;
-import com.quick.portal.userAccessLog.UserAccessLogConstants;
-import com.quick.portal.userRoleRela.IUserRoleRelaService;
-import org.pac4j.core.context.J2EContext;
-import org.pac4j.core.context.WebContext;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.pac4j.core.profile.CommonProfile;
-import org.pac4j.core.profile.ProfileManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
@@ -40,12 +36,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.quick.core.base.AppResource;
+import com.quick.core.util.common.QCommon;
+import com.quick.core.util.common.QCookie;
+import com.quick.portal.security.authority.metric.PropertiesUtil;
+import com.quick.portal.sysUser.ISysUserService;
+import com.quick.portal.sysUser.SysUserDO;
+import com.quick.portal.userAccessLog.IUserAccessLogService;
+import com.quick.portal.userAccessLog.UserAccessLogConstants;
+import com.quick.portal.userRoleRela.IUserRoleRelaService;
 
 /**
  * 身份验证

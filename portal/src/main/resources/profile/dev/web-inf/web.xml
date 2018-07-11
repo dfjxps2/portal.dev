@@ -120,10 +120,6 @@
     <servlet-mapping>
         <servlet-name>cxfService</servlet-name>
         <url-pattern>/*wsdl</url-pattern>
-<!--         <dispatcher>REQUEST</dispatcher>
-        <dispatcher>FORWARD</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
-        <dispatcher>ERROR</dispatcher> -->
     </servlet-mapping>
 
 

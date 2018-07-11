@@ -148,24 +148,18 @@
 
     <bean id="config" class="org.pac4j.core.config.Config">
         <constructor-arg name="clients" ref="clients"/>
-        <!--<constructor-arg name="authorizers">-->
-            <!--<map>-->
-                <!--<entry key="admin" value-ref="adminRoleAuthorizer"/>-->
-                <!--<entry key="custom" value-ref="customAuthorizer"/>-->
-            <!--</map>-->
-        <!--</constructor-arg>-->
     </bean>
 
 
     <!-- 拦截器 -->
     <mvc:interceptors>
-        <!--<mvc:interceptor>-->
-            <!--<mvc:mapping path="/form/*"/>-->
-            <!--<bean class="org.pac4j.springframework.web.SecurityInterceptor">-->
-                <!--<constructor-arg name="config" ref="config"/>-->
-                <!--<constructor-arg name="clients" value="FormClient"/>-->
-            <!--</bean>-->
-        <!--</mvc:interceptor>-->
+        <mvc:interceptor>
+           <mvc:mapping path="/mobile/*"/>
+           <bean class="org.pac4j.springframework.web.SecurityInterceptor">
+                <constructor-arg name="config" ref="config"/>
+                <constructor-arg name="clients" value="FormClient"/>
+           </bean>
+        </mvc:interceptor>
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
             <mvc:exclude-mapping path="/callback"/>

@@ -18,22 +18,22 @@
 package com.quick.core.base;
 
 
-import com.quick.core.base.model.DataStore;
-import com.quick.core.util.common.QCommon;
-import org.apache.log4j.Logger;
-import org.springframework.web.servlet.ModelAndView;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
+
+import org.springframework.web.servlet.ModelAndView;
+
+import com.quick.core.base.model.DataStore;
+import com.quick.core.util.common.QCommon;
 
 /**
  *
  * @author Administrator
  */
 public abstract class SysApiController extends SysBaseController<DataStore> {
-    private final Logger logger = Logger.getLogger(getClass());
     public final static int ROLEID_ADMIN = 1;
 
     /**

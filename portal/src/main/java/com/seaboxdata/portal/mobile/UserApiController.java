@@ -1,4 +1,4 @@
-package com.quick.api;
+package com.seaboxdata.portal.mobile;
 
 import com.quick.core.base.SysApiController;
 import com.quick.core.util.common.QCookie;
@@ -25,7 +25,7 @@ import java.util.Map;
  */
 @Controller
 @Scope("prototype")
-@RequestMapping(value = "/api/sysUser")
+@RequestMapping(value = "/mobile/sysUser")
 public class UserApiController extends SysApiController {
     @Resource(name = "sysUserService")
     private ISysUserService sysUserService;
