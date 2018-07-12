@@ -225,12 +225,6 @@ public class WebLoginController {
     }
     
     
-/*    private List<CommonProfile> getProfiles(HttpServletRequest request, HttpServletResponse response) {
-    	final WebContext context = new J2EContext(request, response);  
-        final ProfileManager manager = new ProfileManager(context);
-        return manager.getAll(true);
-    }
-*/
     public final static String ADMINISTRATOR_USER = "admin";
     public final static String ADMINISTRATOR_ROLE = "1";
     public final static String PORTAL_ADMINISTRATOR_ROLE = "100";
