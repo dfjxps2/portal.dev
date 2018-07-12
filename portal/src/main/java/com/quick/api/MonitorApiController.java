@@ -16,26 +16,9 @@
  *
  * </p>
  */
-package com.quick.portal.web.monitor;
+package com.quick.api;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import com.quick.portal.web.model.DataResult;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.quick.core.base.SysWebController;
-import com.quick.core.base.model.DataStore;
+import com.quick.core.base.SysApiController;
 import com.quick.core.util.common.JsonUtil;
 import com.quick.core.util.common.QCommon;
 import com.quick.core.util.type.TypeUtil;
@@ -45,6 +28,18 @@ import com.quick.portal.page.IPageService;
 import com.quick.portal.section.ISectionService;
 import com.quick.portal.security.authority.metric.MetricPrivilegeConstants;
 import com.quick.portal.security.authority.metric.PropertiesUtil;
+import com.quick.portal.web.model.DataResult;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 门户请求类
@@ -53,8 +48,8 @@ import com.quick.portal.security.authority.metric.PropertiesUtil;
  */
 @Controller
 @Scope("prototype")
-@RequestMapping(value = "/monitor")
-public class MonitorController extends SysWebController {
+@RequestMapping(value = "/api/monitor")
+public class MonitorApiController extends SysApiController {
 
     @Resource(name = "applicationService")
     private IApplicationService applicationService;
@@ -64,68 +59,6 @@ public class MonitorController extends SysWebController {
 
     @Resource(name = "sectionService")
     private ISectionService sectionService;
-
-    /**
-     * 管理驾驶仓(仪表盘)
-     * @param model
-     * @return
-     */
-    @RequestMapping
-    public String index(Model model) {
-        Integer app_id = rint("t", 0);
-        Integer page_id = rint("p", 0);
-        List<Map<String, Object>> plist = queryPage(app_id);
-        String time = rstr("time","0");
-        if(page_id == 0 && plist != null && plist.size() > 0){
-            page_id = (Integer)TypeUtil.parse(Integer.class, plist.get(0).get("page_id"));
-        }
-        ApplicationDO app = applicationService.selectObj(app_id.toString());
-        DataResult layout = getLayout(page_id,time);
-        
-        String url = PropertiesUtil.getPropery("index.service.url");
-    	String port = PropertiesUtil.getPropery("index.service.port");
-    	String serviceUrl = url.concat(MetricPrivilegeConstants.SERVICE_PORT).concat(port).concat(MetricPrivilegeConstants.GET_MEASURES_SERVICE_NAME);
-    	model.addAttribute("MEASURES_URL", serviceUrl);
-        model.addAttribute("app", app);
-        model.addAttribute("page_id", page_id);
-        model.addAttribute("pageJson", JsonUtil.serialize(plist));
-        model.addAttribute("layout", layout.getData());
-        model.addAttribute("time", time);
-        return view();
-    }
-    
-    /**
-     * 添加应用
-     * @param model
-     * @return
-     */
-    @RequestMapping
-    public String setting(Model model) {
-        Integer app_id = rint("t", 0);
-        Integer page_id = rint("p", 0);
-        String user_id = rstr("u", loginer.getUser_id().toString());
-        String time = rint("time",0).toString();
-        List<Map<String, Object>> plist = queryPage(app_id);
-        if(page_id == 0 && plist != null && plist.size() > 0){
-            page_id = (Integer)TypeUtil.parse(Integer.class, plist.get(0).get("page_id"));
-        }
-        ApplicationDO app = applicationService.selectObj(app_id.toString());
-
-        Object layoutJson = getPageJson(page_id);
-        Object metricJson = getMetricJson(page_id,user_id,time);
-       /* String urlShow = PropertiesUtil.getPropery("index.service.showURL");
-    	model.addAttribute("urlShow", urlShow);*/
-        String url = PropertiesUtil.getPropery("index.service.url");
-    	String port = PropertiesUtil.getPropery("index.service.port");
-    	String urlShow = url.concat(MetricPrivilegeConstants.SERVICE_PORT).concat(port).concat(MetricPrivilegeConstants.GET_MEASURES_SERVICE_NAME);
-    	model.addAttribute("urlShow", urlShow);
-    	model.addAttribute("page_id", page_id);
-        model.addAttribute("app", app);
-        model.addAttribute("page", JsonUtil.serialize(plist));
-        model.addAttribute("metric", metricJson);
-        model.addAttribute("layout", layoutJson);
-        return view();
-    }
     
     @RequestMapping(value = "/settingUser")
   	@ResponseBody
@@ -152,15 +85,6 @@ public class MonitorController extends SysWebController {
         map.put("layout", layoutJson);
         map.put("app", JsonUtil.serialize(app));
         return  new DataResult(map);
-    }
-    
-    @RequestMapping
-    public String show(ModelMap model) {
-    	String url = PropertiesUtil.getPropery("index.service.url");
-    	String port = PropertiesUtil.getPropery("index.service.port");
-    	String urlShow = url.concat(MetricPrivilegeConstants.SERVICE_PORT).concat(port).concat(MetricPrivilegeConstants.GET_MEASURES_SERVICE_NAME);
-    	model.addAttribute("urlShow", urlShow);
-        return view();
     }
     
     /**

@@ -16,18 +16,16 @@
  *
  * </p>
  */
-package com.quick.portal.web.home;
+package com.quick.api;
 
-import com.quick.core.base.SysWebController;
+import com.quick.core.base.SysApiController;
 import com.quick.core.base.model.DataStore;
 import com.quick.core.util.common.JsonUtil;
 import com.quick.core.util.common.QCommon;
-import com.quick.portal.menuPrivilege.IMenuPrivilegeService;
-import com.quick.portal.search.infomng.IInfoMngService;
+import com.quick.portal.web.home.IHomeService;
 import com.quick.portal.web.model.DataResult;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -38,71 +36,17 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 门户请求类
+ * 门户API接口类
  *
  * @author Administrator
  */
 @Controller
 @Scope("prototype")
-@RequestMapping(value = "/home")
-public class HomeController extends SysWebController {
+@RequestMapping(value = "/api/home")
+public class HomeApiController extends SysApiController {
 
     @Resource(name = "homeService")
     private IHomeService homeService;
-
-    @Resource(name = "menuPrivilegeService")
-    private IMenuPrivilegeService menuPrivilegeService;
-
-    @Resource(name = "infoMngService")
-    private IInfoMngService infoMngService;
-
-
-    /**
-     * 管理驾驶仓(仪表盘)
-     * @param model
-     * @return
-     */
-    @RequestMapping
-    public String main(Model model) {
-        //查找管理员按钮权限
-        int isadmin = 0;
-        Map<String, Object> parm = new HashMap<>();
-        parm.put("menu_name", "sys_admin");
-        parm.put("role_id", loginer.getRole_id());
-        parm.put("user_id", loginer.getUser_id());
-        Map<String, Object> map = menuPrivilegeService.selectMap(parm);
-        if(map != null && map.size() > 0){
-            isadmin = 1;
-        }
-        //获取用户应用列表,如果没有，从menu_privilege表读取对应角色默认应用列表
-        List<Map<String, Object>> apps = queryUserApp();
-        if(apps == null || apps.size() == 0){
-            //如果没有用户桌面，就添加一个
-            homeService.addDashboard(parm);
-            apps = queryUserApp();
-        }
-
-        String habitInfo = infoMngService.getPersonalHabitsInfo(loginer.getUser_id().toString());
-        model.addAttribute("txtdata", habitInfo);  //信息搜索
-
-        model.addAttribute("apps", JsonUtil.toJson(apps));
-        model.addAttribute("roleid", loginer.getRole_id()); //管理员ROLEID
-        model.addAttribute("isadmin", isadmin);
-
-        return view();
-    }
-
-    /**
-     * 添加应用
-     * @param model
-     * @return
-     */
-    @RequestMapping
-    public String addapp(Model model) {
-        Object apps = getApp();//查询所有应用
-        model.addAttribute("apps", JsonUtil.toJson(apps));
-        return view();
-    }
 
     /**
      * 删除应用
@@ -192,14 +136,14 @@ public class HomeController extends SysWebController {
      */
     @PostMapping
     @ResponseBody
-    public Object getApp(){
+    public DataResult getApp(){
         String uid = rstr("u", loginer.getUser_id().toString());
         String role_id = rstr("r", loginer.getRole_id().toString());
         urlMap.put("user_id", uid);
         urlMap.put("role_id", role_id);
         List<Map<String, Object>> list =   homeService.queryApp(urlMap);
         fixUrl(list);
-        return list;
+        return new DataResult(list);
     }
     /**
      * 查询所有应用2
@@ -207,7 +151,7 @@ public class HomeController extends SysWebController {
      */
     @PostMapping
     @ResponseBody
-    public Object getAllApp(){
+    public DataResult getAllApp(){
         String uid = rstr("u", loginer.getUser_id().toString());
         String role_id = rstr("r", loginer.getRole_id().toString());
         urlMap.put("user_id", uid);
@@ -215,7 +159,7 @@ public class HomeController extends SysWebController {
 
         List<Map<String, Object>> list =   homeService.queryUserAllApp(urlMap);
         fixUrl(list);
-        return list;
+        return new DataResult(list);
     }
     private void fixUrl(List<Map<String, Object>> list){
         //补充host
@@ -230,13 +174,5 @@ public class HomeController extends SysWebController {
             if(menu_icon_url.length()>0 && !menu_icon_url.startsWith("http:"))
                 m.put("menu_icon_url", getUrl() + "/" + menu_icon_url);
         }
-    }
-
-    @RequestMapping
-    public String listinfo(Model model) {
-        String ids = loginer.getUser_id().toString();
-        String habitInfo = infoMngService.getPersonalHabitsInfo(ids);
-        model.addAttribute("data", habitInfo);
-        return view();
     }
 }

@@ -35,7 +35,7 @@
     <!--查询-->
 
 	<select id="select" parameterType="map" resultType="map">
-		SELECT f.cre_time,f.details,f.version_num,f.is_active,j.page_name ,group_concat(distinct k.page_id)as page_id ,group_concat(distinct l.app_name) as app_name from (
+		SELECT f.cre_time,f.details,f.version_num,f.is_active,k.app_id,j.page_name ,group_concat(distinct k.page_id)as page_id ,group_concat(distinct l.app_name) as app_name from (
 		select
 	  sec_metric_id,
      C.cre_time

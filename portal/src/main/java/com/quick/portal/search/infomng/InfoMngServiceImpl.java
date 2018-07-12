@@ -218,11 +218,23 @@ public class InfoMngServiceImpl extends SysBaseService<InfoMngDO> implements IIn
 	 * (non-Javadoc)
 	 * @see com.quick.portal.search.infomng.IInfoMngService#getHotSearchInfo()
 	 */
-	
+	@Override
 	public List<Map<String, Object>> getHotSearchInfo() {
 		List<Map<String, Object>> dataList = dao.getHotSearchInfo();
 		return dataList;
 	}
+	
+	
+	@Override
+	public List<Map<String, Object>> getPerHabitsInfo(String userID) {
+		int uid = 0;
+		if(null != userID && !"".equals(userID)){
+			uid = Integer.valueOf(userID);
+		}
+		List<Map<String, Object>> personalDataList = dao.getPersonalHabitsInfo(uid);
+		return personalDataList;
+	}
+	
 
 
 	

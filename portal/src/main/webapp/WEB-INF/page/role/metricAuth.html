@@ -58,7 +58,7 @@
        
     });
 
-//  var mUrl ="http://10.1.3.193:8082/services/reMeaSys";
+  //var mUrl ="http://192.168.1.129:8082/services/reMeaSys";
     function getAllMetric(){
     	url = mUrl +"?T="+Math.random();
         $.ajax({
@@ -67,8 +67,8 @@
             async:false,
             dataType: "json",
             success: function(data){
-            	console.log(data);
-                var json =JSON.stringify(data);
+            	var str = data.data;
+                var json =JSON.stringify(str);
                 sendData(json);
             },            
             error:function(err){
