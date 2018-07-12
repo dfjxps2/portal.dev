@@ -53,6 +53,32 @@
         quick.idField = "${G.idField}";
         quick.listUrl = quick.serverUrl + "/list";
     }
+
+    function setFormData(obj) {
+        if (!obj) {
+            obj = request.getAll();
+        } else if (typeof (obj) == "string") {
+            obj = eval("(" + obj + ")");
+        }
+        for(var name in obj){
+            var value = obj[name]=== null ? '': obj[name];
+            var node = document.getElementsByName(name);
+            if(node == null || node.length ==0){
+                _selector = $("#"+name);
+            }else {
+                _selector = $(node)
+            }
+
+            if(_selector == null || _selector.length == 0){
+                continue;
+            }
+            var ty = _selector[0].nodeName.toLowerCase();
+            if(ty == "textarea"){
+                _selector.text(value);
+            }
+        }
+
+    }
     window.onload = function() {
         /*加载数据*/
         var mode = $.request.queryString["mode"];
@@ -70,7 +96,7 @@
                 	  layer.msg(data.msg,{icon:1,time: 2000,skin: 'layer-ext-moon'}); 
     				  return ;
                 }
-            	setForm(data);
+                setFormData(data);
                 if (mode == "browse") {
                     viewRead();
                 }

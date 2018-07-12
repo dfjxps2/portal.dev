@@ -238,7 +238,7 @@
         };
         layer.confirm(
             "确认将删除吗？<br/>删除后，所有关联数据将一并删除，且删除后不可恢复",
-            {icon: 3, title: "删除记录", skin: 'layer-ext-moon'},
+            {icon: 3, title: "删除记录",skin: 'layer-ext-moon'},
             function(){
                 $.ajax({
                     type: "post",
@@ -249,7 +249,7 @@
                     },
                     success: function (data) {
                         if (data == 1) {
-                            layer.msg('删除记录成功', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+                            layer.msg('删除记录成功', {icon: 1, time: 1000});
                             window.location.href=quick.serverUrl+"/list";
                         }else {
                             layer.msg('删除记录失败', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
