@@ -159,12 +159,6 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
     @RequestMapping(value = "/getIsAppMenuByID")
     @ResponseBody
     public void getIsAppMenuByID(HttpServletRequest req,HttpServletResponse res,int menuId) throws Exception {
-/*    	String userId = WebUtil.getCookieUsrid(request);
-        if("".equals(userId) || null == userId){
-        	String casLogoutUrl = getCasLogoutUrl(request);
-        		toAlert(res,req);
-        		return;
-        	}*/
     	String	flag = sysMenuService.getIsAppMenuByID(menuId);
         res.getWriter().write(flag);
     }
