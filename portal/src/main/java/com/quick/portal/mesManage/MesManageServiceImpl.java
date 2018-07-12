@@ -9,6 +9,7 @@ import com.quick.core.util.common.QRequest;
 import com.quick.portal.search.infomng.SolrInfoConstants;
 import com.quick.portal.search.infomng.SolrUtils;
 import com.quick.portal.security.authority.metric.PropertiesUtil;
+import org.apache.http.util.TextUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -615,15 +616,18 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
             msgapprstate="审核通过";
         }
         String msgappr = "审核状态："+ msgapprstate;
-        String secondrow = "       "+currenttime+"         "+msgsource+"           "+msgclass+"         "+msgappr;
+        String secondrow = "\t"+currenttime+"         "+msgsource+"           "+msgclass+"         "+msgappr;
         StringBuffer buffer = new StringBuffer();
-        buffer.append(mesManageDO.getMsg_title());
+        buffer.append("\t原标题: "+ removeSpace(mesManageDO.getMsg_title().toString()));
+        buffer.append(System.getProperty("line.separator"));
         buffer.append(System.getProperty("line.separator"));
         buffer.append(secondrow);
         buffer.append(System.getProperty("line.separator"));
-        buffer.append("摘要： "+mesManageDO.getMsg_digest());
         buffer.append(System.getProperty("line.separator"));
-        buffer.append(mesManageDO.getMsgcontent());
+        buffer.append("\t摘要: "+removeSpace(mesManageDO.getMsg_digest().toString()));
+        buffer.append(System.getProperty("line.separator"));
+        buffer.append(System.getProperty("line.separator"));
+        buffer.append("\t"+ removeSpace(mesManageDO.getMsgcontent().toString()));
         fos = new FileOutputStream(file);
         fos.write(buffer.toString().getBytes());
         if(fos != null){
@@ -631,6 +635,28 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
         }
         fos.flush();
     }
+
+    //去除字符串开头的空格
+    public  String removeSpace(String str){
+        if(TextUtils.isEmpty(str)){
+            return  str;
+        }
+        char[] value = str.toCharArray();
+        int start = 0 , last = 0+value.length-1;
+        int end = last;
+        while((start <= end) && (value[start] <= ' ')){
+            start ++;
+        }
+        if(start==0 ){
+            return  str;
+        }
+        if(start >= end){
+            return " ";
+        }
+
+        return  str.substring(start);
+    }
+
 
     //将附件和信息各内容合并生成新的内容
     public  String  combinFile(File fa,MesManageDO mesManageDO) throws IOException {
