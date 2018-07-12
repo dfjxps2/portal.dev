@@ -35,9 +35,8 @@ public class UserApiController extends SysApiController {
     //App修改密码
     @RequestMapping(value = "/changPwApp")
     @ResponseBody
-    public DataResult changeAppPassword(Model model, String new_password, HttpServletResponse res)  {
+    public DataResult changeAppPassword(Integer user_id, String new_password, HttpServletResponse res)  {
         SysUserDO sysUserDO = new SysUserDO();
-        Integer user_id = Integer.parseInt(QCookie.getValue(request,"ids")) ;
         sysUserDO.setUser_password(new_password);
         sysUserDO.setUser_id(user_id);
         iSysUserDao.updatePassword(sysUserDO);
@@ -51,11 +50,10 @@ public class UserApiController extends SysApiController {
     //App密码修改--旧密码校验
     @RequestMapping(value="checkAppOldPw")
     @ResponseBody
-    public DataResult checkAppOldPw(HttpServletResponse res,String user_old_pw) throws IOException {
+    public DataResult checkAppOldPw(HttpServletResponse res,Integer user_id, String user_old_pw) throws IOException {
         Map<String,Object> map = new HashMap<>();
         DataResult result = new DataResult();
         map.put("user_password",user_old_pw);
-        Integer user_id = Integer.parseInt(QCookie.getValue(request,"ids")) ;
         map.put("user_id",user_id);
         List<Map<String,Object>> list = sysUserService.select(map);
         if(list.size()!=0){
