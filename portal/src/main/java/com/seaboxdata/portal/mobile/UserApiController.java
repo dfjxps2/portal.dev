@@ -31,7 +31,7 @@ public class UserApiController extends SysApiController {
     private ISysUserService sysUserService;
 
     @Autowired
-    private ISysUserDao iSysUserDao;
+    private ISysUserDao<SysUserDO> iSysUserDao;
     //App修改密码
     @RequestMapping(value = "/changPwApp")
     @ResponseBody
