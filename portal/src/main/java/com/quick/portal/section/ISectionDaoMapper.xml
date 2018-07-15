@@ -155,21 +155,32 @@
 		<!-- select * from sec_metric_config
 		where sec_metric_id in (select sec_metric_id from page_section p left join section_metric m on p.section_id=m.section_id and page_id=#{page_id})
 		AND user_id = 0 -->
-		select * from sec_metric_config 
-WHERE sec_metric_id NOT in(
-select sec_metric_id from sec_metric_config
+		select * from sec_metric_config WHERE sec_metric_id in
+
+(select sec_metric_id from sec_metric_config
 		where sec_metric_id in (select sec_metric_id from page_section p 
-left join section_metric m on p.section_id=m.section_id and page_id=#{page_id})
-AND user_id = #{user_id}
-AND cre_time = (
+left join section_metric m on p.section_id=m.section_id where page_id=#{page_id})
+AND user_id = '0')
+<if test="cre_time != null and cre_time != '' and cre_time != 'null'"><![CDATA[ 
+AND sec_metric_id NOT in
+(select sec_metric_id from sec_metric_config
+		where sec_metric_id in (select sec_metric_id from page_section p left join section_metric m on p.section_id=m.section_id and page_id=#{page_id})
+		AND user_id = #{user_id}
+		AND cre_time =(
+		select MAX(cre_time) from sec_metric_config
+		where sec_metric_id in (select sec_metric_id from page_section p left join section_metric m on p.section_id=m.section_id and page_id=#{page_id})
+		AND user_id = #{user_id}
+		AND #{cre_time} >=cre_time))
+		union ALL
+		select * from sec_metric_config
+		where sec_metric_id in (select sec_metric_id from page_section p left join section_metric m on p.section_id=m.section_id and page_id=#{page_id})
+		AND user_id = #{user_id}
+		AND cre_time =(
 		select MAX(cre_time) from sec_metric_config
 		where sec_metric_id in (select sec_metric_id from page_section p left join section_metric m on p.section_id=m.section_id and page_id=#{page_id})
 		AND user_id = #{user_id}
 		AND #{cre_time} >=cre_time)
-GROUP BY sec_metric_id)
-AND user_id = 0
-AND sec_metric_id in (select sec_metric_id from page_section p 
-left join section_metric m on p.section_id=m.section_id and page_id=#{page_id})
+		 ]]></if>
 	</select>
 	<select id="selectPageMetricUserConfig" parameterType="map" resultType="map">
 	select * from sec_metric_config

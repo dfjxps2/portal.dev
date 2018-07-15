@@ -34,12 +34,14 @@
                    { field: 'user_id', title: '用户id',type:"hidden" , width: 60   },
 */
 				   { field: 'version_num', title: '版本号', width: 30   },
+				   { field: 'app_id', title: '应用id',type:"hidden" , width: 20   },
 
                    { field: 'cre_time', title: '配置修改时间', width: 50  },
+
 				   { field: 'app_name', title: '应用名称',  width: 50   },
 
 				   { field: 'page_name', title: '页面名称',  width: 50   },
-				   { field: 'details', title: '指标配置详情' ,width: 70},
+				   { field: 'details', title: '已修改指标' ,width: 70},
 
 				   { field: 'is_active', title: '生效状态', width: 25 ,formatter:function(value,row,index){
 					   var state = '<span style="color:#CFCFCF">未生效</span>';
@@ -51,14 +53,16 @@
                    { field: 'param_value', title: '参数值', width: 60  },
 				   { field: 'valid_status', title: '版本状态', width: 40  },*/
 
-				   { field: 'cz', align:'center', title: '操作',width: 50, formatter:function(value,row,index){
+				   { field: 'cz', align:'center', title: '操作',width: 80, formatter:function(value,row,index){
 					   var state= "<button type='button' class='btn_el' onclick='use(\""+row.config_id+"\",\""+row.user_id+"\",\""+row.cre_time+"\",\""+row.is_active+"\")'>启用</button>| "
-					          +"<button type='button' class='btn_el' onclick='edit(\""+row.cre_id+"\",\""+row.version_num+"\",\""+row.cre_time+"\")'>编辑版本号</button> "
+					          +"<button type='button' class='btn_el' onclick='edit(\""+row.cre_id+"\",\""+row.version_num+"\",\""+row.cre_time+"\")'>编辑版本号</button>| "
+									   +"<button type='button' class='btn_el' onclick='preview(\""+row.app_id+"\",\""+row.cre_time+"\")'>预览</button> ";
 
 							  // +"<button type='button' class='btn_el' onclick='del(\""+row.config_id+"\",\""+row.config_id+"\")'>删除</button>";
 					   ;
 					   if(row.is_active==1){
-						   state="<button type='button' class='btn_el' onclick='edit(\""+row.cre_id+"\",\""+row.version_num+"\",\""+row.cre_time+"\")'>编辑版本号</button> ";
+						   state="<button type='button' class='btn_el' onclick='edit(\""+row.cre_id+"\",\""+row.version_num+"\",\""+row.cre_time+"\")'>编辑版本号</button>| "
+						   +"<button type='button' class='btn_el' onclick='preview(\""+row.app_id+"\",\""+row.cre_time+"\")'>预览</button> ";
 
 					   }
 					   return state;
@@ -105,6 +109,10 @@
 		   }
        );
     }
+	   //版本预览
+	   function preview(id,time){
+		   window.open('${G.host}/monitor/index?t='+id+'&time='+time);
+	   }
 	   //删除记录
 	   function del(node,name){
 		   layer.confirm(
@@ -229,7 +237,7 @@
 		  <div class="col-sm-12">
 			  <div class="ibox ibox-x">
 				  <div class="ibox-content ibox-content-x">
-					  <h1 align="center">指标配置管理[电脑]</h1>
+					  <h1 align="center">配置版本管理[电脑]</h1>
 					  <div class="panel-mar">
 							  <form id="formSearch" class="form-inline">
                                   <!--<div class="form-group" style="padding: 0px;width:180px;">

@@ -19,11 +19,12 @@
            	url:_metUrl,
             type:'get',
             success:function(res){
-            	if (res.length>0) {
-                	addInfo(res); 
+            	if (res.code>0) {
+                	addInfo(res.data); 
 				}else{
-					alert('查询结果异常！');
-				}
+				      layer.alert('error:'+ls.msg);
+				      return false;
+				  }
             }
         });
     }
@@ -99,7 +100,7 @@
  }
  var chartList = [{name:"柱状图",value:"bar"},{name:"折线图",value:"line"},{name:"饼图",value:"pie"},
                   {name:"环形图",value:"ringPie"},{name:"玫瑰图",value:"rose"},{name:"环形玫瑰图",value:"ringRose"},
-                  {name:"表格",value:"table"},{name:"仪表盘",value:"gauge"}];
+                  {name:"表格",value:"table"},{name:"仪表盘",value:"gauge"}];//,{name:"地图",value:"map"}];
  function addChar(id,i,data,state,chart,dime){
 	 var disabled = '';
 	 if (chart==1||(chart=='table'&&dime == 'all')) {

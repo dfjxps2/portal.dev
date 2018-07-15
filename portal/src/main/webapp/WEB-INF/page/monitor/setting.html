@@ -292,25 +292,31 @@ font-size: 14px;
               url:'${G.host}/monitor/settingUser',
               data:{app_id:_aid,page_id:id},
               type:'get',
-              success:function(res){
-            	  pageId = $('#pages').val();
-            	 var cos = addPageId(getNo(JSON.parse(res.metric),JSON.parse(res.layout)));
-            	 copyData(cos);
-            	 if (ifPageMetric()) {
-            		 cos =getPageConfig(co);
-				}else {
-	            	 for (var i = 0; i < cos.length; i++) {
-	 					co.push(cos[i]);
-	 				}
-				}
-            	  url = res.urlShow;
-            	  setName(id,JSON.parse(res.page))
-            	 var lay =addPageId(setLayout(JSON.parse(res.layout)));
-            	  addLayout(lay);
-            	  initLayout(lay);
-      	          initChart(cos,lay);
-      	          addTable(cos);
-              }
+              success:function(r){
+            	  if (r.code >0) {
+            		  res = r.data;
+                	  pageId = $('#pages').val();
+                	 var cos = addPageId(getNo(JSON.parse(res.metric),JSON.parse(res.layout)));
+                	 copyData(cos);
+                	 if (ifPageMetric()) {
+                		 cos =getPageConfig(co);
+    				}else {
+    	            	 for (var i = 0; i < cos.length; i++) {
+    	 					co.push(cos[i]);
+    	 				}
+    				}
+                	  url = res.urlShow;
+                	  setName(id,JSON.parse(res.page))
+                	 var lay =addPageId(setLayout(JSON.parse(res.layout)));
+                	  addLayout(lay);
+                	  initLayout(lay);
+          	          initChart(cos,lay);
+          	          addTable(cos);
+				}else{
+				      layer.alert('error:'+r.msg);
+				      return false;
+				  }
+    	  }
           });
     }
     
@@ -380,10 +386,13 @@ font-size: 14px;
 				                 data:{metric_json:JSON.stringify(allMetric)},
 				                 type:'get',
 				                 success:function(res){
-				                	 if (res.code == '1') {
+				                	 if (res.code >0) {
 				                		 layer.msg('保存成功！', {icon:1,time: 1000,skin: 'layer-ext-moon'});
 				                		 cancel();
-				    				}
+				    				}else{
+				    				      layer.alert('error:'+ls.msg);
+				    				      return false;
+				    				  }
 				                 }
 				             });
 				   }
@@ -508,12 +517,17 @@ font-size: 14px;
 	            data:{meaId:metricList,to:'2018',from:'1900'},
 	            type:'get',
 	            success:function(res){
-	            	tData = res.measure;
-	            	$('#statedate').val('199001');
-	            	$('#enddate').val('201712');
-	            	
-	                add(res.measure,name,isShow(metricData),layoutList,'1990','2017','');
-	                hideMask();
+	            	if (res.code>0) {
+	            		tData = res.data.measure;
+	            		$('#statedate').val('199001');
+		            	$('#enddate').val('201712');
+		            	
+		                add(res.data.measure,name,isShow(metricData),layoutList,'1990','2017','');
+		                hideMask();
+					}else{
+					      layer.alert('error:'+ls.msg);
+					      return false;
+					  }
 	            },error:function(jqr){
 	                hideMask();
 	                alert("网络出错");

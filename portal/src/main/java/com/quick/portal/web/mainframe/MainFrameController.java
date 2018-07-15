@@ -17,7 +17,11 @@
  */
 package com.quick.portal.web.mainframe;
 
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -32,10 +36,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.quick.core.base.ISysBaseService;
 import com.quick.core.base.SysBaseController;
 import com.quick.core.util.common.JsonUtil;
+import com.quick.core.util.common.QCommon;
 import com.quick.core.util.web.WebUtil;
+import com.quick.portal.security.authority.metric.PropertiesUtil;
 import com.quick.portal.sysMenu.ISysMenuService;
+import com.quick.portal.sysUser.ISysUserService;
 import com.quick.portal.userAccessLog.IUserAccessLogService;
 import com.quick.portal.userAccessLog.UserAccessLogConstants;
+import com.quick.portal.web.login.WebLoginUitls;
+import com.quick.portal.web.login.WebLoginUser;
 
 /**
  * 查询菜单权限
@@ -62,18 +71,25 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
     @Resource(name = "sysMenuService")
     private ISysMenuService sysMenuService;
     
+    @Resource(name = "sysUserService")
+    private ISysUserService sysUserService;
+    
     
     /*
      * 查询菜单权限
      * 
      */
     @RequestMapping(value = "/mainframe" )
-    public String goMainFrame(HttpServletRequest request, Model model) throws Exception {
+    public String goMainFrame(HttpServletRequest request, HttpServletResponse response,Model model) throws Exception {
     	String jsonStr = "false";
         //根据cookie拿到当前用户的id
         String userId = WebUtil.getCookieUsrid(request);
         if("".equals(userId) || null == userId){
-        	throw new Exception("当前用户为空，查询权限菜单异常");
+        	WebLoginUser loginer = loadCASUserInfo(request,response);
+        	userId = loginer.getUser_id().toString();
+        	/*String casLogoutUrl = getCasLogoutUrl(request);
+            String retUrl ="redirect:".concat(casLogoutUrl);
+            return retUrl;*/
         }
         try{
         	 //权限菜单
@@ -141,8 +157,66 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
     //APP:1;MENU:0
     @RequestMapping(value = "/getIsAppMenuByID")
     @ResponseBody
-    public void getIsAppMenuByID(HttpServletResponse res,int menuId) throws Exception {
+    public void getIsAppMenuByID(HttpServletRequest req,HttpServletResponse res,int menuId) throws Exception {
+/*    	String userId = WebUtil.getCookieUsrid(request);
+        if("".equals(userId) || null == userId){
+        	String casLogoutUrl = getCasLogoutUrl(request);
+        		toAlert(res,req);
+        		return;
+        	}*/
     	String	flag = sysMenuService.getIsAppMenuByID(menuId);
         res.getWriter().write(flag);
     }
+    
+    
+    public WebLoginUser loadCASUserInfo(HttpServletRequest request,HttpServletResponse response){
+		if (request.getRemoteUser() != null) {
+			Map<String, Object> parm = new HashMap<>();
+			parm.put("user_name", request.getRemoteUser());
+			Map<String, Object> u = sysUserService.selectMap(parm);
+			WebLoginUser user = new WebLoginUser();
+			user.setRole_id( Integer.valueOf(WebLoginUitls.getVal(u, "role_id")) );
+			user.setUser_real_name(WebLoginUitls.getVal(u, "user_real_name"));
+			user.setUser_id(Integer.valueOf(WebLoginUitls.getVal(u, "user_id")));
+			user.setUser_global_id(WebLoginUitls.getVal(u, "user_global_id"));
+			user.saveSession(request, response);//保存至本地
+			return user;
+		}
+		return null;
+	}
+    
+    private String getCasLogoutUrl(HttpServletRequest req){
+   	 req.getSession().invalidate();
+        String casUrl = PropertiesUtil.getPropery("cas.serverUrl");
+        String cUrl = req.getScheme() + "://" + req.getServerName()
+                + ":" + req.getServerPort() + req.getContextPath()
+                + "/"; 
+        String casLogoutUrl =casUrl.concat("/logout?service=").concat(QCommon.urlEncode(cUrl));
+        return casLogoutUrl;
+   }
+    
+  //前台弹出alert框
+  	public void toAlert(HttpServletResponse response,HttpServletRequest request){
+  		String casLogoutUrl = getCasLogoutUrl(request); 
+  	    try {
+  	         response.setContentType("text/html;charset=UTF-8");
+  	         response.setCharacterEncoding("UTF-8");
+  	            
+  	         OutputStreamWriter out = new OutputStreamWriter(response.getOutputStream());   
+  	         
+  	         String msg="由于您长时间没有操作，session已过期，请重新登录！";
+  	         msg=new String(msg.getBytes("UTF-8"));
+  	         
+  	         out.write("<meta http-equiv='Content-Type' content='text/html';charset='UTF-8'>");
+  	         out.write("<script>");
+  	         out.write("alert('"+msg+"');");
+  	         out.write("top.location.href = '"+casLogoutUrl+"'; ");
+  	         out.write("</script>");
+  	         out.flush();
+  	         out.close();
+
+  	    } catch (IOException e) {
+  	        e.printStackTrace();
+  	    }
+  	}
 }
