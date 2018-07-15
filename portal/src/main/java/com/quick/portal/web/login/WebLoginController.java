@@ -72,10 +72,10 @@ public class WebLoginController {
    	 String gid = QCookie.getValue(request, "sbd.gid");
    	 WebLoginUser loginer = null;
    	 String userGlobalID = null;
-   		 if((null == uid || "".equals(uid))&&(null == gid || "".equals(gid))){
+   		 if((null == uid || "".equals(uid))||(null == gid || "".equals(gid))){
        		  loginer = loadCASUserInfo(request,response);
        		  if(null == loginer ){
-       			  return "redirect:"+LOGIN; 
+       			  return gotoLoinUrl(request);
        		  }else{
        			  rid =  String.valueOf(loginer.getRole_id());
            		  userGlobalID = loginer.getUser_global_id();
@@ -211,6 +211,15 @@ public class WebLoginController {
      	   flag = APP_MENU_FLAG;
         }
     	return flag;
+    }
+
+    private String gotoLoinUrl(HttpServletRequest request){
+        String casUrl = PropertiesUtil.getPropery("cas.serverUrl");
+        String url = request.getScheme() + "://" + request.getServerName()
+                + ":" + request.getServerPort() + request.getContextPath()
+                + "/";
+        String retUrl ="redirect:".concat(casUrl).concat("/logout?service=").concat(QCommon.urlEncode(url));
+        return retUrl;
     }
   
     
