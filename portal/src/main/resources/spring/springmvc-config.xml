@@ -94,6 +94,13 @@
         <property name="authorizationGenerator" ref="dbAuthGenerator"/>
     </bean>
 
+    <bean id="myCasRestBasicAuthClient" class="com.seaboxdata.portal.auth.MyCasRestBasicAuthClient">
+        <constructor-arg name="headerName" value="Authorization"/>
+        <constructor-arg name="prefixHeader" value="Basic "/>
+        <constructor-arg name="configuration" ref="casConfiguration"/>
+        <property name="authorizationGenerator" ref="dbAuthGenerator"/>
+    </bean>
+
     <bean id="casClient" class="org.pac4j.cas.client.CasClient">
         <constructor-arg name="configuration" ref="casConfiguration"/>
         <property name="authorizationGenerator" ref="dbAuthGenerator"/>
@@ -127,6 +134,7 @@
                 <ref bean="casClient"/>
                 <ref bean="parameterClient"/>
                 <ref bean="casRestBasicAuthClient"/>
+                <ref bean="myCasRestBasicAuthClient"/>
             </list>
         </constructor-arg>
     </bean>
@@ -173,7 +181,7 @@
             <mvc:mapping path="/mobile/login"/>
             <bean class="org.pac4j.springframework.web.SecurityInterceptor">
                 <constructor-arg name="config" ref="config"/>
-                <constructor-arg name="clients" value="CasRestBasicAuthClient"/>
+                <constructor-arg name="clients" value="MyCasRestBasicAuthClient"/>
                 <property name="securityLogic" ref="mySecurityLogic"/>
             </bean>
         </mvc:interceptor>

@@ -1,0 +1,12 @@
+.classpath
+.project
+.settings/
+target/
+bin/
+.idea
+*.iml
+portal/src/main/resources/properties/config.properties
+portal/src/main/resources/properties/jdbc.properties
+portal/src/main/resources/profile/dev/properties/config.properties
+portal/src/main/resources/profile/dev/properties/jdbc.properties
+
