@@ -75,7 +75,7 @@ public class WebLoginController {
         String gid = QCookie.getValue(request, "sbd.gid");
         WebLoginUser loginer = null;
         String userGlobalID = null;
-        if ((null == uid || "".equals(uid)) && (null == gid || "".equals(gid))) {
+        if ((null == rid || "".equals(rid)) && (null == gid || "".equals(gid))) {
             loginer = loadCASUserInfo(request, response);
             if (null == loginer) {
                 return "redirect:" + LOGIN;
