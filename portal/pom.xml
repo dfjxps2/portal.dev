@@ -408,6 +408,12 @@
             <id>dev</id>
             <properties>
                 <profiles.active>dev</profiles.active>
+                <portal.server.ip>${env.PORTAL_SERVER_IP}</portal.server.ip>
+                <index.service.ip>${env.INDEX_SERVICE_IP}</index.service.ip>
+                <solr.service.ip>${env.SOLR_SERVICE_IP}</solr.service.ip>
+                <portal.file.dir>${env.PORTAL_FILE_DIR}</portal.file.dir>
+                <cas.server.ip>${env.CAS_SERVER_IP}</cas.server.ip>
+                <portal.db.password>${env.PORTAL_DB_PASSWORD}</portal.db.password>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
@@ -418,6 +424,12 @@
             <id>test</id>
             <properties>
                 <profiles.active>test</profiles.active>
+                <portal.server.ip>10.1.3.193</portal.server.ip>
+                <index.service.ip>10.1.3.193</index.service.ip>
+                <solr.service.ip>10.1.3.193</solr.service.ip>
+                <portal.file.dir>/home/portal/files</portal.file.dir>
+                <cas.server.ip>10.1.3.193</cas.server.ip>
+                <portal.db.password>root</portal.db.password>
             </properties>
         </profile>
         <!--演示环境-->
@@ -425,6 +437,12 @@
             <id>demo</id>
             <properties>
                 <profiles.active>demo</profiles.active>
+                <portal.server.ip>10.1.3.75</portal.server.ip>
+                <index.service.ip>10.1.3.75</index.service.ip>
+                <solr.service.ip>10.1.3.75</solr.service.ip>
+                <portal.file.dir>/home/portal/files</portal.file.dir>
+                <cas.server.ip>10.1.3.62</cas.server.ip>
+                <portal.db.password>123456</portal.db.password>
             </properties>
         </profile>
         <!--泰豪演示环境-->
@@ -432,6 +450,12 @@
             <id>tellhow</id>
             <properties>
                 <profiles.active>tellhow</profiles.active>
+                <portal.server.ip>10.10.10.42</portal.server.ip>
+                <index.service.ip>10.10.10.42</index.service.ip>
+                <solr.service.ip>10.10.10.42</solr.service.ip>
+                <portal.file.dir>/home/portal/files</portal.file.dir>
+                <cas.server.ip>10.10.10.42</cas.server.ip>
+                <portal.db.password>123456</portal.db.password>
             </properties>
         </profile>
         <!--生产环境-->
@@ -439,12 +463,17 @@
             <id>pro</id>
             <properties>
                 <profiles.active>pro</profiles.active>
+                <portal.server.ip>10.10.10.42</portal.server.ip>
+                <index.service.ip>10.10.10.42</index.service.ip>
+                <solr.service.ip>10.10.10.42</solr.service.ip>
+                <portal.file.dir>/home/portal/files</portal.file.dir>
+                <cas.server.ip>10.10.10.42</cas.server.ip>
+                <portal.db.password>123456</portal.db.password>
             </properties>
         </profile>
     </profiles>
     <!--不同环境切换配置参数1 End -->
     <build>
-       <!--  <finalName>portal_${profiles.active}</finalName> -->
          <finalName>portal</finalName>
         <plugins>
             <plugin>
@@ -462,20 +491,10 @@
                     </compilerArguments>
                 </configuration>
             </plugin>
-            <!--不同环境切换配置参数2 Start -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <configuration>
-                    <webResources>
-                        <resource>
-                            <directory>src/main/resources/profile/${profiles.active}/web-inf</directory>
-                            <targetPath>WEB-INF</targetPath>
-                        </resource>
-                    </webResources>
-                </configuration>
             </plugin>
-            <!--不同环境切换配置参数2 End -->
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
@@ -486,8 +505,6 @@
                     </webApp>
                 </configuration>
             </plugin>
-
-
         </plugins>
         <resources>
             <resource>
@@ -498,6 +515,7 @@
             </resource>
             <resource>
                 <directory>src/main/resources</directory>
+                <filtering>true</filtering>
                 <includes>
                     <include>**/**.*</include>
                     <include>**.*</include>
@@ -506,19 +524,6 @@
                     <exclude>profile/**/*</exclude>
                 </excludes>
             </resource>
-            <!--不同环境切换配置参数3 Start -->
-            <resource>
-                <directory>src/main/resources/profile/${profiles.active}</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>**/**.*</include>
-                    <include>**.*</include>
-                </includes>
-                <excludes>
-                    <exclude>web-inf/**.*</exclude>
-                </excludes>
-            </resource>
-            <!--不同环境切换配置参数3 End -->
         </resources>
     </build>
 
