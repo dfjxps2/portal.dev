@@ -38,6 +38,7 @@ import com.quick.core.base.ISysBaseService;
 import com.quick.core.base.SysBaseController;
 import com.quick.core.util.common.JsonUtil;
 import com.quick.core.util.common.QCommon;
+import com.quick.core.util.common.QCookie;
 import com.quick.core.util.web.WebUtil;
 import com.quick.portal.security.authority.metric.PropertiesUtil;
 import com.quick.portal.sysMenu.ISysMenuService;
@@ -84,13 +85,11 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
     public String goMainFrame(HttpServletRequest request, HttpServletResponse response,Model model) throws Exception {
     	String jsonStr = "false";
         //根据cookie拿到当前用户的id
-        String userId = WebUtil.getCookieUsrid(request);
+        String userId = QCookie.getValue(request, "ids");
+        String rid = QCookie.getValue(request, "sbd.role");
         if("".equals(userId) || null == userId){
         	WebLoginUser loginer = loadCASUserInfo(request,response);
         	userId = loginer.getUser_id().toString();
-        	/*String casLogoutUrl = getCasLogoutUrl(request);
-            String retUrl ="redirect:".concat(casLogoutUrl);
-            return retUrl;*/
         }
         try{
         	 //权限菜单
@@ -100,7 +99,6 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
                   jsonStr = JsonUtil.toJson(menuTree.getChildren());
             }  
             model.addAttribute("data", jsonStr);
-            System.out.println("jsonStr="+jsonStr);
         } catch (Exception e){
         	throw new Exception("查询权限菜单异常,权限菜单数据:jsonStr="+jsonStr +"ERROR:="+e.getMessage());
         }
@@ -175,7 +173,7 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
 			parm.put("user_name", account);
 			Map<String, Object> u = sysUserService.selectMap(parm);
 			WebLoginUser user = new WebLoginUser();
-			user.setRole_id( Integer.valueOf(WebLoginUitls.getVal(u, "role_id")) );
+			user.setRole_id(Integer.valueOf(WebLoginUitls.getVal(u, "role_id")) );
 			user.setUser_real_name(WebLoginUitls.getVal(u, "user_real_name"));
 			user.setUser_id(Integer.valueOf(WebLoginUitls.getVal(u, "user_id")));
 			user.setUser_global_id(WebLoginUitls.getVal(u, "user_global_id"));
