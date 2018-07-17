@@ -6,14 +6,8 @@
 
 package com.quick.core.util.filter;
 
-import com.quick.core.base.AppResource;
-import com.quick.core.util.common.QCommon;
-import com.quick.core.util.common.QCookie;
-import com.quick.portal.security.authority.metric.PropertiesUtil;
-
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -21,42 +15,42 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
+
+import com.quick.core.util.common.QCommon;
+import com.quick.core.util.common.QCookie;
+import com.quick.portal.security.authority.metric.PropertiesUtil;
 
 /**
  *
  * @author Administrator
  * loginCasFilter
  */
-//public class LoginFilter implements Filter {
 public class LoginFilter extends HttpServlet implements Filter {
 
     private FilterConfig filterConfig;
-    private final static String filterParm = ";";
+    private final static String filterParm_prefix_portal = "/portal/";
+    private final static String filterParm_prefix_callback = "/portal/callback";
+    private final static String CAS_PREFIXURL = "sso.cas.server.prefixUrl";
     
     public void doFilter(ServletRequest request, ServletResponse response,
                     FilterChain chain) throws IOException, ServletException {
-    	 HttpServletResponseWrapper wrapper = new HttpServletResponseWrapper((HttpServletResponse) response);
-  
-       HttpServletRequest req = (HttpServletRequest) request;
+    	HttpServletResponseWrapper wrapper = new HttpServletResponseWrapper((HttpServletResponse) response);
+        HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
-        String uid = QCookie.getValue(req, "ids");
+        String rid = QCookie.getValue(req, "sbd.role");
         String url = req.getRequestURI();
-        if(uid == null || "".equals(uid)){
-        	int index= url.lastIndexOf("/");//获取url字符串中“.”的最后一个索引
-        	String method = url.substring(index+1);//返回a
-        	if(method.startsWith(filterParm)||"".equals(method)){
+        if(rid == null || "".equals(rid)){
+        	if(url.startsWith(filterParm_prefix_portal) && filterParm_prefix_portal.equals(url)){
+        		chain.doFilter(req, res);
+        	}else if(url.startsWith(filterParm_prefix_callback) && filterParm_prefix_callback.equals(url)){
         		chain.doFilter(req, res);
         	}else{
         		String casLogoutUrl = getCasLogoutUrl(req);
-//           	  	wrapper.sendRedirect(casLogoutUrl);
-//        		req.getRequestDispatcher(casLogoutUrl).forward(request, response);
-        		toAlert(res,req);    
-           	  	return ;
+           	  	wrapper.sendRedirect(casLogoutUrl);
         	}
         }else{
         	chain.doFilter(req, res); 
@@ -65,7 +59,7 @@ public class LoginFilter extends HttpServlet implements Filter {
     
     private String getCasLogoutUrl(HttpServletRequest req){
     	 req.getSession().invalidate();
-         String casUrl = PropertiesUtil.getPropery("cas.serverUrl");
+         String casUrl = PropertiesUtil.getPropery(CAS_PREFIXURL);
          String cUrl = req.getScheme() + "://" + req.getServerName()
                  + ":" + req.getServerPort() + req.getContextPath()
                  + "/"; 
