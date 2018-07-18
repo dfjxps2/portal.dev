@@ -55,7 +55,7 @@ import com.quick.portal.userRoleRela.IUserRoleRelaService;
 @Scope("prototype")
 public class WebLoginController {
 
-    protected static final String LOGIN = "/home/login";
+    protected static final String LOGOUT_URL = "/home/logout";
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Resource(name = "sysUserService")
@@ -69,21 +69,22 @@ public class WebLoginController {
     //登录页
     @RequestMapping(value = "/")
     public String index(HttpServletRequest request, HttpServletResponse response) {
-        String rid = QCookie.getValue(request, "sbd.role");
-        String uid = QCookie.getValue(request, "ids");
-        //判断公服用户直接访问home/login时，跳转APP_Menu
-        String gid = QCookie.getValue(request, "sbd.gid");
-        WebLoginUser loginer = null;
-        String userGlobalID = null;
-        if ((null == rid || "".equals(rid)) && (null == gid || "".equals(gid))) {
+        WebLoginUser loginer = new WebLoginUser().loadSession(request, response);
+        String userGlobalID = null, rid = null;
+        if (loginer.getRole_id() == 0) {
             loginer = loadCASUserInfo(request, response);
             if (null == loginer) {
-                return "redirect:" + LOGIN;
+                logger.error("Can't get user information from user profile and user database.");
+                return "redirect:" + LOGOUT_URL;
             } else {
                 rid = String.valueOf(loginer.getRole_id());
                 userGlobalID = loginer.getUser_global_id();
             }
         }
+
+        loginer.setRequestSerial(1);
+        loginer.saveSession(request, response);
+
         //平台用户:1:app;2:sys;公服用户:1:app
         String flag = getSysUrlByUserGlobalID(userGlobalID, rid);
         if (SYS_MENU_FLAG.equals(flag) || SYS_MENU_FLAG.equals(flag)) {
@@ -147,6 +148,8 @@ public class WebLoginController {
 
     @RequestMapping(value = "/home/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
+        logger.info("user logout.");
+
         //记录日志
         String ids = QCookie.getValue(request, "ids");
         if (ids != null && ids.length() > 0)
@@ -157,6 +160,7 @@ public class WebLoginController {
         QCookie.remove(response, request, "sbd.role");
         QCookie.remove(response, request, "sbd.gid");
         QCookie.remove(response, request, "sbd.tk");
+        QCookie.remove(response, request, "request.serial");
  //       QCookie.remove(response, request, "JSESSIONID");
         request.getSession().invalidate();
         
@@ -209,7 +213,7 @@ public class WebLoginController {
      */
 
     public String getSysUrlByUserGlobalID(String userGlobalID, String rid) {
-        String flag = APP_MENU_FLAG;
+        String flag = null;
         //平台用户
         if (null == userGlobalID || "".equals(userGlobalID)) {
             if (ADMINISTRATOR_ROLE.equals(rid) || PORTAL_ADMINISTRATOR_ROLE.equals(rid)) {

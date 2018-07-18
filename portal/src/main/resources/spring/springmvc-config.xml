@@ -185,7 +185,12 @@
                 <property name="securityLogic" ref="mySecurityLogic"/>
             </bean>
         </mvc:interceptor>
-        <bean class="com.quick.core.base.spring.filter.ControllerBaseInterceptor" />
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/callback"/>
+            <mvc:exclude-mapping path="/mobile/**"/>
+            <bean class="com.quick.core.util.filter.ControllerBaseInterceptor" />
+        </mvc:interceptor>
     </mvc:interceptors>
     
 
