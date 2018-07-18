@@ -250,7 +250,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         }
         a.put("tag_text",tag_text);
         if(msgcontent!= null && !msgcontent.equals("undefined") && !"null".equals(msgcontent)){
-            msgtext = LoadContentByPath(msgcontent,4);
+            msgtext = LoadContentByPath(msgcontent,6);
             a.put("msgcontent",msgtext);
         }
         return a;
@@ -279,7 +279,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
 		if (msgcontent != null && !msgcontent.equals("undefined")
 				&& !"null".equals(msgcontent)) {
 			try {
-				msgtext = LoadContentByPath(msgcontent, 3);
+				msgtext = LoadContentByPath(msgcontent, 0);
 			} catch (Exception e) {
 				msgMap = new HashMap();
 			    msg = e.getLocalizedMessage();
@@ -288,37 +288,37 @@ public class MesManageController extends SysBaseController<MesManageDO> {
 				return msgMap;
 			}
 		}
-		String pubtime = a.get("pub_time").toString();
-		String title = a.get("msg_title").toString();
-		String msgsource = a.get("msg_src_name").toString();
-		String msgclass = "密级：" + a.get("msg_class_name").toString();
-		String msgapprstate = null;
-		String appstate = null;
-		if (a.get("appr_state").toString() != null
-				&& !a.get("appr_state").toString().equals("")) {
-			appstate = a.get("appr_state").toString();
-			switch (appstate) {
-			case "1":
-				msgapprstate = "人工审核通过";
-				break;
-			case "2":
-				msgapprstate = "人工审核拒绝";
-				break;
-			case "3":
-				msgapprstate = "审核通过";
-				break;
-			case "4":
-				msgapprstate = "审核拒绝";
-				break;
-			}
-		} else {
-			msgapprstate = "审核通过";
-		}
-		String msgappr = "审核状态：" + msgapprstate;
-		String secondrow = pubtime + "     " + msgsource + "           "
-				+ msgclass + "       " + msgappr;
-		String msgdetail = title + "\r\n" + secondrow + "\r\n" + msgtext;
-		a.put("msg_content", msgdetail);
+//		String pubtime = a.get("pub_time").toString();
+//		String title = a.get("msg_title").toString();
+//		String msgsource = a.get("msg_src_name").toString();
+//		String msgclass = "密级：" + a.get("msg_class_name").toString();
+//		String msgapprstate = null;
+//		String appstate = null;
+//		if (a.get("appr_state").toString() != null
+//				&& !a.get("appr_state").toString().equals("")) {
+//			appstate = a.get("appr_state").toString();
+//			switch (appstate) {
+//			case "1":
+//				msgapprstate = "人工审核通过";
+//				break;
+//			case "2":
+//				msgapprstate = "人工审核拒绝";
+//				break;
+//			case "3":
+//				msgapprstate = "审核通过";
+//				break;
+//			case "4":
+//				msgapprstate = "审核拒绝";
+//				break;
+//			}
+//		} else {
+//			msgapprstate = "审核通过";
+//		}
+//		String msgappr = "审核状态：" + msgapprstate;
+//		String secondrow = pubtime + "     " + msgsource + "           "
+//				+ msgclass + "       " + msgappr;
+//		String msgdetail = title + "\r\n" + secondrow + "\r\n" + msgtext;
+		a.put("msg_content", msgtext);
 		a.put(FLAG_KEY, SUCCESS_FLAG_VAL);
 		return a;
     }

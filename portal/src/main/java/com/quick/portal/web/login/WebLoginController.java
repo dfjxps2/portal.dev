@@ -87,12 +87,13 @@ public class WebLoginController {
 
         //平台用户:1:app;2:sys;公服用户:1:app
         String flag = getSysUrlByUserGlobalID(userGlobalID, rid);
-        if (SYS_MENU_FLAG.equals(flag) || SYS_MENU_FLAG.equals(flag)) {
+        if (SYS_MENU_FLAG.equals(flag)) {
             return "redirect:/mainframe";
         } else {
             return "redirect:/home/main";
         }
     }
+
 
     @RequestMapping(value = "/home/login")
     public String login(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
@@ -227,6 +228,7 @@ public class WebLoginController {
         }
         return flag;
     }
+
     
     
     public final static String ADMINISTRATOR_USER = "admin";
