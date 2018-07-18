@@ -9,6 +9,8 @@ package com.quick.core.util.filter;
 import com.quick.core.base.SysBaseController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.quick.portal.web.login.WebLoginUser;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -25,6 +27,8 @@ public class ControllerBaseInterceptor extends HandlerInterceptorAdapter {
         if (handler instanceof HandlerMethod) {
             Object object = ((HandlerMethod) handler).getBean();
             if(object instanceof SysBaseController) {
+                if (!checkValidity(request, response))
+                    return false;
                 ((SysBaseController) object).init(request, response, handler);
             }
         }
@@ -42,5 +46,15 @@ public class ControllerBaseInterceptor extends HandlerInterceptorAdapter {
             }
         }
         super.postHandle(request, response, handler, modelAndView);
-    }    
+    }
+
+    private boolean checkValidity(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        WebLoginUser webLoginUser = new WebLoginUser().loadSession(request, response);
+
+        if (webLoginUser.getRequestSerial() == 0){
+            response.sendRedirect(request.getContextPath());
+            return false;
+        }
+        return true;
+    }
 }

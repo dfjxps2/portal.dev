@@ -125,10 +125,10 @@
 		<if test="end_time != null and end_time != '' and end_time != 'null'"><![CDATA[
 	       and date(log_time) <= #{end_time}
 	    ]]></if>
-        GROUP BY user_id) a
+        GROUP BY user_id ORDER BY count DESC limit 10) a
         LEFT JOIN sys_user b
         on a.user_id =b.user_id
-        ORDER BY a.count  limit 0,10;
+        ORDER BY a.count ;
 	</select>
 	<!-- 查询最多访问标签 -->
 	<select id="selectTopTag" parameterType="map" resultType="map">
