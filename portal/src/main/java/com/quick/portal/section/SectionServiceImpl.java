@@ -110,15 +110,16 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
     	map1.put("page_id", page_id);
     	map1.put("user_id", user_id);
     	List<Map<String,Object>> mconfigls = null;
- 		if (li.size()>0) {
+    	if (li.size()>0) {
  			if(cre_time .equals("0") && cre_time != null){
  				cre_time = li.get(0).get("cre_time").toString();
  			}
  			map1.put("cre_time", cre_time);
-		}else{
-			map1.put("cre_time", "");
-		}
- 		mconfigls = dao.selectPageMetricConfig(map1);
+ 			 mconfigls = mergeData(map1,"show");
+		}else {
+            map1.put("cre_time", "");
+            mconfigls = dao.selectPageMetricConfig(map1);
+        }
         //mergeData(mconfigls,page_id,user_id);
         if(ls == null || ls.size() == 0)
             return "[]";
@@ -177,15 +178,16 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
      	map1.put("user_id", user_id);
      	map1.put("page_id", page_id);
      	List<Map<String,Object>> mconfiglst = null;
-     		if (li.size()>0) {
-     			if(cre_time .equals("0") && cre_time != null){
-         		cre_time = li.get(0).get("cre_time").toString();
-     			}
-     			map1.put("cre_time", cre_time);
-			}else{
-				map1.put("cre_time", "");
-			}
-     		 mconfiglst = dao.selectPageMetricConfig(map1);
+     	if (li.size()>0) {
+ 			if(cre_time .equals("0") && cre_time != null){
+     		cre_time = li.get(0).get("cre_time").toString();
+ 			}
+ 			map1.put("cre_time", cre_time);
+ 			 mconfiglst = mergeData(map1,"set");
+		}else {
+            map1.put("cre_time", "");
+            mconfiglst = dao.selectPageMetricConfig(map1);
+        }
         if(metriclst == null || metriclst.size() == 0 || mconfiglst == null || mconfiglst.size() == 0)
             return "[]";
         String json = "";
