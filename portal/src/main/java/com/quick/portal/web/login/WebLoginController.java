@@ -84,7 +84,7 @@ public class WebLoginController {
 
         loginer.setRequestSerial(1);
         loginer.saveSession(request, response);
-        userAccessLogService.saveLog(request, UserAccessLogConstants.SYS_LOG_TYPE_ID, UserAccessLogConstants.LOGIN_USER_OP_TYPE, 1, loginer.getUser_real_name() + "登录成功", loginer.getUser_id().toString(), loginer.getUser_real_name());
+        userAccessLogService.saveLog(request, UserAccessLogConstants.SYS_LOG_TYPE_ID, UserAccessLogConstants.LOGIN_USER_OP_TYPE, 1, loginer.getUser_real_name() + "登录成功", loginer.getUser_id().toString(), loginer.getUser_name());
 
         //平台用户:1:app;2:sys;公服用户:1:app
         String flag = getSysUrlByUserGlobalID(userGlobalID, rid);
@@ -132,7 +132,7 @@ public class WebLoginController {
 
             List<Map<String, Object>> roles = userRoleRelaService.select(parm);
             saveSession(loginUser, roles, request, response);
-            userAccessLogService.saveLog(request, UserAccessLogConstants.SYS_LOG_TYPE_ID, UserAccessLogConstants.LOGIN_USER_OP_TYPE, 1, loginUser.getUser_real_name() + "登录成功", loginUser.getUser_id().toString(), username);
+            userAccessLogService.saveLog(request, UserAccessLogConstants.SYS_LOG_TYPE_ID, UserAccessLogConstants.LOGIN_USER_OP_TYPE, 1, loginUser.getUser_real_name() + "登录成功", loginUser.getUser_id().toString(), loginUser.getUser_name());
             String rid = null;
             if (null != loginUser.getRole_id() && !"".equals(loginUser.getRole_id())) {
                 rid = String.valueOf(loginUser.getRole_id());
@@ -161,6 +161,7 @@ public class WebLoginController {
         QCookie.remove(response, request, "sbd.user");
         QCookie.remove(response, request, "sbd.role");
         QCookie.remove(response, request, "sbd.gid");
+        QCookie.remove(response, request, "sbd.uid");
         QCookie.remove(response, request, "sbd.tk");
         QCookie.remove(response, request, "request.serial");
         request.getSession().invalidate();
@@ -181,6 +182,7 @@ public class WebLoginController {
         QCookie.set(response, "sbd.user", loginUser.getUser_name(), 4 * 3600);
         QCookie.set(response, "sbd.role", ids, 4 * 3600);
         QCookie.set(response, "sbd.gid", loginUser.getUser_global_id(), 4 * 3600);
+        QCookie.set(response, "sbd.uid", loginUser.getUser_name(), 4 * 3600);
     }
 
     public WebLoginUser loadCASUserInfo(HttpServletRequest request, HttpServletResponse response) {
@@ -198,6 +200,7 @@ public class WebLoginController {
             user.setUser_real_name(WebLoginUitls.getVal(u, "user_real_name"));
             user.setUser_id(Integer.valueOf(WebLoginUitls.getVal(u, "user_id")));
             user.setUser_global_id(WebLoginUitls.getVal(u, "user_global_id"));
+            user.setUser_name(WebLoginUitls.getVal(u, "user_name"));
             user.saveSession(request, response);//保存至本地
             return user;
         }

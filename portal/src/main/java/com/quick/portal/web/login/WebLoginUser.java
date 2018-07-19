@@ -48,6 +48,7 @@ public class WebLoginUser extends SysUserDO {
             String ids = QCookie.getValue(request, "ids");
             String uname = QCookie.getValue(request, "sbd.user");
             String gid = QCookie.getValue(request, "sbd.gid");
+            String uid = QCookie.getValue(request, "sbd.uid");
 
             if (!QCommon.isNullOrEmpty(uname))
                 uname = URLDecoder.decode(uname, "utf-8");
@@ -60,7 +61,7 @@ public class WebLoginUser extends SysUserDO {
             this.setUser_real_name(uname);
             this.setUser_id(Integer.valueOf(ids));
             this.setUser_global_id(gid);
-
+            this.setUser_name(uid);
             String requestSerial = QCookie.getValue(request, "request.serial");
             this.setRequestSerial(requestSerial == null ? 0 : Integer.valueOf(requestSerial));
 
@@ -85,6 +86,7 @@ public class WebLoginUser extends SysUserDO {
             	userNm = URLEncoder.encode(this.getUser_real_name(), "utf-8");
             }
             QCookie.set(response, "sbd.user", userNm, 4 * 3600);
+            QCookie.set(response, "sbd.uid", this.getUser_name(), 4 * 3600);
             QCookie.set(response, "sbd.role", this.getRole_id().toString(), 4 * 3600);
             QCookie.set(response, "sbd.tk", this.createToken(request), 4 * 3600); //验证参数是否被修改
             QCookie.set(response, "sbd.gid", this.getUser_global_id(), 4 * 3600);
