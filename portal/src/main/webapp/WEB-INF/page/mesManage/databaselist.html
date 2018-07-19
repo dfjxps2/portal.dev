@@ -78,7 +78,7 @@
                 {field:'serialNum',title:'资料编号',width:'10%',align:'center'},
                 {field:'msg_title',title:'资料标题',width:'20%',align:'center',
                     formatter:function (value,row) {
-                        var temp ='<a href='+quick.serverUrl+'/downloadFile?msg_content='+row.msg_content+'>'+row.msg_title+'</a>';
+                        var temp ='<a href='+quick.serverUrl+'/downloadFile?msg_content='+encodeURI(row.msg_content)+'>'+row.msg_title+'</a>';
                         return temp;
                     }},
                 {field:'pub_time',title:'入库日期',width:'25%',align:'center'},

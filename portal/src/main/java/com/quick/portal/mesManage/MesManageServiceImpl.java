@@ -309,17 +309,23 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
     @Transactional
     public void addDatum(MesManageDO mesManageDO, String keywords, HttpServletRequest request, HttpServletResponse response, boolean MERGE) throws IOException, TikaException, SAXException {
         Integer msgId =null;
+        request.setCharacterEncoding("UTF-8");
         String tyname = "material";
             MultipartHttpServletRequest re = (MultipartHttpServletRequest) request;
             Map<String, Object> map = new HashMap<>();
             MultipartFile file = re.getFile("file");
             String path = createPath(request,tyname) ;
             String name = file.getOriginalFilename();
+            String name1 = new String(file.getOriginalFilename().getBytes("ISO8859-1"),"UTF-8");
+        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%path%%%%%%%%%%%%%%%%%%%"+path);
+            System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%name%%%%%%%%%%%%%%%%%%%"+name);
+        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%name1%%%%%%%%%%%%%%%%%%%"+name1);
             String title = null;
             if (name != null && !name.equals("")) {
                 title = name.split("\\.")[0];
             }
             String content = path+name;
+        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%content%%%%%%%%%%%%%%%%%%%%%"+content);
             File uploadFile = createFile(path, name);
             file.transferTo(uploadFile);
             String datacontent = parseFile(uploadFile);
