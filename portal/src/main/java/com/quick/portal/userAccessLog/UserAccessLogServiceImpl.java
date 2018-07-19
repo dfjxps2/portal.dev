@@ -30,6 +30,8 @@ import com.quick.core.util.common.CommonUtils;
 import com.quick.core.util.common.DateTime;
 import com.quick.core.util.common.QCookie;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 import java.util.Map;
 
@@ -119,6 +121,12 @@ public class UserAccessLogServiceImpl extends SysBaseService<UserAccessLogDO> im
 		 String uname = QCookie.getValue(request, "sbd.user");
 		 if(null == uname  || "".equals(uname)){
 			 uname = userNM;
+
+			 if(null == uname || "".equals(uname)){
+				 uname = "";
+			 }
+		 }else{
+			 uname = uname ;
 		 }
 		 UserAccessLogDO entity = new UserAccessLogDO();
 		 entity.setLog_time(DateTime.Now().getTime());
