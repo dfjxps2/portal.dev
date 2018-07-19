@@ -323,7 +323,8 @@ public abstract class SysBaseController<T> {
 		//获取本机用户信息，如无法获取，从cas反查
 		if(loginer == null){
 			loginer = new WebLoginUser().loadSession(req, res);
-			if(loginer.getUser_id() == null || loginer.getUser_id() == 0){
+			if(loginer.getUser_id() == null || loginer.getUser_id() == 0 
+					|| loginer.getRole_id() == null || loginer.getRole_id() == 0){
 				loginer = loadCASUserInfo(req,res);
 			}
 		}
@@ -345,10 +346,10 @@ public abstract class SysBaseController<T> {
 			parm.put("user_name", account);
 			Map<String, Object> u = loginerService.selectMap(parm);
 			WebLoginUser user = new WebLoginUser();
-			user.setRole_id( Integer.valueOf(val(u, "role_id")) );
+			user.setRole_id(Integer.valueOf(val(u, "role_id")) );
 			user.setUser_real_name(val(u, "user_real_name"));
 			user.setUser_id(Integer.valueOf(val(u, "user_id")));
-
+			user.setUser_global_id(val(u, "user_global_id"));
 			user.saveSession(request, response);//保存至本地
 			return user;
 		}
