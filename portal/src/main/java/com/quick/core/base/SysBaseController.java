@@ -350,6 +350,7 @@ public abstract class SysBaseController<T> {
 			user.setUser_real_name(val(u, "user_real_name"));
 			user.setUser_id(Integer.valueOf(val(u, "user_id")));
 			user.setUser_global_id(val(u, "user_global_id"));
+			user.setUser_name(WebLoginUitls.getVal(u, "user_name"));
 			user.saveSession(request, response);//保存至本地
 			return user;
 		}
