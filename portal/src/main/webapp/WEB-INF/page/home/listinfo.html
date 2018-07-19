@@ -201,7 +201,7 @@ a, img {
 			   toolbar:"#formSearch",
 			   columns: [
 					{ field: 'title',  title: '信息名称' ,width: '40%', formatter:function(value,row,index){
-						   if (row.portal_doc_class=="1") {
+						   if (row.portal_doc_class=="1" || row.portal_doc_class=="6") {
 							   return "<a href='javascript:void(0)' >"+row.title+"</a>";
 						   }else{
 							   return "<a href='javascript:void(0)' onclick=\'getInfoClick(\""+row.id+"\")\'>"+row.title+"</a>"; 
