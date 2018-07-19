@@ -32,6 +32,7 @@ import com.quick.core.util.common.QCookie;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
@@ -117,16 +118,15 @@ public class UserAccessLogServiceImpl extends SysBaseService<UserAccessLogDO> im
 		 }else{
 			 uid = Integer.parseInt(userID);
 		 }
-		 //用户名
-		 String uname = QCookie.getValue(request, "sbd.user");
+		 //用户名sbd.uid
+		 String uname = QCookie.getValue(request, "sbd.uid");
 		 if(null == uname  || "".equals(uname)){
 			 uname = userNM;
-
 			 if(null == uname || "".equals(uname)){
 				 uname = "";
 			 }
 		 }else{
-			 uname = uname ;
+			 uname = uname;
 		 }
 		 UserAccessLogDO entity = new UserAccessLogDO();
 		 entity.setLog_time(DateTime.Now().getTime());
