@@ -1311,9 +1311,9 @@ public class MesManageController extends SysBaseController<MesManageDO> {
        String name = path.substring(indexname+1);
         InputStream in = new FileInputStream(path);
         response.setContentLength(in.available());
-        response.setCharacterEncoding("UTF-8");
+       // response.setCharacterEncoding("UTF-8");
         response.setContentType("application/force-download");
-        response.addHeader("Content-Disposition","attachment;filename="+name);
+        response.addHeader("Content-Disposition","attachment;filename="+new String(name.getBytes(),"ISO8859-1"));
         OutputStream out = response.getOutputStream();
         byte[] b = new byte[1024];
         int len = 0;
