@@ -78,7 +78,13 @@ public class WebLoginUser extends SysUserDO {
         //过期时间为4小时
         try {
             QCookie.set(response, "ids", this.getUser_id().toString()); //浏览器关闭就过期
-            QCookie.set(response, "sbd.user", URLEncoder.encode(this.getUser_real_name(), "utf-8"), 4 * 3600);
+            String userNm = "";
+            if(null ==this.getUser_real_name() || this.getUser_real_name().equals("")){
+            	userNm = userNm;
+            }else{
+            	userNm = URLEncoder.encode(this.getUser_real_name(), "utf-8");
+            }
+            QCookie.set(response, "sbd.user", userNm, 4 * 3600);
             QCookie.set(response, "sbd.role", this.getRole_id().toString(), 4 * 3600);
             QCookie.set(response, "sbd.tk", this.createToken(request), 4 * 3600); //验证参数是否被修改
             QCookie.set(response, "sbd.gid", this.getUser_global_id(), 4 * 3600);

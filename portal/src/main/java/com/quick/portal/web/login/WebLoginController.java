@@ -84,6 +84,7 @@ public class WebLoginController {
 
         loginer.setRequestSerial(1);
         loginer.saveSession(request, response);
+        userAccessLogService.saveLog(request, UserAccessLogConstants.SYS_LOG_TYPE_ID, UserAccessLogConstants.LOGIN_USER_OP_TYPE, 1, loginer.getUser_real_name() + "登录成功", loginer.getUser_id().toString(), loginer.getUser_real_name());
 
         //平台用户:1:app;2:sys;公服用户:1:app
         String flag = getSysUrlByUserGlobalID(userGlobalID, rid);
@@ -162,10 +163,7 @@ public class WebLoginController {
         QCookie.remove(response, request, "sbd.gid");
         QCookie.remove(response, request, "sbd.tk");
         QCookie.remove(response, request, "request.serial");
- //       QCookie.remove(response, request, "JSESSIONID");
         request.getSession().invalidate();
-        
-
         String casUrl = PropertiesUtil.getPropery("sso.cas.server.prefixUrl");
         String url = request.getScheme() + "://" + request.getServerName()
                 + ":" + request.getServerPort() + request.getContextPath()
