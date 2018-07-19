@@ -64,7 +64,7 @@
                             </div>
                             <div class="form-group" style="padding-left:32px;width: 100%;padding-top:10px;">
                                 <label class="col-xs-3 lable_top" style="width:100px;padding-right:2px;padding-top:15px;"><span class="span_require">*</span>关键词</label>
-                                <div class="col-xs-9" style="padding-left:27px;width:90%;padding-top:10px;"><input style="width:90%;left: auto;" placeholder="输入的关键词以空格隔开，如：参数1 参数2....." class="form-control required" id="keywords" name="keywords"  /></div>
+                                <div class="col-xs-9" style="padding-left:27px;width:90%;padding-top:10px;"><input style="width:90%;left: auto;" maxlength="15" placeholder="输入的关键词以空格隔开，如：参数1 参数2....." class="form-control required" id="keywords" name="keywords"  /></div>
                             </div>
                             <!--<div class="form-group" style="padding-left:46px; width:60%;height:80px;" >-->
                                 <li class="li_file" style="width: 100%;"  >
@@ -115,7 +115,7 @@
         $('#pagename').html("新增资料");
         jQuery.validator.addMethod("keyword",function (value,element) {
             var key = /^[a-zA-Z0-9\s?\u4e00-\u9fa5]*$/;
-            return this.optional(element) || (key.test(value));
+            return this.optional(element) || (key.test(value) );
         },"请按照指定格式输入关键词！");
         $("#pubform").validate({
             errorPlacement: function(error, element) {
