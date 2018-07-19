@@ -87,7 +87,7 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
         //根据cookie拿到当前用户的id
         String userId = QCookie.getValue(request, "ids");
         String rid = QCookie.getValue(request, "sbd.role");
-        if("".equals(userId) || null == userId){
+        if(PORTAL_ZORE_VAL.equals(userId) || null == userId || PORTAL_ZORE_VAL.equals(rid) || null == rid){
         	WebLoginUser loginer = loadCASUserInfo(request,response);
         	userId = loginer.getUser_id().toString();
         }
@@ -217,4 +217,6 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
   	        e.printStackTrace();
   	    }
   	}
+  	
+	public static final String PORTAL_ZORE_VAL = "0";
 }
