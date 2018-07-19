@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
+import javax.servlet.http.HttpSession;
 
 import com.quick.core.util.common.QCommon;
 import com.quick.core.util.common.QCookie;
@@ -35,15 +36,19 @@ public class LoginFilter extends HttpServlet implements Filter {
     private final static String filterParm_prefix_portal = "/portal/";
     private final static String filterParm_prefix_callback = "/portal/callback";
     private final static String CAS_PREFIXURL = "sso.cas.server.prefixUrl";
+    private final static String COOKIE_ROLE_ID = "sbd.role";
+    private final static String SESSION_PAC4JUSERPROFILES = "pac4jUserProfiles";
     
     public void doFilter(ServletRequest request, ServletResponse response,
                     FilterChain chain) throws IOException, ServletException {
     	HttpServletResponseWrapper wrapper = new HttpServletResponseWrapper((HttpServletResponse) response);
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
-        String rid = QCookie.getValue(req, "sbd.role");
+        String rid = QCookie.getValue(req, COOKIE_ROLE_ID);
+        HttpSession session = req.getSession();
+        Object obj = session.getAttribute(SESSION_PAC4JUSERPROFILES);
         String url = req.getRequestURI();
-        if(rid == null || "".equals(rid)){
+        if(rid == null || "0".equals(rid)){
         	if(url.startsWith(filterParm_prefix_portal) && filterParm_prefix_portal.equals(url)){
         		chain.doFilter(req, res);
         	}else if(url.startsWith(filterParm_prefix_callback) && filterParm_prefix_callback.equals(url)){
@@ -53,7 +58,13 @@ public class LoginFilter extends HttpServlet implements Filter {
            	  	wrapper.sendRedirect(casLogoutUrl);
         	}
         }else{
-        	chain.doFilter(req, res); 
+        	if(null == obj){
+            	String casLogoutUrl = getCasLogoutUrl(req);
+           	  	wrapper.sendRedirect(casLogoutUrl);
+            }else{
+            	chain.doFilter(req, res);
+            }
+        	 
         }
     }
     
