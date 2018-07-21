@@ -71,18 +71,18 @@ public class WebLoginController {
     //登录页
     @RequestMapping(value = "/")
     public String index(HttpServletRequest request, HttpServletResponse response) {
-        WebLoginUser loginer = new WebLoginUser().loadSession(request, response);
         String userGlobalID = null, rid = null;
+        WebLoginUser loginer = new WebLoginUser().loadSession(request, response);
         if (loginer.getRole_id() == 0) {
             loginer = loadCASUserInfo(request, response);
             if (null == loginer) {
                 logger.error("Can't get user information from user profile and user database.");
                 return "redirect:" + LOGOUT_URL;
-            } else {
-                rid = String.valueOf(loginer.getRole_id());
-                userGlobalID = loginer.getUser_global_id();
             }
         }
+
+        rid = String.valueOf(loginer.getRole_id());
+        userGlobalID = loginer.getUser_global_id();
 
         loginer.setRequestSerial(1);
         loginer.saveSession(request, response);
@@ -171,13 +171,9 @@ public class WebLoginController {
         String url = request.getScheme() + "://" + request.getServerName()
                 + ":" + request.getServerPort() + request.getContextPath()
                 + "/";
-        String retUrl = casUrl.concat("/logout?service=").concat(QCommon.urlEncode(url));//"redirect:".concat
-        if(isAjax(request)){
-            writeJs("{\"code\":-99,\"msg\":\"会话已超时，请重新登录！\", \"url\":\""+retUrl+"\"}",response);
-        }else{
-            writeMsg("会话已超时，请重新登录！", url, retUrl, request, response);
-        }
-        return null;
+        String retUrl = casUrl.concat("logout?service=").concat(QCommon.urlEncode(url));//"redirect:".concat
+
+        return "redirect:" + retUrl;
     }
 
     public void saveSession(SysUserDO loginUser, List<Map<String, Object>> roles, HttpServletRequest request, HttpServletResponse response) {
@@ -237,35 +233,6 @@ public class WebLoginController {
         return flag;
     }
 
-    private boolean isAjax(HttpServletRequest request){
-        //如果是ajax请求响应头会有x-requested-with
-        if (request.getHeader("x-requested-with") != null && request.getHeader("x-requested-with").equalsIgnoreCase("XMLHttpRequest")){
-            return true;
-        }
-        return false;
-    }
-    public void writeJs(String msg,HttpServletResponse response) {
-        response.setContentType("application/json; charset=utf-8"); // 输出JS文件
-        try {
-            OutputStream out = response.getOutputStream();
-            out.write(msg.getBytes("UTF-8"));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-    public void writeMsg(String msg,String host, String url, HttpServletRequest request, HttpServletResponse response){
-        response.setHeader("content-type", "text/html;charset=UTF-8");
-        String outString =" <script src=\""+host+"/res/plugin/jQuery/jquery-1.11.3.min.js\" type=\"text/javascript\"></script>";
-        outString+="<link href=\""+host+"/res/layer/skin/default/layer.css\" rel=\"stylesheet\">";
-        outString+="<script src=\""+host+"/res/layer/layer.js\"></script>";
-        outString+= "<script language=javascript>layer.alert('"+msg+"',function(){(window.parent||window).location='"
-                + url + "';});</script>";
-        try {
-            response.getWriter().print(outString);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
     
     public final static String ADMINISTRATOR_USER = "admin";
     public final static String ADMINISTRATOR_ROLE = "1";
