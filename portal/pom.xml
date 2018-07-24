@@ -518,6 +518,17 @@
                     </webApp>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <!-- 远程tomcat下manager路径 -->
+                    <url>http://localhost:8080/manager/text</url>
+                    <server>tomcat8</server>
+                </configuration>
+            </plugin>
+
         </plugins>
         <resources>
             <resource>
