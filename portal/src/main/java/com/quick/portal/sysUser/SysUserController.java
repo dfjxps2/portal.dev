@@ -260,7 +260,7 @@ public class SysUserController extends SysBaseController<SysUserDO> {
     @RequestMapping(value = "/getRole")
     public void roleView(HttpServletResponse res) {
         HashMap<String,Object> map = new HashMap<>();
-        List<Map<String,Object>> userRole = iUserRoleDao.select(map);
+        List<Map<String,Object>> userRole = iSysUserDao.selectRole(map);
         String json = getRoleJsonString(userRole);
         try {
             res.getWriter().write(json);

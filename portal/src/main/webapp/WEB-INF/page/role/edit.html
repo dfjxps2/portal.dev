@@ -205,27 +205,16 @@
 		/*保存前*/
 		function submitBefore(){
 			var flag=false;
-		//	var name=$("#role_name").val();
-			 //alert(1);
 			$.ajax({
 				type: "post",
 				url:  '${G.host}/role/getObjByName?T='+Math.random(),
-				//dataType: "json",
 				async: false,
 				data:{role_name:$("#role_name").val()},
 				success: function(data){
-					//alert(data);
-					for(var p in data ){
-						if(data[p]==name&&data !="" && data!=null){
-							flag= false; //后台没有重复数据  可以执行更新
-							return flag;
-						}
-					}
 					console.log(data);
-					if ( data =="" || data==null) {
-						flag= false; //后台没有重复数据  可以执行更新
-					}else{
-						flag= true;  //后台有重复数据 不可以执行更新
+					if(data !="" && data!=null ){
+					    flag = false;
+					    return flag;
 					}
 				}
 			});
