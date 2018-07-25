@@ -132,7 +132,11 @@
 		LIMIT 0,1
 	</select>
 
-
+   <!--新增用户的角色下拉框选项-->
+	<select id="selectRole" parameterType="map" resultType="map">
+		SELECT   ur.role_id,ur.role_name  FROM  user_role ur
+		WHERE  ur.role_state = 1
+	</select>
 
 	<!--初始化和查询-->
 	<select id="getAllUser"  parameterType="map" resultType="map">
