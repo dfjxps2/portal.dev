@@ -2,7 +2,10 @@ package com.quick.portal.web.login;
 
 import com.quick.core.util.common.QCommon;
 import com.quick.core.util.common.QCookie;
+import com.quick.portal.security.authority.metric.PropertiesUtil;
 import com.quick.portal.sysUser.SysUserDO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,6 +18,8 @@ import java.util.HashMap;
  * Created by cc on 2018/4/14.
  */
 public class WebLoginUser extends SysUserDO {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     private static final String KEY = "seabox.portal";
 
@@ -42,7 +47,6 @@ public class WebLoginUser extends SysUserDO {
      * 保存系统登录信息至Cookies中
      */
     public WebLoginUser loadSession(HttpServletRequest request, HttpServletResponse response) {
-        //过期时间为4小时
         try {
             String rid = QCookie.getValue(request, "sbd.role");
             String ids = QCookie.getValue(request, "ids");
@@ -76,7 +80,6 @@ public class WebLoginUser extends SysUserDO {
      * 保存系统登录信息至Cookies中
      */
     public WebLoginUser saveSession(HttpServletRequest request, HttpServletResponse response) {
-        //过期时间为4小时
         try {
             QCookie.set(response, "ids", this.getUser_id().toString()); //浏览器关闭就过期
             String userNm = "";
@@ -85,12 +88,16 @@ public class WebLoginUser extends SysUserDO {
             }else{
             	userNm = URLEncoder.encode(this.getUser_real_name(), "utf-8");
             }
-            QCookie.set(response, "sbd.user", userNm, 4 * 3600);
-            QCookie.set(response, "sbd.uid", this.getUser_name(), 4 * 3600);
-            QCookie.set(response, "sbd.role", this.getRole_id().toString(), 4 * 3600);
-            QCookie.set(response, "sbd.tk", this.createToken(request), 4 * 3600); //验证参数是否被修改
-            QCookie.set(response, "sbd.gid", this.getUser_global_id(), 4 * 3600);
-            QCookie.set(response, "request.serial", String.valueOf(this.requestSerial));
+
+            int cookieTTL = Integer.valueOf(PropertiesUtil.getPropery("portal.session.timeout"));
+            logger.debug("Set portal session  timeout to {} seconds.", cookieTTL);
+
+            QCookie.set(response, "sbd.user", userNm, cookieTTL);
+            QCookie.set(response, "sbd.uid", this.getUser_name(), cookieTTL);
+            QCookie.set(response, "sbd.role", this.getRole_id().toString(), cookieTTL);
+            QCookie.set(response, "sbd.tk", this.createToken(request), cookieTTL); //验证参数是否被修改
+            QCookie.set(response, "sbd.gid", this.getUser_global_id(), cookieTTL);
+            QCookie.set(response, "request.serial", String.valueOf(this.requestSerial), cookieTTL);
 
         } catch (Exception e) {
             System.out.print("无法缓存用户会话信息");

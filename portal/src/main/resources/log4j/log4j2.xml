@@ -31,6 +31,7 @@
 
         <Logger name="org.pac4j" level="debug"/>
         <Logger name="com.seaboxdata" level="debug"/>
+        <Logger name="com.quick" level="debug"/>
 
         <Root level="info">
             <!-- 这里是输入到文件，很重要-->

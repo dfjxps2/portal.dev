@@ -25,12 +25,15 @@ import javax.servlet.http.HttpSession;
 import com.quick.core.util.common.QCommon;
 import com.quick.core.util.common.QCookie;
 import com.quick.portal.security.authority.metric.PropertiesUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Administrator
  * loginCasFilter
  */
 public class LoginFilter extends HttpServlet implements Filter {
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     private final static String COOKIE_ROLE_ID = "sbd.role";
 
@@ -51,6 +54,11 @@ public class LoginFilter extends HttpServlet implements Filter {
         }
 
         if (rid == null || "0".equals(rid)) {
+            logger.warn("Request for {} without valid user role, possibly because of session timeout.",
+                    ((HttpServletRequest) request).getRequestURI());
+
+            ((HttpServletRequest)request).getSession().invalidate();
+
             notifySessionInvalid(res, req);
             return;
         }
@@ -97,7 +105,13 @@ public class LoginFilter extends HttpServlet implements Filter {
         if (isAjax(request)) {
             writeJs("{\"code\":-99,\"msg\":\"会话已超时，请重新登录！\", \"url\":\"" + host + "\"}", response);
         } else {
-            writeMsg("会话已超时，请重新登录！", host, host, request, response);
+            String casUrl = PropertiesUtil.getPropery("sso.cas.server.prefixUrl");
+            String url = request.getScheme() + "://" + request.getServerName()
+                    + ":" + request.getServerPort() + request.getContextPath()
+                    + "/";
+            String retUrl = casUrl.concat("logout?service=").concat(QCommon.urlEncode(url));
+
+            writeMsg("会话已超时，请重新登录！", host, retUrl, request, response);
         }
     }
 
