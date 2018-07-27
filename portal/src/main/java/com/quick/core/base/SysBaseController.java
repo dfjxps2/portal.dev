@@ -599,7 +599,6 @@ public abstract class SysBaseController<T> {
 		PageBounds pager = new PageBounds(pageNo, pageSize);
 
 		List<Map<String, Object>> dt = getBaseService().select(queryMap, pager);
-		
 		recordCount = pager.getTotal();
 
 		switch (json) {
