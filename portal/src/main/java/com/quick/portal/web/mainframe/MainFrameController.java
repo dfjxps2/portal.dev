@@ -219,5 +219,51 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
   	    }
   	}
   	
+  	/*
+  	 * 智能道路管理
+  	 */
+    @RequestMapping(value = "/goRoadIframe" )
+    public String goRoadIframe(HttpServletRequest request, Model model) throws Exception {
+        return "page/index/roadframe";
+    }
+    /*
+     * 智能视频监控
+     */
+    @RequestMapping(value = "/goVideoIframe" )
+    public String goVideoIframe(HttpServletRequest request, Model model) throws Exception {
+        return "page/index/videoframe";
+    }
+    /*
+     * 智慧环境监测
+     */
+    @RequestMapping(value = "/goEnvIframe" )
+    public String goEnvIframe(HttpServletRequest request, Model model) throws Exception {
+        return "page/index/envframe";
+    }
+    
+    /*
+     * 	智能一卡通管理
+     */
+    @RequestMapping(value = "/goBusIframe" )
+    public String goBusIframe(HttpServletRequest request, Model model) throws Exception {
+        return "page/index/busframe";
+    }
+    /*
+     * 智慧能源管理
+     */
+    @RequestMapping(value = "/goEnergyIframe" )
+    public String goEnergyIframe(HttpServletRequest request, Model model) throws Exception {
+        return "page/index/energyframe";
+    }
+    
+    /*
+     * 智慧园区管理
+     */
+    @RequestMapping(value = "/goParkframe" )
+    public String goParkframe(HttpServletRequest request, Model model) throws Exception {
+        return "page/index/parkframe";
+    }
+
+  	
 	public static final String PORTAL_ZORE_VAL = "0";
 }
