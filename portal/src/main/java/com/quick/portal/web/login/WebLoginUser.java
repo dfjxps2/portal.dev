@@ -103,7 +103,7 @@ public class WebLoginUser extends SysUserDO {
             QCookie.set(response, "sbd.tk", this.createToken(request), cookieTTL); //验证参数是否被修改
             QCookie.set(response, "sbd.gid", this.getUser_global_id(), cookieTTL);
             QCookie.set(response, "request.serial", String.valueOf(this.requestSerial), cookieTTL);
-			this.setUser_state(Integer.valueOf(ustate));
+			QCookie.set(response, "sbd.ustate", String.valueOf(this.getUser_state()));
 
         } catch (Exception e) {
             System.out.print("无法缓存用户会话信息");
