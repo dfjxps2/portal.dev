@@ -20,7 +20,7 @@ public class Axis2ClientTest {
   
     public static void main(String[] args) throws RemoteException {  
     	Axis2ClientTest test = new Axis2ClientTest();  
-        System.out.println("2    " + test.testAxis2ClientByRpc());  
+//        System.out.println("2    " + test.testAxis2ClientByRpc());  
         System.out.println("3    " + test.testAxis2ClientByDoc());  
         
 //        Endpoint.publish("http://127.0.0.1:18001/portal/intlDataSynchronizedService", new HelloService());
@@ -113,9 +113,10 @@ public class Axis2ClientTest {
             // 命名空间，有时命名空间不增加没事，不过最好加上，因为有时有事，你懂的    
             OMNamespace omNs = fac.createOMNamespace(SOAP_TARGET_NAMESPACE,"");  
             OMElement method = fac.createOMElement("getAllUserData", omNs);
-            OMElement symbol = fac.createOMElement(new QName("arg0"));  
-            symbol.addChild(fac.createOMText(symbol, "admin"));  
-            method.addChild(symbol);  
+//            OMElement symbol = fac.createOMElement(new QName("arg0"));  
+//            symbol.addChild(fac.createOMText(symbol, "")); 
+//            symbol.addChild(fac.createOMText(symbol, ""));  
+//            method.addChild(symbol);  
             method.build();  
             result = sender.sendReceive(method);  
             retStr = result.getFirstElement().getText();
