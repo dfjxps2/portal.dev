@@ -42,24 +42,26 @@
                                         <label onclick="layerDateTime('pub_time');" style="position: absolute;top:1px;right:0px;background-position-x: center;border:1px solid #e5e6e7" class="laydate-icon inline demoicon layer_date"></label></div>
                                 </div>
 
+                                <div class="form-group" style="width:200px;display: inline-block;padding-left: 6px;position: relative ">
+                                    <div style="position:absolute;right:15px;cursor:pointer;display:none;padding-top:8px" align="center"  class="input_clear">
+                                        <button type="button" class="close" data-dismiss="modal" style="text-align: center" aria-hidden="true" >×</button>
+                                    </div>
+                                    <div class="input-group" style="margin-right: -3px"><span class="input-group-btn" style="width: 20px">
+                                        <button class="btn btn-default" id="anniu" type="button"  onclick="chosebox('tag_text', '${G.serverUrl}/mespubtags','tags');">...</button></span>
+                                    </div>
+                                    <input style="left: auto;width:150px" type="text" readonly="readonly" id="tag_text" placeholder="标签"  class=" form-control required" name="keyword"/>
+                                </div>
+
                                 <div class="form-group" style="padding-left: 5px;width: 90px;">
                                     <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="query();"> 查询</button> </span>
                                 </div>
                                 <div class="form-group" style="padding-left:5px;width: 90px;">
                                     <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="deleteMes();">删除内容</button> </span>
                                 </div>
-                                <div class="form-group" style="padding-left:5px;width: 110px;">
+                                <div class="form-group" style="padding-left:5px;width: 100px;">
                                     <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="mesIssueRe();">发布内容</button> </span>
                                 </div>
-                                <div class="form-group" style="width:1050px;padding-top: 4px;display: inline-block;padding-left: 6px;position: relative ">
-                                        <div style="position:absolute;right:70px;cursor:pointer;display:none;padding-top:8px" align="center"  class="input_clear">
-                                            <button type="button" class="close" data-dismiss="modal" style="text-align: center" aria-hidden="true" >×</button>
-                                        </div>
-                                    <div class="input-group" style="margin-right: -3px"><span class="input-group-btn" style="width: 20px">
-                                        <button class="btn btn-default" id="anniu" type="button"  onclick="chosebox('tag_text', '${G.serverUrl}/mespubtags','tags');">...</button></span>
-                                    </div>
-                                        <input style="left: auto;width: 966px" type="text" readonly="readonly" id="tag_text" placeholder="标签"  class=" form-control required" name="keyword"/>
-                                </div>
+
                                 <input type="hidden" id="tags" name="tags" class="form-control" />
                             </form>
                         <div class="section" style="margin-left:25px;">

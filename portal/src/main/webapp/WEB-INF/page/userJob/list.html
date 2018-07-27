@@ -28,13 +28,13 @@
 			   toolbar:"#formSearch",
 			   columns: [
 				   {  checkbox: true },
-                   { field: 'job_name',  title: '岗位名称' ,width: '12%', sortable:'true',formatter:function(value,row,index){
+                   { field: 'job_name', align: 'center', title: '岗位名称' ,width: '12%', sortable:'true',formatter:function(value,row,index){
                        return "<a href='javascript:void(0)' onclick=\"goDetail(this);\" id='"+row.job_id+"'>"+row.job_name+"</a>";
                    }},
-                   { field: 'job_level', title: '岗位级别', width: 100  },
-                   { field: 'cre_time', title: '创建时间', width: 100  },
-                   { field: 'upd_time', title: '更新时间', width: 100  },
-				   { field: 'CZ',  title: '操作',width: '15%', formatter:function(value,row,index){
+                   { field: 'job_level', align: 'center',title: '岗位级别', width: 100  },
+                   { field: 'cre_time',align: 'center', title: '创建时间', width: 100  },
+                   { field: 'upd_time',align: 'center', title: '更新时间', width: 100  },
+				   { field: 'CZ', align: 'center', title: '操作',width: '15%', formatter:function(value,row,index){
 					   return "<button type='button' class='btn_el' onclick='edit(\""+row.job_id+"\",\""+row.job_name+"\")'>编辑</button>| "
 							   +"<button type='button' class='btn_el' onclick='del(\""+row.job_id+"\",\""+row.job_name+"\")'>删除</button>";
 					   ;

@@ -39,29 +39,29 @@
 			   toolbar:"#formSearch",
 			   columns: [
 						{title: '选择', checkbox: true },
-			             { field: 'menu_cn_name',  title: '菜单中文名称' ,width: '11%', formatter:function(value,row,index){
+			             { field: 'menu_cn_name',  title: '菜单中文名称' ,align: 'center',width: '11%', formatter:function(value,row,index){
 		                       return "<a href='javascript:void(0)' onclick='info("+row.menu_id+")' id='"+row.menu_id+"'>"+row.menu_cn_name+"</a>";
 		                   }},
-		                   { field: 'menu_name', title: '菜单英文名称', width: 110  },
-		                   { field: 'super_menu_name', title: '上级菜单', width: 100  },
-		                   { field: 'menu_level', title: '级别', width: 50  },
-		                   { field: 'disp_order', title: '显示顺序', width: 80  },
-		                   { field: 'menu_state', title: '菜单状态', width: 80 , formatter:function(value,row,index){
+		                   { field: 'menu_name', title: '菜单英文名称',align: 'center', width: 110  },
+		                   { field: 'super_menu_name', title: '上级菜单', align: 'center',width: 100  },
+		                   { field: 'menu_level', title: '级别',align: 'center', width: 50  },
+		                   { field: 'disp_order', title: '显示顺序',align: 'center', width: 80  },
+		                   { field: 'menu_state', title: '菜单状态', align: 'center',width: 80 , formatter:function(value,row,index){
 		                	   var state = '<span style="color:#CFCFCF">禁用</span>';  
 		                	   if (row.menu_state==1) {
 		                		   state = '<span style="color:#9ACD32">激活</span>';  
 		                	   }
 		                	   return state;
 		                   }},
-		                   { field: 'app_name', title: '应用系统', width: 100 , formatter:function(value,row,index){
+		                   { field: 'app_name', title: '应用系统', width: 100 ,align: 'center', formatter:function(value,row,index){
 		                	   var appName = "无对应系统";  
 		                	   if (row.app_name != null) {
 		                		   appName = row.app_name;  
 		                	   }
 		                	   return appName;
 		                   }},
-		                   { field: 'upd_time', title: '更新时间', width: 140  },
-						   { field: 'CZ',  title: '操作',width: 122, formatter:function(value,row,index){
+		                   { field: 'upd_time', title: '更新时间',align: 'center', width: 140   },
+						   { field: 'CZ',  title: '操作',align: 'center',width: 122, formatter:function(value,row,index){
 							   var  str = "<button type='button' class='btn_el' onclick='edit(\""+row.menu_id+"\")'>修改</button>|"
 							   +"<button type='button' class='btn_el' onclick='del(\""+row.menu_id+"\",\""+row.menu_cn_name+"\",\""+"1"+"\")'><span>激活</span></button>";
 							   if (row.menu_state==1) {  
