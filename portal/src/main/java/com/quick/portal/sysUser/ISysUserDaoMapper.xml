@@ -138,6 +138,12 @@
 		WHERE  ur.role_state = 1
 	</select>
 
+	<!--用户管理部门的下拉框选项-->
+	<select id="selectDep" parameterType="map" resultType="map">
+		SELECT  ud.dep_id,ud.dep_name FROM  user_department ud
+		WHERE  ud.dep_state = 1
+	</select>
+
 	<!--初始化和查询-->
 	<select id="getAllUser"  parameterType="map" resultType="map">
 		select urd.*,uj.job_name from (select udrn.*, udn.dep_name from(select urn.*,udr.dep_id,udr.rela_id from (select su.*,rn.role_name role_name,rn.rel_id rel_id from sys_user su
