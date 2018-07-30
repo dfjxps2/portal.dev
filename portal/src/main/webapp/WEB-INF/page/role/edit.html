@@ -53,6 +53,16 @@
 									</div>
 								</div>
 							</div>
+							  <div class="col-sm-8 form_ipt_botm">
+								  <div class="form-group">
+									  <label class="col-xs-2 lable_top"><span class="span_require">*</span>角色类型</label>
+									  <div class="col-xs-9">
+										  <select name="role_type_id" class="form-control required form-control-green select_change"  id="role_type_id">
+										  </select>
+									  </div>
+								  </div>
+							  </div>
+							  
 							<div class="col-sm-8 form_ipt_botm">
 								<div class="form-group">
 									<label class="col-xs-2 lable_top"><span class="span_require">*</span>状态</label>
@@ -100,8 +110,12 @@
 <script src="${G.host}/res/layer/layer.js"></script>
 
 <script>
+
+_gridPool["role_type_id"]=new BCombobox("#role_type_id");
+_gridPool["role_type_id"].load("${G.host}/role/getRoleType", {textField:"role_type_name",valueField:"role_type_id",emptyObj:{role_type_id:"",role_type_name:"请选择角色类型"} });
 	var iscommit=false;
-		var name=$("#role_name").val();
+
+	var name=$("#role_name").val();
 
 	window.onload = function() {
 		var role_id = $.request.queryString["role_id"];
@@ -115,6 +129,7 @@
 			success: function(data){
 				console.log(JSON.stringify(data));
 				if(data!=null){
+					setForm(data);
 					var role_state = data.role_state;
 					var role_name = data.role_name;
 					var role_id = data.role_id;
@@ -223,16 +238,16 @@
 		/*完成*/
 		function thingOver(){
 			iscommit=true;
-			//alert(submitBefore());
 			if(submitBefore()){
 				layer.msg('保存失败',{icon:1,time: 1000,skin: 'layer-ext-moon'});
 				iscommit=false;
 				return;
 			}else {
+				var type =$('#role_type_id option:selected') .val();
 				var role_name = $("#role_name").val();
 				var role_id = $("#role_id").val();
 				var role_state = $("#role_state").val();
-				var url = encodeURI("updataRole?role_id=" + role_id + "&role_name=" + encodeURI(role_name) + "&role_state=" + role_state);
+				var url = encodeURI("updataRole?role_type_id="+type+"&role_id=" + role_id + "&role_name=" + encodeURI(role_name) + "&role_state=" + role_state);
 				layer.msg('保存成功！', {icon: 1, time: 1000, skin: 'layer-ext-moon'}, function () {
 					window.location.href = url;
 				});
@@ -244,6 +259,12 @@
 			if (!($("#form").validate())) {
 				return false;
 			}
+			
+			var role_type = $('#role_type_id option:selected').val();
+			  if(role_type ==null ||role_type.length==0){
+				  layer.msg('请输入角色类型',{icon:1,time: 1000,skin: 'layer-ext-moon'});
+				  return false;
+			  }
 
 			/*点击完成按钮跳转页面*/
 			if(!iscommit)
@@ -251,5 +272,7 @@
 
 		});
 	}
+	
+
 </script>
 </html>

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>新增角色</title>
+      <title>新增角色</title>
+      <#include "/WEB-INF/include/resedit.html" />
+
 	  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-	  <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
 	  <script src="${G.host}/res/plugin/jQuery/jquery-1.11.3.min.js" type="text/javascript"></script>
 	  <!--Bootstrap -->
 	  <link href="${G.host}/res/plugin/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -45,15 +46,27 @@
 						  <div class="row">
 							  <div class="col-sm-8 form_ipt_botm">
 								  <div class="form-group">
-									  <label class="col-xs-2 lable_top"><span class="span_require">*</span>名称</label>
+									  <label class="col-xs-2 lable_top"><span class="span_require">*</span>角色名称</label>
 									  <div class="col-xs-9">
 										  <input maxlength="10" placeholder="输入2-10中文汉字或英文字母或数字的组合" id="role_name" name="role_name" type="text" class="form-control required">
 									  </div>
 								  </div>
 							  </div>
+							  
+                        
+                        	  <div class="col-sm-8 form_ipt_botm">
+								  <div class="form-group">
+									  <label class="col-xs-2 lable_top"><span class="span_require">*</span>角色类型</label>
+									  <div class="col-xs-9">
+										  <select name="role_type_id" class="form-control required form-control-green select_change"  id="role_type_id">
+										  </select>
+									  </div>
+								  </div>
+							  </div>
+							  
 							  <div class="col-sm-8 form_ipt_botm">
 								  <div class="form-group">
-									  <label class="col-xs-2 lable_top"><span class="span_require">*</span>状态</label>
+									  <label class="col-xs-2 lable_top"><span class="span_require">*</span>角色状态</label>
 									  <div class="col-xs-9">
 										  <select name="role_state" class="form-control required" id="role_state">
 											  <option value="1">启用</option>
@@ -95,7 +108,9 @@
 
   <script>
       var iscommit=false;
-	 //   quick.serverUrl = "${G.serverUrl}";
+      _gridPool["role_type_id"]=new BCombobox("#role_type_id");
+      _gridPool["role_type_id"].load("${G.host}/role/getRoleType", {textField:"role_type_name",valueField:"role_type_id",emptyObj:{role_type_id:"",role_type_name:"请选择角色类型"} });
+
 
 	  window.onload = function() {
 
@@ -140,57 +155,7 @@
 			  var tel = /^[0-9]{11}$/;
 			  return this.optional(element) || (tel.test(value));
 		  }, "只能是11位的数字");
-/*
-		  $("#form").steps({
-			  bodyTag: "fieldset",
-			  onStepChanging: function(event, currentIndex, newIndex) {
-                  if (currentIndex > newIndex) {
-                      return true
-                  }
-                  if (newIndex === 3 && Number($("#age").val()) < 18) {
-                      return false
-                  }
-                  var form = $(this);
-                  if (currentIndex < newIndex) {
-                      $(".body:eq(" + newIndex + ") label.error", form).remove();
-                      $(".body:eq(" + newIndex + ") .error", form).removeClass("error")
-                  }
-                  form.validate().settings.ignore = ":disabled,:hidden";
-                  return form.valid()
-			  },
-			  onStepChanged: function(event, currentIndex, priorIndex) {
-                  if (currentIndex === 2 && Number($("#age").val()) >= 18) {
-                      $(this).steps("next")
-                  }
-                  if (currentIndex === 2 && priorIndex === 3) {
-                      $(this).steps("previous")
-                  }
-			  },
-			  onFinishing: function(event, currentIndex) {
 
-				   var form = $(this);
-				  form.validate().settings.ignore = ":disabled";
-				  return form.valid()
-			  },
-			  onFinished: function(event, currentIndex) {
-				 var remark=$("#IDS_ROLEREMARK").val();
-                  if(remark=="输入内容140字符"){
-                      $("#IDS_ROLEREMARK").val("");
-                  }
-
-                  /*点击完成按钮跳转页面*/
-		  /*
-                  if(!iscommit)
-				     thingOver();
-
-
-
-                // $(this).steps("next");
-                // console.log(currentIndex);
-			  },labels:{
-                  finish: "保存",
-              }
-		  }) */
 		  $("#form").validate({
               errorPlacement: function(error, element) {
                   element.parent().append(error);
@@ -233,7 +198,6 @@
 			/*保存前*/
 		  function submitBefore(){
 			 var flag=false;
-			   //alert(1);
 			  $.ajax({
 				  type: "post",
 				  url:  '${G.host}/role/getObjByName?T='+Math.random(),
@@ -255,7 +219,6 @@
 		  /*完成*/
 		  function thingOver(){
               iscommit=true;
-			  // alert(submitBefore());
 			  if(submitBefore()){
                   layer.msg('保存失败',{icon:1,time: 1000,skin: 'layer-ext-moon'});
 				  iscommit=false;
@@ -267,20 +230,10 @@
 				  dataType: "json",
                   data:$('#form').serialize(),
 				  success: function(data){
-
-					 // window.history.go(-1);
-					   //alert("保存成功");
-                     // $("#form").steps();
                       layer.msg('保存成功',{icon:1,time: 1000,skin: 'layer-ext-moon'},function(){
-						 // window.location.href = quick.serverUrl+"/getList";
 						  window.location.href ='${G.host}/role/list';
 					  });
 
-                      //window.location.reload();//刷新当前页t面.
-
-//                    $("#IDS_ROLECODE").val("");
-//					  $("#IDS_ROLENAME").val("");
-//					  $("#IDS_RO/**/LEREMARK").val("");
                       iscommit=false;
 				  }
 			  });
@@ -291,6 +244,11 @@
 			  if (!($("#form").validate())) {
 				  return false;
 			  }
+			  var role_type = $('#role_type_id option:selected').val();
+			  if(role_type ==null ||role_type.length==0){
+				  layer.msg('请输入角色类型',{icon:1,time: 1000,skin: 'layer-ext-moon'});
+				  return false;
+			  }
 
 			  /*点击完成按钮跳转页面*/
 			   if(!iscommit)
@@ -298,5 +256,6 @@
 	      });
 
 	  }
+	  
   </script>
 </html>
