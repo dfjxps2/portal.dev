@@ -70,14 +70,14 @@ public class WebLoginController {
     @RequestMapping(value = "/")
     public String index(HttpServletRequest request, HttpServletResponse response) {
         WebLoginUser loginer = new WebLoginUser().loadSession(request, response);
-        String userGlobalID = null, rid = null;
-        if (loginer.getRole_id() == 0) {
+        String userGlobalID = null, rType = null;
+        if (null !=loginer.getRole_type_id() && loginer.getRole_type_id() == 0) {
             loginer = loadCASUserInfo(request, response);
             if (null == loginer) {
                 logger.error("Can't get user information from user profile and user database.");
                 return "redirect:" + LOGOUT_URL;
             } else {
-            	rid = String.valueOf(loginer.getRole_id());
+            	rType = String.valueOf(loginer.getRole_type_id());
             	userGlobalID = loginer.getUser_global_id();
             }
         }
@@ -88,7 +88,7 @@ public class WebLoginController {
 	        loginer.saveSession(request, response);
 	        userAccessLogService.saveLog(request, UserAccessLogConstants.SYS_LOG_TYPE_ID, UserAccessLogConstants.LOGIN_USER_OP_TYPE, 1, loginer.getUser_real_name() + "登录成功", loginer.getUser_id().toString(), loginer.getUser_name());
 	        //平台用户:1:app;2:sys;公服用户:1:app
-	        String flag = getSysUrlByUserGlobalID(userGlobalID, rid);
+	        String flag = getSysUrlByUserGlobalID(userGlobalID, rType);
 	        if (SYS_MENU_FLAG.equals(flag)) {
 	            return "redirect:"+MAINFRAME_URL;
 	        } else {
@@ -167,6 +167,7 @@ public class WebLoginController {
         QCookie.remove(response, request, "sbd.tk");
         QCookie.remove(response, request, "request.serial");
         QCookie.remove(response, request, "sbd.ustate");
+        QCookie.remove(response, request,"sbd.rtype");
         request.getSession().invalidate();
         String casUrl = PropertiesUtil.getPropery("sso.cas.server.prefixUrl");
         String url = request.getScheme() + "://" + request.getServerName()
@@ -205,6 +206,7 @@ public class WebLoginController {
             user.setUser_global_id(WebLoginUitls.getVal(u, "user_global_id"));
             user.setUser_name(WebLoginUitls.getVal(u, "user_name"));
             user.setUser_state(Integer.valueOf(WebLoginUitls.getVal(u, "user_state")));
+            user.setRole_type_id(Integer.valueOf(WebLoginUitls.getVal(u, "role_type_id")));
             user.saveSession(request, response);//保存至本地
             return user;
         }
@@ -213,16 +215,18 @@ public class WebLoginController {
 
 
     /*
+     *rType --1: 超级管理员类型;2:平台管理员类型;3:业务部门用户类型
+     * 
      * 平台用户:1:app;2:sys
      * 公服用户:1:app
      * 1:app;2:sys
      */
 
-    public String getSysUrlByUserGlobalID(String userGlobalID, String rid) {
+    public String getSysUrlByUserGlobalID(String userGlobalID, String rType) {
         String flag = null;
         //平台用户
         if (null == userGlobalID || "".equals(userGlobalID)) {
-            if (ADMINISTRATOR_ROLE.equals(rid) || PORTAL_ADMINISTRATOR_ROLE.equals(rid)) {
+            if (ADMINISTRATOR_ROLE_TYPE.equals(rType) || PORTAL_ROLE_TYPE.equals(rType)) {
                 flag = SYS_MENU_FLAG;
             } else {
                 flag = APP_MENU_FLAG;
@@ -246,14 +250,13 @@ public class WebLoginController {
         }
         model.addAttribute("host", url);
         model.addAttribute("uid", userId);
-//    	WebLoginUitls.writeFatal(request, response,  userId+"帐号被锁，请联系管理员!");
         return "page/home/lock";
     }
     
     
     public final static String ADMINISTRATOR_USER = "admin";
-    public final static String ADMINISTRATOR_ROLE = "1";
-    public final static String PORTAL_ADMINISTRATOR_ROLE = "100";
+    public final static String ADMINISTRATOR_ROLE_TYPE = "1";
+    public final static String PORTAL_ROLE_TYPE = "2";
 
     public final static String SYS_MENU_FLAG = "2";
     public final static String APP_MENU_FLAG = "1";

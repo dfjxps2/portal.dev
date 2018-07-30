@@ -352,6 +352,7 @@ public abstract class SysBaseController<T> {
 			user.setUser_global_id(val(u, "user_global_id"));
 			user.setUser_name(WebLoginUitls.getVal(u, "user_name"));
 			user.setUser_state(Integer.valueOf(WebLoginUitls.getVal(u, "user_state")));
+			user.setRole_type_id(Integer.valueOf(WebLoginUitls.getVal(u, "role_type_id")));
 			user.saveSession(request, response);//保存至本地
 			return user;
 		}

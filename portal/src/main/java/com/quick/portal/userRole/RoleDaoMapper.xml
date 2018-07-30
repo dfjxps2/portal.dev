@@ -8,6 +8,9 @@
 		<if test="role_id != null and role_id != '' and role_id != 'null'"><![CDATA[
 	       and role_id like  '%${role_id}%'
 	    ]]></if>
+	   	<if test="role_state != null and role_state != '' and role_state != 'null'"><![CDATA[ 
+	       and role_state = #{role_state}
+	    ]]></if>
 		<if test="role_name != null and role_name != '' and role_name != 'null'"><![CDATA[
 	       and role_name like '%${role_name}%'
 	    ]]></if>
@@ -25,11 +28,13 @@
 		insert into user_role (
     		  role_name,
     		  role_state,
+    		  role_type_id,
     		  cre_time,
     		  upd_time
 		)values(
 			 #{role_name},
 			 #{role_state},
+			 #{role_type_id},
 			 now(),
 			 now()
 			)
@@ -40,6 +45,7 @@
 		update user_role
 		   set role_name=#{role_name}
 			  ,role_state=#{role_state}
+			  ,role_type_id=#{role_type_id}
 			  ,upd_time = now()
 		 where role_id = #{role_id}
 	</update>
@@ -53,8 +59,8 @@
     
     <!--查询-->
 	<select id="select" parameterType="map" resultType="map">
-		select *
-		from user_role
+		select r.*,e.role_type_name
+		from user_role r inner join role_type e on r.role_type_id =e.role_type_id
 		<where>
 			<include refid="where" />
 		</where>
@@ -65,7 +71,7 @@
 	
 	<!-- 查询总记录数 -->
 	<select id="count" parameterType="map" resultType="int">
-		select count(*) from user_role
+		select count(*) from  user_role r inner join role_type e on r.role_type_id =e.role_type_id
 		<where>
 			<include refid="where" />
 		</where>
@@ -126,5 +132,8 @@
 		select * from user_role where role_name=#{role_name}
 	</select>
 
-
+	<!--角色类型的下拉框选项-->
+	<select id="getRoleType" parameterType="map" resultType="map">
+		SELECT  role_type_id,role_type_name FROM  ROLE_TYPE 
+	</select>
 </mapper>

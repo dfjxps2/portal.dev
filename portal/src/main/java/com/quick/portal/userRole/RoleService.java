@@ -42,4 +42,6 @@ public interface RoleService extends ISysBaseService<Role> {
     List<Map<String,Object>> listMenuPri(String role_id);
 
     List<Map<String,Object>> listAllApp(Map<String, Object> m);
+    
+    List<Map<String,Object>> getRoleType();
 }

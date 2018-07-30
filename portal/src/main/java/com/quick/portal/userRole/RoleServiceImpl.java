@@ -21,6 +21,7 @@ package com.quick.portal.userRole;
 import com.quick.core.base.SysBaseService;
 import com.quick.core.base.ISysBaseDao;
 import com.quick.core.util.common.QCommon;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -134,4 +135,9 @@ public class RoleServiceImpl extends SysBaseService<Role> implements RoleService
         List<Map<String,Object>> result = dao.listAllApp(m);
         return result;
     }
+
+	@Override
+	public List<Map<String, Object>> getRoleType() {
+		return dao.getRoleType();
+	}
 }

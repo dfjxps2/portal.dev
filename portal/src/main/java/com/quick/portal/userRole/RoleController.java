@@ -18,6 +18,7 @@
  */
 package com.quick.portal.userRole;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Date;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -199,5 +201,13 @@ public class RoleController extends SysBaseController<Role> {
         Map<String, Object> parm = new HashMap<>();
         parm.put("role_id", role_id);
         return roleService.listAllApp(parm);
+    }
+    
+
+    //角色类型下拉框数据
+    @RequestMapping(value = "/getRoleType")
+    @ResponseBody
+    public List<Map<String,Object>> getRoleType() {
+        return roleService.getRoleType();
     }
 }
