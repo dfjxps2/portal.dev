@@ -70,17 +70,17 @@ public class WebLoginController {
     @RequestMapping(value = "/")
     public String index(HttpServletRequest request, HttpServletResponse response) {
         WebLoginUser loginer = new WebLoginUser().loadSession(request, response);
-        String userGlobalID = null, rType = null;
+        String userGlobalID = null;
         if (null !=loginer.getRole_type_id() && loginer.getRole_type_id() == 0) {
             loginer = loadCASUserInfo(request, response);
             if (null == loginer) {
                 logger.error("Can't get user information from user profile and user database.");
                 return "redirect:" + LOGOUT_URL;
             } else {
-            	rType = String.valueOf(loginer.getRole_type_id());
             	userGlobalID = loginer.getUser_global_id();
             }
         }
+        String rType = String.valueOf(loginer.getRole_type_id());
         if(null !=loginer.getUser_state() && loginer.getUser_state() == DISABLE_USER_STATE){
         	return "redirect:" + LOCK_URL;
     	}else{

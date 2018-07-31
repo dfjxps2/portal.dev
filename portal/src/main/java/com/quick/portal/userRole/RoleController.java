@@ -206,8 +206,25 @@ public class RoleController extends SysBaseController<Role> {
 
     //角色类型下拉框数据
     @RequestMapping(value = "/getRoleType")
-    @ResponseBody
-    public List<Map<String,Object>> getRoleType() {
-        return roleService.getRoleType();
+    public void getRoleType(HttpServletResponse res) {
+        List<Map<String,Object>> result = roleService.getRoleType();
+        String json = getRoleTypeJsonString(result);
+        try {
+            res.getWriter().write(json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getRoleTypeJsonString(List<Map<String,Object>> map) {
+        org.json.JSONArray json = new org.json.JSONArray();
+        org.json.JSONObject jo = null;
+        for (Map sysMap:map) {
+            jo = new org.json.JSONObject();
+            jo.put("roleTypeId",sysMap.get("role_type_id"));
+            jo.put("roleTypeName",sysMap.get("role_type_name"));
+            json.put(jo);
+        }
+        return json.toString();
     }
 }
