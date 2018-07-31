@@ -108,9 +108,6 @@
 
   <script>
       var iscommit=false;
-      _gridPool["role_type_id"]=new BCombobox("#role_type_id");
-      _gridPool["role_type_id"].load("${G.host}/role/getRoleType", {textField:"role_type_name",valueField:"role_type_id",emptyObj:{role_type_id:"",role_type_name:"请选择角色类型"} });
-
 
 	  window.onload = function() {
 
@@ -195,6 +192,24 @@
 				  }
 			  }
 		  });
+
+          function selectRoleType(){
+              $.ajax({
+                  type: "get",
+                  url: "getRoleType",
+                  async:false,
+                  dataType: "json",
+                  success: function(data){
+                      $("#role_type_id").append("<option selected hidden value=''>请选择角色类型</option><option value= ''>角色类型</option>");
+                      for (var i = 0; i < data.length; i++) {
+                          var item = data[i];
+                          $("#role_type_id").append("<option  value=" +item.roleTypeId+ ">  "+  item.roleTypeName+"</option>");
+                      }
+                  }
+              });
+          }
+
+          selectRoleType();
 			/*保存前*/
 		  function submitBefore(){
 			 var flag=false;

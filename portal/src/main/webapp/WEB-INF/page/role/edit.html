@@ -111,15 +111,25 @@
 
 <script>
 
-_gridPool["role_type_id"]=new BCombobox("#role_type_id");
-_gridPool["role_type_id"].load("${G.host}/role/getRoleType", {textField:"role_type_name",valueField:"role_type_id",emptyObj:{role_type_id:"",role_type_name:"请选择角色类型"} });
 	var iscommit=false;
+    //从URL,JSON中取值赋给表单元素
+
+        //选中多选下拉框的值
+        function ListInit(obj, v) {
+            if (!obj) return false;
+           var opts = document.getElementById('role_type_id').getElementsByTagName('option');
+                     for (var i in opts) {
+                        if(opts[i].value == v){
+                            opts[i].selected = true;
+                        }
+                     }
+        }
 
 	var name=$("#role_name").val();
 
 	window.onload = function() {
+        selectRoleType();
 		var role_id = $.request.queryString["role_id"];
-
 		$.ajax({
 			type: "post",
 			url: "getObj",
@@ -129,8 +139,6 @@ _gridPool["role_type_id"].load("${G.host}/role/getRoleType", {textField:"role_ty
 			success: function(data){
 				console.log(JSON.stringify(data));
 				if(data!=null){
-					debugger;
-					setForm(data);
 					var type = data.role_type_id;
 					var role_state = data.role_state;
 					var role_name = data.role_name;
@@ -138,12 +146,32 @@ _gridPool["role_type_id"].load("${G.host}/role/getRoleType", {textField:"role_ty
 					$("#role_name").val(role_name);
 					$("#role_state").val(role_state);
 					$("#role_id").val(role_id);
-					selectRoleType(type);
+                    ListInit("role_type_id",data.role_type_id);
+
 				}
 			}
 		});
 
-		/*自定义错误提示信息的方法*/
+        function selectRoleType(){
+            $.ajax({
+                type: "get",
+                url: "getRoleType",
+                async:false,
+                dataType: "json",
+                success: function(data){
+                    $("#role_type_id").append("<option selected hidden value=''>请选择角色类型</option><option value= ''>角色类型</option>");
+                    for (var i = 0; i < data.length; i++) {
+                        var item = data[i];
+                        $("#role_type_id").append("<option  value=" +item.roleTypeId+ ">  "+  item.roleTypeName+"</option>");
+                    }
+                }
+            });
+        }
+
+
+
+
+        /*自定义错误提示信息的方法*/
 		jQuery.validator.addMethod("idFuc", function(value, element) {//编码验证  //2-20位英文字母或者数字的组合
 			var tel = /^[0-9a-zA-Z]{0,100}$/;
 			return this.optional(element) || (tel.test(value));

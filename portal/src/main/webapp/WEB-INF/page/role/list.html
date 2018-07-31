@@ -97,7 +97,8 @@
                  toolbar: "#formSearch",
                  columns: [[
                      {
-                         field: 'role_name',width: '10%',title: '名称',align: 'center',formatter: function (value, row, index) {
+
+                         field: 'role_name',width: '10%',title: '角色名称',align: 'center',formatter: function (value, row, index) {
                              if (value == "" || value == null) {
                                  return "-";
                              } else {
@@ -132,7 +133,7 @@
                      }
                      },
                      {
-                         field: 'CZ', width: '30%', title: '操作', align: 'center', formatter: function (value, row, index) {
+                         field: 'CZ', width: '25%', title: '操作', align: 'center', formatter: function (value, row, index) {
 
                          return "<button type='button' id='btn_auth' class='btn_el' onclick='edit(\""+row.role_id+"\",\""+row.role_name+"\")'>编辑</button>| "+
                                 "<button type='button' id='btn_auth' class='btn_el' onclick='auth(\""+row.role_id+"\",\""+row.role_name+"\")'>功能权限</button>| "+
@@ -244,7 +245,7 @@
  }
      //编辑
 	function edit(role_id,role_name){
-        navAppend("修改角色");/*获取父页面元素并动态赋值父页面title*/
+      navAppend("修改角色");/*获取父页面元素并动态赋值父页面title*/
         var pageURL="${G.host}/role/edit?role_id="+role_id;
 	   window.location.href=pageURL;//跳转到另一个页面，并且还在当前框架
 	}
