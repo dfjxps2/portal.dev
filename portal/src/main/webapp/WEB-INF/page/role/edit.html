@@ -57,7 +57,7 @@
 								  <div class="form-group">
 									  <label class="col-xs-2 lable_top"><span class="span_require">*</span>角色类型</label>
 									  <div class="col-xs-9">
-										  <select name="role_type_id" class="form-control required form-control-green select_change"  id="role_type_id">
+										  <select name="role_type_id" class="form-control required"  id="role_type_id">
 										  </select>
 									  </div>
 								  </div>
@@ -129,13 +129,16 @@ _gridPool["role_type_id"].load("${G.host}/role/getRoleType", {textField:"role_ty
 			success: function(data){
 				console.log(JSON.stringify(data));
 				if(data!=null){
+					debugger;
 					setForm(data);
+					var type = data.role_type_id;
 					var role_state = data.role_state;
 					var role_name = data.role_name;
 					var role_id = data.role_id;
 					$("#role_name").val(role_name);
 					$("#role_state").val(role_state);
 					$("#role_id").val(role_id);
+					selectRoleType(type);
 				}
 			}
 		});
@@ -271,6 +274,17 @@ _gridPool["role_type_id"].load("${G.host}/role/getRoleType", {textField:"role_ty
 				thingOver();
 
 		});
+	}
+	
+	
+	function selectRoleType(optionID){
+		var all_options = document.getElementById("role_type_id").options;
+		for (i=0; i<all_options.length; i++){
+			alert(all_options[i].value)
+			if (all_options[i].value == optionID) {
+				all_options[i].selected = true;
+			}
+		}
 	}
 	
 

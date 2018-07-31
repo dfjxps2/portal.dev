@@ -96,18 +96,8 @@
                  height:$(window).height() - 50,
                  toolbar: "#formSearch",
                  columns: [[
-                /*      {
-                         field: 'role_id',title: '编码',width: '5%',align: 'left',formatter: function (value, row, index){
-
-                         if (value == "" || value == null) {
-                                 return "-";
-                             }
-
-                             return value;
-                         }
-                     }, */
                      {
-                         field: 'role_name',width: '10%',title: '名称',align: 'left',formatter: function (value, row, index) {
+                         field: 'role_name',width: '10%',title: '名称',align: 'center',formatter: function (value, row, index) {
                              if (value == "" || value == null) {
                                  return "-";
                              } else {
@@ -115,10 +105,10 @@
                              }
                          }
                      },
-                     { field: 'role_type_name', title: '角色类型', width: '10%' ,align: 'left' },
+                     { field: 'role_type_name', title: '角色类型', width: '10%' ,align: 'center' },
                      {
 
-                         field: 'role_state',width: '5%',title: '角色状态',align: 'left',formatter: function (value, row, index) {
+                         field: 'role_state',width: '10%',title: '角色状态',align: 'center',formatter: function (value, row, index) {
                          if (value == '0' ) {
                              return "停用";
                          } else if (value=='1'){
@@ -255,7 +245,7 @@
      //编辑
 	function edit(role_id,role_name){
         navAppend("修改角色");/*获取父页面元素并动态赋值父页面title*/
-        var pageURL="${G.host}/role/edit?role_id="+role_id+"&role_name="+role_name;
+        var pageURL="${G.host}/role/edit?role_id="+role_id;
 	   window.location.href=pageURL;//跳转到另一个页面，并且还在当前框架
 	}
 
@@ -315,7 +305,7 @@
                                   <input type="text" class="form-control form-control-green" name="role_name" id="role_name" placeholder="角色名称">
                               </div>
                                <div class="form-group" style="width:159px;">
-                        			 <select name="role_state" class="input-group form-control form-control-green select_change" id="IDS_SYSPLATFORM">
+                        			 <select name="role_state" class="input-group form-control" id="IDS_SYSPLATFORM">
 										  <option value="">角色状态</option>
 										  <option value="1">启用</option>
 										  <option value="0">禁用</option>
