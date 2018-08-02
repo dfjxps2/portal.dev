@@ -11,14 +11,14 @@
 	<link href="${G.host}/res/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
 	<link href="${G.host}/res/layer/skin/default/layer.css" rel="stylesheet">
 	<style>
-		body{background-color: #203140;font:12px/150% Arial,Verdana,"宋体";height: 100%;}
+		body{background-color: #1C0D83;font:12px/150% Arial,Verdana,"宋体";height: 100%;}
 		li{list-style-type: none;}
-		.nav{position:absolute;top:0px;left:0;background-image:url(${G.host}/res/script/home/images/top.png);width:100%;height:76px;z-index:2;overflow: hidden;}
+		.nav{position:absolute;top:0px;left:0;/*background-image:url(${G.host}/res/script/home/images/top.png);*/width:100%;height:50px;z-index:2;overflow: hidden;background-color: #234E91;}
 		.bar {padding-left:15px;background-color:#efefef;width:100%;}
 		.barbtn{margin:5px 0;}
 		.apps{margin:20px;}
-		.footer{background-color:#274360;color:#fff;width:100%;height:52px;z-index:2;}
-		.main{background-color:#fff;margin:0 auto;width:90%;height:600px!important; min-height:100%;padding-top:76px;}
+		.footer{background-color:#234E91;color:#fff;width:100%;height:52px;z-index:2;}
+		.main{background-color:#fff;margin:0 auto;width:90%;height:600px!important; min-height:100%;padding-top:50px;}
 		.main:after {content:"";  visibility:hidden;  display:block;  clear:both;  height:0px;}
 		.cell{float:left; padding: 10px;position: relative; }
 		.box .cell{cursor:pointer;text-align:center;max-width:100%;}
@@ -91,9 +91,9 @@
 </head>
 <body>
 <div class="nav">
-	<div class="left"><a href="#"><img align ="middle" src="${G.host}/res/script/home/images/jb_logo4.png" title="系统首页"></a></div>
+	<div class="left" style="padding:15px"><a href="#"><img align ="middle" src="${G.host}/res/script/home/images/jb_logo5.png" title="系统首页"></a></div>
 	<#if roleid == 1 || isadmin == 1 >
-		<div class="right" style="width:250px;"><a href="javascript:void(0);" onclick="location.href='../mainframe';"><img src="${G.host}/res/script/home/images/niu1.png" title="系统管理"></a></div>
+		<div class="right" style="width:250px;"><a href="javascript:void(0);" onclick="location.href='../mainframe';"><img src="${G.host}/res/script/home/images/niu1.png" style="height:50px" title="系统管理"></a></div>
 	</#if>
 </div>
 <div class="main">
@@ -138,7 +138,7 @@
 </div>
 <nav class="navbar navbar-default navbar-fixed-bottom footer">
 	<div class="container">
-		<h3 style="text-align:center;font-size:16px;">版权所有 Copyright(C)2013-2018 京滨工业园 </h3>
+		<h3 style="text-align:center;font-size:12px;">版权所有 Copyright(C)2013-2018 京滨工业园 </h3>
 	</div>
 </nav>
 </body>
