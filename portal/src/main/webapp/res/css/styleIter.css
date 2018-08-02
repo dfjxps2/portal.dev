@@ -828,7 +828,7 @@ body.canvas-menu.mini-navbar nav.navbar-static-side {
 }
 
 .btn-primary {
-	background-color: #6dabff;
+	background-color: #2f92c9;
 	border-color: #358bff;
 	color: #FFF;
 	width: 90px;
@@ -943,8 +943,8 @@ body.canvas-menu.mini-navbar nav.navbar-static-side {
 }
 
 .btn-default {
-	background-color: #6dabff;
-	border-color: #6dabff;
+	background-color: #3090ca;
+	border-color: #3090ca;
 	color: #fff;
 }
 
@@ -1267,8 +1267,8 @@ button.dim:active:before {
 }
 
 .pagination>.active>a,.pagination>.active>a:focus,.pagination>.active>a:hover,.pagination>.active>span,.pagination>.active>span:focus,.pagination>.active>span:hover {
-	background-color: #6dabff;
-	border-color: #6dabff;
+	background-color: #3090ca;
+	border-color: #3090ca;
 	color: #fff;
 	z-index: 2;
 	cursor: default;
@@ -3858,7 +3858,7 @@ code {
 
 .ibox-content h5{
 	font-size: 40px;
-	font: 40px '黑体', tahoma, Srial, helvetica, sans-serif;
+	font: 40px '榛戜綋', tahoma, Srial, helvetica, sans-serif;
 	text-align: center;
 }
 table.table-mail tr td {
@@ -5315,7 +5315,7 @@ dd.project-people {
 
 .fixed-table-footer, .fixed-table-header {
 	overflow: hidden;
-	background: #fff;
+/* 	background: #fff; */
 }
 
 .clients-list .nav-tabs>li.active>a,.clients-list .nav-tabs>li.active>a:focus,.clients-list .nav-tabs>li.active>a:hover {
@@ -7279,42 +7279,42 @@ body.skin-3 {
 ::-webkit-scrollbar-thumb {
 	background-color: #6dabff;
 }
-/*火狐无效*/
+/*鐏嫄鏃犳晥*/
 /*@-moz-document url-prefix(http://),url-prefix(https://) {
-	!* 滚动条颜�?*!
+	!* 婊氬姩鏉￠锟�?*!
 	scrollbar {
 		-moz-appearance: none !important;
 		background: rgb(0,255,0) !important;
 	}
-	!* 滚动条按钮颜�?*!
+	!* 婊氬姩鏉℃寜閽锟�?*!
 	thumb,scrollbarbutton {
 		-moz-appearance: none !important;
 		background-color: rgb(0,0,255) !important;
 	}
-	!* 鼠标悬停时按钮颜�?*!
+	!* 榧犳爣鎮仠鏃舵寜閽锟�?*!
 
 	thumb:hover,scrollbarbutton:hover {
 		-moz-appearance: none !important;
 		background-color: rgb(255,0,0) !important;
 	}
-	!* 隐藏上下箭头 *!
+	!* 闅愯棌涓婁笅绠ご *!
 	scrollbarbutton {
 		display: none !important;
 	}
-	!* 纵向滚动条宽�?*!
+	!* 绾靛悜婊氬姩鏉″锟�?*!
 	scrollbar[orient="vertical"] {
 		min-width: 15px !important;
 	}
 }*/
 /*IE*/
 html {
-	scrollbar-face-color:#6dabff;/*滚动条颜�?/
+	scrollbar-face-color:#6dabff;/*婊氬姩鏉￠锟�?/
 	scrollbar-highlight-color:#6dabff;
 	scrollbar-3dlight-color:#6dabff;
 	scrollbar-darkshadow-color:#6dabff;
-	scrollbar-Shadow-color:#6dabff;/*滑块边色*/
-	scrollbar-arrow-color:#6dabff;/*箭头颜色*/
-	scrollbar-track-color:#F5F5F5;/*背景颜色*/
+	scrollbar-Shadow-color:#6dabff;/*婊戝潡杈硅壊*/
+	scrollbar-arrow-color:#6dabff;/*绠ご棰滆壊*/
+	scrollbar-track-color:#F5F5F5;/*鑳屾櫙棰滆壊*/
 }
 
 .gohome {
@@ -7444,7 +7444,7 @@ html {
 	border-radius: 4px;
 	margin-right: 0 !important;
 }
-/*修改后input[radio]样式*/
+/*淇敼鍚巌nput[radio]鏍峰紡*/
 input[type="radio"] {
 	width: 20px;
 	height: 20px;
@@ -7460,15 +7460,15 @@ input[type="radio"] {
 	border-radius: 50%;
 	border: 1px solid #999;
 }
-/*设置选中的input的样�?/
-/* + 是兄弟选择�?获取选中后的label元素*/
+/*璁剧疆閫変腑鐨刬nput鐨勬牱锟�?/
+/* + 鏄厔寮熼�夋嫨锟�?鑾峰彇閫変腑鍚庣殑label鍏冪礌*/
 input:checked+label {
 	background-color: #6dabff;
 	border: 1px solid #aeaeae;
 }
 .ibox-nav{ position:relative;text-align:center;font-size: 22px;color:blue; }
 .ibox-toolbars{position:absolute;right:0px;}
-/*layer msg失败信息提示*/
+/*layer msg澶辫触淇℃伅鎻愮ず*/
 /*
 .layui-layer-hui {
 	min-width: 100px;

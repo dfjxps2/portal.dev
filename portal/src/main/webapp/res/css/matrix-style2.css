@@ -167,6 +167,98 @@ hr{
 	height: 100%;
 	margin-top:8px;
 }
+#b_content {
+	background: url(../images/b_img.png) no-repeat;
+	background-size: 100% 100%;
+  	-moz-background-size: 100% 100%;
+  	-webkit-background-size: 100% 100%;
+	margin-left: 0px;
+	margin-right: 0;
+	background-size: 100% 100%;padding: 0;
+	padding-bottom: 10px;
+	position: relative;
+	min-height:100%;
+	width: 100%;
+	height: 100%;
+	margin-top:8px;
+}
+#e_content {
+	background: url(../images/e_img.png) no-repeat;
+	background-size: 100% 100%;
+  	-moz-background-size: 100% 100%;
+  	-webkit-background-size: 100% 100%;
+	margin-left: 0px;
+	margin-right: 0;
+	background-size: 100% 100%;padding: 0;
+	padding-bottom: 10px;
+	position: relative;
+	min-height:100%;
+	width: 100%;
+	height: 100%;
+	margin-top:8px;
+}
+
+#env_content {
+	background: url(../images/en_img.png) no-repeat;
+	background-size: 100% 100%;
+  	-moz-background-size: 100% 100%;
+  	-webkit-background-size: 100% 100%;
+	margin-left: 0px;
+	margin-right: 0;
+	background-size: 100% 100%;padding: 0;
+	padding-bottom: 10px;
+	position: relative;
+	min-height:100%;
+	width: 100%;
+	height: 100%;
+	margin-top:8px;
+}
+#r_content {
+	background: url(../images/r_img.png) no-repeat;
+	background-size: 100% 100%;
+  	-moz-background-size: 100% 100%;
+  	-webkit-background-size: 100% 100%;
+	margin-left: 0px;
+	margin-right: 0;
+	background-size: 100% 100%;padding: 0;
+	padding-bottom: 10px;
+	position: relative;
+	min-height:100%;
+	width: 100%;
+	height: 100%;
+	margin-top:8px;
+}
+
+#p_content {
+	background: url(../images/p_img.png) no-repeat;
+	background-size: 100% 100%;
+  	-moz-background-size: 100% 100%;
+  	-webkit-background-size: 100% 100%;
+	margin-left: 0px;
+	margin-right: 0;
+	background-size: 100% 100%;padding: 0;
+	padding-bottom: 10px;
+	position: relative;
+	min-height:100%;
+	width: 100%;
+	height: 100%;
+	margin-top:8px;
+}
+#v_content {
+	background: url(../images/v_img.png) no-repeat;
+	background-size: 100% 100%;
+  	-moz-background-size: 100% 100%;
+  	-webkit-background-size: 100% 100%;
+	margin-left: 0px;
+	margin-right: 0;
+	background-size: 100% 100%;padding: 0;
+	padding-bottom: 10px;
+	position: relative;
+	min-height:100%;
+	width: 100%;
+	height: 100%;
+	margin-top:8px;
+}
 #content-header {
 	position: abslute;
 	width: 100%;

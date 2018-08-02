@@ -72,8 +72,8 @@ a:focus {
 
 .navbar-default .nav > li > a:hover,
 .navbar-default .nav > li > a:focus {
-    background-color: #0c1f36;
-    color: #3f8aff;
+    background-color: #234E91;
+    color: #ffffff;
 }
 
 .nav .open > a,
@@ -213,8 +213,8 @@ body.body-small .navbar-top-links li:last-child {
 }
 
 .nav > li.active {
-    border-left: 4px solid #293846;
-    background: #17283c;
+    border-left: 4px solid #234E91;
+    background: #234E91;
 }
 
 .nav.nav-second-level > li.active {
@@ -1838,7 +1838,7 @@ table.dataTable thead .sorting:after {
 /* CIRCLE */
 
 .img-circle {
-    border-radius: 50%;
+    /* border-radius: 50%; */
 }
 
 .btn-circle {
@@ -3631,7 +3631,7 @@ body.body-small .footer.fixed {
 .content-tabs {
     position: relative;
     height: 42px;
-    background: #fff;
+ /*    background: #fff; */
     line-height: 40px;
 }
 
@@ -3657,7 +3657,7 @@ body.body-small .footer.fixed {
 }
 
 .content-tabs button {
-    background: #fff;
+    background: #F4F3F3;
     border: 0;
     height: 40px;
     width: 40px;
@@ -3715,7 +3715,7 @@ nav.page-tabs .page-tabs-content {
 }
 
 .roll-right.J_tabExit {
-    background: #fff;
+/*     background: #fff; */
     height: 40px;
     width: 80px;
     outline: none;

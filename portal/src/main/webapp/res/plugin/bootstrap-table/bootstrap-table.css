@@ -59,6 +59,7 @@
 
 .fixed-table-container table {
     width: 100%;
+
 }
 
 .fixed-table-container thead th {
@@ -234,6 +235,13 @@
     box-sizing: border-box;
 }
 
+
+.table tr {
+    vertical-align: middle;
+    box-sizing: border-box;
+}
+
+
 .table th, .table td {
     vertical-align: middle;
     box-sizing: border-box;
@@ -270,13 +278,23 @@
 }
 
 /* support bootstrap 3 */
+
+
+	
+.bootstrap-table .table thead {
+ 	background-color: #5197d5;
+	color: white;
+}
+	
 .bootstrap-table .table thead > tr > th {
     padding: 0;
     margin: 0;
 }
 
+
 .bootstrap-table .fixed-table-footer tbody > tr > td {
     padding: 0 !important;
+
 }
 
 .bootstrap-table .fixed-table-footer .table {
@@ -288,6 +306,7 @@
 .bootstrap-table .pull-right .dropdown-menu {
     right: 0;
     left: auto;
+
 }
 
 /* calculate scrollbar width */
