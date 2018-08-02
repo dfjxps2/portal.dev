@@ -18,12 +18,17 @@
  */
 package com.seaboxdata.portal.mobile;
 
+import com.quick.core.base.ISysBaseService;
 import com.quick.core.base.SysApiController;
 import com.quick.core.base.model.DataStore;
 import com.quick.core.util.common.JsonUtil;
 import com.quick.core.util.common.QCommon;
 import com.quick.portal.web.home.IHomeService;
+import com.quick.portal.web.login.WebLoginUitls;
+import com.quick.portal.web.login.WebLoginUser;
+import com.quick.portal.web.mainframe.MainFrameService;
 import com.quick.portal.web.model.DataResult;
+
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,6 +36,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,12 +55,16 @@ public class HomeApiController extends SysApiController {
 
     @Resource(name = "homeService")
     private IHomeService homeService;
+    
+    
 
+    
+    
     /**
      * 删除应用
      * @return
      */
-    @PostMapping
+    @RequestMapping(value = "/dodel")
     @ResponseBody
     public Object dodel(String id){
         if(id != null && !id.equals("")) {
@@ -64,7 +76,7 @@ public class HomeApiController extends SysApiController {
         return getUserApp();
     }
 
-    @PostMapping
+    @RequestMapping(value = "/doadd")
     @ResponseBody
     public Object doadd(String id){
         if(id == null || id.equals(""))
@@ -97,7 +109,7 @@ public class HomeApiController extends SysApiController {
      * 查询用户所有应用
      * @return
      */
-    @PostMapping
+    @RequestMapping(value = "/getUserApp")
     @ResponseBody
     public DataResult getUserApp(){
         return new DataResult(queryUserApp());
@@ -115,7 +127,7 @@ public class HomeApiController extends SysApiController {
         return list;
     }
 
-    @PostMapping
+    @RequestMapping(value = "/saveSort")
     @ResponseBody
     public DataStore saveSort(String s){
         if(QCommon.isNullOrEmpty(s) || !s.startsWith("["))
@@ -134,9 +146,10 @@ public class HomeApiController extends SysApiController {
      * 查询所有应用
      * @return
      */
-    @PostMapping
+    
+    @RequestMapping(value = "/getApp")
     @ResponseBody
-    public DataResult getApp(){
+    public DataResult getApp(HttpServletRequest request,HttpServletResponse response){
         String uid = rstr("u", loginer.getUser_id().toString());
         String role_id = rstr("r", loginer.getRole_id().toString());
         urlMap.put("user_id", uid);
@@ -149,7 +162,8 @@ public class HomeApiController extends SysApiController {
      * 查询所有应用2
      * @return
      */
-    @PostMapping
+    
+    @RequestMapping(value = "/getAllApp")
     @ResponseBody
     public DataResult getAllApp(){
         String uid = rstr("u", loginer.getUser_id().toString());
@@ -175,4 +189,9 @@ public class HomeApiController extends SysApiController {
                 m.put("menu_icon_url", getUrl() + "/" + menu_icon_url);
         }
     }
+    
+    
+	
+	
+
 }

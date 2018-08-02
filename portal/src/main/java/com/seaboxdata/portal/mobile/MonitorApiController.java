@@ -91,10 +91,11 @@ public class MonitorApiController extends SysApiController {
      * 查询页面配置信息
      * @return
      */
-    @PostMapping
+    @RequestMapping(value = "/getLayout")
     @ResponseBody
-    public DataResult getLayout(Integer p,String time){
+    public DataResult getLayout(Integer p,String u){
     	//获取当前用户id
+    	String time = null;
     	String user_id = rstr("u", loginer.getUser_id().toString());
         String layout = "[{id:0, no:1,x: 0, y: 0, width: 12, height: 6, metric:[]}]";
         if(p != null && p > 0){
@@ -109,7 +110,7 @@ public class MonitorApiController extends SysApiController {
      * 查询应用所有页面
      * @return
      */
-    @PostMapping
+    @RequestMapping(value = "/getPage")
     @ResponseBody
     public DataResult getPage(Integer t){
         List<Map<String, Object>> ls = queryPage(t);

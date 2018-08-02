@@ -111,11 +111,11 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
     	map1.put("user_id", user_id);
     	List<Map<String,Object>> mconfigls = null;
     	if (li.size()>0) {
- 			if(cre_time .equals("0") && cre_time != null){
+ 			if(!cre_time .equals("") && cre_time != null){
  				cre_time = li.get(0).get("cre_time").toString();
  			}
  			map1.put("cre_time", cre_time);
- 			 mconfigls = mergeData(map1,"show");
+ 			mconfigls = mergeData(map1,"show");
 		}else {
             map1.put("cre_time", "");
             mconfigls = dao.selectPageMetricConfig(map1);
