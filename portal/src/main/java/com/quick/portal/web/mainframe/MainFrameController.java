@@ -224,6 +224,8 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
   	 */
     @RequestMapping(value = "/goRoadIframe" )
     public String goRoadIframe(HttpServletRequest request, Model model) throws Exception {
+    	 String url = request.getParameter("url");
+    	 model.addAttribute("url", url);
         return "page/index/roadframe";
     }
     /*
@@ -231,6 +233,8 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
      */
     @RequestMapping(value = "/goVideoIframe" )
     public String goVideoIframe(HttpServletRequest request, Model model) throws Exception {
+    	 String url = request.getParameter("url");
+    	 model.addAttribute("url", url);
         return "page/index/videoframe";
     }
     /*
@@ -238,6 +242,8 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
      */
     @RequestMapping(value = "/goEnvIframe" )
     public String goEnvIframe(HttpServletRequest request, Model model) throws Exception {
+    	 String url = request.getParameter("url");
+    	 model.addAttribute("url", url);
         return "page/index/envframe";
     }
     
@@ -246,6 +252,8 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
      */
     @RequestMapping(value = "/goBusIframe" )
     public String goBusIframe(HttpServletRequest request, Model model) throws Exception {
+    	 String url = request.getParameter("url");
+    	 model.addAttribute("url", url);
         return "page/index/busframe";
     }
     /*
@@ -253,6 +261,8 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
      */
     @RequestMapping(value = "/goEnergyIframe" )
     public String goEnergyIframe(HttpServletRequest request, Model model) throws Exception {
+    	 String url = request.getParameter("url");
+    	 model.addAttribute("url", url);
         return "page/index/energyframe";
     }
     
@@ -261,6 +271,8 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
      */
     @RequestMapping(value = "/goParkframe" )
     public String goParkframe(HttpServletRequest request, Model model) throws Exception {
+    	 String url = request.getParameter("url");
+    	 model.addAttribute("url", url);
         return "page/index/parkframe";
     }
 
