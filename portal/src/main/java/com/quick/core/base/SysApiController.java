@@ -113,11 +113,10 @@ public abstract class SysApiController extends SysBaseController<DataStore> {
 		this.urlPathHelper = new UrlPathHelper();
 		this.request = request;
 		this.response = response;
-
-		getMobileCurrentLoginUser(request,response);
+		setMobileCurrentLoginUser(request,response);
 	}
     
-    public WebLoginUser getMobileCurrentLoginUser(HttpServletRequest request,HttpServletResponse response){
+    public WebLoginUser setMobileCurrentLoginUser(HttpServletRequest request,HttpServletResponse response){
 		if(loginer == null){
 			String account = request.getParameter("u");
 	    	 if (null !=account && !"".equals(account)) {
@@ -131,7 +130,7 @@ public abstract class SysApiController extends SysBaseController<DataStore> {
 				loginer.setUser_global_id(val(u, "user_global_id"));
 				loginer.setUser_name(WebLoginUitls.getVal(u, "user_name"));
 				loginer.setUser_state(Integer.valueOf(WebLoginUitls.getVal(u, "user_state")));
-				loginer.setRole_type_id(Integer.valueOf(WebLoginUitls.getVal(u, "role_type_id")));
+//				loginer.setRole_type_id(Integer.valueOf(WebLoginUitls.getVal(u, "role_type_id")));
 				loginer.saveSession(request, response);//保存至本地
 				return loginer;
 			}
@@ -140,7 +139,17 @@ public abstract class SysApiController extends SysBaseController<DataStore> {
 	}
     
     
-	
+	public String val(Object obj){
+		if(obj == null)
+			return "";
+		return obj.toString();
+	}
+	public String val(Map<String, Object> m, String key){
+		Object obj = m.get(key);
+		if(obj == null)
+			return "";
+		return obj.toString();
+	}
 	public String rstr(String name){
 		return QRequest.getString(request, name);
 	}
@@ -153,12 +162,10 @@ public abstract class SysApiController extends SysBaseController<DataStore> {
 	public Integer rint(String name, Integer defValue){
 		return QRequest.getInteger(request, name, defValue);
 	}
-	
 	public String getUrl(){
 		String url = request.getScheme() + "://" + request.getServerName()
 				+ ":" + request.getServerPort() + request.getContextPath();
 		return url;
 	}
-    
 
 }

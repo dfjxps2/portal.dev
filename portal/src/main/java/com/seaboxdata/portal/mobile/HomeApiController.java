@@ -18,30 +18,25 @@
  */
 package com.seaboxdata.portal.mobile;
 
-import com.quick.core.base.ISysBaseService;
-import com.quick.core.base.SysApiController;
-import com.quick.core.base.model.DataStore;
-import com.quick.core.util.common.JsonUtil;
-import com.quick.core.util.common.QCommon;
-import com.quick.portal.web.home.IHomeService;
-import com.quick.portal.web.login.WebLoginUitls;
-import com.quick.portal.web.login.WebLoginUser;
-import com.quick.portal.web.mainframe.MainFrameService;
-import com.quick.portal.web.model.DataResult;
-
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.quick.core.base.SysApiController;
+import com.quick.core.base.model.DataStore;
+import com.quick.core.util.common.JsonUtil;
+import com.quick.core.util.common.QCommon;
+import com.quick.portal.web.home.IHomeService;
+import com.quick.portal.web.model.DataResult;
 
 /**
  * 门户API接口类
