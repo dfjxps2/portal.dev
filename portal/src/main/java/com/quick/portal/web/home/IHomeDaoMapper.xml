@@ -3,10 +3,12 @@
 <mapper namespace="com.quick.portal.web.home.IHomeDao">
     <!--查询用户所有应用-->
 	<select id="queryUserApp" parameterType="map" resultType="map">
-		select a.app_id,a.app_name,a.app_url,a.app_preview_url,m.menu_id,m.menu_icon_url,d.param_value app_sort,d.dashboard_id,d.config_id
+		select a.app_id,a.app_name,IFNULL(c.app_class_name,'z') as app_class_name,a.app_url,a.app_preview_url,m.menu_id,m.menu_icon_url,d.param_value app_sort,d.dashboard_id,d.config_id
 		from dashboard_app_config d
 		left join user_dashboard u on u.dashboard_id=d.dashboard_id
 		left join application a on a.app_id=d.app_id and a.app_state=1
+		left join app_class_rela r on a.app_id=r.app_id
+		left join app_class c on r.app_class_id=c.app_class_id
 		inner join sys_menu m on d.app_id=m.app_id
 		and m.menu_state=0
 		
@@ -18,7 +20,7 @@
 	</select>
 	<!-- 查询用户所有应用2 -->
 	<select id="queryUserAllApp" parameterType="map" resultType="map">
-		select a.app_id,a.app_name, c.app_class_name, m.menu_id, m.menu_icon_url,(case when aa.app_id is null then 0 else 1 end) is_add
+		select a.app_id,a.app_name, IFNULL(c.app_class_name,'z') as app_class_name, m.menu_id, m.menu_icon_url,(case when aa.app_id is null then 0 else 1 end) is_add
 		  from application a
 		left join app_class_rela r on a.app_id=r.app_id
 		left join app_class c on r.app_class_id=c.app_class_id
@@ -82,7 +84,7 @@
 	</select>
 	<!-- 查询所有应用 -->
 	<select id="queryApp" parameterType="map" resultType="map">
-		select c.app_class_name, m.menu_id, m.menu_icon_url,a.* from application a
+		select IFNULL(c.app_class_name,'z') as app_class_name, m.menu_id, m.menu_icon_url,a.* from application a
 		  left join app_class_rela r on a.app_id=r.app_id
 		  left join app_class c on r.app_class_id=c.app_class_id
 		  inner join sys_menu m on a.app_id=m.app_id
