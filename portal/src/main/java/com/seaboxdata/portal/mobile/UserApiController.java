@@ -6,6 +6,7 @@ import com.quick.portal.sysUser.ISysUserDao;
 import com.quick.portal.sysUser.ISysUserService;
 import com.quick.portal.sysUser.SysUserDO;
 import com.quick.portal.web.model.DataResult;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -33,17 +35,38 @@ public class UserApiController extends SysApiController {
     @Autowired
     private ISysUserDao<SysUserDO> iSysUserDao;
     //App修改密码
-    @RequestMapping(value = "/changPwApp")
+    @RequestMapping(value = "/modifyPwdByApp")
     @ResponseBody
-    public DataResult changeAppPassword(Integer user_id, String new_password, HttpServletResponse res)  {
-        SysUserDO sysUserDO = new SysUserDO();
+    public DataResult modifyPwdByApp(String user_id,String user_old_pw, String new_password, HttpServletResponse res)  {
+        Map<String,Object> map = new HashMap<>();
+        DataResult result = null;
+        if(null == user_old_pw || "".equals(user_old_pw)){
+        	 result = new DataResult(0,"您输入旧密码不能为空，请重新输入密码！");
+             return result;     
+        }
+        if(null == new_password || "".equals(new_password)){
+        	 result = new DataResult(0,"您输入新密码不能为空，请重新输入密码！");
+             return result;     
+        }
+        		
+        map.put("user_password",user_old_pw);
+        map.put("user_name",user_id);
+        
+        List<Map<String,Object>> list = sysUserService.select(map);
+        if(null == list || list.size()==0){
+              result = new DataResult(0,"您输入旧密码不准确，请重新输入密码！");
+              return result;     
+        }
+    	SysUserDO sysUserDO = new SysUserDO();
         sysUserDO.setUser_password(new_password);
-        sysUserDO.setUser_id(user_id);
-        iSysUserDao.updatePassword(sysUserDO);
-        DataResult result = new DataResult();
-        result.setCode(1);
-        result.setMsg("OK");
-        result.setVersion("1.0");
+        sysUserDO.setUser_name(user_id);
+        try{
+        	 iSysUserDao.modifyPwdByApp(sysUserDO);
+        }catch(Exception e){
+        	  result = new DataResult(0,"修改密码失败，请重新操作！");
+              return result;
+        }
+        result = new DataResult(0,"OK"); 
         return result;
     }
 

@@ -166,7 +166,7 @@ public class HomeApiController extends SysApiController {
         urlMap.put("user_id", uid);
         urlMap.put("role_id", role_id);
 
-        List<Map<String, Object>> list =   homeService.queryUserAllApp(urlMap);
+        List<Map<String, Object>> list = homeService.queryUserAllApp(urlMap);
         fixUrl(list);
         return new DataResult(list);
     }
