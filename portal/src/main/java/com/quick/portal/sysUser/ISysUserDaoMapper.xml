@@ -99,6 +99,14 @@
 		user_password=#{user_password}
 		where user_id = #{user_id}
 	</update>
+	
+	
+	<update id="modifyPwdByApp" parameterType="com.quick.portal.sysUser.SysUserDO">
+		update sys_user  set
+		user_password=#{user_password},
+		user_state=1
+		where user_name = #{user_name}
+	</update>
 
 
 	<!-- 删除 -->
