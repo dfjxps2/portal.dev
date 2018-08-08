@@ -54,7 +54,7 @@ public class UserApiController extends SysApiController {
         
         List<Map<String,Object>> list = sysUserService.select(map);
         if(null == list || list.size()==0){
-              result = new DataResult(0,"您输入旧密码不准确，请重新输入密码！");
+              result = new DataResult(0,"您输入用户或密码不准确，请重新输入密码！");
               return result;     
         }
     	SysUserDO sysUserDO = new SysUserDO();
