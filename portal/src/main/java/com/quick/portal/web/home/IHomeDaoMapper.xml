@@ -21,12 +21,12 @@
 	<!-- 查询用户所有应用2 -->
 	<select id="queryUserAllApp" parameterType="map" resultType="map">
 		select a.app_id,a.app_name, IFNULL(c.app_class_name,'z') as app_class_name, m.menu_id, m.menu_icon_url,(case when aa.app_id is null then 0 else 1 end) is_add
-		  from application a
+		   from application a
 		left join app_class_rela r on a.app_id=r.app_id
 		left join app_class c on r.app_class_id=c.app_class_id
 		inner join sys_menu m on a.app_id=m.app_id
 		and m.menu_state=0
-		left join (select app_id from dashboard_app_config a1
+		left join (select DISTINCT a1.app_id  from dashboard_app_config a1
 		               left join user_dashboard a2
 		                 on a1.dashboard_id=a2.dashboard_id
 		              where a2.user_id=#{user_id}) aa on a.app_id=aa.app_id
@@ -112,4 +112,33 @@
 	<select id="queryDashboard" parameterType="map" resultType="map">
 		select * from user_dashboard where user_id=#{user_id}
 	</select>
+	
+	<delete id="deleteDashboardAppByID" parameterType="map">
+		delete from dashboard_app_config where app_id = #{aid}  and dashboard_id in (${bid})
+	</delete>
+	
+	
+	
+	<!--查询用户所有应用-->
+	<select id="getUserApp" parameterType="map" resultType="map">
+		select DISTINCT d.app_id,a.app_name,IFNULL(c.app_class_name,'z') as app_class_name,a.app_url,a.app_preview_url,
+		m.menu_id,m.menu_icon_url
+		from dashboard_app_config d
+		left join user_dashboard u on u.dashboard_id=d.dashboard_id
+		and  u.user_id=#{user_id} 
+		left join application a on a.app_id=d.app_id and a.app_state=1
+		 and a.app_id is not null
+		left join app_class_rela r on a.app_id=r.app_id
+		left join app_class c on r.app_class_id=c.app_class_id
+		inner join sys_menu m on d.app_id=m.app_id
+		and m.menu_state=0
+		where d.param_id=1 and d.param_value !='0'
+		<if test="app_name != null and app_name != '' and app_name != 'null'"><![CDATA[
+	       and instr(a.app_name,#{app_name})>0
+	    ]]></if>
+		order by convert(d.param_value, SIGNED)
+	</select>
+	
+
+	
 </mapper>

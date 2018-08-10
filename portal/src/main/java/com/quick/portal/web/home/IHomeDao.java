@@ -90,4 +90,12 @@ public interface IHomeDao<ApplicationDO> extends ISysBaseDao<ApplicationDO> {
      * @return
      */
     List<Map<String, Object>> queryDashboard(Map<String, Object> m);
+    
+    
+    int deleteDashboardAppByID(Map<String, Object> m);
+    
+    List<Map<String, Object>> getUserApp(Map<String, Object> m);
+    
+    
+
 }

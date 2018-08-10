@@ -75,7 +75,7 @@ public class MonitorController extends SysWebController {
         Integer app_id = rint("t", 0);
         Integer page_id = rint("p", 0);
         List<Map<String, Object>> plist = queryPage(app_id);
-        String time = rstr("time","0");
+        String time = rstr("time","");
         if(page_id == 0 && plist != null && plist.size() > 0){
             page_id = (Integer)TypeUtil.parse(Integer.class, plist.get(0).get("page_id"));
         }

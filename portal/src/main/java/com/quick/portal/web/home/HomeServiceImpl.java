@@ -24,6 +24,7 @@ import com.quick.core.base.model.DataStore;
 import com.quick.core.util.common.DateTime;
 import com.quick.portal.application.ApplicationDO;
 import com.quick.portal.application.IApplicationDao;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -149,4 +150,40 @@ public class HomeServiceImpl extends SysBaseService<ApplicationDO> implements IH
         }
         return md;
     }
+
+	@Override
+	public String queryDashboard(Map<String, Object> m) {
+		String bid = "";
+		String ids = "";
+		List<Map<String, Object>> retList = dao.queryDashboard(m);
+		if(null != retList && retList.size()>0){
+			for(Map<String, Object> mp :retList){
+				bid += Integer.parseInt(mp.get("dashboard_id").toString())+",";
+			}
+			ids = bid.lastIndexOf(",")>0?bid.substring(0,bid.length()-1):bid;
+		}
+		return ids;
+	}
+    
+	
+    /**
+     * 删除用户应用
+     *
+     * @param bid :应用配置编号
+     * @param aid :应用编号
+     * @return
+     */
+    @Override
+    public int deleteDashboardAppByID(String bid,String aid) {
+    	Map<String, Object> p = new HashMap<>();
+    	p.put("bid", bid);
+    	p.put("aid", aid);
+        return dao.deleteDashboardAppByID(p);
+    }
+
+	@Override
+	public List<Map<String, Object>> getUserApp(Map<String, Object> m) {
+		  return dao.getUserApp(m);
+	}
+
 }

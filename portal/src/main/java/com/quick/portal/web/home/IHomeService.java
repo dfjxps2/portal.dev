@@ -78,4 +78,19 @@ public interface IHomeService extends ISysBaseService<ApplicationDO> {
     int addApp(Map<String, Object> m);
 
     Map<String,Object> queryAppConfig(Map<String, Object> m);
+    
+    /**
+     * 查询用户桌面
+     * @param m
+     * @return
+     */
+    String queryDashboard(Map<String, Object> m);
+    
+    
+    int deleteDashboardAppByID(String bid ,String aid);
+    
+    
+    
+    List<Map<String, Object>> getUserApp(Map<String, Object> m);
+ 
 }
