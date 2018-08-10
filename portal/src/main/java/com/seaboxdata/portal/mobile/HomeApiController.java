@@ -57,34 +57,39 @@ public class HomeApiController extends SysApiController {
     
     /**
      * 删除应用
+     * id: 应用编号
      * @return
      */
     @RequestMapping(value = "/dodel")
     @ResponseBody
-    public Object dodel(String id){
+    public Object dodel(String u,String id){
+    	Map<String, Object> p = new HashMap<>();
+        String uid = rstr("u", loginer.getUser_id().toString());
+        p.put("user_id", uid);
+    	String bid = homeService.queryDashboard(p);
         if(id != null && !id.equals("")) {
             String[] ids = id.split(",");
             for (String str : ids) {
-                homeService.deleteApp(str);
+                homeService.deleteDashboardAppByID(bid,str);
             }
         }
-        return getUserApp();
+        return new DataResult(1,CANCEL_MSG);
+//        return getUserApp();
     }
 
     @RequestMapping(value = "/doadd")
     @ResponseBody
     public Object doadd(String id){
         if(id == null || id.equals(""))
-            return ActionMsg.setError("请选择要添加的应用");
+        	return new DataResult(0,"请选择要添加的应用");
         String[] ids = id.split(",");
         Map<String, Object> p = new HashMap<>();
-
         String uid = rstr("u", loginer.getUser_id().toString());
         p.put("user_id", uid);
 
         Map<String, Object> u = homeService.queryAppConfig(p);
         if(u == null)
-            return ActionMsg.setError("读取用户桌面出错，请刷新页面");
+        	return new DataResult(0,"读取用户桌面出错，请刷新页面");
         String dashboard_id = val(u, "dashboard_id");
         String sno = val(u, "param_value");
         Integer param_value = sno.length() == 0 ? 1 : Integer.valueOf(sno);
@@ -97,7 +102,8 @@ public class HomeApiController extends SysApiController {
             homeService.addApp(m);
             param_value++;
         }
-        return getUserApp();
+//        return getUserApp();
+        return new DataResult(1,SUBSCRIPTION_MSG);
     }
 
     /**
@@ -113,11 +119,11 @@ public class HomeApiController extends SysApiController {
         String app_name = rstr("t");
         if(app_name.length() > 0)
             urlMap.put("app_name", app_name);
-
         String uid = rstr("u", loginer.getUser_id().toString());
         urlMap.put("user_id", uid);
 
-        List<Map<String, Object>> list =  homeService.queryUserApp(urlMap);
+//        List<Map<String, Object>> list =  homeService.queryUserApp(urlMap);
+        List<Map<String, Object>> list =  homeService.getUserApp(urlMap);
         fixUrl(list);
         return list;
     }
@@ -186,7 +192,9 @@ public class HomeApiController extends SysApiController {
     }
     
     
-	
+    private static final String  CANCEL_MSG = "取消成功";
+    
+    private static final String  SUBSCRIPTION_MSG = "订阅成功";
 	
 
 }
