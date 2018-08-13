@@ -3,7 +3,7 @@
 <mapper namespace="com.quick.portal.web.home.IHomeDao">
     <!--查询用户所有应用-->
 	<select id="queryUserApp" parameterType="map" resultType="map">
-		select a.app_id,a.app_name,IFNULL(c.app_class_name,'z') as app_class_name,a.app_url,a.app_preview_url,m.menu_id,m.menu_icon_url,d.param_value app_sort,d.dashboard_id,d.config_id
+		select DISTINCT a.app_id,a.app_name,IFNULL(c.app_class_name,'z') as app_class_name,a.app_url,a.app_preview_url,m.menu_id,m.menu_icon_url,d.param_value app_sort,d.dashboard_id,d.config_id
 		from dashboard_app_config d
 		left join user_dashboard u on u.dashboard_id=d.dashboard_id
 		left join application a on a.app_id=d.app_id and a.app_state=1

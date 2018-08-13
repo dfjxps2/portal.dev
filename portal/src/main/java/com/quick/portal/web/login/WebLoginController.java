@@ -246,7 +246,6 @@ public class WebLoginController {
         }
         model.addAttribute("host", url);
         model.addAttribute("uid", userId);
-//    	WebLoginUitls.writeFatal(request, response,  userId+"帐号被锁，请联系管理员!");
         return "page/home/lock";
     }
     
