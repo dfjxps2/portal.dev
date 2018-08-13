@@ -125,14 +125,13 @@
 		m.menu_id,m.menu_icon_url
 		from dashboard_app_config d
 		left join user_dashboard u on u.dashboard_id=d.dashboard_id
-		and  u.user_id=#{user_id} 
 		left join application a on a.app_id=d.app_id and a.app_state=1
 		 and a.app_id is not null
 		left join app_class_rela r on a.app_id=r.app_id
 		left join app_class c on r.app_class_id=c.app_class_id
 		inner join sys_menu m on d.app_id=m.app_id
-		and m.menu_state=0
 		where d.param_id=1 and d.param_value !='0'
+		and  u.user_id=#{user_id} and m.menu_state=0
 		<if test="app_name != null and app_name != '' and app_name != 'null'"><![CDATA[
 	       and instr(a.app_name,#{app_name})>0
 	    ]]></if>
