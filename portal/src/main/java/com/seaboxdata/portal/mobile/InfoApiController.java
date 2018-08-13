@@ -3,6 +3,7 @@ package com.seaboxdata.portal.mobile;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,8 +79,12 @@ public class InfoApiController extends SysApiController {
 		PageBounds pager = new PageBounds(pageNo, pgSize);
 		//当前用户编号
 		String userID =  getUserIdByuserNm(userName);
+		List<Map<String, Object>> dataList = new ArrayList<>();
 		List<Map<String, Object>> retList = infoMngService.getSolrInfo(queryMap, pager,userID,type);
-        return new DataResult(retList);
+		if(null != retList && retList.size()>0){
+			dataList = (List<Map<String, Object>>) retList.get(1);
+		}
+        return new DataResult(dataList);
     }
     
     
