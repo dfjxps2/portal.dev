@@ -28,6 +28,11 @@
 	<script src="${G.host}/res/plugin//bootstrap-table/bootstrap-table.js"></script>
 	<script src="${G.host}/res/plugin/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
 	<#include "/WEB-INF/include/resedit.html" />
+	<style>
+		select::-ms-expand{
+			display: none;
+		}
+	</style>
 
 </head>
 
@@ -57,7 +62,7 @@
 								  <div class="form-group">
 									  <label class="col-xs-2 lable_top"><span class="span_require">*</span>角色类型</label>
 									  <div class="col-xs-9">
-										  <select name="role_type_id" class="form-control required"  id="role_type_id">
+										  <select name="role_type_id" class="form-control required select_change"  id="role_type_id">
 										  </select>
 									  </div>
 								  </div>

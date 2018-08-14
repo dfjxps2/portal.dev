@@ -28,7 +28,11 @@
 
 	  <script src="${G.host}/res/plugin//bootstrap-table/bootstrap-table.js"></script>
 	  <script src="${G.host}/res/plugin/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
-
+	  <style>
+		  select::-ms-expand{
+			  display: none;
+		  }
+	  </style>
   </head>
 
   <body class="gray-bg">
@@ -68,7 +72,7 @@
 								  <div class="form-group">
 									  <label class="col-xs-2 lable_top"><span class="span_require">*</span>角色状态</label>
 									  <div class="col-xs-9">
-										  <select name="role_state" class="form-control required" id="role_state">
+										  <select name="role_state" class="form-control required select_change" id="role_state">
 											  <option value="1">启用</option>
 											  <option value="0">停用</option>
 										  </select>

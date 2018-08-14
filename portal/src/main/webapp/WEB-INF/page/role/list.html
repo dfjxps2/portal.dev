@@ -35,6 +35,9 @@
               white-space:pre-wrap;
               word-break:break-all;
           }
+          select::-ms-expand{
+              display: none;
+          }
 	  </style>
   </head>
    <script>
@@ -306,7 +309,7 @@
                                   <input type="text" class="form-control form-control-green" name="role_name" id="role_name" placeholder="角色名称">
                               </div>
                                <div class="form-group" style="width:159px;">
-                        			 <select name="role_state" class="input-group form-control" id="IDS_SYSPLATFORM">
+                        			 <select name="role_state" class="input-group form-control select_change" id="IDS_SYSPLATFORM">
 										  <option value="">角色状态</option>
 										  <option value="1">启用</option>
 										  <option value="0">禁用</option>
