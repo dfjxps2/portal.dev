@@ -92,5 +92,10 @@ public interface IHomeService extends ISysBaseService<ApplicationDO> {
     
     
     List<Map<String, Object>> getUserApp(Map<String, Object> m);
+    
+    /*
+     *  APP端：查询所有应用
+     */
+    List<Map<String, Object>> queryUserAllByApp(Map<String, Object> m);
  
 }

@@ -160,7 +160,7 @@ public class HomeServiceImpl extends SysBaseService<ApplicationDO> implements IH
 			for(Map<String, Object> mp :retList){
 				bid += Integer.parseInt(mp.get("dashboard_id").toString())+",";
 			}
-			ids = bid.lastIndexOf(",")>0?bid.substring(0,bid.length()-1):bid;
+			ids = bid.endsWith(",")==true?bid.substring(0,bid.length()-1):bid;
 		}
 		return ids;
 	}
@@ -184,6 +184,16 @@ public class HomeServiceImpl extends SysBaseService<ApplicationDO> implements IH
 	@Override
 	public List<Map<String, Object>> getUserApp(Map<String, Object> m) {
 		  return dao.getUserApp(m);
+	}
+	
+	/*
+	 * app端：查询用户所有应用
+	 * (non-Javadoc)
+	 * @see com.quick.portal.web.home.IHomeService#queryUserAllByApp(java.util.Map)
+	 */
+	@Override
+	public List<Map<String, Object>> queryUserAllByApp(Map<String, Object> m) {
+		 return dao.queryUserAllByApp(m);
 	}
 
 }

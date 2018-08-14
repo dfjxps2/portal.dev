@@ -178,11 +178,11 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
      	map1.put("page_id", page_id);
      	List<Map<String,Object>> mconfiglst = null;
      	if (li.size()>0) {
- 			if(cre_time .equals("0") && cre_time != null){
-     		cre_time = li.get(0).get("cre_time").toString();
+ 			if(cre_time == null|| cre_time.equals("") ){
+ 				cre_time = li.get(0).get("cre_time").toString();
  			}
  			map1.put("cre_time", cre_time);
- 			 mconfiglst = mergeData(map1,"set");
+ 			mconfiglst = mergeData(map1,"set");
 		}else {
             map1.put("cre_time", "");
             mconfiglst = dao.selectPageMetricConfig(map1);
@@ -250,7 +250,7 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
         if(json.length()>1)
             json = json.substring(1);
         return "[" + json + "]";
-    }
+    }              
     private String getMetricConfig(Map<String, Object> m, List<Map<String,Object>> config,Integer user_id){
     	 if (user_id.equals(0)==false) {
          	List<Map<String,Object>> metric_role = dao.getMetricRoleByUserId(user_id);

@@ -97,5 +97,11 @@ public interface IHomeDao<ApplicationDO> extends ISysBaseDao<ApplicationDO> {
     List<Map<String, Object>> getUserApp(Map<String, Object> m);
     
     
+    /*
+     * app端：查询用户所有应用
+     */
+    List<Map<String, Object>> queryUserAllByApp(Map<String, Object> m);
+    
+    
 
 }
