@@ -18,6 +18,7 @@
  */
 package com.seaboxdata.portal.mobile;
 
+import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.quick.core.base.SysApiController;
 import com.quick.core.util.common.JsonUtil;
 import com.quick.core.util.common.QCommon;
@@ -29,6 +30,7 @@ import com.quick.portal.section.ISectionService;
 import com.quick.portal.security.authority.metric.MetricPrivilegeConstants;
 import com.quick.portal.security.authority.metric.PropertiesUtil;
 import com.quick.portal.web.model.DataResult;
+
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,7 +67,7 @@ public class MonitorApiController extends SysApiController {
   	@ResponseBody
       public Object settingUser(Integer app_id,Integer page_id) {
     	String user_id = rstr("u", loginer.getUser_id().toString());
-    	String time = rint("time",0).toString();
+    	String time = rstr("time","").toString();
         List<Map<String, Object>> plist = queryPage(app_id);
         if(page_id == 0 && plist != null && plist.size() > 0){
             page_id = (Integer)TypeUtil.parse(Integer.class, plist.get(0).get("page_id"));
@@ -91,6 +94,26 @@ public class MonitorApiController extends SysApiController {
      * 查询页面配置信息
      * @return
      */
+   /* @RequestMapping(value = "/getLayout",produces="application/json;charset=utf-8")
+    @ResponseBody
+    public String getLayout(Integer p,String u){
+    	//获取当前用户id
+    	String time = null;
+    	String user_id = rstr("u", loginer.getUser_id().toString());
+        String layout = "[{id:0, no:1,x: 0, y: 0, width: 12, height: 6, metric:[]}]";
+        if(p != null && p > 0){
+            String res = sectionService.selectLayoutJson(p,Integer.parseInt(user_id),time);
+            if(!QCommon.isNullOrEmpty(res))
+                layout = res;
+        }
+        if(layout.indexOf(",}]")>-1){
+        	layout = layout.replace(",}]", "}]");
+        }
+        String bStr ="{\"code\":1,\"msg\":\"OK\",\"url\":null,\"version\":\"1.0\",\"data\":";
+        String aStr =",\"error\":false,\"ok\":true}";
+        return bStr+layout+aStr;
+    }
+    */
     @RequestMapping(value = "/getLayout")
     @ResponseBody
     public DataResult getLayout(Integer p,String u){
@@ -102,6 +125,9 @@ public class MonitorApiController extends SysApiController {
             String res = sectionService.selectLayoutJson(p,Integer.parseInt(user_id),time);
             if(!QCommon.isNullOrEmpty(res))
                 layout = res;
+        }
+        if(layout.indexOf(",}]")>-1){
+        	layout = layout.replace(",}]", "}]");
         }
         return new DataResult(layout);
     }

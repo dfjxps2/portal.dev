@@ -160,7 +160,7 @@ public class HomeApiController extends SysApiController {
         return new DataResult(list);
     }
     /**
-     * 查询所有应用2
+     * APP端：查询所有应用
      * @return
      */
     
@@ -172,7 +172,7 @@ public class HomeApiController extends SysApiController {
         urlMap.put("user_id", uid);
         urlMap.put("role_id", role_id);
 
-        List<Map<String, Object>> list = homeService.queryUserAllApp(urlMap);
+        List<Map<String, Object>> list = homeService.queryUserAllByApp(urlMap);
         fixUrl(list);
         return new DataResult(list);
     }
