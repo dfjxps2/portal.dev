@@ -24,6 +24,7 @@ import com.quick.core.base.model.DataStore;
 import com.quick.core.util.common.DateTime;
 import com.quick.portal.application.ApplicationDO;
 import com.quick.portal.application.IApplicationDao;
+import com.quick.portal.web.model.DataResult;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -213,5 +214,74 @@ public class HomeServiceImpl extends SysBaseService<ApplicationDO> implements IH
 	public List<Map<String, Object>> querySubscribedByApp(Map<String, Object> m) {
 		return dao.querySubscribedByApp(m);
 	}
-
+	
+	/*
+	 * 保存应用
+	 * (non-Javadoc)
+	 * @see com.quick.portal.web.home.IHomeService#dosave(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public int dosave(String userID, String aid, String did) {
+		if(null != did && !"".equals(did)){
+			//删除应用
+			this.dodel(userID,did);
+		}
+		
+		if(null != aid && !"".equals(aid)){
+			//增加应用
+			this.doadd(userID,aid);
+		}
+		return 1;
+		
+	}
+	
+	/*
+	 * 增加应用
+	 */
+	public void doadd(String userID, String id) {
+		Map<String, Object> p = new HashMap<String, Object>();
+		p.put("user_id", userID);
+		Map<String, Object> mp = this.queryAppConfig(p);
+		 	String dsid = (String) mp.get("dashboard_id");
+		 	Integer did = Integer.valueOf(dsid);
+	        String sno = mp.get("param_value").toString();
+	        Integer param_value = sno.length() == 0 ? 1 : Integer.valueOf(sno);
+	        String[] ids = id.split(",");
+	        for(String str : ids){
+	            Map<String, Object> m = new HashMap<>();
+	            m.put("dashboard_id", did);
+	            m.put("param_value", param_value);
+	            m.put("app_id", str);
+	            m.put("param_id", 1);
+	            this.addApp(m);
+	            param_value++;
+	        }
+	}
+	
+	/*
+	 * 删除应用
+	 */
+	public void dodel(String userID, String id) {
+		Map<String, Object> p = new HashMap<String, Object>();
+		p.put("user_id", userID);
+    	String bid = this.queryDashboard(p);
+            String[] ids = id.split(",");
+            for (String str : ids) {
+                this.deleteDashboardAppByID(bid,str);
+            }
+	}
+	
+	/*
+     * 判断重复数据（应用编号、仪表表编号）
+     */
+	@Override
+	public boolean isExitsAppInfo(Map<String, Object> m) {
+		boolean bool = false;
+		int count = dao.isExitsAppInfo(m);
+		if(count >0){
+			bool = true;
+		}
+		return bool;
+	}
+	
 }

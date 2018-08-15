@@ -131,13 +131,18 @@ public class HomeController extends SysWebController {
         String dashboard_id = val(u, "dashboard_id");
         String sno = val(u, "param_value");
         Integer param_value = sno.length() == 0 ? 1 : Integer.valueOf(sno);
+        boolean bool = false;
+        Map<String, Object> m = null;
         for(String str : ids){
-            Map<String, Object> m = new HashMap<>();
+            m = new HashMap<String, Object>();
             m.put("dashboard_id", dashboard_id);
             m.put("param_value", param_value);
             m.put("app_id", str);
             m.put("param_id", 1);
-            homeService.addApp(m);
+            bool = homeService.isExitsAppInfo(m);
+            if(!bool){
+        	   homeService.addApp(m);
+            }
             param_value++;
         }
         return getUserApp();

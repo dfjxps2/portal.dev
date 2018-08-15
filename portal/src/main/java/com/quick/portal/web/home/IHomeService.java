@@ -112,5 +112,17 @@ public interface IHomeService extends ISysBaseService<ApplicationDO> {
      * @return
      */
     List<Map<String, Object>> querySubscribedByApp(Map<String, Object> m);
+    
+    /*
+     * 保存应用
+     * 
+     */
+    int dosave(String u,String aid,String did);
+    
+    /*
+     * 判断重复数据（应用编号、仪表表编号）
+     */
+    boolean isExitsAppInfo(Map<String, Object> m);
+    
  
 }

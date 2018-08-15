@@ -116,7 +116,9 @@ public interface IHomeDao<ApplicationDO> extends ISysBaseDao<ApplicationDO> {
      */
     List<Map<String, Object>> querySubscribedByApp(Map<String, Object> m);
     
-    
-    
+    /*
+     * 判断重复数据（应用编号、仪表表编号）
+     */
+    int isExitsAppInfo(Map<String, Object> m);
 
 }
