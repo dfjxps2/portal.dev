@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>auth</title>
+    <title>角色管理</title>
       <#include "/WEB-INF/include/reslist.html" />
       <style>
 		  .bs-bars{width:100%}
@@ -34,6 +34,9 @@
               overflow:visible;
               white-space:pre-wrap;
               word-break:break-all;
+          }
+          select::-ms-expand{
+              display: none;
           }
 	  </style>
   </head>
@@ -97,17 +100,8 @@
                  toolbar: "#formSearch",
                  columns: [[
                      {
-                         field: 'role_id',title: '编码',width: '5%',align: 'left',formatter: function (value, row, index){
 
-                         if (value == "" || value == null) {
-                                 return "-";
-                             }
-
-                             return value;
-                         }
-                     },
-                     {
-                         field: 'role_name',width: '10%',title: '名称',align: 'left',formatter: function (value, row, index) {
+                         field: 'role_name',width: '10%',title: '角色名称',align: 'center',formatter: function (value, row, index) {
                              if (value == "" || value == null) {
                                  return "-";
                              } else {
@@ -115,9 +109,10 @@
                              }
                          }
                      },
+                     { field: 'role_type_name', title: '角色类型', width: '10%' ,align: 'center' },
                      {
 
-                         field: 'role_state',width: '5%',title: '角色状态',align: 'left',formatter: function (value, row, index) {
+                         field: 'role_state',width: '10%',title: '角色状态',align: 'center',formatter: function (value, row, index) {
                          if (value == '0' ) {
                              return "停用";
                          } else if (value=='1'){
@@ -129,21 +124,6 @@
                      }
                      },
 
-                    /*  {
-                         field: 'cre_time',
-                         width: '10%',
-                         title: '创建时间',
-                         align: 'center',
-                         formatter: function (value, row, index) {
-
-                             if (value == "" || value == null) {
-                                 return "-";
-                             } else {
-                                 return value;
-                             }
-
-                         }
-                     }, */
                      {
                          field: 'upd_time',width: '10%',title: '更新时间',align: 'center',formatter: function (value, row, index) {
 
@@ -156,24 +136,12 @@
                      }
                      },
                      {
-                         field: 'CZ', width: '30%', title: '操作', align: 'center', formatter: function (value, row, index) {
+                         field: 'CZ', width: '25%', title: '操作', align: 'center', formatter: function (value, row, index) {
 
                          return "<button type='button' id='btn_auth' class='btn_el' onclick='edit(\""+row.role_id+"\",\""+row.role_name+"\")'>编辑</button>| "+
                                 "<button type='button' id='btn_auth' class='btn_el' onclick='auth(\""+row.role_id+"\",\""+row.role_name+"\")'>功能权限</button>| "+
                                 "<button type='button' id='btn_auth' class='btn_el' onclick='metricAuth(\""+row.role_id+"\",\""+row.role_name+"\")'>指标权限</button>| "+
                                 "<button id='btn_delete' type='button' class='btn_el'  onclick='del(\"" + row.role_id + "\",\"" + row.role_name + "\")'>删除</button>";
-                         /*
-                     var srt='<div class="btn-group">';
-                         srt+='<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">操作 <span class="caret"></span>';
-                         srt+='</button>';
-                         srt+='<ul class="dropdown-menu">';
-                         srt+="<li><a href='#' onclick='del(\""+row.IDS_ROLEID+"\")'>删除</a></li>";
-
-                         srt+='</ul>';
-                         srt+='</div>';
-                     return srt;
-                    */
-                         //+" <button id=\"btn_edit\" type=\"button\" class=\"btn btn-info btn-sm\" onclick='edit(\""+row.IDS_ROLEID+"\")'>  <span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span>查看 </button>";
                  }}
              ]],onPageChange:function(number, size){
                  $("#IDS_PAGESIZE").val(size);
@@ -280,8 +248,8 @@
  }
      //编辑
 	function edit(role_id,role_name){
-        navAppend("修改角色");/*获取父页面元素并动态赋值父页面title*/
-        var pageURL="${G.host}/role/edit?role_id="+role_id+"&role_name="+role_name;
+      navAppend("修改角色");/*获取父页面元素并动态赋值父页面title*/
+        var pageURL="${G.host}/role/edit?role_id="+role_id;
 	   window.location.href=pageURL;//跳转到另一个页面，并且还在当前框架
 	}
 
@@ -299,8 +267,6 @@
          if(IroleName!='undefined'){
              $("#IDS_ROLENAME").val(IroleName);
          }
-//        if(is!='undefined'){
-//         $("#IDS_SYSID").val(is);}
 
            _gridPool["tb_role"].config({
                pageSize: ps
@@ -316,7 +282,6 @@
                       pageFlag++;
                }
            });
-          // $("#tb_role").bootstrapTable(_gridPool["tb_role"].options); $('#tb_role').bootstrapTable('refresh');
          _gridPool["tb_role"].init();
        }
 
@@ -341,10 +306,15 @@
                       <div class="panel-mar">
                           <form class="form-inline" id="formSearch">
                               <div class="form-group" style="width:159px;">
-                                  <input type="text" placeholder="编码" class="input-sm form-control" id="role_id" name="role_id" />
+                                  <input type="text" class="form-control form-control-green" name="role_name" id="role_name" placeholder="角色名称">
                               </div>
-                              <div class="form-group" style="width:159px;">
-                                  <input type="text" class="form-control form-control-green" name="role_name" id="role_name" placeholder="名称">
+                               <div class="form-group" style="width:159px;">
+                        			 <select name="role_state" class="input-group form-control select_change" id="IDS_SYSPLATFORM">
+										  <option value="">角色状态</option>
+										  <option value="1">启用</option>
+										  <option value="0">禁用</option>
+									  </select>
+									  
                               </div>
                               <button type="button" class="btn btn-primary" onclick="query()"> 查询</button>
                               <div class="form-group" style="width:100px;float:right;">

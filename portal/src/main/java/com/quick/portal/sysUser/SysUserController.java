@@ -234,6 +234,19 @@ public class SysUserController extends SysBaseController<SysUserDO> {
     @RequestMapping(value = "/getDep")
     public void depView(HttpServletResponse res) {
         HashMap<String,Object> map = new HashMap<>();
+        List<Map<String,Object>> userDep = iSysUserDao.selectDep(map);
+        String json = getSysJsonString(userDep);
+        try {
+            res.getWriter().write(json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @RequestMapping(value = "/getListDep")
+    public void depLView(HttpServletResponse res) {
+        HashMap<String,Object> map = new HashMap<>();
         List<Map<String,Object>> userDep = iUserDepartmentDao.select(map);
         String json = getSysJsonString(userDep);
         try {
@@ -260,7 +273,7 @@ public class SysUserController extends SysBaseController<SysUserDO> {
     @RequestMapping(value = "/getRole")
     public void roleView(HttpServletResponse res) {
         HashMap<String,Object> map = new HashMap<>();
-        List<Map<String,Object>> userRole = iUserRoleDao.select(map);
+        List<Map<String,Object>> userRole = iSysUserDao.selectRole(map);
         String json = getRoleJsonString(userRole);
         try {
             res.getWriter().write(json);

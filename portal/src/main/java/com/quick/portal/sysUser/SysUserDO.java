@@ -89,10 +89,12 @@ public class SysUserDO  implements java.io.Serializable {
      * 用户-部门关系id
      * @return
      */
-  private Integer rela_id;
+    private Integer rela_id;
   
   
-  private String user_global_id;
+  	private String user_global_id;
+  
+  	private Integer role_type_id;
 
     public Integer getRela_id() {
         return rela_id;
@@ -321,6 +323,14 @@ public class SysUserDO  implements java.io.Serializable {
 	 */
 	public void setUser_global_id(String user_global_id) {
 		this.user_global_id = user_global_id;
+	}
+
+	public Integer getRole_type_id() {
+		return role_type_id;
+	}
+
+	public void setRole_type_id(Integer role_type_id) {
+		this.role_type_id = role_type_id;
 	}
 
 }

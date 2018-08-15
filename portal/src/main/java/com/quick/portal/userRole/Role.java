@@ -27,6 +27,8 @@ public class Role  implements java.io.Serializable {
     private String role_state;
     private String cre_time;
     private String upd_time;
+    
+    private Integer role_type_id;
 
     public String getRole_id() {
         return role_id;
@@ -67,4 +69,12 @@ public class Role  implements java.io.Serializable {
     public void setUpd_time(String upd_time) {
         this.upd_time = upd_time;
     }
+
+	public Integer getRole_type_id() {
+		return role_type_id;
+	}
+
+	public void setRole_type_id(Integer role_type_id) {
+		this.role_type_id = role_type_id;
+	}
 }

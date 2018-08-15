@@ -28,14 +28,20 @@
 			   toolbar:"#formSearch",
 			   columns: [
 				   {  checkbox: true },
-                   { field: 'super_app_name', title: '上级应用系统', width: 100  },
-                   { field: 'app_name',  title: '应用系统名称' ,width: '12%',formatter:function(value,row,index){
+                   { field: 'super_app_name',align: 'center', title: '上级应用系统', width: 100  },
+                   { field: 'app_name', align: 'center', title: '应用系统名称' ,width: '12%',formatter:function(value,row,index){
                        return "<a href='javascript:void(0)' onclick=\"goDetail(this);\" id='"+row.app_id+"'>"+row.app_name+"</a>";
                    }},
-                   { field: 'dep_name', title: '部门', width: 100  },
-                   { field: 'app_state', title: '应用系统状态', width: 100  },
-                   { field: 'cre_time', title: '创建时间', width: 100  },
-				   { field: 'CZ',  title: '操作',width: '15%', formatter:function(value,row,index){
+                   { field: 'dep_name',align: 'center', title: '部门', width: 100  },
+                   { field: 'app_state',align: 'center', title: '应用系统状态', width: 100 ,formatter:function(value,row,index){
+                       var state = '<span style="color:#CFCFCF">禁用</span>';
+                       if (row.app_state==1) {
+                           state = '<span style="color:#9ACD32">激活</span>';
+                       }
+                       return state;
+                   }  },
+                   { field: 'cre_time', align: 'center',title: '创建时间', width: 100  },
+				   { field: 'CZ', align: 'center', title: '操作',width: '15%', formatter:function(value,row,index){
 					   return "<button type='button' class='btn_el' onclick='edit(\""+row.app_id+"\",\""+row.app_name+"\")'>编辑</button>| "
 							   +"<button type='button' class='btn_el' onclick='del(\""+row.app_id+"\",\""+row.app_name+"\")'>删除</button>";
 					   ;

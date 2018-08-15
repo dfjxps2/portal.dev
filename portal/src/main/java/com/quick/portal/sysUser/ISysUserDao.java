@@ -43,4 +43,6 @@ public interface ISysUserDao<SysUserDO> extends ISysBaseDao<SysUserDO> {
     int recount(String depid);
     int modifyPwdByApp(SysUserDO sysDO);
     
+    List<Map<String,Object>> selectRole(Map<String,Object> p);
+    List<Map<String,Object>> selectDep(Map<String,Object> p);
 }

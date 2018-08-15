@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html>
 <head>
     <#include "/WEB-INF/include/resedit.html" />
@@ -25,6 +24,11 @@
     <link href="${G.host}/res/css/hk0405.css" rel="stylesheet">
     <link href="${G.host}/res/css/styleIter.css" rel="stylesheet">
     <link href="${G.host}/res/css/import.css" rel="stylesheet">
+    <style>
+        select::-ms-expand{
+            display: none;
+        }
+    </style>
     <script>
         function fileOnMouseDown(){
             $("#btn_select").removeClass("button_normal").addClass("button_press");

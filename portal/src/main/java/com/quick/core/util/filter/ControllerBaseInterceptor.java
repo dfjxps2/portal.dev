@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.quick.portal.web.login.WebLoginUser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -20,6 +22,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
  * @author Administrator
  */
 public class ControllerBaseInterceptor extends HandlerInterceptorAdapter {
+    private Logger logger = LoggerFactory.getLogger(getClass());
     
     @Override
     public boolean preHandle(HttpServletRequest request,
@@ -52,6 +55,7 @@ public class ControllerBaseInterceptor extends HandlerInterceptorAdapter {
         WebLoginUser webLoginUser = new WebLoginUser().loadSession(request, response);
 
         if (webLoginUser.getRequestSerial() == 0){
+            logger.warn("Request for {} with request serial = 0, possibly system internal error.", request.getRequestURI());
             response.sendRedirect(request.getContextPath());
             return false;
         }

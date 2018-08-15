@@ -178,6 +178,8 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
 			user.setUser_id(Integer.valueOf(WebLoginUitls.getVal(u, "user_id")));
 			user.setUser_global_id(WebLoginUitls.getVal(u, "user_global_id"));
 			user.setUser_name(WebLoginUitls.getVal(u, "user_name"));
+		    user.setUser_state(Integer.valueOf(WebLoginUitls.getVal(u, "user_state")));
+	        user.setRole_type_id(Integer.valueOf(WebLoginUitls.getVal(u, "role_type_id")));
 			user.saveSession(request, response);//保存至本地
 			return user;
 		}

@@ -56,6 +56,19 @@
         <url-pattern>*.css</url-pattern>
     </servlet-mapping>
 
+    <!-- 登陆验证过滤器 -->
+    <filter>
+        <filter-name>loginFilter</filter-name>
+        <filter-class>com.quick.core.util.filter.LoginFilter</filter-class>
+        <init-param>
+            <param-name>prefixIgnore</param-name>
+            <param-value>/res,/callback,/mobile,/auth,/login</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>loginFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
     <!-- Spring MVC 请求配置 -->
     <servlet>
         <servlet-name>PortalServlet</servlet-name>
@@ -70,6 +83,7 @@
         <servlet-name>PortalServlet</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
+
 
     <!--字符编码-->
     <filter>

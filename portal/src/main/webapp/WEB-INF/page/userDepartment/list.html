@@ -28,15 +28,21 @@
 			   toolbar:"#formSearch",
 			   columns: [
 				   {  checkbox: true },
-                   { field: 'super_dep_name', title: '上级部门', width: 100  },
-				   { field: 'dep_name',  title: '部门名称' ,width: '12%',formatter:function(value,row,index){
+                   { field: 'super_dep_name', title: '上级部门', width: 100 ,align: 'center' },
+				   { field: 'dep_name',  title: '部门名称' ,align: 'center',width: '12%',formatter:function(value,row,index){
 					   return "<a href='javascript:void(0)' onclick=\"goDetail(this);\" id='"+row.dep_id+"'>"+row.dep_name+"</a>";
 				   }},
-                   { field: 'dep_level', title: '部门级别', width: 100  },
-                   { field: 'dep_state', title: '部门状态', width: 100  },
-                   { field: 'cre_time', title: '创建时间', width: 100  },
-                   { field: 'upd_time', title: '更新时间', width: 100  },
-				   { field: 'CZ',  title: '操作',width: '15%', formatter:function(value,row,index){
+                   { field: 'dep_level', title: '部门级别', width: 100 ,align: 'center'  },
+                   { field: 'dep_state', title: '部门状态', width: 100 ,align: 'center',formatter:function(value,row,index){
+                       var state = '<span style="color:#CFCFCF">禁用</span>';
+                       if (row.dep_state==1) {
+                           state = '<span style="color:#9ACD32">激活</span>';
+                       }
+                       return state;
+				   }  },
+                   { field: 'cre_time', title: '创建时间', width: 100 ,align: 'center' },
+                   { field: 'upd_time', title: '更新时间', width: 100 ,align: 'center' },
+				   { field: 'CZ',  title: '操作',width: '15%',align: 'center', formatter:function(value,row,index){
 					   return "<button type='button' class='btn_el' onclick='edit(\""+row.dep_id+"\",\""+row.dep_name+"\")'>编辑</button>| "
 							   +"<button type='button' class='btn_el' onclick='del(\""+row.dep_id+"\",\""+row.dep_name+"\")'>删除</button>";
 					   ;

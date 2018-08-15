@@ -79,7 +79,7 @@
     
     <!--查询-->
 	<select id="select" parameterType="map" resultType="map">
-		select a.log_id log_id,a.log_time log_time,c.log_type_name log_type_id,b.user_real_name user_id,a.user_ip,case a.user_op_type when '0' then'登录' when '1'then '退出' when '2'then '调用菜单'  end as user_op_type,
+		select a.log_id log_id,a.log_time log_time,c.log_type_name log_type_id,b.user_name user_id,a.user_ip,case a.user_op_type when '0' then'登录' when '1'then '退出' when '2'then '调用菜单'  end as user_op_type,
 		d.menu_cn_name menu_id,a.log_detail
 		from user_access_log a
 		left join sys_user b on a.user_id=b.user_id

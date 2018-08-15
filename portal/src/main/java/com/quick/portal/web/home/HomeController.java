@@ -68,12 +68,8 @@ public class HomeController extends SysWebController {
         int isadmin = 0;
         Map<String, Object> parm = new HashMap<>();
         parm.put("menu_name", "sys_admin");
-        parm.put("role_id", loginer.getRole_id());
+        parm.put("role_type_id",loginer.getRole_type_id());
         parm.put("user_id", loginer.getUser_id());
-        Map<String, Object> map = menuPrivilegeService.selectMap(parm);
-        if(map != null && map.size() > 0){
-            isadmin = 1;
-        }
         //获取用户应用列表,如果没有，从menu_privilege表读取对应角色默认应用列表
         List<Map<String, Object>> apps = queryUserApp();
         if(apps == null || apps.size() == 0){
@@ -86,9 +82,7 @@ public class HomeController extends SysWebController {
         model.addAttribute("txtdata", habitInfo);  //信息搜索
 
         model.addAttribute("apps", JsonUtil.toJson(apps));
-        model.addAttribute("roleid", loginer.getRole_id()); //管理员ROLEID
-        model.addAttribute("isadmin", isadmin);
-
+        model.addAttribute("roleTypeId", loginer.getRole_type_id()); //管理员ROLEID
         return view();
     }
 
