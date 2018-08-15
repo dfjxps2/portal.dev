@@ -119,10 +119,10 @@
 	
 	
 	
-	<!--查询用户所有应用-->
-	<select id="getUserApp" parameterType="map" resultType="map">
+	<!--APP端 查询用户已订阅所有应用-->
+	<select id="querySubscribedByApp" parameterType="map" resultType="map">
 		select DISTINCT d.app_id,a.app_name,IFNULL(c.app_class_name,'z') as app_class_name,a.app_url,a.app_preview_url,
-		m.menu_id,m.menu_icon_url
+		m.menu_id,m.menu_icon_url,e.res_url
 		from dashboard_app_config d
 		left join user_dashboard u on u.dashboard_id=d.dashboard_id
 		left join application a on a.app_id=d.app_id and a.app_state=1
@@ -130,12 +130,10 @@
 		left join app_class_rela r on a.app_id=r.app_id
 		left join app_class c on r.app_class_id=c.app_class_id
 		inner join sys_menu m on d.app_id=m.app_id
+		 left join system_resource e on a.app_id=e.object_id
+		 and e.term_type_id = 1 and e.object_type_id = 0 and e.res_type_id =0
 		where d.param_id=1 and d.param_value !='0'
-		and  u.user_id=#{user_id} and m.menu_state=0
-		<if test="app_name != null and app_name != '' and app_name != 'null'"><![CDATA[
-	       and instr(a.app_name,#{app_name})>0
-	    ]]></if>
-		order by convert(d.param_value, SIGNED)
+		and  u.user_id=#{user_id} and m.menu_state=0		
 	</select>
 	
    
@@ -157,6 +155,25 @@
 		and e.term_type_id = 1 and e.object_type_id = 0 and e.res_type_id =0
 		where a.app_state=1
 		  and m.menu_id in (select menu_id from menu_privilege mp where mp.role_id=#{role_id})
+	</select>
+	
+	
+	<!-- 手机端 查询未订阅所有应用 -->
+	<select id="queryUnSubscribeByApp" parameterType="map" resultType="map">
+		select IFNULL(c.app_class_name,'z') as app_class_name, m.menu_id, m.menu_icon_url,a.*,e.res_url from application a
+		  left join app_class_rela r on a.app_id=r.app_id
+		  left join app_class c on r.app_class_id=c.app_class_id
+		  inner join sys_menu m on a.app_id=m.app_id
+		  and m.menu_id in (select menu_id from menu_privilege mp where mp.role_id=#{role_id})
+		  and m.menu_state=0
+		  left join system_resource e on a.app_id=e.object_id
+			and e.term_type_id = 1 and e.object_type_id = 0 and e.res_type_id =0
+		  where a.app_state=1
+		   and a.app_id not in (
+		       select a1.app_id from dashboard_app_config a1
+		        left join user_dashboard a2 on a1.dashboard_id=a2.dashboard_id
+			    where a2.user_id=#{user_id}
+		   )
 	</select>
    
 	
