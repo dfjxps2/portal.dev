@@ -181,10 +181,7 @@ public class HomeServiceImpl extends SysBaseService<ApplicationDO> implements IH
         return dao.deleteDashboardAppByID(p);
     }
 
-	@Override
-	public List<Map<String, Object>> getUserApp(Map<String, Object> m) {
-		  return dao.getUserApp(m);
-	}
+
 	
 	/*
 	 * app端：查询用户所有应用
@@ -194,6 +191,27 @@ public class HomeServiceImpl extends SysBaseService<ApplicationDO> implements IH
 	@Override
 	public List<Map<String, Object>> queryUserAllByApp(Map<String, Object> m) {
 		 return dao.queryUserAllByApp(m);
+	}
+	
+	/*
+	 * 查询当前用户未订阅的应用列表
+	 * (non-Javadoc)
+	 * @see com.quick.portal.web.home.IHomeService#queryUnSubscribeByApp(java.util.Map)
+	 */
+	@Override
+	public List<Map<String, Object>> queryUnSubscribeByApp(Map<String, Object> m) {
+		return dao.queryUnSubscribeByApp(m);
+	}
+	
+	/*
+	 *
+     * app端 查询当前用户已订阅的应用列表
+     * @param m
+     * @return
+     */
+	@Override
+	public List<Map<String, Object>> querySubscribedByApp(Map<String, Object> m) {
+		return dao.querySubscribedByApp(m);
 	}
 
 }

@@ -90,12 +90,27 @@ public interface IHomeService extends ISysBaseService<ApplicationDO> {
     int deleteDashboardAppByID(String bid ,String aid);
     
     
-    
-    List<Map<String, Object>> getUserApp(Map<String, Object> m);
-    
+
     /*
      *  APP端：查询所有应用
      */
     List<Map<String, Object>> queryUserAllByApp(Map<String, Object> m);
+    
+
+    
+    /**
+     * 查询当前用户未订阅的应用列表
+     * @param m
+     * @return
+     */
+    List<Map<String, Object>> queryUnSubscribeByApp(Map<String, Object> m);
+    
+    
+    /**
+     * app端 查询当前用户已订阅的应用列表
+     * @param m
+     * @return
+     */
+    List<Map<String, Object>> querySubscribedByApp(Map<String, Object> m);
  
 }

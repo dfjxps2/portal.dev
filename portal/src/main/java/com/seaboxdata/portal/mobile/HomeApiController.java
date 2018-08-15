@@ -123,7 +123,8 @@ public class HomeApiController extends SysApiController {
         urlMap.put("user_id", uid);
 
 //        List<Map<String, Object>> list =  homeService.queryUserApp(urlMap);
-        List<Map<String, Object>> list =  homeService.getUserApp(urlMap);
+        List<Map<String, Object>> list =  homeService.querySubscribedByApp(urlMap);
+        
         fixUrl(list);
         return list;
     }
@@ -144,7 +145,7 @@ public class HomeApiController extends SysApiController {
 
 
     /**
-     * 查询所有应用
+     * 查询当前用户未订阅的应用列表
      * @return
      */
     
@@ -155,7 +156,7 @@ public class HomeApiController extends SysApiController {
         String role_id = rstr("r", loginer.getRole_id().toString());
         urlMap.put("user_id", uid);
         urlMap.put("role_id", role_id);
-        List<Map<String, Object>> list = homeService.queryApp(urlMap);
+        List<Map<String, Object>> list = homeService.queryUnSubscribeByApp(urlMap);
         fixUrl(list);
         return new DataResult(list);
     }
