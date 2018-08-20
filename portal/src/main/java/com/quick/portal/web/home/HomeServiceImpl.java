@@ -242,7 +242,7 @@ public class HomeServiceImpl extends SysBaseService<ApplicationDO> implements IH
 		Map<String, Object> p = new HashMap<String, Object>();
 		p.put("user_id", userID);
 		Map<String, Object> mp = this.queryAppConfig(p);
-		 	String dsid = (String) mp.get("dashboard_id");
+		 	String dsid = (String) mp.get("dashboard_id").toString();;
 		 	Integer did = Integer.valueOf(dsid);
 	        String sno = mp.get("param_value").toString();
 	        Integer param_value = sno.length() == 0 ? 1 : Integer.valueOf(sno);

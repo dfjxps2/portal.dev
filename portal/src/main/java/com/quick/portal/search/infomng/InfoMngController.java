@@ -106,7 +106,7 @@ public class InfoMngController extends SysBaseController<InfoMngDO> {
 				PageBounds pager = new PageBounds(pageNo, pageSize);
 				//当前用户编号
 				String ids = QCookie.getValue(request, "ids");
-				List retList = infoMngService.getSolrInfo(queryMap, pager,ids,type);
+				List retList = infoMngService.getSolrInfo(queryMap, pager,ids,type,"");
 				if(null !=retList && retList.size()>0){
 					dt = (List)retList.get(1);
 					recordCount = (int) retList.get(0);
