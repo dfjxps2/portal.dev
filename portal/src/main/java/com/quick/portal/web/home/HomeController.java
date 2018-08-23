@@ -68,12 +68,8 @@ public class HomeController extends SysWebController {
         int isadmin = 0;
         Map<String, Object> parm = new HashMap<>();
         parm.put("menu_name", "sys_admin");
-        parm.put("role_id", loginer.getRole_id());
+        parm.put("role_type_id",loginer.getRole_type_id());
         parm.put("user_id", loginer.getUser_id());
-        Map<String, Object> map = menuPrivilegeService.selectMap(parm);
-        if(map != null && map.size() > 0){
-            isadmin = 1;
-        }
         //获取用户应用列表,如果没有，从menu_privilege表读取对应角色默认应用列表
         List<Map<String, Object>> apps = queryUserApp();
         if(apps == null || apps.size() == 0){
@@ -86,9 +82,7 @@ public class HomeController extends SysWebController {
         model.addAttribute("txtdata", habitInfo);  //信息搜索
 
         model.addAttribute("apps", JsonUtil.toJson(apps));
-        model.addAttribute("roleid", loginer.getRole_id()); //管理员ROLEID
-        model.addAttribute("isadmin", isadmin);
-
+        model.addAttribute("roleTypeId", loginer.getRole_type_id()); //管理员ROLEID
         return view();
     }
 
@@ -137,13 +131,18 @@ public class HomeController extends SysWebController {
         String dashboard_id = val(u, "dashboard_id");
         String sno = val(u, "param_value");
         Integer param_value = sno.length() == 0 ? 1 : Integer.valueOf(sno);
+        boolean bool = false;
+        Map<String, Object> m = null;
         for(String str : ids){
-            Map<String, Object> m = new HashMap<>();
+            m = new HashMap<String, Object>();
             m.put("dashboard_id", dashboard_id);
             m.put("param_value", param_value);
             m.put("app_id", str);
             m.put("param_id", 1);
-            homeService.addApp(m);
+            bool = homeService.isExitsAppInfo(m);
+            if(!bool){
+        	   homeService.addApp(m);
+            }
             param_value++;
         }
         return getUserApp();

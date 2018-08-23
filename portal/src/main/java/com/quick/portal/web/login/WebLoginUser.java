@@ -53,6 +53,9 @@ public class WebLoginUser extends SysUserDO {
             String uname = QCookie.getValue(request, "sbd.user");
             String gid = QCookie.getValue(request, "sbd.gid");
             String uid = QCookie.getValue(request, "sbd.uid");
+			String ustate = QCookie.getValue(request, "sbd.ustate");
+			String rtype = QCookie.getValue(request, "sbd.rtype");
+			
 
             if (!QCommon.isNullOrEmpty(uname))
                 uname = URLDecoder.decode(uname, "utf-8");
@@ -60,7 +63,11 @@ public class WebLoginUser extends SysUserDO {
                 rid = "0";
             if (QCommon.isNullOrEmpty(ids))
                 ids = "0";
-
+			if (QCommon.isNullOrEmpty(ustate))
+            	ustate = "0";
+			if (QCommon.isNullOrEmpty(rtype))
+				rtype = "0";
+			 
             this.setRole_id(Integer.valueOf(rid));
             this.setUser_real_name(uname);
             this.setUser_id(Integer.valueOf(ids));
@@ -68,7 +75,8 @@ public class WebLoginUser extends SysUserDO {
             this.setUser_name(uid);
             String requestSerial = QCookie.getValue(request, "request.serial");
             this.setRequestSerial(requestSerial == null ? 0 : Integer.valueOf(requestSerial));
-
+			this.setUser_state(Integer.valueOf(ustate));
+			this.setRole_type_id(Integer.valueOf(rtype));
         } catch (Exception e) {
             System.out.print("无法缓存用户会话信息");
             e.printStackTrace();
@@ -98,6 +106,8 @@ public class WebLoginUser extends SysUserDO {
             QCookie.set(response, "sbd.tk", this.createToken(request), cookieTTL); //验证参数是否被修改
             QCookie.set(response, "sbd.gid", this.getUser_global_id(), cookieTTL);
             QCookie.set(response, "request.serial", String.valueOf(this.requestSerial), cookieTTL);
+			QCookie.set(response, "sbd.ustate", String.valueOf(this.getUser_state()),cookieTTL);
+			QCookie.set(response, "sbd.rtype", String.valueOf(this.getRole_type_id()),cookieTTL);
 
         } catch (Exception e) {
             System.out.print("无法缓存用户会话信息");

@@ -97,24 +97,25 @@ public class SolrUtils {
 	
 	/*
 	 * 查询SOLR数据
+	 * termCd--0:手机APP
 	 */
 	public static List searchInfoDataByCondition(Map<String, Object> m,
-			PageBounds page, List<Map<String, Object>> retList, String type) {
+			PageBounds page, List<Map<String, Object>> retList, String type,String termCd) {
 		List restList = new ArrayList();
 		if (SolrInfoConstants.UNREAD_OBJ_TYPE.equals(type)) {
 			int fromIndex = page.getStartRow() == 1 ? 0 : page.getStartRow() - 1;
 			int toIndex = page.getEndRow();
 			SolrDocumentList docInfoList = (SolrDocumentList) getUnReadData(m,retList);
-			List dataList = getUnReadInfoData(docInfoList);
+			List dataList = getUnReadInfoData(docInfoList,termCd);
 			restList = getDataList(dataList, fromIndex,toIndex);
 		}else if (SolrInfoConstants.READ_OBJ_TYPE.equals(type)) {
 			 int fromIndex = page.getStartRow() == 1 ? 0 : page.getStartRow() - 1;
 			 int toIndex = page.getEndRow();
-			 restList = getReadInfoData(m,retList,fromIndex,toIndex);
+			 restList = getReadInfoData(m,retList,fromIndex,toIndex,termCd);
 		}else{
 			SolrQuery query = getAllSolrQuery(m, page,type);
 			SolrDocumentList docList = getSolrInfoDataByTitle(query);
-			restList = getAllInfoData(docList,retList);
+			restList = getAllInfoData(docList,retList,termCd);
 		}
 	
 		return restList;
@@ -148,17 +149,28 @@ public class SolrUtils {
 		return docList;
 	}
 	
-	public static List getUnReadInfoData(SolrDocumentList docList){
+	public static List getUnReadInfoData(SolrDocumentList docList,String termCd){
 		List restList = new ArrayList();
 		List<Map<String, Object>> dataList = new ArrayList<>();
 		Map<String, Object> dataMap = null;
 		String id = null;
+		String aid = null;
 		System.out.println("####### 总共 ： " + docList.size() + "条记录");
 		for (SolrDocument doc : docList) {
 			System.out.println("####### id : " + doc.get("id") + "  title : "
 					+ doc.get("portal_doc_title") + "  portal_doc_class : "
 					+ doc.get("portal_doc_class") );
+			
 			id = doc.get("id") == null ? "" : doc.get("id").toString();
+			aid = doc.get("portal_attachment_id") == null ? "" : doc.get("portal_attachment_id").toString();
+			if(null !=termCd && TERM_TYPE_APP.equals(termCd)){
+				id = id.replace(INFO_APP_FILE_DIR, "");
+				aid = aid.replace(INFO_APP_FILE_DIR, "");
+				String appUrl = PropertiesUtil.getPropery("app.upload.file.dir");
+				id = appUrl.concat(id); 
+				aid = appUrl.concat(aid);
+			}
+
 			dataMap = new HashMap();
 			dataMap.put("status", SolrInfoConstants.UNREAD_STATUS);
 			dataMap.put("id", id);
@@ -166,8 +178,9 @@ public class SolrUtils {
 					doc.get("portal_doc_title") == null ? "" : doc.get("portal_doc_title"));
 			dataMap.put("portal_doc_class",
 					doc.get("portal_doc_class") == null ? "" : doc.get("portal_doc_class"));
-			dataMap.put("aid",
-					doc.get("portal_attachment_id") == null ? "" : doc.get("portal_attachment_id"));
+			
+			
+			dataMap.put("aid",aid);
 			
 			dataList.add(dataMap);
 		}
@@ -200,7 +213,6 @@ public class SolrUtils {
 			query.setStart(SolrInfoConstants.PAGE_START);
 			query.setRows(SolrInfoConstants.PAGE_ROWS);
 		}  
-		// query.addFilterQuery("description:演员");
 		// 排序 如果按照blogId 排序，那么将blogId desc(or asc) 改成 id desc(or asc)
 //		query.addSort("create_time", ORDER.asc);
 		return query;
@@ -289,24 +301,23 @@ public class SolrUtils {
 	 * 与查阅数据比对
 	 */
 	public static List getReadInfoData(Map<String, Object> m,
-			List<Map<String, Object>> retList,int fromIndex, int toIndex) {
+			List<Map<String, Object>> retList,int fromIndex, int toIndex,String termCd) {
 		List<Map<String, Object>> dataList = new ArrayList<>();
 		SolrQuery query= getSolrQueryByCond(m);	
 		List<SolrDocument> docList = getSolrInfoDataByTitle(query);
-		List restList = getInfoData(docList, retList);
+		List restList = getInfoData(docList, retList,termCd);
 		List dtList = getDataList(restList, fromIndex,toIndex);
 		return dtList;		
 	}
 	
 	
 	public static List getInfoData(List<SolrDocument> docList,
-			List<Map<String, Object>> retList) {
+			List<Map<String, Object>> retList,String termCd) {
 		List restList = new ArrayList();
 		Map<String, Object> dataMap = null;
 		List<Map<String, Object>> dataList = new ArrayList<>();
 		System.out.println("####### 已查阅表关系数据总共 ： " + retList.size() + "条记录");
-		String cid = null;
-		String id = null;
+		String cid = null, id = null, aid = null;
 		for (Map<String, Object> data : retList) {
 			cid = data.get("MSG_CONTENT").toString();
 			dataMap = new HashMap();
@@ -318,6 +329,16 @@ public class SolrUtils {
 				if (null != cid && cid.equals(id)) {
 					// status:1表示已阅
 					dataMap.put("status", SolrInfoConstants.READ_STATUS);
+					
+					aid = doc.get("portal_attachment_id") == null ? "" : doc.get("portal_attachment_id").toString();
+					if(null !=termCd && TERM_TYPE_APP.equals(termCd)){
+						id = id.replace(INFO_APP_FILE_DIR, "");
+						aid = aid.replace(INFO_APP_FILE_DIR, "");
+						String appUrl = PropertiesUtil.getPropery("app.upload.file.dir");
+						id = appUrl.concat(id); 
+						aid = appUrl.concat(aid);
+					}
+					
 					dataMap.put("id", id);
 					dataMap.put("title",
 							doc.get("portal_doc_title") == null ? "" : doc.get("portal_doc_title"));
@@ -325,8 +346,7 @@ public class SolrUtils {
 							"portal_doc_class",
 							doc.get("portal_doc_class") == null ? "" : doc
 									.get("portal_doc_class"));
-					dataMap.put("aid",
-							doc.get("portal_attachment_id") == null ? "" : doc.get("portal_attachment_id"));
+					dataMap.put("aid",aid);
 					dataList.add(dataMap);
 					break;
 				}
@@ -355,14 +375,13 @@ public class SolrUtils {
 	
 	
 	public static List getAllInfoData(SolrDocumentList docList,
-			List<Map<String, Object>> retList) {
+			List<Map<String, Object>> retList,String termCd) {
 		List restList = new ArrayList();
 		Map<String, Object> dataMap = null;
 		List<Map<String, Object>> dataList = new ArrayList<>();
 		System.out.println("####### 总共 ： " + docList.getNumFound() + "条记录");
 		int count = (int) docList.getNumFound();
-		String cid = null;
-		String id = null;
+		String cid = null,aid = null,id = null;
 		for (SolrDocument doc : docList) {
 			System.out.println("####### id : " + doc.get("id")
 					+ "  title : " + doc.get("portal_doc_title")
@@ -378,13 +397,20 @@ public class SolrUtils {
 					break;
 				}
 			}
+			aid = doc.get("portal_attachment_id") == null ? "" : doc.get("portal_attachment_id").toString();
+			if(null !=termCd && TERM_TYPE_APP.equals(termCd)){
+				id = id.replace(INFO_APP_FILE_DIR, "");
+				aid = aid.replace(INFO_APP_FILE_DIR, "");
+				String appUrl = PropertiesUtil.getPropery("app.upload.file.dir");
+				id = appUrl.concat(id); 
+				aid = appUrl.concat(aid);
+			}
 			dataMap.put("id", id);
 			dataMap.put("title",
 					doc.get("portal_doc_title") == null ? "" : doc.get("portal_doc_title"));
 			dataMap.put("portal_doc_class", doc.get("portal_doc_class") == null ? ""
 					: doc.get("portal_doc_class"));
-			dataMap.put("aid",
-					doc.get("portal_attachment_id") == null ? "" : doc.get("portal_attachment_id"));
+			dataMap.put("aid",aid);
 			dataList.add(dataMap);
 		}
 		restList.add(count);
@@ -486,4 +512,7 @@ public class SolrUtils {
 	  	return  serviceUrl;
 	}
 	
+	private final static String  TERM_TYPE_APP = "0";
+	
+	private final static String  INFO_APP_FILE_DIR = "/home/portal";
 }

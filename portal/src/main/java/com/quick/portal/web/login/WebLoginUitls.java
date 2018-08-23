@@ -1,5 +1,6 @@
 package com.quick.portal.web.login;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -31,5 +32,23 @@ public class WebLoginUitls {
         final ProfileManager manager = new ProfileManager(context);
         return manager.getAll(true);
     }
+	
+	
+	public static void writeFatal(HttpServletRequest request,HttpServletResponse response, String msg){
+		String url = request.getContextPath();
+		String logoutUrl = url+"/home/logout";
+		response.setHeader("content-type", "text/html;charset=UTF-8");
+		String outString =" <script src=\""+url+"/res/plugin/jQuery/jquery-1.11.3.min.js\" type=\"text/javascript\"></script>";
+		outString+="<link href=\""+url+"/res/layer/skin/default/layer.css\" rel=\"stylesheet\">";
+		outString+="<link href=\""+url+"/res/layer/skin/moon/style.css\" rel=\"stylesheet\">";
+		outString+="<script src=\""+url+"/res/layer/layer.js\"></script>";
+		outString+= "<script language=javascript>layer.msg('"+msg+"',{icon: 1, time: 5000, skin: 'layer-ext-moon'},function(){(window.parent||window).location='"
+				+ logoutUrl + "/';});</script>";
+		try {
+			response.getWriter().print(outString);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
 
 }

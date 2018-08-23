@@ -75,7 +75,7 @@ public class MonitorController extends SysWebController {
         Integer app_id = rint("t", 0);
         Integer page_id = rint("p", 0);
         List<Map<String, Object>> plist = queryPage(app_id);
-        String time = rstr("time","0");
+        String time = rstr("time","");
         if(page_id == 0 && plist != null && plist.size() > 0){
             page_id = (Integer)TypeUtil.parse(Integer.class, plist.get(0).get("page_id"));
         }
@@ -104,7 +104,7 @@ public class MonitorController extends SysWebController {
         Integer app_id = rint("t", 0);
         Integer page_id = rint("p", 0);
         String user_id = rstr("u", loginer.getUser_id().toString());
-        String time = rint("time",0).toString();
+        String time = rstr("time","").toString();
         List<Map<String, Object>> plist = queryPage(app_id);
         if(page_id == 0 && plist != null && plist.size() > 0){
             page_id = (Integer)TypeUtil.parse(Integer.class, plist.get(0).get("page_id"));
@@ -131,7 +131,7 @@ public class MonitorController extends SysWebController {
   	@ResponseBody
       public Object settingUser(Integer app_id,Integer page_id) {
     	String user_id = rstr("u", loginer.getUser_id().toString());
-    	String time = rint("time",0).toString();
+    	String time = rstr("time","").toString();
         List<Map<String, Object>> plist = queryPage(app_id);
         if(page_id == 0 && plist != null && plist.size() > 0){
             page_id = (Integer)TypeUtil.parse(Integer.class, plist.get(0).get("page_id"));

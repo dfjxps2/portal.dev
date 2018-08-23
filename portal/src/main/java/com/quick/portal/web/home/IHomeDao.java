@@ -90,4 +90,35 @@ public interface IHomeDao<ApplicationDO> extends ISysBaseDao<ApplicationDO> {
      * @return
      */
     List<Map<String, Object>> queryDashboard(Map<String, Object> m);
+    
+    
+    int deleteDashboardAppByID(Map<String, Object> m);
+    
+
+    /*
+     * app端：查询用户所有应用
+     */
+    List<Map<String, Object>> queryUserAllByApp(Map<String, Object> m);
+    
+    
+    /**
+     * app端 查询当前用户未订阅的应用列表
+     * @param m
+     * @return
+     */
+    List<Map<String, Object>> queryUnSubscribeByApp(Map<String, Object> m);
+    
+    
+    /**
+     * app端 查询当前用户已订阅的应用列表
+     * @param m
+     * @return
+     */
+    List<Map<String, Object>> querySubscribedByApp(Map<String, Object> m);
+    
+    /*
+     * 判断重复数据（应用编号、仪表表编号）
+     */
+    int isExitsAppInfo(Map<String, Object> m);
+
 }

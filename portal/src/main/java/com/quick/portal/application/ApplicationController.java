@@ -145,7 +145,7 @@ public class ApplicationController extends SysBaseController<ApplicationDO> {
         MultipartHttpServletRequest multiRequest=(MultipartHttpServletRequest)request;
         //创建文件夹
         String baseDir = PropertiesUtil.getPropery("file.dir");
-        File dirPath = new File(baseDir+"upload/home/");
+        File dirPath = new File(baseDir + SRC_UPLOAD_PATH);
         if (!dirPath.exists()) {
             dirPath.mkdirs();
         }
@@ -164,7 +164,7 @@ public class ApplicationController extends SysBaseController<ApplicationDO> {
                     String fname = QCommon.getUUID() + suffix;
                     File uploadFile = new File(dirPath+File.separator+ fname);
                     FileCopyUtils.copy(file.getBytes(), uploadFile);
-                    String url = "upload/home/" + fname;
+                    String url = TARGE_UPLOAD_PATH + fname;
                     return url;
                 }
             }
@@ -174,4 +174,8 @@ public class ApplicationController extends SysBaseController<ApplicationDO> {
         }
         return "";
     }
+    
+    private final static String TARGE_UPLOAD_PATH = "upload/files/pc/";
+    
+    private final static String SRC_UPLOAD_PATH = "/pc";
 }

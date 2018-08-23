@@ -18,6 +18,7 @@
  */
 package com.quick.portal.userRole;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Date;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -199,5 +201,30 @@ public class RoleController extends SysBaseController<Role> {
         Map<String, Object> parm = new HashMap<>();
         parm.put("role_id", role_id);
         return roleService.listAllApp(parm);
+    }
+    
+
+    //角色类型下拉框数据
+    @RequestMapping(value = "/getRoleType")
+    public void getRoleType(HttpServletResponse res) {
+        List<Map<String,Object>> result = roleService.getRoleType();
+        String json = getRoleTypeJsonString(result);
+        try {
+            res.getWriter().write(json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getRoleTypeJsonString(List<Map<String,Object>> map) {
+        org.json.JSONArray json = new org.json.JSONArray();
+        org.json.JSONObject jo = null;
+        for (Map sysMap:map) {
+            jo = new org.json.JSONObject();
+            jo.put("roleTypeId",sysMap.get("role_type_id"));
+            jo.put("roleTypeName",sysMap.get("role_type_name"));
+            json.put(jo);
+        }
+        return json.toString();
     }
 }

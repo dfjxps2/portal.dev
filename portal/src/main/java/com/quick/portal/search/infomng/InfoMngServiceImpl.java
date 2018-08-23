@@ -60,7 +60,7 @@ public class InfoMngServiceImpl extends SysBaseService<InfoMngDO> implements IIn
 
 	@Override
 	public List<Map<String, Object>> getSolrInfo(Map<String, Object> m,
-			PageBounds page,String userID,String type) {
+			PageBounds page,String userID,String type,String termCd) {
 		List<Map<String, Object>> dataList = new ArrayList<>();
     	String keyword = m.get(SolrInfoConstants.INDEX_KEYWORD).toString();
         if(null == keyword || "".equals(keyword)){
@@ -68,7 +68,7 @@ public class InfoMngServiceImpl extends SysBaseService<InfoMngDO> implements IIn
         }else{
         	Integer uid = Integer.valueOf(userID);
         	List<Map<String, Object>> retList = getSolrInfoByCurrUserID(uid);
-        	dataList = SolrUtils.searchInfoDataByCondition(m, page,retList,type);
+        	dataList = SolrUtils.searchInfoDataByCondition(m, page,retList,type,termCd);
         }
     	return dataList;
 		

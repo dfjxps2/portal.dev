@@ -24,6 +24,8 @@ import com.quick.core.base.model.DataStore;
 import com.quick.core.util.common.DateTime;
 import com.quick.portal.application.ApplicationDO;
 import com.quick.portal.application.IApplicationDao;
+import com.quick.portal.web.model.DataResult;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -149,4 +151,137 @@ public class HomeServiceImpl extends SysBaseService<ApplicationDO> implements IH
         }
         return md;
     }
+
+	@Override
+	public String queryDashboard(Map<String, Object> m) {
+		String bid = "";
+		String ids = "";
+		List<Map<String, Object>> retList = dao.queryDashboard(m);
+		if(null != retList && retList.size()>0){
+			for(Map<String, Object> mp :retList){
+				bid += Integer.parseInt(mp.get("dashboard_id").toString())+",";
+			}
+			ids = bid.endsWith(",")==true?bid.substring(0,bid.length()-1):bid;
+		}
+		return ids;
+	}
+    
+	
+    /**
+     * 删除用户应用
+     *
+     * @param bid :应用配置编号
+     * @param aid :应用编号
+     * @return
+     */
+    @Override
+    public int deleteDashboardAppByID(String bid,String aid) {
+    	Map<String, Object> p = new HashMap<>();
+    	p.put("bid", bid);
+    	p.put("aid", aid);
+        return dao.deleteDashboardAppByID(p);
+    }
+
+
+	
+	/*
+	 * app端：查询用户所有应用
+	 * (non-Javadoc)
+	 * @see com.quick.portal.web.home.IHomeService#queryUserAllByApp(java.util.Map)
+	 */
+	@Override
+	public List<Map<String, Object>> queryUserAllByApp(Map<String, Object> m) {
+		 return dao.queryUserAllByApp(m);
+	}
+	
+	/*
+	 * 查询当前用户未订阅的应用列表
+	 * (non-Javadoc)
+	 * @see com.quick.portal.web.home.IHomeService#queryUnSubscribeByApp(java.util.Map)
+	 */
+	@Override
+	public List<Map<String, Object>> queryUnSubscribeByApp(Map<String, Object> m) {
+		return dao.queryUnSubscribeByApp(m);
+	}
+	
+	/*
+	 *
+     * app端 查询当前用户已订阅的应用列表
+     * @param m
+     * @return
+     */
+	@Override
+	public List<Map<String, Object>> querySubscribedByApp(Map<String, Object> m) {
+		return dao.querySubscribedByApp(m);
+	}
+	
+	/*
+	 * 保存应用
+	 * (non-Javadoc)
+	 * @see com.quick.portal.web.home.IHomeService#dosave(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public int dosave(String userID, String aid, String did) {
+		if(null != did && !"".equals(did)){
+			//删除应用
+			this.dodel(userID,did);
+		}
+		
+		if(null != aid && !"".equals(aid)){
+			//增加应用
+			this.doadd(userID,aid);
+		}
+		return 1;
+		
+	}
+	
+	/*
+	 * 增加应用
+	 */
+	public void doadd(String userID, String id) {
+		Map<String, Object> p = new HashMap<String, Object>();
+		p.put("user_id", userID);
+		Map<String, Object> mp = this.queryAppConfig(p);
+		 	String dsid = (String) mp.get("dashboard_id").toString();;
+		 	Integer did = Integer.valueOf(dsid);
+	        String sno = mp.get("param_value").toString();
+	        Integer param_value = sno.length() == 0 ? 1 : Integer.valueOf(sno);
+	        String[] ids = id.split(",");
+	        for(String str : ids){
+	            Map<String, Object> m = new HashMap<>();
+	            m.put("dashboard_id", did);
+	            m.put("param_value", param_value);
+	            m.put("app_id", str);
+	            m.put("param_id", 1);
+	            this.addApp(m);
+	            param_value++;
+	        }
+	}
+	
+	/*
+	 * 删除应用
+	 */
+	public void dodel(String userID, String id) {
+		Map<String, Object> p = new HashMap<String, Object>();
+		p.put("user_id", userID);
+    	String bid = this.queryDashboard(p);
+            String[] ids = id.split(",");
+            for (String str : ids) {
+                this.deleteDashboardAppByID(bid,str);
+            }
+	}
+	
+	/*
+     * 判断重复数据（应用编号、仪表表编号）
+     */
+	@Override
+	public boolean isExitsAppInfo(Map<String, Object> m) {
+		boolean bool = false;
+		int count = dao.isExitsAppInfo(m);
+		if(count >0){
+			bool = true;
+		}
+		return bool;
+	}
+	
 }

@@ -99,6 +99,14 @@
 		user_password=#{user_password}
 		where user_id = #{user_id}
 	</update>
+	
+	
+	<update id="modifyPwdByApp" parameterType="com.quick.portal.sysUser.SysUserDO">
+		update sys_user  set
+		user_password=#{user_password},
+		user_state=1
+		where user_name = #{user_name}
+	</update>
 
 
 	<!-- 删除 -->
@@ -112,8 +120,8 @@
 
 
 	<select id="select" parameterType="map" resultType="map">
-		select urd.*,uj.job_name from (select udrn.*, udn.dep_name from(select urn.*,udr.dep_id,udr.rela_id from (select su.*,rn.role_name role_name,rn.rel_id rel_id,rn.role_id role_id from sys_user su
-		left join(select urr.user_id, ur.role_name,urr.rel_id,ur.role_id from  user_role ur , user_role_rela urr where ur.role_id = urr.role_id) rn on su.user_id = rn.user_id where 1=1) urn
+		select urd.*,uj.job_name from (select udrn.*, udn.dep_name from(select urn.*,udr.dep_id,udr.rela_id from (select su.*,rn.role_name role_name,rn.rel_id rel_id,rn.role_type_id role_type_id,rn.role_id role_id from sys_user su
+		left join(select urr.user_id, ur.role_name,ur.role_type_id,urr.rel_id,ur.role_id from  user_role ur , user_role_rela urr where ur.role_id = urr.role_id) rn on su.user_id = rn.user_id where 1=1) urn
 		left join user_dep_rela udr on urn.user_id = udr.user_id where 1=1) udrn left join user_department udn
 		on udrn.dep_id = udn.dep_id  where 1=1)urd left join user_job uj on urd.job_id=uj.job_id
 		<where>
@@ -136,6 +144,12 @@
 	<select id="selectRole" parameterType="map" resultType="map">
 		SELECT   ur.role_id,ur.role_name  FROM  user_role ur
 		WHERE  ur.role_state = 1
+	</select>
+
+	<!--用户管理部门的下拉框选项-->
+	<select id="selectDep" parameterType="map" resultType="map">
+		SELECT  ud.dep_id,ud.dep_name FROM  user_department ud
+		WHERE  ud.dep_state = 1
 	</select>
 
 	<!--初始化和查询-->

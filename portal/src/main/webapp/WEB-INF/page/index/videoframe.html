@@ -11,17 +11,53 @@
 <link rel="stylesheet" href="${G.host}/res/css/matrix-style2.css" />
 <link rel="stylesheet" href="${G.host}/res/css/matrix-media.css" />
 <link href="${G.host}/res/fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+ <style>
+    .carousel-tmp-item {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 400px;
+      /*height: 300px;*/
+      margin-left: -180px;
+      margin-top: -120px;
+      /*border-radius: 8px;*/
+      transition: transform 0.5s ease-in-out;
+      cursor: pointer;
+    }
+    
+     .nav-carousel-btn {
+      position: absolute;
+      left: 50%;
+      bottom: 44px;
+      transform: translateX(-50%);
+      width: 410px;
+      height: 45px;
+      background: url('${G.host}/res/images/nav_carousel_btn.png') no-repeat;
+      background-size: contain;
+      text-align: center;
+      font-size: 20px;
+      line-height: 45px;
+      color: #fff;
+      cursor: pointer;
+    }
+    
+     .nav-carousel-btn:hover {
+      background: url('${G.host}/res/images/nav_carousel_btn_hover.png') no-repeat;
+      background-size: contain;
+    }
+	</style>
 </head>
 <body>
 
 <div id="v_content">
   <div class="quick-actions_homepage">
-  	
   </div>
-<!--   <button class="btn btn-base1" type="button"  style=" width:20px; height:20px;  border:0; background:url(../images/v_img.png) no-repeat  bottom"  onclick="gosearch();">&nbsp;&nbsp;&nbsp;&nbsp;go&nbsp;&nbsp;&nbsp;&nbsp;</button>
-   -->
+    <div class="carousel-tmp-item"></div>
+    <div class="nav-carousel-btn" id="come-in-btn">
+      	进入
+    </div>
+  </div>
 </div>
-
 </body>
 </html>
 <script src="${G.host}/res/plugin/jQuery/jquery-1.11.3.min.js" type="text/javascript"></script>

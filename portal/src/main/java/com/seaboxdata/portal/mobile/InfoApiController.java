@@ -3,6 +3,7 @@ package com.seaboxdata.portal.mobile;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,11 +76,16 @@ public class InfoApiController extends SysApiController {
     	String type = QRequest.getString(request, "obj");
 		int pgSize = QRequest.getInteger(request, "pageSize", 10); // 获取datagrid传来的行数
 		int pageNo = QRequest.getInteger(request, "page", 1); // 获取datagrid传来的页码
+		String termCd = QRequest.getString(request, "tcd");   //终端类型APP
 		PageBounds pager = new PageBounds(pageNo, pgSize);
 		//当前用户编号
 		String userID =  getUserIdByuserNm(userName);
-		List<Map<String, Object>> retList = infoMngService.getSolrInfo(queryMap, pager,userID,type);
-        return new DataResult(retList);
+		List<Map<String, Object>> dataList = new ArrayList<>();
+		List<Map<String, Object>> retList = infoMngService.getSolrInfo(queryMap, pager,userID,type,termCd);
+		if(null != retList && retList.size()>0){
+			dataList = (List<Map<String, Object>>) retList.get(1);
+		}
+        return new DataResult(dataList);
     }
     
     

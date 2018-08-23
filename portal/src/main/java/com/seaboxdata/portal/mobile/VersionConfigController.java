@@ -22,7 +22,7 @@ import com.quick.portal.web.model.DataResult;
  */
 @Controller
 @Scope("prototype")
-@RequestMapping(value = "/mobile/VersionConfig")
+@RequestMapping(value = "/mobile/versionConfig")
 public class VersionConfigController extends SysApiController {
     @Resource(name = "secMetricConfigService")
     private ISecMetricConfigService secMetricConfigService;

@@ -135,7 +135,7 @@ public class PageController extends SysBaseController<PageDO> {
     @ResponseBody
     public Object getMetricJson(Integer page_id){
     	String user_id = rstr("u", loginer.getUser_id().toString());
-    	String time = rint("time",0).toString();
+    	String time = rstr("time","").toString();
         String json = "[]";
         if(page_id != null && page_id > 0){
             String res = sectionService.selectMetricJson(page_id,Integer.parseInt(user_id),time);

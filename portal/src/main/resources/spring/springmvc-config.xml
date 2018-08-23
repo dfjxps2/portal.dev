@@ -34,10 +34,10 @@
     <!--<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>-->
     <bean name='handlerMapping' class='com.quick.core.base.spring.MethodRequestMappingHandlerMapping' />
     <!--Spring3.1版本开始的注解 HandlerAdapter -->
-    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
-        <!-- 配置一下对json数据的转换 -->
+<!--     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
         <property name="messageConverters">
             <list>
+             	<bean class="org.springframework.http.converter.StringHttpMessageConverter" /> 
                 <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
                     <property name="objectMapper">
                         <bean class="com.fasterxml.jackson.databind.ObjectMapper">
@@ -59,7 +59,36 @@
                 </bean>
             </list>
         </property>
+    </bean> -->
+    
+    
+     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+			   <bean class="org.springframework.http.converter.StringHttpMessageConverter" /> 
+			   <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                    <property name="objectMapper">
+                        <bean class="com.fasterxml.jackson.databind.ObjectMapper">
+                             <property name="dateFormat">
+                                  <bean class="java.text.SimpleDateFormat">
+                                      <constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss" />
+                                  </bean>
+                             </property>
+                        </bean>
+                    </property>
+                    <property name="supportedMediaTypes">
+                        <list>
+                            <value>application/json;charset=UTF-8</value>
+                            <value>text/json;charset=UTF-8</value>
+                            <value>text/plain;charset=UTF-8</value>
+                            <value>text/html;charset=UTF-8</value>
+                        </list>
+                    </property>
+                </bean>
+            </list>
+        </property>
     </bean>
+	  
 	  
     
     <!-- 默认的注解映射的支持(注册RequestMappingHandlerMapping和RequestMappingHandlerAdapter) --> 
@@ -172,6 +201,7 @@
             <mvc:mapping path="/**"/>
             <mvc:exclude-mapping path="/callback"/>
             <mvc:exclude-mapping path="/mobile/**"/>
+            <mvc:exclude-mapping path="/upload/**"/>
             <bean class="org.pac4j.springframework.web.SecurityInterceptor">
                 <constructor-arg name="config" ref="config"/>
                 <constructor-arg name="clients" value="CasClient"/>
@@ -179,11 +209,17 @@
         </mvc:interceptor>
         <mvc:interceptor>
             <mvc:mapping path="/mobile/login"/>
-            <bean class="org.pac4j.springframework.web.SecurityInterceptor">
+		     <bean class="org.pac4j.springframework.web.SecurityInterceptor">
                 <constructor-arg name="config" ref="config"/>
                 <constructor-arg name="clients" value="MyCasRestBasicAuthClient"/>
                 <property name="securityLogic" ref="mySecurityLogic"/>
             </bean>
+        </mvc:interceptor>
+        
+         <mvc:interceptor>
+            <mvc:mapping path="/mobile/**"/>
+            <mvc:exclude-mapping path="/mobile/login"/>
+            <bean class="com.seaboxdata.portal.mobile.filter.MobileBaseInterceptor" />
         </mvc:interceptor>
         <mvc:interceptor>
             <mvc:mapping path="/**"/>

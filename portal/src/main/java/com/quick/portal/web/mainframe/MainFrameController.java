@@ -178,6 +178,8 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
 			user.setUser_id(Integer.valueOf(WebLoginUitls.getVal(u, "user_id")));
 			user.setUser_global_id(WebLoginUitls.getVal(u, "user_global_id"));
 			user.setUser_name(WebLoginUitls.getVal(u, "user_name"));
+		    user.setUser_state(Integer.valueOf(WebLoginUitls.getVal(u, "user_state")));
+	        user.setRole_type_id(Integer.valueOf(WebLoginUitls.getVal(u, "role_type_id")));
 			user.saveSession(request, response);//保存至本地
 			return user;
 		}
@@ -219,63 +221,47 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
   	    }
   	}
   	
-  	/*
-  	 * 智能道路管理
-  	 */
-    @RequestMapping(value = "/goRoadIframe" )
+    @RequestMapping({"/goRoadIframe"})
     public String goRoadIframe(HttpServletRequest request, Model model) throws Exception {
-    	 String url = request.getParameter("url");
-    	 model.addAttribute("url", url);
+        String url = request.getParameter("url");
+        model.addAttribute("url", url);
         return "page/index/roadframe";
     }
-    /*
-     * 智能视频监控
-     */
-    @RequestMapping(value = "/goVideoIframe" )
+
+    @RequestMapping({"/goVideoIframe"})
     public String goVideoIframe(HttpServletRequest request, Model model) throws Exception {
-    	 String url = request.getParameter("url");
-    	 model.addAttribute("url", url);
+        String url = request.getParameter("url");
+        model.addAttribute("url", url);
         return "page/index/videoframe";
     }
-    /*
-     * 智慧环境监测
-     */
-    @RequestMapping(value = "/goEnvIframe" )
+
+    @RequestMapping({"/goEnvIframe"})
     public String goEnvIframe(HttpServletRequest request, Model model) throws Exception {
-    	 String url = request.getParameter("url");
-    	 model.addAttribute("url", url);
+        String url = request.getParameter("url");
+        model.addAttribute("url", url);
         return "page/index/envframe";
     }
-    
-    /*
-     * 	智能一卡通管理
-     */
-    @RequestMapping(value = "/goBusIframe" )
+
+    @RequestMapping({"/goBusIframe"})
     public String goBusIframe(HttpServletRequest request, Model model) throws Exception {
-    	 String url = request.getParameter("url");
-    	 model.addAttribute("url", url);
+        String url = request.getParameter("url");
+        model.addAttribute("url", url);
         return "page/index/busframe";
     }
-    /*
-     * 智慧能源管理
-     */
-    @RequestMapping(value = "/goEnergyIframe" )
+
+    @RequestMapping({"/goEnergyIframe"})
     public String goEnergyIframe(HttpServletRequest request, Model model) throws Exception {
-    	 String url = request.getParameter("url");
-    	 model.addAttribute("url", url);
+        String url = request.getParameter("url");
+        model.addAttribute("url", url);
         return "page/index/energyframe";
     }
-    
-    /*
-     * 智慧园区管理
-     */
-    @RequestMapping(value = "/goParkframe" )
+
+    @RequestMapping({"/goParkframe"})
     public String goParkframe(HttpServletRequest request, Model model) throws Exception {
-    	 String url = request.getParameter("url");
-    	 model.addAttribute("url", url);
+        String url = request.getParameter("url");
+        model.addAttribute("url", url);
         return "page/index/parkframe";
     }
-
   	
 	public static final String PORTAL_ZORE_VAL = "0";
 }

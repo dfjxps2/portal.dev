@@ -29,7 +29,7 @@ import com.quick.core.base.model.PageBounds;
  */
 public interface IInfoMngService extends ISysBaseService<InfoMngDO> {
 	
-	 public List getSolrInfo(Map<String, Object> m, PageBounds page,String userID,String type);
+	 public List getSolrInfo(Map<String, Object> m, PageBounds page,String userID,String type,String termCd);
 	 
 	 public void saveVisitInfo(String id,int type,int userID);
 	 

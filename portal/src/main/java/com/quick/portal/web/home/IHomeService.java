@@ -78,4 +78,51 @@ public interface IHomeService extends ISysBaseService<ApplicationDO> {
     int addApp(Map<String, Object> m);
 
     Map<String,Object> queryAppConfig(Map<String, Object> m);
+    
+    /**
+     * 查询用户桌面
+     * @param m
+     * @return
+     */
+    String queryDashboard(Map<String, Object> m);
+    
+    
+    int deleteDashboardAppByID(String bid ,String aid);
+    
+    
+
+    /*
+     *  APP端：查询所有应用
+     */
+    List<Map<String, Object>> queryUserAllByApp(Map<String, Object> m);
+    
+
+    
+    /**
+     * 查询当前用户未订阅的应用列表
+     * @param m
+     * @return
+     */
+    List<Map<String, Object>> queryUnSubscribeByApp(Map<String, Object> m);
+    
+    
+    /**
+     * app端 查询当前用户已订阅的应用列表
+     * @param m
+     * @return
+     */
+    List<Map<String, Object>> querySubscribedByApp(Map<String, Object> m);
+    
+    /*
+     * 保存应用
+     * 
+     */
+    int dosave(String u,String aid,String did);
+    
+    /*
+     * 判断重复数据（应用编号、仪表表编号）
+     */
+    boolean isExitsAppInfo(Map<String, Object> m);
+    
+ 
 }

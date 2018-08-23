@@ -41,5 +41,8 @@ public interface ISysUserDao<SysUserDO> extends ISysBaseDao<SysUserDO> {
     void insertUserDepRela(SysUserDO userDO);
     //根据部门查询计算总条数
     int recount(String depid);
+    int modifyPwdByApp(SysUserDO sysDO);
+    
     List<Map<String,Object>> selectRole(Map<String,Object> p);
+    List<Map<String,Object>> selectDep(Map<String,Object> p);
 }

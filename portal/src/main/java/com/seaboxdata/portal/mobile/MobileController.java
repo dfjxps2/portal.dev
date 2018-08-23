@@ -28,7 +28,7 @@ public class MobileController {
     	 return "page/home/login";
     }
 
-    @RequestMapping(value = "/login", produces = {"application/json;charset=UTF-8"})
+    @RequestMapping(value = "/login", produces = {"text/json;charset=UTF-8"})
     public DataResult login(HttpServletRequest request, HttpServletResponse response) {
         final WebContext context = new J2EContext(request, response);
         List<CommonProfile> profiles = new ProfileManager<>(context).getAll(true);
