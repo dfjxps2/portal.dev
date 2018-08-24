@@ -15,7 +15,7 @@
 	       and dep_id = #{dep_id}
 	    ]]></if>
 		<if test="app_name != null and app_name != '' and app_name != 'null'"><![CDATA[
-	       and instr(app_name,#{app_name})>0
+	       and app_name = #{app_name}
 	    ]]></if>
 		<if test="app_level != null"><![CDATA[
 	       and app_level = #{app_level}

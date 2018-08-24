@@ -101,6 +101,9 @@ public class ApplicationController extends SysBaseController<ApplicationDO> {
             model.setApp_preview_url(up_url);
         //保存应用
         ActionMsg = getBaseService().save(model);
+        if (ActionMsg.isError())
+            return ActionMsg;
+
         //保存应用分类
         String acids = rstr("app_class_id");
         String rids = rstr("rel_id");
