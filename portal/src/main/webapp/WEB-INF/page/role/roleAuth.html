@@ -3,9 +3,11 @@
 <head>
     <#include "/WEB-INF/include/resedit.html" />
     <link href="${G.host}/res/js/ztree/zTreeStyle/zTreeStyle.css" rel="stylesheet">
-    <script src="${G.host}/res/js/ztree/jquery.ztree.all.min.js" ></script>
+    <script src="${G.host}/res/js/ztree/jquery.ztree.all.min.js"></script>
     <style type="text/css">
-        .sotxt{width:40px;}
+        .sotxt {
+            width: 40px;
+        }
     </style>
 </head>
 <body class="gray-bg">
@@ -15,7 +17,8 @@
         <div class="col-sm-12">
             <div class="col-sm-10">
                 <div class="col-sm-12">
-                    <label id="pagename" class="col-xs-8" style="text-align:center;font-size: 22px;color:blue;margin-left: 180px">角色权限</label>
+                    <label id="pagename" class="col-xs-8"
+                           style="text-align:center;font-size: 22px;color:blue;margin-left: 180px">角色权限</label>
                 </div>
             </div>
             <div class="ibox float-e-margins">
@@ -69,12 +72,12 @@
 </html>
 <script>
     var zTreeObj, appTree;
-    $(document).ready(function(){
+    $(document).ready(function () {
         listAllMenu();
         listAllApp();
     });
 
-    function listAllMenu(){
+    function listAllMenu() {
         var role_id = $.request.queryString["role_id"];
         zTreeObj = null;
         var ztreeSetting = {
@@ -90,21 +93,28 @@
         };
         $.ajax({
             type: "get",
-            url: "listAllMenu?role_id="+role_id,
-            async:false,
+            url: "listAllMenu?role_id=" + role_id,
+            async: false,
             dataType: "json",
-            success: function(data){
+            success: function (data) {
                 //console.log(JSON.stringify(data));
                 var ztreeNodes = new Array();
-                if(data!=null&&data.length>0){
-                    $.each(data,function(i,dataNode){
+                if (data != null && data.length > 0) {
+                    $.each(data, function (i, dataNode) {
                         var menu_id = dataNode.menu_id;
                         var super_menu_id = dataNode.super_menu_id;
                         var menu_cn_name = dataNode.menu_cn_name;
                         var show_on_init = dataNode.show_on_init || '';
                         var show_order = dataNode.show_order || '';
                         var is_app = dataNode.app_id ? 1 : 0;
-                        ztreeNodes.push({"id":menu_id, "pId":super_menu_id, "name":menu_cn_name, "app_id":is_app, "show_order": show_order, "show_on_init":show_on_init});
+                        ztreeNodes.push({
+                            "id": menu_id,
+                            "pId": super_menu_id,
+                            "name": menu_cn_name,
+                            "app_id": is_app,
+                            "show_order": show_order,
+                            "show_on_init": show_on_init
+                        });
                     });
                 }
                 zTreeObj = $.fn.zTree.init($("#treeDemo"), ztreeSetting, ztreeNodes);
@@ -113,20 +123,20 @@
         });
     }
 
-    function checkMenuPri(){
+    function checkMenuPri() {
         var role_id = $.request.queryString["role_id"];
         $.ajax({
             type: "get",
             url: "listMenuPri",
-            async:false,
-            data:{role_id:role_id},
+            async: false,
+            data: {role_id: role_id},
             dataType: "json",
-            success: function(data){
-                if(data!=null&&data.length>0){
-                    $.each(data,function(i,checkMenu){
+            success: function (data) {
+                if (data != null && data.length > 0) {
+                    $.each(data, function (i, checkMenu) {
                         var menu_id_checked = checkMenu.menu_id;
-                        var hasCheckNode = zTreeObj.getNodesByParam("id",menu_id_checked);
-                        if(hasCheckNode!=null&&hasCheckNode.length>0)
+                        var hasCheckNode = zTreeObj.getNodesByParam("id", menu_id_checked);
+                        if (hasCheckNode != null && hasCheckNode.length > 0)
                             zTreeObj.checkNode(hasCheckNode[0], true, false);
                     });
                 }
@@ -135,47 +145,50 @@
         });
     }
 
-    function saveRoleAuth(){
+    function saveRoleAuth() {
         var realCheckNode = new Array();
         var allCheckedNodes = zTreeObj.getCheckedNodes(true);
         mergeNodes(allCheckedNodes);
-        if(allCheckedNodes!=null&&allCheckedNodes.length>0){
-            $.each(allCheckedNodes,function(i,checkNode){
+        if (allCheckedNodes != null && allCheckedNodes.length > 0) {
+            $.each(allCheckedNodes, function (i, checkNode) {
                 //id,show_on_init,show_order
-                var si = checkNode.show_on_init ||  '';
-                var so = checkNode.show_order ||  '';
-                realCheckNode.push(checkNode.id+"|"+si+"|"+so);
+                var si = checkNode.show_on_init || '';
+                var so = checkNode.show_order || '';
+                realCheckNode.push(checkNode.id + "|" + si + "|" + so);
             });
         }
         var role_id = $.request.queryString["role_id"];
         var IpageNum = $.request.queryString["IpageNum"];
         var IpageSize = $.request.queryString["IpageSize"];
-        var url = encodeURI("saveMenuPri?role_id="+role_id+"&menus="+JSON.stringify(realCheckNode));
-        layer.msg('保存成功！', {icon:1,time: 1000,skin: 'layer-ext-moon'},function(){
+        var url = encodeURI("saveMenuPri?role_id=" + role_id + "&menus=" + JSON.stringify(realCheckNode));
+        layer.msg('保存成功！', {icon: 1, time: 1000, skin: 'layer-ext-moon'}, function () {
             window.location.href = url;
         });
     }
 
-    function cancel(){
+    function cancel() {
         var IpageNum = $.request.queryString["IpageNum"];
         var IpageSize = $.request.queryString["IpageSize"];
-        var url = '${G.host}/role/list?page='+IpageNum+'&pageSize='+IpageSize;
+        var url = '${G.host}/role/list?page=' + IpageNum + '&pageSize=' + IpageSize;
         window.location.href = url;
     }
+
     var IDMark_A = "_a";
+
     function addDiyDom(treeId, treeNode) {
         var aObj = $("#" + treeNode.tId + IDMark_A);
-        if(treeNode.app_id==1){
-            var editStr = "<label for='so_" +treeNode.id+ "'>（排序：<input id='so_" +treeNode.id+ "' class='sotxt' type='number' value='"+treeNode.show_order+"' /><input id='si_" +treeNode.id+ "' type='hidden' value='"+treeNode.show_on_init+"' />）</label> ";
+        if (treeNode.app_id == 1) {
+            var editStr = "<label for='so_" + treeNode.id + "'>（排序：<input id='so_" + treeNode.id + "' class='sotxt' type='number' value='" + treeNode.show_order + "' /><input id='si_" + treeNode.id + "' type='hidden' value='" + treeNode.show_on_init + "' />）</label> ";
             aObj.after(editStr);
-            var btn = $("#so_"+treeNode.id);
-            if (btn) btn.bind("change", function(){
-                var v = btn.val()>0 ? '1' : '';
-                $("#si_"+treeNode.id).val(v);
+            var btn = $("#so_" + treeNode.id);
+            if (btn) btn.bind("change", function () {
+                var v = btn.val() > 0 ? '1' : '';
+                $("#si_" + treeNode.id).val(v);
             });
         }
     }
-    function listAllApp(){
+
+    function listAllApp() {
         var role_id = $.request.queryString["role_id"];
         appTree = null;
         var ztreeSetting = {
@@ -195,12 +208,13 @@
         };
         $.ajax({
             type: "get",
-            url: "listAllApp?role_id="+role_id,
+            url: "listAllApp?role_id=" + role_id,
             dataType: "json",
-            success: function(data){
+            success: function (data) {
                 var ztreeNodes = [], addMap = {}, tmpMap = {}, appNodes = [];
-                if(data!=null&&data.length>0){
-                    $.each(data,function(i,dataNode){
+                if (data != null && data.length > 0) {
+
+                    $.each(data, function (i, dataNode) {
                         var menu_id = dataNode.menu_id;
                         var super_menu_id = dataNode.super_menu_id;
                         var menu_cn_name = dataNode.menu_cn_name;
@@ -208,15 +222,44 @@
                         var show_order = dataNode.show_order || '';
                         var is_app = dataNode.app_id ? 1 : 0;
                         var menu_url = dataNode.menu_url || '';
-                        var node = {"id":menu_id, "pId":super_menu_id, "name":menu_cn_name, "menu_url":menu_url, "app_id":is_app, "show_order": show_order, "show_on_init":show_on_init};
-                        if(is_app == 0){
+                        var node = {
+                            "id": menu_id,
+                            "pId": super_menu_id,
+                            "name": menu_cn_name,
+                            "menu_url": menu_url,
+                            "app_id": is_app,
+                            "show_order": show_order,
+                            "show_on_init": show_on_init
+                        };
+                        if (is_app == 0) {
                             tmpMap[menu_id] = node;
-                            return true;
                         }
-                        appNodes.push(node);
-                        loadParentNode(appNodes, node, tmpMap, addMap);
                     });
-                    for(var i = 0; i < appNodes.length; i++)
+
+                    $.each(data, function (i, dataNode) {
+                        var menu_id = dataNode.menu_id;
+                        var super_menu_id = dataNode.super_menu_id;
+                        var menu_cn_name = dataNode.menu_cn_name;
+                        var show_on_init = dataNode.show_on_init || '';
+                        var show_order = dataNode.show_order || '';
+                        var is_app = dataNode.app_id ? 1 : 0;
+                        var menu_url = dataNode.menu_url || '';
+                        var node = {
+                            "id": menu_id,
+                            "pId": super_menu_id,
+                            "name": menu_cn_name,
+                            "menu_url": menu_url,
+                            "app_id": is_app,
+                            "show_order": show_order,
+                            "show_on_init": show_on_init
+                        };
+                        if (is_app == 1) {
+                            appNodes.push(node);
+                            loadParentNode(appNodes, node, tmpMap, addMap);
+                        }
+                    });
+
+                    for (var i = 0; i < appNodes.length; i++)
                         ztreeNodes.push(appNodes[i]);
                 }
                 appTree = $.fn.zTree.init($("#appTree"), ztreeSetting, ztreeNodes);
@@ -224,35 +267,37 @@
             }
         });
     }
-    function loadParentNode(nodes, curr, mapper,adds){
+
+    function loadParentNode(nodes, curr, mapper, adds) {
         var n = curr.pId;
-        if(mapper[n]){
-            if(mapper[n].pId == null && adds[n] == null){
+        if (mapper[n]) {
+            if (mapper[n].pId == null && adds[n] == null) {
                 nodes.push(mapper[n]);
                 adds[n] = mapper[n];
-            }else{
-                if(adds[n] == null){
+            } else {
+                if (adds[n] == null) {
                     nodes.push(mapper[n]);
                     adds[n] = mapper[n];
                 }
-                loadParentNode(nodes, mapper[n], mapper,adds);
+                loadParentNode(nodes, mapper[n], mapper, adds);
             }
         }
     }
-    function checkAppPri(){
+
+    function checkAppPri() {
         var role_id = $.request.queryString["role_id"];
         $.ajax({
             type: "get",
             url: "listMenuPri",
-            async:false,
-            data:{role_id:role_id},
+            async: false,
+            data: {role_id: role_id},
             dataType: "json",
-            success: function(data){
-                if(data!=null&&data.length>0){
-                    $.each(data,function(i,node){
-                        var menu_id_checked = node.menu_id ;
-                        var hasCheckNode = appTree.getNodesByParam("id",menu_id_checked);
-                        if(hasCheckNode!=null&&hasCheckNode.length>0){
+            success: function (data) {
+                if (data != null && data.length > 0) {
+                    $.each(data, function (i, node) {
+                        var menu_id_checked = node.menu_id;
+                        var hasCheckNode = appTree.getNodesByParam("id", menu_id_checked);
+                        if (hasCheckNode != null && hasCheckNode.length > 0) {
                             appTree.checkNode(hasCheckNode[0], true, false);
                         }
                     });
@@ -261,51 +306,53 @@
             }
         });
     }
-    function onAppCheck(e, treeId, treeNode){
-        if(!treeNode.checked){
-            $("#si_"+treeNode.id).val(0);
-            $("#so_"+treeNode.id).val('');
+
+    function onAppCheck(e, treeId, treeNode) {
+        if (!treeNode.checked) {
+            $("#si_" + treeNode.id).val(0);
+            $("#so_" + treeNode.id).val('');
             return;
         }
-        $("#si_"+treeNode.id).val(1);
-        var so = $("#so_"+treeNode.id).val() ||  '';
+        $("#si_" + treeNode.id).val(1);
+        var so = $("#so_" + treeNode.id).val() || '';
         var x = 1;
-        if(so == ''){
-            $(".sotxt").each(function(){
+        if (so == '') {
+            $(".sotxt").each(function () {
                 var v = parseInt(this.value);
-                if(v >= x)
+                if (v >= x)
                     x = v + 1;
             });
         }
-        $("#so_"+treeNode.id).val(x);
+        $("#so_" + treeNode.id).val(x);
     }
-    function mergeNodes(nodes){
+
+    function mergeNodes(nodes) {
         var appNodes = appTree.getCheckedNodes(true);
-        for(var i = 0; i < appNodes.length; i++){
+        for (var i = 0; i < appNodes.length; i++) {
             var b = false, si, so;
-            for(var j = 0; j < nodes.length; j++){
-                if(appNodes[i].id == nodes[j].id){
-                    si = $("#si_"+appNodes[i].id).val() ||  '';
-                    so = $("#so_"+appNodes[i].id).val() ||  '';
+            for (var j = 0; j < nodes.length; j++) {
+                if (appNodes[i].id == nodes[j].id) {
+                    si = $("#si_" + appNodes[i].id).val() || '';
+                    so = $("#so_" + appNodes[i].id).val() || '';
                     nodes[j].show_on_init = 1;
                     nodes[j].show_order = so;
                     b = true;
                     break;
                 }
             }
-            if(!b){
-                si = $("#si_"+appNodes[i].id).val() ||  '';
-                so = $("#so_"+appNodes[i].id).val() ||  '';
+            if (!b) {
+                si = $("#si_" + appNodes[i].id).val() || '';
+                so = $("#so_" + appNodes[i].id).val() || '';
                 appNodes[i].show_on_init = 1;
                 appNodes[i].show_order = so;
                 nodes.push(appNodes[i]);
             }
         }
         var delNodes = appTree.getCheckedNodes(false);
-        for(var x = 0; x < delNodes.length; x++){
-            for(var y = 0; y < nodes.length; y++){
-                if(delNodes[x].id == nodes[y].id){
-                    nodes.splice(y,1);
+        for (var x = 0; x < delNodes.length; x++) {
+            for (var y = 0; y < nodes.length; y++) {
+                if (delNodes[x].id == nodes[y].id) {
+                    nodes.splice(y, 1);
                     //nodes[y].show_on_init = 0;
                     //nodes[y].show_order = '';
                     break;
