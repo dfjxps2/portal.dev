@@ -19,7 +19,10 @@
 package com.quick.portal.userRole;
 
 import com.quick.core.base.ISysBaseService;
+import com.quick.core.base.model.PageBounds;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -44,4 +47,9 @@ public interface RoleService extends ISysBaseService<Role> {
     List<Map<String,Object>> listAllApp(Map<String, Object> m);
     
     List<Map<String,Object>> getRoleType();
+
+    void  delRoleUser(HttpServletResponse res, HttpServletRequest req);
+
+    void addRoleUser(HttpServletResponse res, HttpServletRequest req);
+
 }

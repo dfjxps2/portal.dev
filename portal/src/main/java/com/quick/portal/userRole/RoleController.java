@@ -21,14 +21,16 @@ package com.quick.portal.userRole;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.quick.core.base.model.JsonDataGrid;
+import com.quick.core.base.model.PageBounds;
+import com.quick.core.util.common.QRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -56,6 +58,9 @@ public class RoleController extends SysBaseController<Role> {
     //角色服务
     @Resource(name = "roleService")
     private RoleService roleService;
+
+    @Autowired
+    private  RoleDao roleDao;
     
     @Override
     public ISysBaseService getBaseService(){
@@ -76,6 +81,17 @@ public class RoleController extends SysBaseController<Role> {
     public String addRole(ModelMap model) {
         return "page/role/addRole";
     }
+
+    @RequestMapping
+    public String roleUsers(ModelMap model) {
+        return "page/role/roleUsers";
+    }
+
+    @RequestMapping
+    public String addRoleUser(ModelMap model) {
+        return "page/role/addRoleUser";
+    }
+
 
     //页面请求---结束
     /**
@@ -120,6 +136,116 @@ public class RoleController extends SysBaseController<Role> {
         }
         Map<String, Object> p=  ReflectUtil.toMap(obj);
         return p;
+    }
+
+    /**
+     * 角色对应用户数据
+     */
+    @RequestMapping(value = "/getRoleUsers")
+    @ResponseBody
+    public String roleUsers(HttpServletResponse res){
+        String str="[]";
+        //分页参数
+        int pageSize= QRequest.getInteger(request,"pageSize",10);
+        int pageNo=QRequest.getInteger(request,"page",1);
+
+        //获取表名
+        String tableName = getTableName();
+        // 排序处理
+        String fieldOrder = getFieldOrder();
+        String whereStr = "";
+        whereStr += getFilterCondition(); // 数据必须受限
+        String fieldShow = getFieldShow();
+
+        // 日期格式
+        String dateTimeFormat = QRequest.getString(request, "dateTimeFormat",
+                "yyyy-MM-dd HH:mm:ss");
+        response.setCharacterEncoding("utf-8");
+        response.setContentType(QRequest.getResponseType("json")); // 输出JS文件
+        // 默认O条数据
+        int recordCount = 0;
+        Map<String, Object> queryMap = getQueryMap(request, fieldShow,
+                tableName, whereStr, fieldOrder);
+        PageBounds pager = new PageBounds(pageNo, pageSize);
+        List<Map<String, Object>> dt = roleDao.listRoleUser(queryMap,pager);
+        recordCount = roleDao.roleUserCount(queryMap);
+        str = new JsonDataGrid(recordCount, dt).toJson(dateTimeFormat);
+        try {
+            response.getWriter().print(str);
+            response.getWriter().flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 角色可增加的用户数据
+     */
+
+    @RequestMapping(value = "/getUserData")
+    @ResponseBody
+    public String userData(HttpServletResponse res){
+        String str="[]";
+        //分页参数
+        int pageSize= QRequest.getInteger(request,"pageSize",10);
+        int pageNo=QRequest.getInteger(request,"page",1);
+
+        //获取表名
+        String tableName = getTableName();
+        // 排序处理
+        String fieldOrder = getFieldOrder();
+        String whereStr = "";
+        whereStr += getFilterCondition(); // 数据必须受限
+        String fieldShow = getFieldShow();
+
+        // 日期格式
+        String dateTimeFormat = QRequest.getString(request, "dateTimeFormat",
+                "yyyy-MM-dd HH:mm:ss");
+        response.setCharacterEncoding("utf-8");
+        response.setContentType(QRequest.getResponseType("json")); // 输出JS文件
+        // 默认O条数据
+        int recordCount = 0;
+        Map<String, Object> queryMap = getQueryMap(request, fieldShow,
+                tableName, whereStr, fieldOrder);
+        PageBounds pager = new PageBounds(pageNo, pageSize);
+        List<Map<String, Object>> dt = roleDao.listUser(queryMap,pager);
+        for(Map<String,Object> data : dt){
+            if(data.get("user_state").toString().equals("1")){
+
+                data.put("user_state","激活");
+            }else {
+                data.put("user_state","禁用");
+            }
+        }
+        recordCount = roleDao.recountUsers(queryMap);
+        str = new JsonDataGrid(recordCount, dt).toJson(dateTimeFormat);
+        try {
+            response.getWriter().print(str);
+            response.getWriter().flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 提交添加用户
+     */
+    @RequestMapping(value="/addRoleUsers")
+    @ResponseBody
+    public  void addUsers(HttpServletResponse res, HttpServletRequest req){
+        roleService.addRoleUser(res,req);
+    }
+
+
+    /**
+     * 删除角色对应的 用户
+     */
+    @RequestMapping(value="/deleteRoleUser")
+    @ResponseBody
+    public  void deleteRoleUser(HttpServletResponse res, HttpServletRequest req){
+        roleService.delRoleUser(res,req);
     }
 
     /**
@@ -227,4 +353,6 @@ public class RoleController extends SysBaseController<Role> {
         }
         return json.toString();
     }
+
+
 }
