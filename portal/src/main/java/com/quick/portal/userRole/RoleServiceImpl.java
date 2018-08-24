@@ -20,16 +20,19 @@ package com.quick.portal.userRole;
 
 import com.quick.core.base.SysBaseService;
 import com.quick.core.base.ISysBaseDao;
+import com.quick.core.base.model.PageBounds;
 import com.quick.core.util.common.QCommon;
 
+import com.quick.core.util.common.QRequest;
+import com.quick.portal.userRoleRela.UserRoleRelaDO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * 服务类
@@ -140,4 +143,62 @@ public class RoleServiceImpl extends SysBaseService<Role> implements RoleService
 	public List<Map<String, Object>> getRoleType() {
 		return dao.getRoleType();
 	}
+
+    @Override
+    public void delRoleUser(HttpServletResponse res, HttpServletRequest request) {
+        String users = QRequest.getString(request,"ROLE_USER_ID_LIST");
+        String roleid = QRequest.getString(request,"role_id");
+        Map<String,Object> map = new HashMap<>();
+        if(!users.equals("") && !users.equals("undefined") && users != null && roleid!=null && !roleid.equals("undefined") && !roleid.equals("")){
+            String[] userId = users.split(",");
+              map.put("array",userId);
+              map.put("role_id",roleid);
+             dao.deleteRoleUser(map);
+            try {
+                res.getWriter().write("1");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else {
+            try {
+                res.getWriter().write("0");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void addRoleUser(HttpServletResponse res, HttpServletRequest request) {
+        String users = QRequest.getString(request,"ROLE_USER_ID_LIST");
+        Integer roleid = QRequest.getInteger(request,"role_id");
+        ArrayList<Object> list = new ArrayList<>();
+        Date date= Calendar.getInstance().getTime();
+        UserRoleRelaDO userRoleRelaDO ;
+        if(!users.equals("") && !users.equals("undefined") && users != null && roleid!=null && !roleid.equals("undefined") && !roleid.equals("")){
+            String[] userId = users.split(",");
+            for(String value: userId){
+               userRoleRelaDO = new UserRoleRelaDO();
+               userRoleRelaDO.setUser_id(Integer.parseInt(value));
+               userRoleRelaDO.setRole_id(roleid);
+               userRoleRelaDO.setCre_time(date);
+               userRoleRelaDO.setUpd_time(date);
+               list.add(userRoleRelaDO);
+            }
+              dao.addRoleUsers(list);
+            try {
+                res.getWriter().write("1");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else {
+            try {
+                res.getWriter().write("0");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
 }

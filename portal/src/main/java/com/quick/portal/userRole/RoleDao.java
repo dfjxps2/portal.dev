@@ -19,7 +19,9 @@
 package com.quick.portal.userRole;
 
 import com.quick.core.base.ISysBaseDao;
+import com.quick.core.base.model.PageBounds;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -49,4 +51,11 @@ public interface RoleDao extends ISysBaseDao<Role> {
 
     List<Map<String,Object>> listAllApp(Map<String, Object> m);
     List<Map<String,Object>> getRoleType();
+    List<Map<String,Object>> listRoleUser(Map<String, Object> m, PageBounds page);
+    int roleUserCount(Map<String, Object> m);
+    void deleteRoleUser(Map<String, Object> m);
+    List<Map<String,Object>> listUser(Map<String, Object> m, PageBounds page);
+    int recountUsers(Map<String, Object> m);
+    void addRoleUsers(ArrayList<Object> list);
+
 }
