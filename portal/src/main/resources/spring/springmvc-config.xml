@@ -32,31 +32,33 @@
     <!--<bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping" />-->
     <!--Spring3.1版本开始的注解 HandlerMapping -->
     <!--<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>-->
+    <bean id="jackson2HttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+        <property name="objectMapper">
+            <bean class="com.fasterxml.jackson.databind.ObjectMapper">
+                <property name="dateFormat">
+                    <bean class="java.text.SimpleDateFormat">
+                        <constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss" />
+                    </bean>
+                </property>
+            </bean>
+        </property>
+        <property name="supportedMediaTypes">
+            <list>
+                <value>application/json;charset=UTF-8</value>
+                <value>text/json;charset=UTF-8</value>
+                <value>text/plain;charset=UTF-8</value>
+                <value>text/html;charset=UTF-8</value>
+            </list>
+        </property>
+    </bean>
+    
     <bean name='handlerMapping' class='com.quick.core.base.spring.MethodRequestMappingHandlerMapping' />
     <!--Spring3.1版本开始的注解 HandlerAdapter -->
      <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
         <property name="messageConverters">
             <list>
              	<bean class="org.springframework.http.converter.StringHttpMessageConverter" />
-                <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
-                    <property name="objectMapper">
-                        <bean class="com.fasterxml.jackson.databind.ObjectMapper">
-                             <property name="dateFormat">
-                                  <bean class="java.text.SimpleDateFormat">
-                                      <constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss" />
-                                  </bean>
-                             </property>
-                        </bean>
-                    </property>
-                    <property name="supportedMediaTypes">
-                        <list>
-                            <value>application/json;charset=UTF-8</value>
-                            <value>text/json;charset=UTF-8</value>
-                            <value>text/plain;charset=UTF-8</value>
-                            <value>text/html;charset=UTF-8</value>
-                        </list>
-                    </property>
-                </bean>
+                <ref bean="jackson2HttpMessageConverter"/>
             </list>
         </property>
     </bean>
@@ -65,25 +67,7 @@
         <property name="messageConverters">
             <list>
                 <bean class="org.springframework.http.converter.StringHttpMessageConverter" />
-                <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
-                    <property name="objectMapper">
-                        <bean class="com.fasterxml.jackson.databind.ObjectMapper">
-                            <property name="dateFormat">
-                                <bean class="java.text.SimpleDateFormat">
-                                    <constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss" />
-                                </bean>
-                            </property>
-                        </bean>
-                    </property>
-                    <property name="supportedMediaTypes">
-                        <list>
-                            <value>application/json;charset=UTF-8</value>
-                            <value>text/json;charset=UTF-8</value>
-                            <value>text/plain;charset=UTF-8</value>
-                            <value>text/html;charset=UTF-8</value>
-                        </list>
-                    </property>
-                </bean>
+                <ref bean="jackson2HttpMessageConverter"/>
             </list>
         </property>
     </bean>
