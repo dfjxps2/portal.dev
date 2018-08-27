@@ -20,9 +20,11 @@ package com.quick.portal.sysUser;
 
 import com.quick.core.base.SysBaseService;
 import com.quick.core.base.ISysBaseDao;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.quick.core.base.model.DataStore;
 import com.quick.core.util.common.DateTime;
 
@@ -86,4 +88,14 @@ public class SysUserServiceImpl extends SysBaseService<SysUserDO> implements ISy
         dao.delete(sysid);
         return ActionMsg.setOk("操作成功");
     }
+    
+
+	/*
+	 * 锁定用户帐号
+	 */
+	@Override
+	public void updateUserStatueByUersId(String userId) {
+		 dao.updateUserStatueByUersId(userId);
+		
+	}
 }

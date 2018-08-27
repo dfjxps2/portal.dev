@@ -45,4 +45,9 @@ public interface ISysUserDao<SysUserDO> extends ISysBaseDao<SysUserDO> {
     
     List<Map<String,Object>> selectRole(Map<String,Object> p);
     List<Map<String,Object>> selectDep(Map<String,Object> p);
+    
+    /*
+	 * 锁定用户帐号
+	 */
+	void updateUserStatueByUersId (String userId);
 }
