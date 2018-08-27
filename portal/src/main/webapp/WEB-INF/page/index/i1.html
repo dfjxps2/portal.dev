@@ -1,155 +1,742 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<title>frame</title>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link rel="stylesheet" href="${G.host}/res/css/skin/bootstrap.min.css" />
-<link rel="stylesheet" href="${G.host}/res/css/bootstrap-responsive.min.css" />
-<link rel="stylesheet" href="${G.host}/res/css/fullcalendar.css" />
-<link rel="stylesheet" href="${G.host}/res/css/jquery.gritter.css" />
-<link rel="stylesheet" href="${G.host}/res/css/matrix-style2.css" />
-<link rel="stylesheet" href="${G.host}/res/css/matrix-media.css" />
-<link href="${G.host}/res/fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-<!--
-<link href='http://fonts.useso.com/css?family=Open+Sans:400,700,800' rel='stylesheet' type='text/css'>
--->
-</head>
-<body>
+<!DOCTYPE HTML>
+<!-- saved from url=(0038)http://127.0.0.1:8080/portal/mainframe -->
+<!DOCTYPE html PUBLIC "" "">
+<HTML>
+<HEAD>
+<META content="IE=11.0000" http-equiv="X-UA-Compatible">
 
-<div id="content">
-  <div  class="quick-actions_homepage">
-    <ul class="quick-actions">
-      <li class="bg_lb"> <a href="#"> <i class="icon-dashboard"></i> My Dashboard </a> </li>
-      <li class="bg_lg"> <a href="#"> <i class="icon-shopping-cart"></i> Shopping Cart</a> </li>
-      <li class="bg_ly"> <a href="#"> <i class=" icon-globe"></i> Web Marketing </a> </li>
-      <li class="bg_lo"> <a href="#"> <i class="icon-group"></i> Manage Users </a> </li>
-      <li class="bg_ls"> <a href="#"> <i class="icon-signal"></i> Check Statistics</a> </li>
-    </ul>
-  </div>
-  <div class="container-fluid">
-    <div class="row-fluid">
-      <div class="span6">
-        <div class="widget-box">
-          <div class="widget-title bg_ly" data-toggle="collapse" href="#collapseG2"><span class="icon"><i class="icon-chevron-down"></i></span>
-            <h5>Latest Posts</h5>
-          </div>
-          <div class="widget-content nopadding collapse in" id="collapseG2">
-            <ul class="recent-posts">
-              
-              
-              
-                <button class="btn btn-warning btn-mini">View All</button>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="widget-box">
-          <div class="widget-title"> <span class="icon"><i class="icon-ok"></i></span>
-            <h5>To Do list</h5>
-          </div>
-          <div class="widget-content">
-            <div class="todo">
-              <ul>
-                <li class="clearfix">
-                  <div class="txt"> Luanch This theme on Themeforest <span class="by label">Nirav</span> <span class="date badge badge-important">Today</span> </div>
-                  <div class="pull-right"> <a class="tip" href="#" title="Edit Task"><i class="icon-pencil"></i></a> <a class="tip" href="#" title="Delete"><i class="icon-remove"></i></a> </div>
-                </li>
-                <li class="clearfix">
-                  <div class="txt"> Manage Pending Orders <span class="by label">Alex</span> <span class="date badge badge-warning">Today</span> </div>
-                  <div class="pull-right"> <a class="tip" href="#" title="Edit Task"><i class="icon-pencil"></i></a> <a class="tip" href="#" title="Delete"><i class="icon-remove"></i></a> </div>
-                </li>
-                <li class="clearfix">
-                  <div class="txt"> MAke your desk clean <span class="by label">Admin</span> <span class="date badge badge-success">Tomorrow</span> </div>
-                  <div class="pull-right"> <a class="tip" href="#" title="Edit Task"><i class="icon-pencil"></i></a> <a class="tip" href="#" title="Delete"><i class="icon-remove"></i></a> </div>
-                </li>
-                <li class="clearfix">
-                  <div class="txt"> Today we celebrate the great looking theme <span class="by label">Admin</span> <span class="date badge badge-info">08.03.2013</span> </div>
-                  <div class="pull-right"> <a class="tip" href="#" title="Edit Task"><i class="icon-pencil"></i></a> <a class="tip" href="#" title="Delete"><i class="icon-remove"></i></a> </div>
-                </li>
-                <li class="clearfix">
-                  <div class="txt"> Manage all the orders <span class="by label">Mark</span> <span class="date badge badge-info">12.03.2013</span> </div>
-                  <div class="pull-right"> <a class="tip" href="#" title="Edit Task"><i class="icon-pencil"></i></a> <a class="tip" href="#" title="Delete"><i class="icon-remove"></i></a> </div>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="span6">
-        <div class="widget-box">
-          <div class="widget-title"> <span class="icon"><i class="icon-ok"></i></span>
-            <h5>Progress Box</h5>
-          </div>
-          <div class="widget-content">
-            <ul class="unstyled">
-              <li> <span class="icon24 icomoon-icon-arrow-up-2 green"></span> 81% Clicks <span class="pull-right strong">567</span>
-                <div class="progress progress-striped ">
-                  <div style="width: 81%;" class="bar"></div>
-                </div>
-              </li>
-              <li> <span class="icon24 icomoon-icon-arrow-up-2 green"></span> 72% Uniquie Clicks <span class="pull-right strong">507</span>
-                <div class="progress progress-success progress-striped ">
-                  <div style="width: 72%;" class="bar"></div>
-                </div>
-              </li>
-              <li> <span class="icon24 icomoon-icon-arrow-down-2 red"></span> 53% Impressions <span class="pull-right strong">457</span>
-                <div class="progress progress-warning progress-striped ">
-                  <div style="width: 53%;" class="bar"></div>
-                </div>
-              </li>
-              <li> <span class="icon24 icomoon-icon-arrow-up-2 green"></span> 3% Online Users <span class="pull-right strong">8</span>
-                <div class="progress progress-danger progress-striped ">
-                  <div style="width: 3%;" class="bar"></div>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="widget-box">
-          <div class="widget-title bg_lo"  data-toggle="collapse" href="#collapseG3" > <span class="icon"> <i class="icon-chevron-down"></i> </span>
-            <h5>News updates</h5>
-          </div>
-          <div class="widget-content nopadding updates collapse in" id="collapseG3">
-            <div class="new-update clearfix"><i class="icon-ok-sign"></i>
-              <div class="update-done"><a title="" href="#"><strong>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</strong></a> <span>dolor sit amet, consectetur adipiscing eli</span> </div>
-              <div class="update-date"><span class="update-day">20</span>jan</div>
-            </div>
-            <div class="new-update clearfix"> <i class="icon-gift"></i> <span class="update-notice"> <a title="" href="#"><strong>Congratulation Maruti, Happy Birthday </strong></a> <span>many many happy returns of the day</span> </span> <span class="update-date"><span class="update-day">11</span>jan</span> </div>
-            <div class="new-update clearfix"> <i class="icon-move"></i> <span class="update-alert"> <a title="" href="#"><strong>Maruti is a Responsive Admin theme</strong></a> <span>But already everything was solved. It will ...</span> </span> <span class="update-date"><span class="update-day">07</span>Jan</span> </div>
-            <div class="new-update clearfix"> <i class="icon-leaf"></i> <span class="update-done"> <a title="" href="#"><strong>Envato approved Maruti Admin template</strong></a> <span>i am very happy to approved by TF</span> </span> <span class="update-date"><span class="update-day">05</span>jan</span> </div>
-            <div class="new-update clearfix"> <i class="icon-question-sign"></i> <span class="update-notice"> <a title="" href="#"><strong>I am alwayse here if you have any question</strong></a> <span>we glad that you choose our template</span> </span> <span class="update-date"><span class="update-day">01</span>jan</span> </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <hr>
-    
-  </div>
-</div>
-<!--
-<script src="js/excanvas.min.js"></script> 
-<script src="js/jquery.min.js"></script> 
-<script src="js/jquery.ui.custom.js"></script> 
-<script src="js/bootstrap.min.js"></script> 
-<script src="js/jquery.flot.min.js"></script> 
-<script src="js/jquery.flot.resize.min.js"></script> 
-<script src="js/jquery.peity.min.js"></script> 
-<script src="js/jquery.gritter.min.js"></script> 
-<script src="js/matrix.js"></script> 
-<script src="js/fullcalendar.min.js"></script> 
-<script src="js/matrix.calendar.js"></script> 
-<script src="js/matrix.chat.js"></script> 
-<script src="js/jquery.validate.js"></script> 
-<script src="js/matrix.form_validation.js"></script> 
-<script src="js/jquery.wizard.js"></script> 
-<script src="js/jquery.uniform.js"></script> 
-<script src="js/select2.min.js"></script> 
-<script src="js/matrix.popover.js"></script> 
-<script src="js/jquery.dataTables.min.js"></script> 
-<script src="js/matrix.tables.js"></script> 
-<script src="js/matrix.interface.js"></script> 
--->
+<META charset="utf-8">
+<META name="viewport" content="width=device-width, initial-scale=1.0">
+<META name="renderer" content="webkit">
+<TITLE>门户主页</TITLE>
+<META name="keywords" content="门户主题">
+<!--<link rel="shortcut icon" href="favicon.ico">-->
+<LINK href="门户主页_files/bootstrap.min.css" rel="stylesheet">
+<LINK href="门户主页_files/font-awesome.min.css" rel="stylesheet">
+<LINK href="门户主页_files/animate.css" rel="stylesheet">
+<LINK href="门户主页_files/style.css" rel="stylesheet">
+<STYLE></STYLE>
 
-</body>
-</html>
+<META name="GENERATOR" content="MSHTML 11.00.10570.1001">
+</HEAD>
+<BODY class="fixed-sidebar full-height-layout gray-bg"
+	style="overflow: hidden;">
+	<DIV id="wrapper">
+		<!--左侧导航开始-->
+		<NAV class="navbar-default navbar-static-side" role="navigation">
+			<DIV class="nav-close">
+				<A href="http://127.0.0.1:8080/portal/mainframe#"><IMG
+					title="系统首页" align="left" src="门户主页_files/logo4.png"></A>
+			</DIV>
+			<DIV class="sidebar-collapse"
+				style="width: auto; height: 100%; margin-top: -17px; position: relative;">
+				<UL class="nav" id="side-menu">
+					<LI class="nav-header" id="mynode"></LI>
+				</UL>
+			</DIV>
+		</NAV>
+		<!--左侧导航结束-->
+		<!--右侧部分开始-->
+
+		<DIV class="gray-bg dashbard-1" id="page-wrapper">
+			<DIV class="row border-bottom">
+				<NAV class="navbar navbar-static-top" role="navigation"
+					style="margin-bottom: 0px; background-color: rgb(43, 92, 169);">
+					<DIV class="navbar-header"></DIV>
+					<UL class="nav navbar-top-links navbar-right"
+						style="background-color: rgb(43, 92, 169);">
+						<LI class="dropdown hidden-xs"><A
+							class="right-sidebar-toggle" aria-expanded="false"
+							style="background-color: rgb(43, 92, 169);"
+							onclick="javascript:location.href='home/main';"
+							href="javascript:void(0);"><I class="fa fa-tasks"></I>
+								返回领导驾驶舱 </A></LI>
+						<LI class="hidden-xs"><A
+							style="background-color: rgb(43, 92, 169);"><I
+								class="fa fa-cart-arrow-down"></I><STRONG class="font-bold">管理员</STRONG></A></LI>
+						<LI class="hidden-xs"><A
+							class="roll-nav roll-right J_tabExit"
+							style="background-color: rgb(43, 92, 169);"
+							onclick="javascript:logout();return false;"
+							href="javascript:void(0);"><I class="fa fa fa-sign-out"></I>退出</A></LI>
+					</UL>
+				</NAV>
+			</DIV>
+			<DIV class="row content-tabs">
+				<BUTTON class="roll-nav  J_tabLeft">
+					<I class="fa fa-backward"></I>
+				</BUTTON>
+				<NAV class="page-tabs J_menuTabs">
+					<NAV class="page-tabs J_menuTabs">
+						<DIV class="page-tabs-content">
+							<A class="active J_menuTab" href="javascript:;" data-id="i2">首页</A>
+						</DIV>
+					</NAV>
+					<BUTTON class="roll-nav roll-right J_tabRight"
+						style="border-left-color: rgb(238, 238, 238); border-left-width: 1px; border-left-style: solid;">
+						<I class="fa fa-forward"></I>
+					</BUTTON>
+					<DIV class="btn-group roll-nav roll-right">
+						<BUTTON class="dropdown J_tabClose" data-toggle="dropdown">
+							关闭<SPAN class="caret"></SPAN>
+						</BUTTON>
+						<UL class="dropdown-menu dropdown-menu-right" role="menu">
+							<LI class="J_tabShowActive"><A>定位当前选项卡</A></LI>
+							<LI class="J_tabCloseAll"><A>关闭全部选项卡</A></LI>
+							<LI class="J_tabCloseOther"><A>关闭其他选项卡</A></LI>
+						</UL>
+					</DIV>
+				</NAV>
+			</DIV>
+			<DIV class="row J_mainContent" id="content-main">
+				<IFRAME name="iframe0" width="100%" height="100%" class="J_iframe"
+					src="门户主页_files/goIframe.htm" frameborder="0"
+					style="scrolling: no;" data-id="i2" seamless=""></IFRAME>
+			</DIV>
+			<DIV class="footer">
+				<DIV
+					style="text-align: center; color: rgb(51, 51, 51); font-family: Microsoft YaHei; font-size: 14px;">版权所有
+					Copyright(C)2013-2018 北京泰豪智能工程有限公司</DIV>
+			</DIV>
+		</DIV>
+		<!--右侧部分结束-->
+	</DIV>
+	<!-- 全局js -->
+
+	<SCRIPT src="门户主页_files/jquery.min.js"></SCRIPT>
+
+	<SCRIPT src="门户主页_files/bootstrap.min.js"></SCRIPT>
+
+	<SCRIPT src="门户主页_files/jquery.metisMenu.js"></SCRIPT>
+
+	<SCRIPT src="门户主页_files/jquery.slimscroll.min.js"></SCRIPT>
+
+	<SCRIPT src="门户主页_files/layer.min.js"></SCRIPT>
+	<!-- 自定义js -->
+	<SCRIPT src="门户主页_files/hplus.js"></SCRIPT>
+
+	<SCRIPT src="门户主页_files/contabs.js"></SCRIPT>
+	<!-- 第三方插件 -->
+	<SCRIPT src="门户主页_files/pace.min.js"></SCRIPT>
+
+	<SCRIPT src="门户主页_files/layer.js"></SCRIPT>
+
+	<SCRIPT>
+		var dt = [
+				{
+					"menuId" : 208,
+					"superMenuId" : 1,
+					"menuCnName" : "智慧园区应用",
+					"depth" : 1,
+					"menuIconUrl" : "fa fa-adjust",
+					"menuUrl" : "dd",
+					"menuLevel" : 0,
+					"appId" : 0,
+					"dispOrder" : 0,
+					"parent" : true,
+					"children" : [
+							{
+								"menuId" : 194,
+								"superMenuId" : 208,
+								"menuCnName" : "智慧园区管理",
+								"depth" : 2,
+								"menuUrl" : "goParkframe?url=http://127.0.0.1:7080/stps/navigation.html",
+								"menuLevel" : 0,
+								"appId" : 0,
+								"dispOrder" : 0,
+								"parent" : false,
+								"children" : []
+							},
+							{
+								"menuId" : 195,
+								"superMenuId" : 208,
+								"menuCnName" : "智能视频监控",
+								"depth" : 2,
+								"menuUrl" : "goVideoIframe?url=http://127.0.0.1:7080/stps/navigation.html",
+								"menuLevel" : 0,
+								"appId" : 0,
+								"dispOrder" : 0,
+								"parent" : false,
+								"children" : []
+							},
+							{
+								"menuId" : 198,
+								"superMenuId" : 208,
+								"menuCnName" : "智慧能源管理",
+								"depth" : 2,
+								"menuUrl" : "goEnergyIframe?url=https://www.taobao.com",
+								"menuLevel" : 0,
+								"appId" : 0,
+								"dispOrder" : 0,
+								"parent" : false,
+								"children" : []
+							},
+							{
+								"menuId" : 193,
+								"superMenuId" : 208,
+								"menuCnName" : "智能道路管理",
+								"depth" : 2,
+								"menuUrl" : "goRoadIframe?url=http://www.baidu.com",
+								"menuLevel" : 0,
+								"appId" : 0,
+								"dispOrder" : 0,
+								"parent" : false,
+								"children" : []
+							},
+							{
+								"menuId" : 196,
+								"superMenuId" : 208,
+								"menuCnName" : "智慧环境监测",
+								"depth" : 2,
+								"menuUrl" : "goEnvIframe?url=http://www.sohu.com",
+								"menuLevel" : 0,
+								"appId" : 0,
+								"dispOrder" : 0,
+								"parent" : false,
+								"children" : []
+							},
+							{
+								"menuId" : 197,
+								"superMenuId" : 208,
+								"menuCnName" : "智能一卡通管理",
+								"depth" : 2,
+								"menuUrl" : "goBusIframe?url=https://www.jd.com",
+								"menuLevel" : 0,
+								"appId" : 0,
+								"dispOrder" : 0,
+								"parent" : false,
+								"children" : []
+							}, {
+								"menuId" : 210,
+								"superMenuId" : 208,
+								"menuCnName" : "智慧园区导航",
+								"depth" : 2,
+								"menuUrl" : "goMapframe",
+								"menuLevel" : 0,
+								"appId" : 0,
+								"dispOrder" : 0,
+								"parent" : false,
+								"children" : []
+							} ]
+				},
+				{
+					"menuId" : 159,
+					"superMenuId" : 1,
+					"menuCnName" : "大数据平台",
+					"depth" : 1,
+					"menuIconUrl" : "fa fa-picture-o",
+					"menuUrl" : "无",
+					"menuLevel" : 0,
+					"appId" : 0,
+					"dispOrder" : 0,
+					"parent" : true,
+					"children" : [
+							{
+								"menuId" : 160,
+								"superMenuId" : 159,
+								"menuCnName" : "大数据管理平台",
+								"depth" : 2,
+								"menuUrl" : "http://10.1.3.208:9999/#/main/dashboard/metrics",
+								"menuLevel" : 0,
+								"appId" : 0,
+								"dispOrder" : 0,
+								"parent" : false,
+								"children" : []
+							},
+							{
+								"menuId" : 149,
+								"superMenuId" : 159,
+								"menuCnName" : "大数据安全管理",
+								"depth" : 2,
+								"menuUrl" : "http://10.1.3.208:6080/index.html",
+								"menuLevel" : 0,
+								"appId" : 0,
+								"dispOrder" : 0,
+								"parent" : false,
+								"children" : []
+							}, {
+								"menuId" : 150,
+								"superMenuId" : 159,
+								"menuCnName" : "大数据使用平台",
+								"depth" : 2,
+								"menuUrl" : "http://10.1.3.206:8888",
+								"menuLevel" : 0,
+								"appId" : 0,
+								"dispOrder" : 0,
+								"parent" : false,
+								"children" : []
+							} ]
+				},
+				{
+					"menuId" : 145,
+					"superMenuId" : 1,
+					"menuCnName" : "数据接入",
+					"depth" : 1,
+					"menuIconUrl" : "fa fa-columns",
+					"menuUrl" : "无",
+					"menuLevel" : 0,
+					"appId" : 0,
+					"dispOrder" : 0,
+					"parent" : true,
+					"children" : [ {
+						"menuId" : 146,
+						"superMenuId" : 145,
+						"menuCnName" : "数据接入系统",
+						"depth" : 2,
+						"menuUrl" : "http://10.1.2.142:8080/cloud/",
+						"menuLevel" : 0,
+						"appId" : 0,
+						"dispOrder" : 0,
+						"parent" : false,
+						"children" : []
+					} ]
+				},
+				{
+					"menuId" : 5,
+					"superMenuId" : 1,
+					"menuCnName" : "数据管理",
+					"depth" : 1,
+					"menuIconUrl" : "fa fa-magic",
+					"menuLevel" : 0,
+					"appId" : 0,
+					"dispOrder" : 0,
+					"parent" : true,
+					"children" : [ {
+						"menuId" : 103,
+						"superMenuId" : 5,
+						"menuCnName" : "数据治理平台",
+						"depth" : 2,
+						"menuUrl" : "http://10.1.2.143:8080/",
+						"menuLevel" : 0,
+						"appId" : 0,
+						"dispOrder" : 0,
+						"parent" : false,
+						"children" : []
+					}, {
+						"menuId" : 104,
+						"superMenuId" : 5,
+						"menuCnName" : "指标管理平台",
+						"depth" : 2,
+						"menuUrl" : "http://10.1.3.193:8080/bsbProd/main.jsp",
+						"menuLevel" : 0,
+						"appId" : 0,
+						"dispOrder" : 0,
+						"parent" : false,
+						"children" : []
+					} ]
+				},
+				{
+					"menuId" : 154,
+					"superMenuId" : 1,
+					"menuCnName" : "数据可视化",
+					"depth" : 1,
+					"menuIconUrl" : "fa fa fa-bar-chart-o",
+					"menuUrl" : "无",
+					"menuLevel" : 0,
+					"appId" : 0,
+					"dispOrder" : 0,
+					"parent" : true,
+					"children" : [
+							{
+								"menuId" : 180,
+								"superMenuId" : 154,
+								"menuCnName" : "数据可视化工具",
+								"depth" : 2,
+								"menuUrl" : "http://10.1.2.143:37799/WebReport/ReportServer?op=fs",
+								"menuLevel" : 0,
+								"appId" : 0,
+								"dispOrder" : 0,
+								"parent" : false,
+								"children" : []
+							},
+							{
+								"menuId" : 178,
+								"superMenuId" : 154,
+								"menuCnName" : "待办事项统计",
+								"depth" : 2,
+								"menuUrl" : "http://10.1.2.143:8080/WebReport/ReportServer?reportlet=RYGJ.cpt&op=view",
+								"menuLevel" : 0,
+								"appId" : 0,
+								"dispOrder" : 0,
+								"parent" : false,
+								"children" : []
+							} ]
+				},
+				{
+					"menuId" : 138,
+					"superMenuId" : 1,
+					"menuCnName" : "数据分析",
+					"depth" : 1,
+					"menuIconUrl" : "fa fa-edit",
+					"menuUrl" : "无",
+					"menuLevel" : 0,
+					"appId" : 0,
+					"dispOrder" : 0,
+					"parent" : true,
+					"children" : [ {
+						"menuId" : 139,
+						"superMenuId" : 138,
+						"menuCnName" : "分布式挖掘系统",
+						"depth" : 2,
+						"menuUrl" : "http://10.1.3.207:54321",
+						"menuLevel" : 0,
+						"appId" : 0,
+						"dispOrder" : 0,
+						"parent" : false,
+						"children" : []
+					}, {
+						"menuId" : 141,
+						"superMenuId" : 138,
+						"menuCnName" : "高维模型分析",
+						"depth" : 2,
+						"menuUrl" : "http://10.1.3.204:7070/kylin",
+						"menuLevel" : 0,
+						"appId" : 0,
+						"dispOrder" : 0,
+						"parent" : false,
+						"children" : []
+					}, {
+						"menuId" : 161,
+						"superMenuId" : 138,
+						"menuCnName" : "大数据检索引擎",
+						"depth" : 2,
+						"menuUrl" : "http://10.1.3.208:8983/solr/#/",
+						"menuLevel" : 0,
+						"appId" : 0,
+						"dispOrder" : 0,
+						"parent" : false,
+						"children" : []
+					}, {
+						"menuId" : 144,
+						"superMenuId" : 138,
+						"menuCnName" : "批量日志分析",
+						"depth" : 2,
+						"menuUrl" : "http://10.1.3.208:61888/",
+						"menuLevel" : 0,
+						"appId" : 0,
+						"dispOrder" : 0,
+						"parent" : false,
+						"children" : []
+					} ]
+				},
+				{
+					"menuId" : 152,
+					"superMenuId" : 1,
+					"menuCnName" : "监控运维",
+					"depth" : 1,
+					"menuIconUrl" : "fa fa-desktop",
+					"menuUrl" : "http://10.1.3.77/zabbix",
+					"menuLevel" : 0,
+					"appId" : 0,
+					"dispOrder" : 0,
+					"parent" : false,
+					"children" : []
+				},
+				{
+					"menuId" : 2,
+					"superMenuId" : 1,
+					"menuCnName" : "系统管理",
+					"depth" : 1,
+					"menuIconUrl" : "fa fa-home",
+					"menuUrl" : "qq",
+					"menuLevel" : 0,
+					"appId" : 0,
+					"dispOrder" : 0,
+					"parent" : true,
+					"children" : [
+							{
+								"menuId" : 209,
+								"superMenuId" : 2,
+								"menuCnName" : "公告管理",
+								"depth" : 2,
+								"menuUrl" : "http://localhost:8011/phpwind/upload/index.php",
+								"menuLevel" : 0,
+								"appId" : 0,
+								"dispOrder" : 0,
+								"parent" : false,
+								"children" : []
+							}, {
+								"menuId" : 8,
+								"superMenuId" : 2,
+								"menuCnName" : "用户管理",
+								"depth" : 2,
+								"menuUrl" : "sysUser/list",
+								"menuLevel" : 0,
+								"appId" : 0,
+								"dispOrder" : 0,
+								"parent" : false,
+								"children" : []
+							}, {
+								"menuId" : 10,
+								"superMenuId" : 2,
+								"menuCnName" : "菜单管理",
+								"depth" : 2,
+								"menuUrl" : "sysMenu/list",
+								"menuLevel" : 0,
+								"appId" : 0,
+								"dispOrder" : 0,
+								"parent" : false,
+								"children" : []
+							}, {
+								"menuId" : 11,
+								"superMenuId" : 2,
+								"menuCnName" : "应用集成管理",
+								"depth" : 2,
+								"menuUrl" : "application/list",
+								"menuLevel" : 0,
+								"appId" : 0,
+								"dispOrder" : 0,
+								"parent" : false,
+								"children" : []
+							}, {
+								"menuId" : 50,
+								"superMenuId" : 2,
+								"menuCnName" : "业务监测应用管理",
+								"depth" : 2,
+								"menuUrl" : "application/bizlist",
+								"menuLevel" : 0,
+								"appId" : 0,
+								"dispOrder" : 0,
+								"parent" : false,
+								"children" : []
+							}, {
+								"menuId" : 12,
+								"superMenuId" : 2,
+								"menuCnName" : "角色管理",
+								"depth" : 2,
+								"menuUrl" : "role/list",
+								"menuLevel" : 0,
+								"appId" : 0,
+								"dispOrder" : 0,
+								"parent" : false,
+								"children" : []
+							}, {
+								"menuId" : 13,
+								"superMenuId" : 2,
+								"menuCnName" : "部门管理",
+								"depth" : 2,
+								"menuUrl" : "userDepartment/list",
+								"menuLevel" : 0,
+								"appId" : 0,
+								"dispOrder" : 0,
+								"parent" : false,
+								"children" : []
+							}, {
+								"menuId" : 14,
+								"superMenuId" : 2,
+								"menuCnName" : "岗位管理",
+								"depth" : 2,
+								"menuUrl" : "userJob/list",
+								"menuLevel" : 0,
+								"appId" : 0,
+								"dispOrder" : 0,
+								"parent" : false,
+								"children" : []
+							}, {
+								"menuId" : 16,
+								"superMenuId" : 2,
+								"menuCnName" : "日志管理",
+								"depth" : 2,
+								"menuIconUrl" : "",
+								"menuLevel" : 0,
+								"appId" : 0,
+								"dispOrder" : 0,
+								"parent" : true,
+								"children" : [ {
+									"menuId" : 17,
+									"superMenuId" : 16,
+									"menuCnName" : "日志查询",
+									"depth" : 3,
+									"menuIconUrl" : "",
+									"menuUrl" : "userAccessLog/list",
+									"menuLevel" : 0,
+									"appId" : 0,
+									"dispOrder" : 0,
+									"parent" : false,
+									"children" : []
+								}, {
+									"menuId" : 18,
+									"superMenuId" : 16,
+									"menuCnName" : "日志报表",
+									"depth" : 3,
+									"menuIconUrl" : "",
+									"menuUrl" : "userAccessLog/logTable",
+									"menuLevel" : 0,
+									"appId" : 0,
+									"dispOrder" : 0,
+									"parent" : false,
+									"children" : []
+								} ]
+							}, {
+								"menuId" : 45,
+								"superMenuId" : 2,
+								"menuCnName" : "信息管理",
+								"depth" : 2,
+								"menuIconUrl" : "",
+								"menuUrl" : "",
+								"menuLevel" : 0,
+								"appId" : 0,
+								"dispOrder" : 0,
+								"parent" : true,
+								"children" : [ {
+									"menuId" : 46,
+									"superMenuId" : 45,
+									"menuCnName" : "信息搜索",
+									"depth" : 3,
+									"menuIconUrl" : "",
+									"menuUrl" : "info/list",
+									"menuLevel" : 0,
+									"appId" : 0,
+									"dispOrder" : 0,
+									"parent" : false,
+									"children" : []
+								} ]
+							}, {
+								"menuId" : 52,
+								"superMenuId" : 2,
+								"menuCnName" : "内容管理",
+								"depth" : 2,
+								"menuUrl" : "",
+								"menuLevel" : 0,
+								"appId" : 0,
+								"dispOrder" : 0,
+								"parent" : true,
+								"children" : [ {
+									"menuId" : 58,
+									"superMenuId" : 52,
+									"menuCnName" : "内容浏览",
+									"depth" : 3,
+									"menuUrl" : "mesManage/list",
+									"menuLevel" : 0,
+									"appId" : 0,
+									"dispOrder" : 0,
+									"parent" : false,
+									"children" : []
+								}, {
+									"menuId" : 59,
+									"superMenuId" : 52,
+									"menuCnName" : "内容审核管理",
+									"depth" : 3,
+									"menuUrl" : "mesManage/mesappr",
+									"menuLevel" : 0,
+									"appId" : 0,
+									"dispOrder" : 0,
+									"parent" : false,
+									"children" : []
+								}, {
+									"menuId" : 60,
+									"superMenuId" : 52,
+									"menuCnName" : "内容标签管理",
+									"depth" : 3,
+									"menuUrl" : "mesManage/taglist",
+									"menuLevel" : 0,
+									"appId" : 0,
+									"dispOrder" : 0,
+									"parent" : false,
+									"children" : []
+								}, {
+									"menuId" : 69,
+									"superMenuId" : 52,
+									"menuCnName" : "资料库管理",
+									"depth" : 3,
+									"menuUrl" : "mesManage/databaselist",
+									"menuLevel" : 0,
+									"appId" : 0,
+									"dispOrder" : 0,
+									"parent" : false,
+									"children" : []
+								}, {
+									"menuId" : 70,
+									"superMenuId" : 52,
+									"menuCnName" : "资料类别管理",
+									"depth" : 3,
+									"menuUrl" : "mesManage/datatype",
+									"menuLevel" : 0,
+									"appId" : 0,
+									"dispOrder" : 0,
+									"parent" : false,
+									"children" : []
+								} ]
+							}, {
+								"menuId" : 57,
+								"superMenuId" : 2,
+								"menuCnName" : "配置版本管理",
+								"depth" : 2,
+								"menuUrl" : "secMetricConfig/list",
+								"menuLevel" : 0,
+								"appId" : 0,
+								"dispOrder" : 0,
+								"parent" : false,
+								"children" : []
+							} ]
+				} ];
+		if (dt == false) {
+			layer.msg('该用户没有查询菜单权限,请联系管理员！异常信息:"' + dt + '"', {
+				icon : 1,
+				time : 5000,
+				skin : 'layer-ext-seaning'
+			});
+		}
+		drawMenu("#mynode", dt);
+		function drawMenu(id, dt) {
+			var html = [];
+			drawLi(html, dt);
+			$(id).after(html.join(''));
+			function drawLi(arr, dt) {
+				for (var i = 0; i < dt.length; i++) {
+					if (dt[i].depth == 1) {
+						arr.push(' <li>');
+						if (dt[i].children == null
+								|| dt[i].children.length == 0) {
+							arr
+									.push(
+											'	<a class="J_menuItem" tabindex='+dt[i].menuId+' href="'+dt[i].menuUrl+'" ><i class="'+dt[i].menuIconUrl+'" style="color:#ffffff"></i> <span class="nav-label" style="font-size:14px;color:#ffffff;">',
+											dt[i].menuCnName, '</span>',
+											'</a> </li>');
+						} else {
+							arr
+									.push(
+											'	<a href="#"><i class="'+dt[i].menuIconUrl+'" style="color:#ffffff"></i> <span class="nav-label" style="font-size:14px;color:#ffffff;" >',
+											dt[i].menuCnName, '</span>',
+											' <span class="fa arrow" style="color:#ffffff"></span></a>');
+
+							arr
+									.push('<ul class="nav nav-second-level" style="font-size:12px;color:#ffffff;">');
+							drawLi(arr, dt[i].children);
+							arr.push('</ul></li>');
+						}
+
+					} else if (dt[i].depth > 1 && dt[i].children.length > 0) {
+						arr
+								.push(' <li><a href="#"> ', dt[i].menuCnName,
+										'<span class="fa arrow"></span></a>',
+										'	<ul class="nav nav-third-level" style="font-size:12px;color:#ffffff">');
+						drawLi(arr, dt[i].children);
+						arr.push('	</ul>', '</li>');
+
+					} else if (dt[i].depth > 1 && dt[i].children.length == 0) {
+						arr
+								.push(
+										'<li><a class="J_menuItem" tabindex='+dt[i].menuId+' href="'+dt[i].menuUrl+'">',
+										dt[i].menuCnName, '</a></li>');
+
+					}
+				}
+			}
+		}
+
+		function logout() {
+			layer.confirm("您好,确定退出吗?", {
+				btnAlign : 'c'
+			}, function() {
+				window.location.href = "home/logout";
+			});
+		}
+
+		function goMain() {
+			window.location.href = "home/main";
+
+		}
+	</SCRIPT>
+</BODY>
+</HTML>

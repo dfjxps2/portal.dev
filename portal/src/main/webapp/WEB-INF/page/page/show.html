@@ -62,6 +62,7 @@ var name = "";
             	if (res.code>0) {
             		tData = res.data.measure;
                 	add(res.data.measure,name,co,_layout,'1990','2017','');
+                	sendLog(52,"业务监测应用指标预览功能");
 				}else{
 				      layer.alert('error:'+res.msg);
 				      return false;
@@ -259,5 +260,16 @@ var name = "";
 		alert('请先双击选中栏目！');
 	}
   }
+  
+  function sendLog(id,mn){
+	  $.ajax({
+		  type: "post",
+		  url:  'sendLog?T='+Math.random(),
+		  data:{menuId:id,menuNm:mn},
+		  success: function(data){
+		  }
+	  });
+  }
+
 </script>
 </html>

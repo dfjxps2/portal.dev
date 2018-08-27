@@ -6,38 +6,28 @@
 <meta name="renderer" content="webkit">
 <title>门户主页</title>
 <meta name="keywords" content="门户主题">
-<!--<link rel="shortcut icon" href="favicon.ico">-->
 <link href="${G.host}/res/css/bootstrap.min.css?v=3.3.6"
 	rel="stylesheet">
 <link href="${G.host}/res/css/font-awesome.min.css?v=4.4.0"
 	rel="stylesheet">
 <link href="${G.host}/res/css/animate.css" rel="stylesheet">
 <link href="${G.host}/res/css/style.css?v=4.1.0" rel="stylesheet">
+<style>
+</style>
 </head>
 <body class="fixed-sidebar full-height-layout gray-bg"
 	style="overflow: hidden">
 	<div id="wrapper">
 		<!--左侧导航开始-->
-		<nav class="navbar-default navbar-static-side"  role="navigation">
-			<div class="nav-close">
-				<i class="fa fa-times-circle"></i>
-			</div>
-			<div class="sidebar-collapse">
+		<nav style="left:0px;" class="navbar-default navbar-static-side" role="navigation">
+		<!-- 	<div class="nav-close">
+				<a href="#"><img align="left"
+					src="${G.host}/res/script/home/images/logo4.png" title="系统首页"></a>
+			</div> -->
+			<div class="sidebar-collapse"
+				style="position: relative; width: auto; height: 100%; margin-top: -17px;">
 				<ul class="nav" id="side-menu">
-					<li class="nav-header" id="mynode">
-						<div class="dropdown profile-element" align="center">
-							<span><img alt="image" class="img-circle"
-								src="${G.host}/res/images/profile_small.jpg" width="64px" height="64px" /></span> <a
-								data-toggle="dropdown" class="dropdown-toggle" href="#"> <span
-								class="clear"> <span class="block m-t-xs"><strong
-										class="font-bold">${L.user_real_name}</strong></span> <!--  
-                                <span class="text-muted text-xs block">超级管理员<b class="caret"></b></span>
-                                -->
-							</span>
-							</a>
-						</div>
-					</li>
-
+					<li class="nav-header" id="mynode"></li>
 				</ul>
 			</div>
 		</nav>
@@ -45,31 +35,39 @@
 		<!--右侧部分开始-->
 		<div id="page-wrapper" class="gray-bg dashbard-1">
 			<div class="row border-bottom">
-				<nav class="navbar navbar-static-top"  role="navigation"
-					style="margin-bottom:0;background-color:#2b5ca9 ;">
-					<div class="navbar-header">
-						<!--<a class="navbar-minimalize minimalize-styl-2 btn btn-primary"-->
-							<!--href="#"><i class="fa fa-bars"></i> </a>-->
-						<a class="navbar-minimalize minimalize-styl-2  btn-primary"
-						   href="#"><img  src="${G.host}/res/script/home/images/hanbao.png"> </a>
-						<!--
-                        <form role="search" class="navbar-form-custom" method="post" action="search_results.html">
-                            <div class="form-group">
-                                <input type="text" placeholder="请输入您需要查找的内容 …" class="form-control" name="top-search" id="top-search">
-                            </div>
-                        </form>
-                          -->
-                          <div class="left" style="padding:19px;"><a href="#"><img align ="left" src="${G.host}/res/script/home/images/logo4.png" title="系统首页"></a></div>
-					</div>
-					<ul class="nav navbar-top-links navbar-right" style="background-color:#204e97" >
-						
-					  <li class="hidden-xs"><a href="javascript:void(0);"
-							onclick="javascript:location.href='home/main';" style="background-color:#204e97"><i
-								class="fa fa-cart-arrow-down"></i> 返回领导驾驶舱</a></li>
-						<li class="dropdown hidden-xs"><a
-							class="right-sidebar-toggle" aria-expanded="false" style="background-color:#204e97"> <i
-								class="fa fa-tasks"></i> 主题
-						</a></li>
+				<div style="z-index: 2034; left: 0px;" class="nav-close">
+					<a href="#"><img align="left"
+					src="${G.host}/res/script/home/images/logo4.png" title="系统首页"></a>
+					<!-- <a class="navbar-minimalize minimalize-styl-2  btn-primary"
+						   href="#"><img  src="${G.host}/res/script/home/images/hanbao.png"> </a> -->
+				</div>
+				
+				<nav class="navbar navbar-static-top" role="navigation"
+					style="margin-bottom: 0; background-color: #2b5ca9;">
+					<div class="navbar-header"></div>
+					<ul class="nav navbar-top-links navbar-right"
+						style="background-color: #2b5ca9">
+						<li class="dropdown hidden-xs">
+							<a
+							class="right-sidebar-toggle" href="javascript:void(0);"
+							onclick="javascript:location.href='home/main';"
+							aria-expanded="false" style="background-color: #2b5ca9"> <i
+								class="fa fa-tasks"></i> 返回领导驾驶舱
+							</a>
+						</li>
+
+
+						<li class="hidden-xs"><a style="background-color: #2b5ca9"><i
+								class="fa fa-cart-arrow-down"></i><strong class="font-bold">${L.user_real_name}</strong></a>
+
+						</li>
+						<li class="hidden-xs"><a href="javascript:void(0);"
+							style="background-color: #2b5ca9"
+							onclick="javascript:logout();return false;"
+							class="roll-nav roll-right J_tabExit"><i
+								class="fa fa fa-sign-out"></i>退出</a></li>
+
+
 					</ul>
 				</nav>
 			</div>
@@ -78,111 +76,39 @@
 					<i class="fa fa-backward"></i>
 				</button>
 				<nav class="page-tabs J_menuTabs">
-				<nav class="page-tabs J_menuTabs">
-					<div class="page-tabs-content">
-						<a href="javascript:;" class="active J_menuTab" data-id="i2">首页</a>
-					</div>
-				</nav>
-				<button class="roll-nav roll-right J_tabRight" style="border-left:solid 1px #eee">
-					<i class="fa fa-forward"></i>
-				</button>
-				<div class="btn-group roll-nav roll-right">
-					<button class="dropdown J_tabClose" data-toggle="dropdown">
-						关闭<span class="caret"></span>
+					<nav class="page-tabs J_menuTabs">
+						<div class="page-tabs-content">
+							<a href="javascript:;" class="active J_menuTab" data-id="i2">首页</a>
+						</div>
+					</nav>
+					<button class="roll-nav roll-right J_tabRight"
+						style="border-left: solid 1px #eee">
+						<i class="fa fa-forward"></i>
 					</button>
-					<ul role="menu" class="dropdown-menu dropdown-menu-right">
-						<li class="J_tabShowActive"><a>定位当前选项卡</a></li>
-						<li class="J_tabCloseAll"><a>关闭全部选项卡</a></li>
-						<li class="J_tabCloseOther"><a>关闭其他选项卡</a></li>
-					</ul>
-				</div>
-				<a href="javascript:void(0);"
-					onclick="javascript:logout();return false;"
-					class="roll-nav roll-right J_tabExit"><i
-					class="fa fa fa-sign-out"></i>退出</a>
+					<div class="btn-group roll-nav roll-right">
+						<button class="dropdown J_tabClose" data-toggle="dropdown">
+							关闭<span class="caret"></span>
+						</button>
+						<ul role="menu" class="dropdown-menu dropdown-menu-right">
+							<li class="J_tabShowActive"><a>定位当前选项卡</a></li>
+							<li class="J_tabCloseAll"><a>关闭全部选项卡</a></li>
+							<li class="J_tabCloseOther"><a>关闭其他选项卡</a></li>
+						</ul>
+					</div>
 			</div>
 			<div class="row J_mainContent" id="content-main">
-				<iframe class="J_iframe" name="iframe0" width="100%" height="100%"
-					src="${G.host}/goIframe" frameborder="0" data-id="i2" seamless></iframe>
+				<iframe class="J_iframe" name="iframe0" style="scrolling: no"
+					width="100%" height="100%" src="${G.host}/goIframe" frameborder="0"
+					data-id="i2" seamless></iframe>
+			</div>
+			<div class="footer">
+				<div
+					style="text-align: center; font-size: 14px; color: #333333; font-family: Microsoft YaHei;">版权所有
+					Copyright(C)2013-2018 北京泰豪智能工程有限公司</div>
 			</div>
 		</div>
 		<!--右侧部分结束-->
-		<!--右侧边栏开始-->
-		<div id="right-sidebar">
-			<div class="sidebar-container">
-				<ul class="nav nav-tabs navs-3">
-					<i class="fa fa-gear"></i>主题
-				</ul>
 
-				<div class="tab-content">
-					<div id="tab-1" class="tab-pane active">
-						<div class="sidebar-title">
-							<h3>
-								<i class="fa fa-comments-o"></i> 主题设置
-							</h3>
-							<small><i class="fa fa-tim"></i>
-								你可以从这里选择和预览主题的布局和样式，这些设置会被保存在本地，下次打开的时候会直接应用这些设置。</small>
-						</div>
-						<div class="skin-setttings">
-							<div class="title">主题设置</div>
-							<div class="setings-item">
-								<span>收起左侧菜单</span>
-								<div class="switch">
-									<div class="onoffswitch">
-										<input type="checkbox" name="collapsemenu"
-											class="onoffswitch-checkbox" id="collapsemenu"> <label
-											class="onoffswitch-label" for="collapsemenu"> <span
-											class="onoffswitch-inner"></span> <span
-											class="onoffswitch-switch"></span>
-										</label>
-									</div>
-								</div>
-							</div>
-							<div class="setings-item">
-								<span>固定顶部</span>
-								<div class="switch">
-									<div class="onoffswitch">
-										<input type="checkbox" name="fixednavbar"
-											class="onoffswitch-checkbox" id="fixednavbar"> <label
-											class="onoffswitch-label" for="fixednavbar"> <span
-											class="onoffswitch-inner"></span> <span
-											class="onoffswitch-switch"></span>
-										</label>
-									</div>
-								</div>
-							</div>
-							<div class="setings-item">
-								<span>固定宽度</span>
-								<div class="switch">
-									<div class="onoffswitch">
-										<input type="checkbox" name="boxedlayout"
-											class="onoffswitch-checkbox" id="boxedlayout"> <label
-											class="onoffswitch-label" for="boxedlayout"> <span
-											class="onoffswitch-inner"></span> <span
-											class="onoffswitch-switch"></span>
-										</label>
-									</div>
-								</div>
-							</div>
-							<div class="title">皮肤选择</div>
-							<div class="setings-item default-skin nb">
-								<span class="skin-name "> <a href="#" class="s-skin-0">
-										默认皮肤</a>
-								</span>
-							</div>
-							<div class="setings-item blue-skin nb">
-								<span class="skin-name "> <a href="#" class="s-skin-1">蓝色主题</a>
-								</span>
-							</div>
-							<div class="setings-item yellow-skin nb">
-								<span class="skin-name "> <a href="#" class="s-skin-3">黄色/紫色主题</a>
-								</span>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
 
 	</div>
 	<!-- 全局js -->
@@ -218,31 +144,24 @@
 				if (dt[i].depth == 1) {
 					arr.push(' <li>');
 					if (dt[i].children == null || dt[i].children.length == 0) {
-						arr.push('	<a class="J_menuItem" tabindex='+dt[i].menuId+' href="'+dt[i].menuUrl+'" ><i class="'+dt[i].menuIconUrl+'" style="color:#ffffff"></i> <span class="nav-label" style="color:#ffffff">',
+						arr.push('	<a class="J_menuItem" tabindex='+dt[i].menuId+' href="'+dt[i].menuUrl+'" ><i class="'+dt[i].menuIconUrl+'" style="color:#ffffff"></i> <span class="nav-label" style="font-size:14px;color:#ffffff;">',
 									dt[i].menuCnName, '</span>',
 									'</a> </li>');
 					}else{
-						arr.push('	<a href="#"><i class="'+dt[i].menuIconUrl+'" style="color:#ffffff"></i> <span class="nav-label" style="color:#ffffff" >',
+						arr.push('	<a href="#"><i class="'+dt[i].menuIconUrl+'" style="color:#ffffff"></i> <span class="nav-label" style="font-size:14px;color:#ffffff;" >',
 							dt[i].menuCnName, '</span>',
 							' <span class="fa arrow" style="color:#ffffff"></span></a>');
 						
-						arr.push('<ul class="nav nav-second-level">');
+						arr.push('<ul class="nav nav-second-level" style="font-size:12px;color:#ffffff;">');
 						drawLi(arr, dt[i].children);
 						arr.push('</ul></li>');
 					}
 
-			/* 		if (dt[i].children != null || dt[i].children.length > 0) {
-						arr.push('<ul class="nav nav-second-level">');
-						drawLi(arr, dt[i].children);
-						arr.push('</ul>');
-					} else {
-						arr.push('	</li>');
-					} */
 
 				} else if (dt[i].depth > 1 && dt[i].children.length > 0) {
 					arr.push(' <li><a href="#"> ', dt[i].menuCnName,
 							'<span class="fa arrow"></span></a>',
-							'	<ul class="nav nav-third-level">');
+							'	<ul class="nav nav-third-level" style="font-size:12px;color:#ffffff">');
 					drawLi(arr, dt[i].children);
 					arr.push('	</ul>', '</li>');
 

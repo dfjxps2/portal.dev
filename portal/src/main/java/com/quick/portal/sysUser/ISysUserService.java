@@ -24,7 +24,10 @@ import com.quick.core.base.ISysBaseService;
  * sys_user服务接口
  */
 public interface ISysUserService extends ISysBaseService<SysUserDO> {
-
-
+	
+	/*
+	 * 锁定用户帐号
+	 */
+	void updateUserStatueByUersId (String userId);
 
 }

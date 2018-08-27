@@ -63,7 +63,7 @@ public class MonitorApiController extends SysApiController {
     @Resource(name = "sectionService")
     private ISectionService sectionService;
     
-    @RequestMapping(value = "/settingUser")
+    /*@RequestMapping(value = "/settingUser")
   	@ResponseBody
       public Object settingUser(Integer app_id,Integer page_id) {
     	String user_id = rstr("u", loginer.getUser_id().toString());
@@ -88,13 +88,43 @@ public class MonitorApiController extends SysApiController {
         map.put("layout", layoutJson);
         map.put("app", JsonUtil.serialize(app));
         return  new DataResult(map);
+    }*/
+    
+    
+    @RequestMapping(value = "/settingUser",produces="application/json;charset=utf-8")
+  	@ResponseBody
+      public Object settingUser(String app_id,String page_id) {
+    	int aid = Integer.valueOf(app_id);
+    	int pid = Integer.valueOf(page_id);
+    	String user_id = rstr("u", loginer.getUser_id().toString());
+    	String time = rstr("time","").toString();
+        List<Map<String, Object>> plist = queryPage(aid);
+        if((page_id == null||"".equals(page_id)) && plist != null && plist.size() > 0){
+        	pid = (Integer)TypeUtil.parse(Integer.class, plist.get(0).get("page_id"));
+        }
+        ApplicationDO app = applicationService.selectObj(app_id);
+
+        Object layoutJson = getPageJson(pid);
+        Object metricJson = getMetricJson(pid,user_id,time);
+        String url = PropertiesUtil.getPropery("index.service.url");
+    	String port = PropertiesUtil.getPropery("index.service.port");
+    	String urlShow = url.concat(MetricPrivilegeConstants.SERVICE_PORT).concat(port).concat(MetricPrivilegeConstants.GET_MEASURES_SERVICE_NAME);
+        Map<String, Object> map = new HashMap<String, Object>();
+        
+        map.put("urlShow", urlShow.replaceAll("\"", "'"));
+        map.put("page_id", page_id);
+        map.put("page", JsonUtil.serialize(plist).replaceAll("\"", "'"));
+        map.put("metric",  metricJson.toString().replaceAll("\"", "'"));
+        map.put("layout", layoutJson.toString().replaceAll("\"", "'"));
+        map.put("app", JsonUtil.serialize(app).replaceAll("\"", "'"));
+        return  new DataResult(map);
     }
     
     /**
      * 查询页面配置信息
      * @return
      */
-   /* @RequestMapping(value = "/getLayout",produces="application/json;charset=utf-8")
+/*    @RequestMapping(value = "/getLayout",produces="application/json;charset=utf-8")
     @ResponseBody
     public String getLayout(Integer p,String u){
     	//获取当前用户id
@@ -112,11 +142,11 @@ public class MonitorApiController extends SysApiController {
         String bStr ="{\"code\":1,\"msg\":\"OK\",\"url\":null,\"version\":\"1.0\",\"data\":";
         String aStr =",\"error\":false,\"ok\":true}";
         return bStr+layout+aStr;
-    }
-    */
-    @RequestMapping(value = "/getLayout")
+    }*/
+  
+    @RequestMapping(value = "/getLayout",produces="application/json;charset=utf-8")
     @ResponseBody
-    public DataResult getLayout(Integer p,String u){
+    public Object getLayout(Integer p,String u){
     	//获取当前用户id
     	String time = null;
     	String user_id = rstr("u", loginer.getUser_id().toString());
@@ -129,7 +159,8 @@ public class MonitorApiController extends SysApiController {
         if(layout.indexOf(",}]")>-1){
         	layout = layout.replace(",}]", "}]");
         }
-        return new DataResult(layout);
+        
+        return new DataResult(layout.replace("\"", "'"));
     }
 
     /**

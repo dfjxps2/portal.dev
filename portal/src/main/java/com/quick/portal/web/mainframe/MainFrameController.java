@@ -222,4 +222,5 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
   	}
   	
 	public static final String PORTAL_ZORE_VAL = "0";
+	public static final String INDEX_MSG = "指标管理系统";
 }

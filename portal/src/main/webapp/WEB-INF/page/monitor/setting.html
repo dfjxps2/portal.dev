@@ -510,6 +510,7 @@ font-size: 14px;
     
     //获取指标的数值
 	    function getMetricData(metricList,metricData,layoutList){
+    	    alert(metricList)
 	        if(metricList == null || metricList.length == 0)
 	            return;
 	        $.ajax({
@@ -524,6 +525,7 @@ font-size: 14px;
 		            	
 		                add(res.data.measure,name,isShow(metricData),layoutList,'1990','2017','');
 		                hideMask();
+		        	    sendLog(12,"领导驾驶舱应用个性化配置功能");
 					}else{
 					      layer.alert('error:'+ls.msg);
 					      return false;
@@ -551,6 +553,18 @@ font-size: 14px;
 	    }
 	    function hideMask(){
 	        $("#qmask").hide();
+	    }
+	    
+
+	    
+	    function sendLog(id,mn){
+	  	  $.ajax({
+	  		  type: "post",
+	  		  url:  'sendLog?T='+Math.random(),
+	  		  data:{menuId:id,menuNm:mn},
+	  		  success: function(data){
+	  		  }
+	  	  });
 	    }
 </script>
 </html>

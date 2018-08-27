@@ -202,5 +202,10 @@
 	<select id="selectByName" parameterType="java.lang.String" resultType="map">
 		SELECT su.* FROM  sys_user su WHERE  su.user_name = #{user_name}
 	</select>
+	
+	
+	<update id="updateUserStatueByUersId" parameterType="java.lang.String">
+		update sys_user  set user_state=0, upd_time =now()  where user_name = #{user_name}
+	</update>
 
 </mapper>
