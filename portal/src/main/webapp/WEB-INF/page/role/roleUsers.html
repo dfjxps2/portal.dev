@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <#include "/WEB-INF/include/reslist.html" />
+    <style>
+        select::-ms-expand{
+            display: none;
+        }
+    </style>
+
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content wrapper-content-x animated fadeInRight">
+    <div  class="row">
+        <div class="col-sm-12">
+            <div class="col-sm-10">
+                <div class="col-sm-12">
+                    <label id="pagename" class="col-xs-8" style="text-align:center;font-size: 22px;color:blue;margin-left: 180px"></label>
+                </div>
+            </div>
+            <div class="ibox ibox-x">
+                <div class="ibox-content ibox-content-x">
+                    <div  class="panel-mar">
+                        <form id="formSearch" class="form-inline">
+                            <div class="form-group" style="left: auto;width:90px;">
+                                <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="addRoleUser();"> 新增角色用户</button> </span>
+                            </div>
+                            <div class="form-group" style="left: auto;width:90px;">
+                                <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="deletRoleUser();">删除角色用户 </button></span>
+                            </div>
+                        <div class="form-group" style="left: auto;width:90px;">
+                            <span class="input-group-btn" style="display:inline-block;"><input type="button" class="btn btn-primary " value="返回" onclick="returnEdit();"></span>
+                        </div>
+                        </form>
+                    </div>
+                    <div style ="margin:5px;">
+                        <table id="list" class="table-striped" style="table-layout:fixed"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    var pageNum=1;
+    var pageSize=10;
+    var queryParm = '';
+    var flag=true;
+    var pageFlag=0;
+    //初始化表格
+    var  roleid=$.request.queryString["role_id"];
+    function  config(){
+        var RFlag=$.request.queryString["RFlag"];
+        quick.serverUrl = "${G.serverUrl}";  // /sysUser
+        quick.editUrl = "${G.editUrl}";       // sysUser/edit
+        quick.objName = "${G.objName}";
+        quick.idField = "${G.idField}";
+        $("#list").bootstrapTable("destroy");
+        _gridPool["list"]=new BGrid("#list");
+        _gridPool["list"].config({
+            url:quick.serverUrl+"/getRoleUsers?role_id=" +roleid +"&i="+ Math.random(),
+            idField: quick.idField,
+            sortName: quick.idField,
+            cache:false,
+            height: $(document.body).height()-50,
+            toolbar:"#formSearch",
+            columns: [
+                {  field: 'TAGSELECT', title: '选择',width: '5%', align: 'center',
+                    formatter:function(value,rec){
+                        return "<input id=\"msgs"+rec.user_id+"\" title=\"msgs\" class=\"ck_qx\" type=\"checkbox\" name=\"msg\" value=\"" + rec.user_id+ "\" >";
+                    }  },
+                { field: 'user_id', title: '用户ID', width: 70,align: 'center' },
+                { field: 'user_name', title: '用户登录名称', width: 90 ,align: 'center' },
+                { field: 'user_real_name', title: '用户真实名称', width: 90,align: 'center'  },
+                { field: 'dep_name', title: '用户部门名称', width: 110 ,align: 'center' }
+            ],onPageChange:function(number, size){
+                pageNum=number;
+                pageSize=size;
+            },onPostBody:function(data){
+                if(queryParm=='' &&　(data == null || data.length == 0)){
+                    $(".no-records-found td").html('您还没有添加相关信息，请点击新增角色用户按钮进行添加</a>');
+                }
+            }
+        });
+
+        if(RFlag==1){
+            requery();
+        }else{
+            _gd["list"].init();
+        }
+    }
+    //下拉框
+
+
+
+    //删除记录
+    function deletRoleUser(){
+        var json = document.getElementsByName("msg");
+        var check_val = [];
+        for (var i = 0; i < json.length; i++) {
+            if (json[i].checked) {
+                check_val.push(json[i].value);
+            }
+        }
+        if(check_val.length<=0){
+            layer.msg("请选择要删除的用户！",{icon:1,time: 1000,skin: 'layer-ext-moon'});
+            return;
+        };
+        layer.confirm(
+            "确认将删除吗？<br/>删除后，所有关联数据将一并删除，且删除后不可恢复",
+            {icon: 3, title: "删除记录",skin: 'layer-ext-moon'},
+            function(){
+                $.ajax({
+                    type: "post",
+                    url: quick.serverUrl + '/deleteRoleUser',
+                    dataType: "json",
+                    data:{
+                        ROLE_USER_ID_LIST:check_val.join(","),
+                        role_id:roleid
+                    },
+                    success: function (data) {
+                        if (data == 1) {
+                            layer.msg('删除记录成功', {icon: 1, time: 1000});
+                            window.location.href= "roleUsers?role_id="+roleid;
+                        }else {
+                            layer.msg('删除记录失败', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+
+                        }
+                    },
+                    error: function (err) {
+                        layer.msg("结果异常", {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+                    }
+                });
+            });
+    }
+
+    function addRoleUser (){
+        navAppend("新增角色用户");/*获取父页面元素并动态赋值父页面title*/
+        window.location.href= "addRoleUser?role_id="+roleid;//跳转到另一个页面，并且还在当前框架
+    }
+
+    function returnEdit() {
+        window.location.href= "edit?role_id="+roleid;
+    }
+
+</script>
+
+</html>
