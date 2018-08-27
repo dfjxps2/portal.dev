@@ -1,25 +1,569 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<title>frame</title>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link rel="stylesheet" href="${G.host}/res/css/skin/bootstrap.min.css" />
-<link rel="stylesheet" href="${G.host}/res/css/bootstrap-responsive.min.css" />
-<link rel="stylesheet" href="${G.host}/res/css/fullcalendar.css" />
-<link rel="stylesheet" href="${G.host}/res/css/jquery.gritter.css" />
-<link rel="stylesheet" href="${G.host}/res/css/matrix-style2.css" />
-<link rel="stylesheet" href="${G.host}/res/css/matrix-media.css" />
-<link href="${G.host}/res/fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-<!--
-<link href='http://fonts.useso.com/css?family=Open+Sans:400,700,800' rel='stylesheet' type='text/css'>
--->
-</head>
-<body>
+<html>
 
-<div id="content">
-  <div class="quick-actions_homepage">
-  </div>
-</div>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>mainframe view</title>
+
+    <link href="${G.host}/res/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="${G.host}/res/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <!-- Gritter -->
+    <link href="${G.host}/res/css/jquery.gritter.css" rel="stylesheet">
+
+    <link href="${G.host}/res/css/animate.css" rel="stylesheet">
+    <link href="${G.host}/res/css/style.css?v=4.1.0" rel="stylesheet">
+
+    <link href="${G.host}/res/css/custom.css" rel="stylesheet">
+
+    <link href="${G.host}/res/css/chosen.css" rel="stylesheet">
+
+    <link href="${G.host}/res/css/plugins/ionRangeSlider/ion.rangeSlider.css" rel="stylesheet">
+    <link href="${G.host}/res/css/plugins/ionRangeSlider/ion.rangeSlider.skinFlat.css" rel="stylesheet">
+    
+
+
+</head>
+
+<body class="gray-bg" style="margin-left: 5px;">
+    <div class="wrapper wrapper-content" style="padding:0px;">
+        <div class="row">
+           <div class="ibox-title">
+               <h5>数据接入</h5>
+	       </div>
+           
+            <div class="col-sm-3">
+                <div class="widget style1 blue-bg">
+                    <div class="row">
+                        <div class="col-xs-4 text-center">
+                            <i class="fa fa-trophy fa-5x"></i>
+                        </div>
+                        <div class="col-xs-8 text-right">
+                            <span>接入部门数量 </span>
+                            <h2 class="font-bold">200</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="widget style1 navy-bg">
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <i class="fa fa-cloud fa-5x"></i>
+                        </div>
+                        <div class="col-xs-8 text-right">
+                            <span> 接入系统数量 </span>
+                            <h2 class="font-bold">228</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="widget style1 lazur-bg">
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <i class="fa fa-envelope-o fa-5x"></i>
+                        </div>
+                        <div class="col-xs-8 text-right">
+                            <span> 接入数据表数量 </span>
+                            <h2 class="font-bold">324</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="widget style1 yellow-bg">
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <i class="fa fa-music fa-5x"></i>
+                        </div>
+                        <div class="col-xs-8 text-right">
+                            <span> 接入信息项数量 </span>
+                            <h2 class="font-bold">535</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        </div>
+        <div class="row">
+            <div class="ibox-title">
+                <h5>基础建设信息</h5>
+            </div>
+            
+            <div class="col-sm-3">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <span class="label label-success pull-right">月</span>
+                        <h5>人口库</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <h1 class="no-margins">1,290,600</h1>
+                        <div class="stat-percent font-bold text-success">28% <i class="fa fa-level-up"></i>
+                        </div>
+                        <small>人口库表数量</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <span class="label label-info pull-right">全年</span>
+                        <h5>法人库</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <h1 class="no-margins">210,600</h1>
+                        <div class="stat-percent font-bold text-info">20% <i class="fa fa-level-up"></i>
+                        </div>
+                        <small>接入法人库表数量</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <span class="label label-primary pull-right">月</span>
+                        <h5>空间地理库</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <h1 class="no-margins">510,600</h1>
+                        <div class="stat-percent font-bold text-navy">44% <i class="fa fa-level-up"></i>
+                        </div>
+                        <small>空间地理库表数量</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <span class="label label-danger pull-right">月</span>
+                        <h5>宏观经济库</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <h1 class="no-margins">410,600</h1>
+                        <div class="stat-percent font-bold text-danger">38% <i class="fa fa-level-down"></i>
+                        </div>
+                        <small>宏观经济库表数量</small>
+                    </div>
+                </div>
+            </div>
+        </div>	
+       
+       <div class="row">
+          <div class="ibox-title">
+               <h5>主题库建设情况</h5>
+	       </div>
+          <div class="col-sm-6">
+              <div class="ibox float-e-margins">
+                  <div class="ibox-title">
+                      <h5>主题指标统计</h5>
+                      <div class="ibox-tools">
+                          <a class="collapse-link">
+                              <i class="fa fa-chevron-up"></i>
+                          </a>
+                          <a class="dropdown-toggle" data-toggle="dropdown" href="graph_flot.html#">
+                              <i class="fa fa-wrench"></i>
+                          </a>
+                          <ul class="dropdown-menu dropdown-user">
+                              <li><a href="graph_flot.html#">选项1</a>
+                              </li>
+                              <li><a href="graph_flot.html#">选项2</a>
+                              </li>
+                          </ul>
+                          <a class="close-link">
+                              <i class="fa fa-times"></i>
+                          </a>
+                      </div>
+                  </div>
+                  <div class="ibox-content">
+                      <div class="echarts" id="echarts-line-chart"></div>
+                  </div>
+              </div>
+          </div>
+            <div class="col-sm-6">
+              <div class="ibox float-e-margins">
+                  <div class="ibox-title">
+                      <h5>系統服务组件统计</h5>
+                      <div class="ibox-tools">
+                          <a class="collapse-link">
+                              <i class="fa fa-chevron-up"></i>
+                          </a>
+                          <a class="dropdown-toggle" data-toggle="dropdown" href="graph_flot.html#">
+                              <i class="fa fa-wrench"></i>
+                          </a>
+                          <ul class="dropdown-menu dropdown-user">
+                              <li><a href="graph_flot.html#">选项1</a>
+                              </li>
+                              <li><a href="graph_flot.html#">选项2</a>
+                              </li>
+                          </ul>
+                          <a class="close-link">
+                              <i class="fa fa-times"></i>
+                          </a>
+                      </div>
+                  </div>
+                  <div class="ibox-content">
+                      <div class="echarts" id="echarts-pie-chart"></div>
+                  </div>
+              </div>
+          </div>
+          
+         <div class="row">
+         	<div class="col-sm-4">
+                 <div class="ibox float-e-margins">
+                     <div class="ibox-title">
+                         <h5>应用情况</h5>
+                         <div class="ibox-tools">
+                             <a class="collapse-link">
+                                 <i class="fa fa-chevron-up"></i>
+                             </a>
+                             <a class="close-link">
+                                 <i class="fa fa-times"></i>
+                             </a>
+                         </div>
+                     </div>
+                     <div class="ibox-content">
+                         <div class="m-b-sm">
+                            <small><strong>应用用户数</strong> </small>
+                        </div>
+                        <div id="ionrange_1"></div>
+                     
+                     <div class="m-b-sm">
+                            <small><strong>用户访问量</strong> </small>
+                     </div>
+                        <div id="ionrange_2"></div>
+                     
+                       <div class="m-b-sm">
+                            <small><strong>指标数量</strong> </small>
+                        </div>
+                        <div id="ionrange_3"></div>
+                     
+                     
+                       <div class="m-b-sm">
+                            <small><strong>应用系统数量</strong></small>
+                        </div>
+                        <div id="ionrange_4"></div>
+                   </div>
+                 </div>
+             </div>
+             <div class="col-sm-4">
+                 <div class="ibox float-e-margins">
+                     <div class="ibox-title">
+                         <h5>综合评价最佳TOP10</h5>
+                         <div class="ibox-tools">
+                             <a class="collapse-link">
+                                 <i class="fa fa-chevron-up"></i>
+                             </a>
+                             <a class="close-link">
+                                 <i class="fa fa-times"></i>
+                             </a>
+                         </div>
+                     </div>
+                     <div class="ibox-content">
+                         <table class="table table-hover no-margins">
+                             <thead>
+                                 <tr>
+                                     <th>排名</th>
+                                     <th>部门名称</th>
+                                     <th>评介指数</th>
+                                 </tr>
+                             </thead>
+                             <tbody>
+                            
+                                 <tr>
+                                     <td><span class="label label-success">1</span>
+                                     </td>
+                                     <td>经委部</td>
+                                     <td> 
+                                      	<div class="stat-percent">98% <i class="fa fa-bolt text-navy"></i>
+                                        </div>
+                                        <div class="progress progress-mini">
+                                            <div style="width: 98%;" class="progress-bar"></div>
+                                        </div>
+                                     </td>
+                                 </tr>
+                                 <tr>
+                                     <td><span class="label label-warning">2</span>
+                                     </td>
+                                     <td>计委部</td>
+                                     <td> 
+                                      	<div class="stat-percent">96% <i class="fa fa-bolt text-navy"></i>
+                                        </div>
+                                        <div class="progress progress-mini">
+                                            <div style="width: 96%;" class="progress-bar"></div>
+                                        </div>
+                                     </td>
+                                 </tr>
+                                 <tr>
+                                     <td><span class="label label-info">3</span>
+                                     </td>
+                                     <td>科委部</td>
+                                     <td> 
+                                      	<div class="stat-percent">95% <i class="fa fa-sitemap text-navy"></i>
+                                        </div>
+                                        <div class="progress progress-mini">
+                                            <div style="width: 95%;" class="progress-bar"></div>
+                                        </div>
+                                     </td>
+                                 </tr>
+                                 <tr>
+                                     <td><span class="label ">4</span>
+                                     </td>
+                                     <td>公安部</td>
+                                     <td> 
+                                      	<div class="stat-percent">93% <i class="fa fa-bolt text-navy"></i>
+                                        </div>
+                                        <div class="progress progress-mini">
+                                            <div style="width: 93%;" class="progress-bar"></div>
+                                        </div>
+                                     </td>
+                                 </tr>
+                                 <tr>
+                                     <td><span class="label ">5</span>
+                                     </td>
+                                     <td>民政部</td>
+                                     <td> 
+                                      	<div class="stat-percent">90% <i class="fa fa-bolt text-navy"></i>
+                                        </div>
+                                        <div class="progress progress-mini">
+                                            <div style="width: 90%;" class="progress-bar"></div>
+                                        </div>
+                                     </td>
+                                 </tr>
+                                 <tr>
+                                     <td><span class="label ">6</span>
+                                     </td>
+                                     <td>税务部</td>
+                                     <td> 
+                                      	<div class="stat-percent">89% <i class="fa fa-sitemap text-navy"></i>
+                                        </div>
+                                        <div class="progress progress-mini">
+                                            <div style="width: 89%;" class="progress-bar"></div>
+                                        </div>
+                                     </td>
+                                 </tr>
+                                 <tr>
+                                     <td><span class="label ">7</span>
+                                     </td>
+                                     <td>教育部</td>
+                                     <td> 
+                                      	<div class="stat-percent">88% <i class="fa fa-bolt text-navy"></i>
+                                        </div>
+                                        <div class="progress progress-mini">
+                                            <div style="width: 88%;" class="progress-bar"></div>
+                                        </div>
+                                     </td>
+                                 </tr>
+                                 <tr>
+                                     <td><span class="label ">8</span>
+                                     </td>
+                                     <td>交通部</td>
+                                     <td> 
+                                      	<div class="stat-percent">80% <i class="fa fa-bolt text-navy"></i>
+                                        </div>
+                                        <div class="progress progress-mini">
+                                            <div style="width: 80%;" class="progress-bar"></div>
+                                        </div>
+                                     </td>
+                                 </tr>
+                                 <tr>
+                                     <td><span class="label ">9</span>
+                                     </td>
+                                     <td>体委部</td>
+                                     <td> 
+                                      	<div class="stat-percent">70% <i class="fa fa-sitemap text-navy"></i>
+                                        </div>
+                                        <div class="progress progress-mini">
+                                            <div style="width: 70%;" class="progress-bar"></div>
+                                        </div>
+                                     </td>
+                                 </tr>
+                                 <tr>
+                                     <td><span class="label ">10</span>
+                                     </td>
+                                     <td>农委部</td>
+                                     <td> 
+                                      	<div class="stat-percent">65% <i class="fa fa-sitemap text-navy"></i>
+                                        </div>
+                                        <div class="progress progress-mini">
+                                            <div style="width: 65%;" class="progress-bar"></div>
+                                        </div>
+                                     </td>
+                                 </tr>
+                             </tbody>
+                         </table>
+                     </div>
+                 </div>
+             </div>
+             
+                 <div class="col-sm-4">
+                 <div class="ibox float-e-margins">
+                     <div class="ibox-title">
+                         <h5>用户项目列表</h5>
+                         <div class="ibox-tools">
+                             <a class="collapse-link">
+                                 <i class="fa fa-chevron-up"></i>
+                             </a>
+                             <a class="close-link">
+                                 <i class="fa fa-times"></i>
+                             </a>
+                         </div>
+                     </div>
+                     <div class="ibox-content">
+                         <table class="table table-hover no-margins">
+                             <thead>
+                                 <tr>
+                                     <th>状态</th>
+                                     <th>日期</th>
+                                     <th>用户</th>
+                                     <th>值</th>
+                                 </tr>
+                             </thead>
+                             <tbody>
+                                 <tr>
+                                     <td><small>进行中...</small>
+                                     </td>
+                                     <td><i class="fa fa-clock-o"></i> 11:20</td>
+                                     <td>青衣5858</td>
+                                     <td class="text-navy"> <i class="fa fa-level-up"></i> 24%</td>
+                                 </tr>
+                                 <tr>
+                                     <td><span class="label label-warning">已取消</span>
+                                     </td>
+                                     <td><i class="fa fa-clock-o"></i> 10:40</td>
+                                     <td>徐子崴</td>
+                                     <td class="text-navy"> <i class="fa fa-level-up"></i> 66%</td>
+                                 </tr>
+                                 <tr>
+                                     <td><small>进行中...</small>
+                                     </td>
+                                     <td><i class="fa fa-clock-o"></i> 01:30</td>
+                                     <td>姜岚昕</td>
+                                     <td class="text-navy"> <i class="fa fa-level-up"></i> 54%</td>
+                                 </tr>
+                                 <tr>
+                                     <td><small>进行中...</small>
+                                     </td>
+                                     <td><i class="fa fa-clock-o"></i> 02:20</td>
+                                     <td>武汉大兵哥</td>
+                                     <td class="text-navy"> <i class="fa fa-level-up"></i> 12%</td>
+                                 </tr>
+                                 <tr>
+                                     <td><small>进行中...</small>
+                                     </td>
+                                     <td><i class="fa fa-clock-o"></i> 09:40</td>
+                                     <td>荆莹儿</td>
+                                     <td class="text-navy"> <i class="fa fa-level-up"></i> 22%</td>
+                                 </tr>
+                                 <tr>
+                                     <td><span class="label label-primary">已完成</span>
+                                     </td>
+                                     <td><i class="fa fa-clock-o"></i> 04:10</td>
+                                     <td>栾某某</td>
+                                     <td class="text-navy"> <i class="fa fa-level-up"></i> 66%</td>
+                                 </tr>
+                                 <tr>
+                                     <td><small>进行中...</small>
+                                     </td>
+                                     <td><i class="fa fa-clock-o"></i> 12:08</td>
+                                     <td>范范范二妮</td>
+                                     <td class="text-navy"> <i class="fa fa-level-up"></i> 23%</td>
+                                 </tr>
+                             </tbody>
+                         </table>
+                     </div>
+                 </div>
+             </div>
+          
+         </div>
+
+    </div>
+
+
+    <!-- 全局js -->
+    <script src="${G.host}/res/js/jquery.min.js?v=2.1.4"></script>
+    <script src="${G.host}/res/js/bootstrap.min.js?v=3.3.6"></script>
+	 <!-- ECharts demo data -->
+    <script src="${G.host}/res/js/echarts-demo.js"></script>
+    <!-- ECharts -->
+    <script src="${G.host}/res/js/plugins/echarts/echarts-all.js"></script>
+
+    <!-- Peity -->
+    <script src="${G.host}/res/js/plugins/peity/jquery.peity.min.js"></script>
+    <script src="${G.host}/res/js/peity-demo.js"></script>
+    <!-- 自定义js -->
+    <script src="${G.host}/res/js/content.js?v=1.0.0"></script>
+
+    <!-- jQuery UI -->
+    <script src="${G.host}/res/js/jquery-ui.min.js"></script>
+
+    <!-- Jvectormap -->
+    <script src="${G.host}/res/js/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
+    <script src="${G.host}/res/js/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+
+    <!-- EayPIE
+    <script src="${G.host}/res/js/plugins/easypiechart/jquery.easypiechart.js"></script>
+ -->
+    <!-- Sparkline -->
+    <script src="${G.host}/res/js/plugins/sparkline/jquery.sparkline.min.js"></script>
+
+    <!-- Sparkline demo data  -->
+    <script src="${G.host}/res/js/sparkline-demo.js"></script>
+    
+ 	<!-- IonRangeSlider -->
+    <script src="${G.host}/res/js/plugins/ionRangeSlider/ion.rangeSlider.min.js"></script>
+	
+	  
+    <!-- Chosen -->
+    <script src="${G.host}/res/js/plugins/chosen/chosen.jquery.js"></script>
+
+    <!-- JSKnob -->
+    <script src="${G.host}/res/js/plugins/jsKnob/jquery.knob.js"></script>
+
+    <!-- Input Mask-->
+    <script src="${G.host}/res/js/plugins/jasny/jasny-bootstrap.min.js"></script>
+
+
+    <!-- Prettyfile -->
+    <script src="${G.host}/res/js/plugins/prettyfile/bootstrap-prettyfile.js"></script>
+
+    <!-- NouSlider 
+    <script src="${G.host}/res/js/plugins/nouslider/jquery.nouislider.min.js"></script>
+-->
+    <!-- Switchery -->
+    <script src="${G.host}/res/js/plugins/switchery/switchery.js"></script>
+
+    <!-- IonRangeSlider 
+    <script src="${G.host}/res/js/plugins/ionRangeSlider/ion.rangeSlider.min.js"></script>
+-->
+    <!-- iCheck -->
+    <script src="${G.host}/res/js/plugins/iCheck/icheck.min.js"></script>
+
+
+
+    <!-- Color picker -->
+    <script src="${G.host}/res/js/plugins/colorpicker/bootstrap-colorpicker.min.js"></script>
+
+    <!-- Clock picker -->
+    <script src="${G.host}/res/js/plugins/clockpicker/clockpicker.js"></script>
+
+    <!-- Image cropper -->
+    <script src="${G.host}/res/js/plugins/cropper/cropper.min.js"></script>
+
+    <script src="${G.host}/res/js/form-advanced-demo.js"></script>
+    
+
+    <!-- Morris 
+    <script src="${G.host}/res/js/plugins/morris/raphael-2.1.0.min.js"></script>
+    <script src="${G.host}/res/js/plugins/morris/morris.js"></script>
+    -->
+    <!-- Morris demo data
+    <script src="${G.host}/res/js/morris-demo.js"></script>
+    -->
+
 </body>
+
 </html>

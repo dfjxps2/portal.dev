@@ -26,6 +26,7 @@
             success:function(res){
             	if (res.code>0) {
                 	addInfo(res.data); 
+                	sendLog(50,"业务监测应用配置指标功能");
 				}else{
 				      layer.alert('error:'+ls.msg);
 				      return false;
@@ -457,6 +458,15 @@
     function cancel(){
         var url = quick.listUrl + urlDel(location.search, 'mode','page_section_id') + '&RFlag=1';
         window.location.href = url;
+    }
+    function sendLog(id,mn){
+  	  $.ajax({
+  		  type: "post",
+  		  url:  'sendLog?T='+Math.random(),
+  		  data:{menuId:id,menuNm:mn},
+  		  success: function(data){
+  		  }
+  	  });
     }
 </script>
 </html>
