@@ -307,12 +307,15 @@ public abstract class SysBaseController<T> {
 
 	@ExceptionHandler
 	@ResponseBody
-	public Object exceptionHandler(Exception ex, ModelAndView modelAndView) {
+	public Object exceptionHandler(Exception ex) {
 		printError("【未处理异常】", ex);
 
     	/*如果是Ajax请求将错误信息返回到ajax*/
 		if(isAjax(request)){
-			return showError(ex.getMessage());
+			String msg = ex.getMessage();
+			if (msg == null)
+				msg = ex.toString();
+			return showError(msg);
 		}else{
 			writeFatal("系统已重启，请重新登录!");
 			return null;

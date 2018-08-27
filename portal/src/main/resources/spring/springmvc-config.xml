@@ -34,10 +34,10 @@
     <!--<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>-->
     <bean name='handlerMapping' class='com.quick.core.base.spring.MethodRequestMappingHandlerMapping' />
     <!--Spring3.1版本开始的注解 HandlerAdapter -->
-<!--     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
         <property name="messageConverters">
             <list>
-             	<bean class="org.springframework.http.converter.StringHttpMessageConverter" /> 
+             	<bean class="org.springframework.http.converter.StringHttpMessageConverter" />
                 <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
                     <property name="objectMapper">
                         <bean class="com.fasterxml.jackson.databind.ObjectMapper">
@@ -59,21 +59,20 @@
                 </bean>
             </list>
         </property>
-    </bean> -->
-    
-    
-     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+    </bean>
+
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver">
         <property name="messageConverters">
             <list>
-			   <bean class="org.springframework.http.converter.StringHttpMessageConverter" /> 
-			   <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <bean class="org.springframework.http.converter.StringHttpMessageConverter" />
+                <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
                     <property name="objectMapper">
                         <bean class="com.fasterxml.jackson.databind.ObjectMapper">
-                             <property name="dateFormat">
-                                  <bean class="java.text.SimpleDateFormat">
-                                      <constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss" />
-                                  </bean>
-                             </property>
+                            <property name="dateFormat">
+                                <bean class="java.text.SimpleDateFormat">
+                                    <constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss" />
+                                </bean>
+                            </property>
                         </bean>
                     </property>
                     <property name="supportedMediaTypes">
@@ -277,15 +276,17 @@
     </bean>
     
     <!--定义异常处理页面-->
-    <bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
-        <!--<property name="exceptionMappings">
-            <props>
-                <prop key="java.sql.SQLException">outException</prop>
-                <prop key="java.io.IOException">outException</prop>
-            </props>
-        </property>-->
-    </bean>
+    <!--<bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">-->
+        <!--&lt;!&ndash;<property name="exceptionMappings">-->
+            <!--<props>-->
+                <!--<prop key="java.sql.SQLException">outException</prop>-->
+                <!--<prop key="java.io.IOException">outException</prop>-->
+            <!--</props>-->
+        <!--</property>&ndash;&gt;-->
+    <!--</bean>-->
 
     <!--<context:annotation-config/>   -->
+
+
 </beans>
 

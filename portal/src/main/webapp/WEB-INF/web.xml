@@ -34,6 +34,7 @@
         <exception-type>java.lang.Exception</exception-type>
         <location>/WEB-INF/error.html</location>
     </error-page>
+
     <!-- 激活Tomcat的defaultServlet来处理静态文件 -->
     <servlet-mapping>
         <servlet-name>default</servlet-name>
