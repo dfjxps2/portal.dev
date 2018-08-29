@@ -62,6 +62,25 @@
 			)
 	</insert>
 
+	<!--删除用户的角色-->
+	<delete id="deleteUserRole" parameterType="String">
+		delete from user_role_rela where user_id = #{user_id}
+	</delete>
+
+	<!--更新用户角色-->
+	<insert id="addRoleUsers" parameterType="java.util.List">
+		INSERT INTO  user_role_rela (user_id,role_id,cre_time,upd_time)
+		VALUES
+		<foreach collection="list" item="entity" separator=",">
+			(
+			#{entity.user_id},
+			#{entity.role_id},
+			#{entity.cre_time},
+			#{entity.upd_time}
+			)
+		</foreach>
+	</insert>
+
 	<insert id="insertUserDepRela" parameterType="com.quick.portal.sysUser.SysUserDO">
 		INSERT INTO user_dep_rela(
 		   user_id,
@@ -81,7 +100,8 @@
 		      user_addr = #{user_addr},
 		      user_state=#{user_state},
 			  user_tel=#{user_tel},
-			  job_id=#{job_id}
+			  job_id=#{job_id},
+			  upd_time=#{upd_time}
 		 where user_id = #{user_id}
 	</update>
 
@@ -124,6 +144,13 @@
      	</if>
 	</select>
 
+	<select id="getUserEdit" parameterType="map" resultType="map">
+		select urd.*,uj.job_name from (select udrn.*, udn.dep_name from(select urn.*,udr.dep_id,udr.rela_id from (select su.*,rn.role_name role_name,rn.rel_id rel_id,rn.role_type_id role_type_id,rn.role_id role_id from sys_user su
+		left join(select urr.user_id, GROUP_CONCAT(role_name) role_name ,ur.role_type_id,urr.rel_id,GROUP_CONCAT(ur.role_id) role_id from  user_role ur  INNER JOIN user_role_rela urr on ur.role_id = urr.role_id GROUP BY urr.user_id) rn on su.user_id = rn.user_id where su.user_id= #{user_id}) urn
+		left join user_dep_rela udr on urn.user_id = udr.user_id where 1=1) udrn left join user_department udn
+		on udrn.dep_id = udn.dep_id  where 1=1)urd left join user_job uj on urd.job_id=uj.job_id
+	</select>
+
 	<!--用户新增查询生产用户id-->
 	<select id="selectUserId" resultType="java.lang.String" >
 		select su.user_id from sys_user  su
@@ -147,7 +174,7 @@
 	<!--初始化和查询-->
 	<select id="getAllUser"  parameterType="map" resultType="map">
 		select urd.*,uj.job_name from (select udrn.*, udn.dep_name from(select urn.*,udr.dep_id,udr.rela_id from (select su.*,rn.role_name role_name,rn.rel_id rel_id from sys_user su
-		left join(select urr.user_id, ur.role_name,urr.rel_id from  user_role ur , user_role_rela urr where ur.role_id = urr.role_id) rn on su.user_id = rn.user_id where 1=1) urn
+		left join(select urr.user_id, GROUP_CONCAT(role_name) role_name,urr.rel_id from  user_role ur INNER JOIN user_role_rela urr on ur.role_id = urr.role_id GROUP BY urr.user_id) rn on su.user_id = rn.user_id where 1=1) urn
 		left join user_dep_rela udr on urn.user_id = udr.user_id where 1=1) udrn left join user_department udn
 		on udrn.dep_id = udn.dep_id  where 1=1)urd left join user_job uj on urd.job_id=uj.job_id where 1=1
 		<if test="job_id != null and job_id != '' and  !'null'.equals(job_id)"><![CDATA[
@@ -186,7 +213,7 @@
 
 	<!--用户编辑角色-->
 	<select id="getUserRoleRe" parameterType="java.lang.String" resultType="com.quick.portal.userRoleRela.UserRoleRelaDO" >
-		SELECT urr.*  FROM  user_role_rela urr WHERE  user_id = #{user_id}
+		SELECT urr.rel_id,urr.user_id,urr.role_id,urr.cre_time,urr.upd_time  FROM  user_role_rela urr WHERE  user_id = #{user_id} AND  role_id = #{role_oid}
 	</select>
 
 

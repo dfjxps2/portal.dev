@@ -20,11 +20,7 @@ package com.quick.portal.sysUser;
 
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -41,6 +37,7 @@ import com.quick.portal.mesManage.MesManageDO;
 import com.quick.portal.userDepartment.IUserDepartmentDao;
 import com.quick.portal.userJob.IUserJobDao;
 import com.quick.portal.userRole.IUserRoleDao;
+import com.quick.portal.userRole.RoleDao;
 import com.quick.portal.userRoleRela.IUserRoleRelaDao;
 import com.quick.portal.userRoleRela.UserRoleRelaDO;
 
@@ -56,6 +53,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.quick.core.base.ISysBaseService;
@@ -98,6 +96,9 @@ public class SysUserController extends SysBaseController<SysUserDO> {
     @Autowired
     private IUserDepartmentDao iUserDepartmentDao;
 
+    @Autowired
+    private RoleDao dao;
+
     @Override
     public ISysBaseService getBaseService(){
         return sysUserService;
@@ -135,6 +136,18 @@ public class SysUserController extends SysBaseController<SysUserDO> {
         }catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    //获取编辑对象数据
+    @RequestMapping(value = "/getEditData")
+    @ResponseBody
+    public Map<String,Object> getObj() throws Exception {
+
+        String sysid = QRequest.getString(request,"user_id");
+        Map<String,Object> map = new HashMap<>();
+        map.put("user_id",sysid);
+        Map<String,Object> obj = iSysUserDao.getUserEdit(map);
+        return obj;
     }
 
    //添加用户
@@ -351,9 +364,7 @@ public class SysUserController extends SysBaseController<SysUserDO> {
         String dateTimeFormat = QRequest.getString(request, "dateTimeFormat",
                 "yyyy-MM-dd HH:mm:ss"); // 例：dateTimeFormat=yyyy-MM-dd HH:mm
 
-        // 默认输出html(?)
-        // String contentType = QRequest.getString(request, "responseType",
-        // "json"); //输出json 为： responseType=json
+
         response.setCharacterEncoding("utf-8");
         response.setContentType(QRequest.getResponseType("json")); // 输出JS文件
         // 默认O条数据
@@ -417,6 +428,7 @@ public class SysUserController extends SysBaseController<SysUserDO> {
         if (!usrDetail.getUser_id().equals("")&& !usrDetail.getUser_id().equals ("undefined") && !"null".equals(usrDetail.getUser_id())){
             sysUserDO.setUser_id(usrDetail.getUser_id());//用户ID
         }
+        sysUserDO.setUpd_time(date);
         if(usrDetail.getRela_id() != null && !usrDetail.getRela_id().equals ("undefined") && !"null".equals(usrDetail.getRela_id())){
              sysUserDO.setRela_id(usrDetail.getRela_id());
             iSysUserDao.updateUserDepRela(sysUserDO);
@@ -426,26 +438,33 @@ public class SysUserController extends SysBaseController<SysUserDO> {
         iSysUserDao.update(sysUserDO);
         //将角色和用户关系放入user_role_rela中
         UserRoleRelaDO userRoleRelaDO = new UserRoleRelaDO();
-        UserRoleRelaDO ui = new UserRoleRelaDO();
+        ArrayList<Object> list = new ArrayList<>();
+        Integer userId = null;
         if(usrDetail.getUser_id() != null && !usrDetail.getUser_id().equals ("undefined") && !"null".equals(usrDetail.getUser_id())){
-            userRoleRelaDO.setUser_id(usrDetail.getUser_id());
-            ui  = iSysUserDao.getUserRoleRe(usrDetail.getUser_id().toString());  //角色ID
-        }
-        if(ui!=null && ui.getCre_time() != null && !ui.getCre_time().equals ("undefined") && !"null".equals(ui.getCre_time())) {
-            userRoleRelaDO.setCre_time(ui.getCre_time());
+          userId= usrDetail.getUser_id();
+            iSysUserDao.deleteUserRole(usrDetail.getUser_id().toString());
         }else{
-            userRoleRelaDO.setCre_time(date);
-        }//创建时间
+            json.put("0");
+            res.getWriter().write(json.toString());
+            return;
+        }
         userRoleRelaDO.setUpd_time(date);
-        if(usrDetail.getRole_id() != null && !usrDetail.getRole_id().equals ("undefined") && !"null".equals(usrDetail.getRole_id())){
-            userRoleRelaDO.setRole_id(usrDetail.getRole_id());
+        userRoleRelaDO.setCre_time(date);
+        if(usrDetail.getRoles() != null && !usrDetail.getRoles().equals ("undefined") ){
+            String[] role = usrDetail.getRoles().split(",") ;
+            for(String value : role){
+                   userRoleRelaDO = new UserRoleRelaDO();
+                    userRoleRelaDO.setRole_id(Integer.parseInt(value));
+                    userRoleRelaDO.setUser_id(userId);
+                    userRoleRelaDO.setUpd_time(date);
+                    userRoleRelaDO.setCre_time(date);
+                    list.add(userRoleRelaDO);
+            }
+        }else {
+            userRoleRelaDO.setRole_id(null);
         }
-        if(ui!=null && ui.getRel_id() != null && !ui.getRel_id().equals ("undefined") && !"null".equals(ui.getRel_id())) {
-            userRoleRelaDO.setRel_id(ui.getRel_id());
-            iUserRoleRelaDao.update(userRoleRelaDO);
-        }else{
-            iUserRoleRelaDao.insert(userRoleRelaDO);
-        }
+
+        iSysUserDao.addRoleUsers(list);
 
         json.put("1");
         res.getWriter().write(json.toString());

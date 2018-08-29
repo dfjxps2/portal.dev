@@ -24,6 +24,7 @@ import com.quick.portal.userDepartment.UserDepartmentDO;
 import com.quick.portal.userJob.UserJobDO;
 import com.quick.portal.userRoleRela.UserRoleRelaDO;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +34,7 @@ import java.util.Map;
 public interface ISysUserDao<SysUserDO> extends ISysBaseDao<SysUserDO> {
     int updatePassword(SysUserDO password);
     String selectUserId();
-    UserRoleRelaDO getUserRoleRe(String urrid);
+    UserRoleRelaDO getUserRoleRe(String urrid,String roleId);
     List<Map<String,Object>> getAllUser(Map<String, Object> m, PageBounds page);
     List<Map<String,Object>> selectByName(String username);
     int deleteUserDepRela(String relaid);
@@ -43,4 +44,8 @@ public interface ISysUserDao<SysUserDO> extends ISysBaseDao<SysUserDO> {
     int recount(String depid);
     List<Map<String,Object>> selectRole(Map<String,Object> p);
     List<Map<String,Object>> selectDep(Map<String,Object> p);
+    Map<String,Object> getUserEdit(Map<String,Object> p);
+    void  updateUserRole(Map<String,Object> p);
+    void deleteUserRole(String id);
+    void addRoleUsers(ArrayList<Object> list);
 }
