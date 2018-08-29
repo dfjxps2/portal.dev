@@ -2,10 +2,25 @@
 <html>
 <head>
 	<#include "/WEB-INF/include/resedit.html" />
+    <script type="text/javascript" src="${G.host}/res/js/bootstrap-select.min.js"></script>
+    <link rel="stylesheet" href="${G.host}/res/css/bootstrap-select.min.css" type="text/css" />
+    <!--<script type="text/javascript" src="${G.host}/res/plugin/jQuery/jquery-1.11.3.min.js"></script>-->
+
     <style>
         select::-ms-expand{
             display: none;
         }
+        .btn-default{
+            background-color: #FFF;
+            border-color: #e5e6e7 ;
+            color:#999 ;
+        }
+        .btn-default.active, .btn-default:active, .btn-default:focus, .btn-default:hover, .open .dropdown-toggle.btn-default{
+            background-color: #FFF;
+            border-color: #e5e6e7 ;
+            color:#999 ;
+        }
+
     </style>
 </head>
 
@@ -33,7 +48,7 @@
                             <div class="col-sm-6 form_ipt_botm">
                                 <div class="form-group">
                                 <label class="col-xs-3 lable_top"><span class="span_require">*</span>角色名称</label>
-                                    <div class="col-xs-9"> <select class="form-control required select_change" id="role_id" name="role_id"></select></div>
+                                    <div class="col-xs-9"> <select class="form-control required select_change selectpicker"   id="role_id" data-live-search="false" multiple  name="role_id"></select></div>
                                </div>
                             </div>
 
@@ -71,7 +86,7 @@
                         <div class="col-sm-6 form_ipt_botm">
                             <div class="form-group">
                                 <label class="col-xs-3 lable_top"><span></span>用户地址</label>
-                                <div class="col-xs-9"><textarea class="form-control" id="user_addr" name="user_addr"></textarea>
+                                <div class="col-xs-9"><textarea style="resize:none;" class="form-control" id="user_addr" name="user_addr"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -96,7 +111,6 @@
                                 <span class="input-group-btn"  ><input id="reset" class="pull-right btn btn-primary"  type="button"  value="返回"/></span>
                             </li>
                         </div>
-
                         <div class="col-xs-9"><input type="hidden" id="user_id" name="user_id" class="form-control" /></div>
                         <div class="col-xs-9"><input type="hidden" id="rela_id" name="rela_id" class="form-control" /></div>
 				    </div>
@@ -116,6 +130,12 @@
         quick.idField = "${G.idField}";
         quick.listUrl = quick.serverUrl + "/list";
     }
+    var selectedValues = [];
+
+    $(window).on('load',function () {
+        $('.selectpicker').selectpicker('val','');
+        $('.selectpicker').selectpicker('refresh');
+    })
 
     window.onload = function() {
 		/*自定义错误提示信息的方法*/
@@ -165,15 +185,88 @@
             }
         });
 
+        function setEditForm(obj) {
+            if (!obj) {
+                obj = request.getAll();
+            } else if (typeof (obj) == "string") {
+                obj = eval("(" + obj + ")");
+            }
+            for (var name in obj) {
+                var val = obj[name] === null ? '' : obj[name];
+                var nodes = document.getElementsByName(name);
+                if (nodes == null || nodes.length == 0) {
+                    _selector = $("#" + name);
+                } else {
+                    _selector = $(nodes);
+                }
+                if (_selector == null || _selector.length == 0)
+                    continue;
+                var nodeType = _selector[0].nodeName.toLowerCase();
+                if (nodeType == "input") {
+                    var etype = _selector.attr("type") || "text";
+                    if (etype == "checkbox") {
+                        CheckBoxInit(name, val);
+                    } else if (etype == "radio") {
+                        _selector.each(function () {
+                            if ($(this).val() == decodeURI(val)) {
+                                $(this).attr("checked", "checked");
+                                if (typeof ($(this).parent().parent().attr("data-toggle")) != "undefined") {
+                                    $(this).parent().parent().find('label').removeClass("active");
+                                    $(this).parent().addClass("active");
+                                }
+                            }
+                        });
+                    } else {
+                        _selector.val(val);
+                    }
+
+                }else if (nodeType == "select") {
+                    ListInit(name, decodeURI(val));
+                }else if (nodeType == "button") {
+                    _selector.val(val);
+                } else {
+                    _selector.text(decodeURI(val));
+                }
+            }
+            //选中多选下拉框的值
+            function ListInit(obj, v) {
+                if (!obj) return false;
+                var x = v.split(',');
+                $("#" + obj).find("option").each(function () {
+                    for (var i = 0; i < x.length; i++) {
+                        if (x[i] == this.value)
+                            this.selected = "selected";
+                    }
+                });
+            }
+            function CheckBoxInit(obj, v) {
+                if (null == obj || v == '') return false;
+                var chks = document.getElementsByName(obj);
+                var vs = v.split(',');
+                for (var i = 0; i < chks.length; i++) {
+                    chks[i].checked = false;
+                    for (var j = 0; j < vs.length; j++) {
+                        if (vs[j] == chks[i].value) {
+                            chks[i].checked = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
         /*加载数据*/
         var mode = $.request.queryString["mode"];
         var sysid=$.request.queryString["user_id"];
+        var relid =$.request.queryString["rel_id"];
         if(sysid){
             $('#pagename').html("修改用户信息");
             $("input,textarea").attr("placeholder", "");
             $(".hidefield").show();
-            $.post(quick.serverUrl + '/getObj?user_id=' + sysid + "&i=" + Math.random(), function(data){
-                setForm(data);
+            $.post(quick.serverUrl + '/getEditData?user_id=' + sysid +"&i=" + Math.random(), function(data){
+                var rolename = data.role_id.split(",");
+                $('.selectpicker').selectpicker('val',rolename);
+                setEditForm(data);
                 document.getElementsByName("user_state").checked=false;
                 if (data.user_state==1) {
                     $("#user_state1").attr("checked","checked");
@@ -185,11 +278,19 @@
                 }
             });
         };
+
         // 保存
     $("#submit-form").click(function () {
+        var roles;
+        if($("#role_id").val()){
+            roles=$("#role_id").val() .join(",");
+        }else{
+            roles = null;
+        }
+
         if(!($("#form").valid())){
             return false;
-        }
+        };
 
         var subData={
             user_name :$("#user_name").val(),
@@ -198,7 +299,7 @@
             user_state: $('input:radio[name="user_state"]:checked').val(),
             user_addr:$("#user_addr").val(),
             user_tel:$("#user_tel").val(),
-          role_id:$("#role_id").val(),
+              roles:roles,
             user_id:$("#user_id").val(),
             user_real_name:$("#user_real_name").val(),
             rela_id:$("#rela_id").val()
@@ -244,7 +345,7 @@ function selectData(){
     });
 }
 selectData();
- var depid = $("#dep_id").val();
+var depid = $("#dep_id").val();
 function selectDep(){
     $.ajax({
         type: "get",
@@ -264,17 +365,24 @@ selectDep();
 
 var roleid = $("#role_id").val();
 function selectRole(){
+    $('.selectpicker').selectpicker({
+        noneSelectedText: '请选择角色',
+        size:9
+    });
     $.ajax({
         type: "get",
         url: "getRole",
         async:false,
         dataType: "json",
         success: function(data){
-            $("#role_id").append("<option selected hidden value=''>角色名称</option><option value= ''>选择用户角色</option>");
+            var select = $("#role_id");
+//            $("#role_id").append("<option selected hidden value=''>角色名称</option><option value= ''>选择用户角色</option>");
             for (var i = 0; i < data.length; i++) {
                 var item = data[i];
-                $("#role_id").append("<option  value=" +item.roleid+"> "+item.rolename+"</option>");
+                select.append("<option  value=" +item.roleid+" > "+item.rolename+"</option>");
             }
+            $('.selectpicker').selectpicker('val','');
+            $('.selectpicker').selectpicker('refresh');
         }
     });
 }

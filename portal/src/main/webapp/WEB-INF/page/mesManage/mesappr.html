@@ -136,9 +136,9 @@
                 { field: 'appr_state', title: '状态', width: '13%',align: 'center' ,formatter:function (value,rec) {
                     var apprstate = rec.appr_state;
                     if(apprstate=='1'){return '人工审核通过'};
-                    if(apprstate=='2'){return '人工审核拒绝'};
+                    if(apprstate=='2'){return '人工审核未通过'};
                     if(apprstate=='3'){return '审核通过'};
-                    if(apprstate=='4'){return '审核拒绝'};
+                    if(apprstate=='4'){return '审核未通过'};
                 } },
                 { field: 'msg_class_name', title: '密级', width: '8%',align: 'center'  },
                 { field: 'msgtext',title: '标签', width: '15%',align: 'center'},

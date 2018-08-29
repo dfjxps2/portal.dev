@@ -2,6 +2,7 @@
 <html>
   <head>
 	  <#include "/WEB-INF/include/reslist.html" />
+	  <link href="../css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
   </head>
   <script  type="text/javascript">
 	  function queryItem(){
@@ -24,6 +25,14 @@
 			  }
 		  });
 	  }
+
+      //查询时间
+      function layerDateTime(id){
+          laydate({
+              elem: '#'+ id
+          });
+          $("#"+id).focus();
+      }
 
 	  function queryUser(){
 		  var dom = document.getElementById("containerUser");
@@ -232,11 +241,13 @@
 						   <form id="formSearch" class="form-inline">
 
 							   <div class="form-group" style="padding: 10px;width:180px;">
-								    <input id="start_time" name="start_time" class="form-control" onfocus="(this.type='date')" type="text" placeholder="起始时间" />
+								   <div class="col-xs-8" style="width:175px;padding-left:0px;"><input id="start_time" name="start_time" class="form-control" onfocus="laydate({elem: '#start_time'});" type="text" placeholder="起始时间" />
+									   <label onclick="layerDateTime('start_time');" style="position: absolute;top:0px;right:0px;background-position-x: center;border:1px solid #e5e6e7" class="laydate-icon inline demoicon layer_date"></label></div>
 							   </div>
 							   <div class="form-group" style="padding: 10px;width:180px;">
-								   <input id="end_time" name="end_time" class="input-sm form-control" onfocus="(this.type='date')" type="text" placeholder="截止时间" />
-							   </div>
+								   <div class="col-xs-8" style="width:175px;padding-left:0px;"> <input id="end_time" name="end_time" class="input-sm form-control" onfocus="laydate({elem: '#end_time'});" type="text" placeholder="截止时间" />
+									   <label onclick="layerDateTime('end_time');" style="position: absolute;top:0px;right:0px;background-position-x: center;border:1px solid #e5e6e7" class="laydate-icon inline demoicon layer_date"></label></div>
+							     </div>
 
 							   <span class="input-group-btn" style="display:inline-block;">  <button class="btn btn-primary " type="button" onclick="queryUser();queryTag();queryItem()"> 查询</button> </span>
 						   </form>
