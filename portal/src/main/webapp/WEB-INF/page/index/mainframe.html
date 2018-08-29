@@ -18,8 +18,45 @@
 <body class="fixed-sidebar full-height-layout gray-bg"
 	style="overflow: hidden">
 	<div id="wrapper">
+		<div class="row border-bottom nav-top">
+			<div style="z-index: 2034; left: 0px;" class="nav-close">
+				<a href="#"><img align="left"
+								 src="${G.host}/res/script/home/images/logo4.png" title="系统首页"></a>
+				<!-- <a class="navbar-minimalize minimalize-styl-2  btn-primary"
+                       href="#"><img  src="${G.host}/res/script/home/images/hanbao.png"> </a> -->
+			</div>
+
+			<nav class="navbar navbar-static-top" role="navigation"
+				 style="margin-bottom: 0; background-color: #2b5ca9;">
+				<div class="navbar-header"></div>
+				<ul class="nav navbar-top-links navbar-right"
+					style="background-color: #2b5ca9">
+					<li class="dropdown hidden-xs">
+						<a
+								class="right-sidebar-toggle" href="javascript:void(0);"
+								onclick="javascript:location.href='home/main';"
+								aria-expanded="false" style="background-color: #2b5ca9"> <i
+								class="fa fa-tasks"></i> 返回领导驾驶舱
+						</a>
+					</li>
+
+
+					<li class="hidden-xs"><a style="background-color: #2b5ca9"><i
+							class="fa fa-cart-arrow-down"></i><strong class="font-bold">${L.user_real_name}</strong></a>
+
+					</li>
+					<li class="hidden-xs"><a href="javascript:void(0);"
+											 style="background-color: #2b5ca9"
+											 onclick="javascript:logout();return false;"
+											 class="roll-nav roll-right J_tabExit"><i
+							class="fa fa fa-sign-out"></i>退出</a></li>
+
+
+				</ul>
+			</nav>
+		</div>
 		<!--左侧导航开始-->
-		<nav style="left:0px;" class="navbar-default navbar-static-side" role="navigation">
+		<nav style="left:0px;height:calc(100% - 50px);" class="navbar-default navbar-static-side" role="navigation">
 		<!-- 	<div class="nav-close">
 				<a href="#"><img align="left"
 					src="${G.host}/res/script/home/images/logo4.png" title="系统首页"></a>
@@ -33,46 +70,10 @@
 		</nav>
 		<!--左侧导航结束-->
 		<!--右侧部分开始-->
-		<div id="page-wrapper" class="gray-bg dashbard-1">
-			<div class="row border-bottom">
-				<div style="z-index: 2034; left: 0px;" class="nav-close">
-					<a href="#"><img align="left"
-					src="${G.host}/res/script/home/images/logo4.png" title="系统首页"></a>
-					<!-- <a class="navbar-minimalize minimalize-styl-2  btn-primary"
-						   href="#"><img  src="${G.host}/res/script/home/images/hanbao.png"> </a> -->
-				</div>
-				
-				<nav class="navbar navbar-static-top" role="navigation"
-					style="margin-bottom: 0; background-color: #2b5ca9;">
-					<div class="navbar-header"></div>
-					<ul class="nav navbar-top-links navbar-right"
-						style="background-color: #2b5ca9">
-						<li class="dropdown hidden-xs">
-							<a
-							class="right-sidebar-toggle" href="javascript:void(0);"
-							onclick="javascript:location.href='home/main';"
-							aria-expanded="false" style="background-color: #2b5ca9"> <i
-								class="fa fa-tasks"></i> 返回领导驾驶舱
-							</a>
-						</li>
+		<div style="height:calc(100% - 50px);" id="page-wrapper" class="gray-bg dashbard-1">
 
-
-						<li class="hidden-xs"><a style="background-color: #2b5ca9"><i
-								class="fa fa-cart-arrow-down"></i><strong class="font-bold">${L.user_real_name}</strong></a>
-
-						</li>
-						<li class="hidden-xs"><a href="javascript:void(0);"
-							style="background-color: #2b5ca9"
-							onclick="javascript:logout();return false;"
-							class="roll-nav roll-right J_tabExit"><i
-								class="fa fa fa-sign-out"></i>退出</a></li>
-
-
-					</ul>
-				</nav>
-			</div>
 			<div class="row content-tabs">
-				<button class="roll-nav  J_tabLeft">
+				<button class="roll-nav  J_tabLeft" style="display: none;">
 					<i class="fa fa-backward"></i>
 				</button>
 				<nav class="page-tabs J_menuTabs">
@@ -81,8 +82,7 @@
 							<a href="javascript:;" class="active J_menuTab" data-id="i2">首页</a>
 						</div>
 					</nav>
-					<button class="roll-nav roll-right J_tabRight"
-						style="border-left: solid 1px #eee">
+					<button class="roll-nav roll-right J_tabRight" style="border-left: solid 1px #eee;display: none;">
 						<i class="fa fa-forward"></i>
 					</button>
 					<div class="btn-group roll-nav roll-right">
@@ -101,11 +101,11 @@
 					width="100%" height="100%" src="${G.host}/goIframe" frameborder="0"
 					data-id="i2" seamless></iframe>
 			</div>
-			<div class="footer">
+			<!--<div class="footer">
 				<div
 					style="text-align: center; font-size: 14px; color: #333333; font-family: Microsoft YaHei;">版权所有
-					Copyright(C)2013-2018 北京泰豪智能工程有限公司</div>
-			</div>
+					Copyright(C)2017-2020 北京泰豪智能工程有限公司</div>
+			</div>-->
 		</div>
 		<!--右侧部分结束-->
 
