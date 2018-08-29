@@ -163,6 +163,11 @@ $(function () {
             }
             sendLog(mId,menuName);
         }
+        if($(".J_menuTab").size()>6){
+            $(".J_tabLeft,.J_tabRight").show();
+        }else{
+            $(".J_tabLeft,.J_tabRight").hide();
+        }
         return false;
     }
     

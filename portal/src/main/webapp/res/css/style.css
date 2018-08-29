@@ -203,9 +203,9 @@ body.body-small .navbar-top-links li:last-child {
 }
 
 .nav-header {
-    padding: 33px 25px;
-   /*  background: url("../images/patterns/header-profile.png") no-repeat; */
-    background-color: #025DA1;
+    padding: 15px 25px;
+   /*  background: url("../images/patterns/header-profile.png") no-repeat;
+    background-color: #025DA1; */
 }
 
 .pace-done .nav-header {
@@ -387,6 +387,10 @@ body.mini-navbar .navbar-default .nav > li > .nav-second-level li a {
     transition: all 0.5s;
 }
 
+.nav-top{
+    z-index: 2034; position: relative;
+}
+
 .navbar-fixed-top {
     background: #fff;
     -webkit-transition-duration: 0.5s;
@@ -443,8 +447,7 @@ body.canvas-menu .logo-element {
 }
 
 body.mini-navbar .nav-header {
-    padding: 0;
-    background-color: #1ab394;
+    padding: 10px 0;
 }
 
 body.canvas-menu .nav-header {
@@ -464,7 +467,6 @@ body.fixed-sidebar .navbar-static-side,
 body.canvas-menu .navbar-static-side {
     position: fixed;
     width: 220px;
-    z-index: 2001;
     height: 100%;
 }
 
@@ -3728,7 +3730,7 @@ nav.page-tabs .page-tabs-content {
 }
 
 #content-main {
-    height: calc(100% - 110px);
+    height: calc(100% - 42px);
     overflow: hidden;
 }
 
@@ -4034,7 +4036,7 @@ code {
     -o-border-image: none;
     border-image: none;
     border-style: solid solid none;
-    border-width: 4px 0px 0;
+    border-width: 2px 0px 0;
     color: inherit;
     margin-bottom: 0;
     padding: 14px 15px 7px;
@@ -7588,7 +7590,7 @@ body.skin-3 {
 }
 
 .nav-close {
-    padding: 10px;
+    padding: 10px 10px 10px 20px;
    /*  display: block; */
     position: absolute;
    /*  right: 5px; */
