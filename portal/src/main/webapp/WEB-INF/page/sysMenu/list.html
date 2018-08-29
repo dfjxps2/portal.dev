@@ -164,6 +164,12 @@
     	$("input:checkbox[name='btSelectItem']:checked").each(function() { // 遍历name=test的多选框
     		menuid.push($(this).val());
     		});
+
+    	if (menuid.length === 0) {
+            layer.msg("请至少选择一个菜单项", {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+            return;
+        }
+
     	var infoBefore =  "确认将激活【 "+menuid.length+" 】个菜单吗？<br/>激活后，菜单将可正常显示！";
     	var infoAfter = "菜单激活成功！";
     	var title = "激活菜单";
