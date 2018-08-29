@@ -31,6 +31,14 @@
         <spring.webservice.version>3.1.5</spring.webservice.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+
+        <!-- 本地调试所用的环境参数 -->
+        <portal.server.ip>${env.PORTAL_SERVER_IP}</portal.server.ip>
+        <index.service.ip>${env.INDEX_SERVICE_IP}</index.service.ip>
+        <solr.service.ip>${env.SOLR_SERVICE_IP}</solr.service.ip>
+        <portal.file.dir>${env.PORTAL_FILE_DIR}</portal.file.dir>
+        <cas.server.ip>${env.CAS_SERVER_IP}</cas.server.ip>
+        <portal.db.password>${env.PORTAL_DB_PASSWORD}</portal.db.password>
     </properties>
 
     <dependencies>
@@ -408,12 +416,6 @@
             <id>dev</id>
             <properties>
                 <profiles.active>dev</profiles.active>
-                <portal.server.ip>${env.PORTAL_SERVER_IP}</portal.server.ip>
-                <index.service.ip>${env.INDEX_SERVICE_IP}</index.service.ip>
-                <solr.service.ip>${env.SOLR_SERVICE_IP}</solr.service.ip>
-                <portal.file.dir>${env.PORTAL_FILE_DIR}</portal.file.dir>
-                <cas.server.ip>${env.CAS_SERVER_IP}</cas.server.ip>
-                <portal.db.password>${env.PORTAL_DB_PASSWORD}</portal.db.password>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
@@ -487,7 +489,7 @@
     </profiles>
     <!--不同环境切换配置参数1 End -->
     <build>
-         <finalName>portal</finalName>
+        <finalName>portal</finalName>
         <plugins>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -507,6 +509,16 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <TimeStamp>${maven.build.timestamp}</TimeStamp>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
@@ -528,7 +540,27 @@
                     <server>tomcat8</server>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <version>2.2.4</version>
+                <executions>
+                    <execution>
+                        <id>get-the-git-infos</id>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+                    <prefix>git</prefix>
+                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                    <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties
+                    </generateGitPropertiesFilename>
+                </configuration>
 
+            </plugin>
         </plugins>
         <resources>
             <resource>
@@ -539,14 +571,25 @@
             </resource>
             <resource>
                 <directory>src/main/resources</directory>
-                <filtering>true</filtering>
+                <filtering>false</filtering>
                 <includes>
-                    <include>**/**.*</include>
-                    <include>**.*</include>
+                    <include>**/*.*</include>
+                    <include>*.*</include>
                 </includes>
                 <excludes>
-                    <exclude>profile/**/*</exclude>
+                    <exclude>config-template/*.*</exclude>
+                    <exclude>properties/config.properties</exclude>
+                    <exclude>properties/jdbc.properties</exclude>
                 </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources/config-template</directory>
+                <targetPath>properties</targetPath>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*.*</include>
+                    <include>*.*</include>
+                </includes>
             </resource>
         </resources>
     </build>
