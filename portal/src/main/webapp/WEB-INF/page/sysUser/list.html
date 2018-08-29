@@ -100,10 +100,24 @@
                 if(queryParm=='' &&　(data == null || data.length == 0)){
                     $(".no-records-found td").html('您还没有添加相关信息，请点击<a onclick="add();" href="javascript:void(0);">添加</a>');
                 }
-            }
+            },onClickCell:function (field,value,row,e) {
+                if(value.length >6){
+                    var data = "<div align='center' style='margin-top:15px;'>"+"<p style='font-size:16px;color:#0d509a'>"+value+"</p>"+"</div>";
+                    layer.open({
+                        type: 1//此处以iframe举例
+                        ,title:'详细信息'
+                        ,area: ['500px', '150px']
+                        ,shade: 0
+                        ,maxmin: true
+                        ,content:data
+                        ,btn: [ '关闭']
+                        ,btn2: function(){
+                            layer.closeAll();
+                        }
+                    });
+                }}
         });
-
-        if(RFlag==1){
+		if(RFlag==1){
             requery();
         }else{
             _gd["list"].init();
@@ -165,8 +179,6 @@
     }
     selectDep();
 
-
-
     //删除记录
     function del(node,name,relaid,relid){
         layer.confirm(
@@ -180,7 +192,7 @@
 //                    data:{ID:node},
                     success: function(data){
                         if(data==1) {
-                            layer.msg('删除记录成功', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+                            layer.msg('该用户已被删除！', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
                             _gd["list"].refresh();
                         } },
                     error:function(err){
@@ -202,7 +214,7 @@
 
     function edit(id){
         navAppend("编辑集成系统");/*获取父页面元素并动态赋值父页面title*/
-        window.location.href=quick.editUrl + "?user_id="+id + getDetailParm();//跳转到另一个页面，并且还在当前框架
+        window.location.href=quick.editUrl + "?user_id="+id+ getDetailParm();//跳转到另一个页面，并且还在当前框架
     }
 
 
