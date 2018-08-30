@@ -63,6 +63,7 @@ a:focus {
 
 .nav.navbar-right > li > a {
     color: #ffffff;
+    padding: 15px;
 }
 
 .nav > li.active > a {
@@ -4039,8 +4040,8 @@ code {
     border-width: 2px 0px 0;
     color: inherit;
     margin-bottom: 0;
-    padding: 14px 15px 7px;
-    min-height: 48px;
+    padding: 5px 15px 7px;
+    min-height: 30px;
 }
 
 .ibox-content {
