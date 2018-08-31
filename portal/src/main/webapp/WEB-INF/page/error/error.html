@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>error</title>
+<link href="${host}/res/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+<link href="${host}/res/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+<link href="${host}/res/css/animate.css" rel="stylesheet">
+<link href="${host}/res/css/style.css?v=4.1.0" rel="stylesheet">
+
+</head>
+<body class="gray-bg">
+
+	<div class="middle-box text-center animated fadeInDown">
+		<h1>${cd}</h1>
+		<h3 class="font-bold">${message}</h3>
+
+		<div class="error-desc">
+			服务器好像出错了... <br />您可以返回登录主页 <br /> <a href="#" onclick="return login(this)"
+				class="btn btn-primary m-t" style="background-color: #18a689;border-color: #18a689;color: #FFFFFF;">重新登录</a>
+		</div>
+	</div>
+
+	<!-- 全局js -->
+	<script src="${host}/res/js/jquery.min.js?v=2.1.4"></script>
+	<script src="${host}/res/js/bootstrap.min.js?v=3.3.6"></script>
+</body>
+</html>
+<script type="text/javascript">
+  function login() {
+	  window.location.href = "${host}/home/logout";
+  }
+  </script>
+
+</body>
+
+</html>
