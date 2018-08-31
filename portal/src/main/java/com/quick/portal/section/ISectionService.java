@@ -37,4 +37,6 @@ public interface ISectionService extends ISysBaseService<SectionDO> {
     String selectLayoutJson(Integer page_id,Integer user_id,String time);
     
     String getEditionMetricJson(Integer app_id,Integer user_id);
+    
+    List selectLayoutJsonByApp(Integer page_id,Integer user_id,String cre_time);
 }

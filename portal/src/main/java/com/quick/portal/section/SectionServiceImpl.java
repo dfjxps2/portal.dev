@@ -133,6 +133,76 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
         return json;
     }
     
+    /*
+     * 类型转换
+     * section_url 类型String->Map<String, Object>
+     * 
+     */
+    public Map<String, Object> formatSectionUrl(String secUrl, Map<String, Object> secMap){
+    	String []fileds  = null;
+    	if(null != secUrl && !"".equals(secUrl)){
+    		secUrl = secUrl.replace("\"", "").replace("{", "").replace("}", "");
+    		String [] secs  = secUrl.split(",");
+        	for(String secStr : secs){
+        		fileds = secStr.split(":");
+        		secMap.put(fileds[0], fileds[1]) ;
+        	}
+    	}
+    	return secMap;
+    }
+    
+    
+    @Override
+    public List selectLayoutJsonByApp(Integer page_id,Integer user_id,String cre_time){
+        List <Map<String, Object>> retList = new ArrayList<>();
+        List<Map<String, Object>> ls = dao.selectPageSection(page_id);
+        List<Map<String,Object>> metricls = dao.selectPageMetric(page_id);
+        List<Map<String,Object>> li = configDao.selectTime(user_id);
+        Map<String, Object> map1 = new HashMap<String, Object>();
+    	map1.put("page_id", page_id);
+    	map1.put("user_id", user_id);
+    	List<Map<String,Object>> mconfigls = null;
+    	if (li.size()>0) {
+ 			if(null == cre_time || cre_time.equals("")){
+ 				cre_time = li.get(0).get("cre_time").toString();
+ 			}
+ 			map1.put("cre_time", cre_time);
+ 			mconfigls = mergeData(map1,"show");
+		}else {
+            map1.put("cre_time", "");
+            mconfigls = dao.selectPageMetricConfig(map1);
+        }
+        if(ls == null || ls.size() == 0)
+            return null;
+        int i, l = ls.size();
+        Map<String, Object> secMap  = null ;
+        String id = "";
+        String secInfo  = "";
+        Map<String, String> metricMap = new HashMap<String, String>();
+        Map<String, Object> metricMapInfo = new HashMap<String, Object>();
+        for(i = 0; i < l; i++){
+        	secMap = new HashMap<String, Object>();
+        	secInfo = ls.get(i).get("section_url").toString();
+        	id = ls.get(i).get("section_id").toString();
+        	secMap.put("id", id);
+        	secMap = formatSectionUrl(secInfo, secMap);
+        	Map<String, Object> metMap = getMetricConfigByApp(id,metricls, mconfigls,user_id);
+        	if(null == metMap || metMap.isEmpty()){
+        		retList.add(secMap);
+        	}else{
+        		List<Map<String,String>> retLit= (List<Map<String, String>>) metMap.get("metric");
+        		 for (Map<String, String> map : retLit) {
+                     for (Map.Entry<String, String> m : map.entrySet()) {
+                         metricMap.put(m.getKey(), m.getValue());
+                     }
+                 }
+        		 secMap.put("metric", metricMap);
+        	}
+        	retList.add(secMap);
+        }
+        return retList;
+    }
+    
     public List<Map<String,Object>> mergeData(Map<String,Object> map,String type){
     	 List<Map<String,Object>> mconfigls = dao.selectPageMetricConfig(map);
          List<Map<String,Object>> userMconfigls = dao.selectPageMetricUserConfig(map);
@@ -217,6 +287,8 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
             return "{}";
         return "{\"id\":" + m.get("section_id") + "," + json.substring(1);
     }
+    
+
     private String getMetricConfig(Object section_value, List<Map<String,Object>> metrics, List<Map<String,Object>> config,Integer user_id){
     	
     	String section_id = section_value.toString();
@@ -250,7 +322,42 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
         if(json.length()>1)
             json = json.substring(1);
         return "[" + json + "]";
-    }              
+    } 
+    
+    
+    
+  private Map<String, Object> getMetricConfigByApp(String secId, List<Map<String,Object>> metrics, List<Map<String,Object>> config,Integer user_id){
+		Map<String, Object> secMap = null;
+		if (user_id.equals(0) == false) {
+			List<Map<String, Object>> metric_role = dao.getMetricRoleByUserId(user_id);
+			config = setConfig("1", config, metric_role);
+		}
+		String sid = "";
+		String smid = "";
+		int count = metFilds.length;
+		for (Map<String, Object> m : metrics) {
+			sid = m.get("section_id").toString();
+			smid = m.get("sec_metric_id").toString();
+			if (secId.equals(sid)) {
+				if (findSubMetricConfig(smid, "1", "metric_id", config)
+						.toString().equals("") == false) {
+					int seqNo = 0;
+					
+					List<Map<String, String>> metList = new ArrayList();
+					for (int i = 0; i < count; i++) {
+						seqNo = i + 1;
+						Map<String, String> mp = findSubMetricConfigInfo(smid,
+								String.valueOf(seqNo), metFilds[i], config);
+						metList.add(mp);
+					}
+					secMap = new HashMap<String, Object>();
+					secMap.put("metric", metList);
+				}
+			}
+		}
+		return secMap;
+    } 
+    
     private String getMetricConfig(Map<String, Object> m, List<Map<String,Object>> config,Integer user_id){
     	 if (user_id.equals(0)==false) {
          	List<Map<String,Object>> metric_role = dao.getMetricRoleByUserId(user_id);
@@ -291,6 +398,37 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
         //return "\""+name+"\":\"\"";
     }
     
+    
+		
+	
+	  private Map<String,String> findSubMetricConfigInfo(String id, String no, String name, List<Map<String,Object>> config){
+	      Map mectrcMap = new HashMap();  
+		  for(Map<String,Object> m : config){
+	            String sid = m.get("sec_metric_id").toString();
+	            String sno = m.get("param_id").toString();
+	            if(id.equals(sid) && no.equals(sno)){
+	            	mectrcMap.put(name, m.get("param_value").toString());
+	            }
+
+	        }
+	        return mectrcMap;
+	    }
+    
+    private List findSubMetricConfig1(String id, List<Map<String,Object>> config){
+    	List<Map<String,Object>> metList =  new ArrayList<Map<String,Object>>();
+    	String sid = "";
+    	for(Map<String,Object> m : config){
+            sid = m.get("sec_metric_id").toString();
+            if(id.equals(sid)){
+            	metList.add(m);
+            }
+           
+        }
+        return metList;
+    }
+    
+
+    
     private List<Map<String,Object>> setConfig(String name,List<Map<String,Object>> config,List<Map<String,Object>> metric_role){
     	List<Map<String,Object>> list = new ArrayList<Map<String,Object>>(); 
     	for (int i = 0; i < config.size(); i++) {
@@ -320,4 +458,8 @@ public class SectionServiceImpl extends SysBaseService<SectionDO> implements ISe
 		List<Map<String,Object>> metric_list = dao.getEditionMetric(app_id);
 		return null;
 	}
+	
+	final String [] metFilds = new String []{"metric_id","category_id","dimension","charts",
+    		"numb","measure_name","time_dim","unit","display",
+    } ;
 }
