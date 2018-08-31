@@ -18,6 +18,8 @@
  */
 package com.quick.portal.web.login;
 
+import java.util.Map;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,8 +29,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.quick.core.base.exception.ExceptionEnumServiceImpl;
+import com.quick.core.util.common.CommonUtils;
+import com.quick.portal.security.authority.metric.PropertiesUtil;
 import com.quick.portal.sysUser.ISysUserService;
-import com.quick.portal.sysUser.SysUserDO;
 
 /**
  * 门户请求类
@@ -42,20 +46,71 @@ public class LockController {
 	
     @Resource(name = "sysUserService")
     private ISysUserService sysUserService;
-
-    @RequestMapping(value = "/lockAccount")
-    public String lockAccount(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
-        String url = request.getScheme() + "://" + request.getServerName()
-                + ":" + request.getServerPort() + request.getContextPath();
-        String userId = request.getParameter("u");
-        if(null == userId || "".equals(userId)){
-        	userId = "用户信息异常：用户帐号为空";
-        }else{
-        	 sysUserService.updateUserStatueByUersId(userId);
-        }
-       
-        model.addAttribute("host", url);
-        model.addAttribute("uid", userId);
-        return "page/home/lock";
+    
+    /*
+     * 异常信息返回到页面
+     */
+    @RequestMapping(value = "/error")
+    public String prompt(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
+    	String code = (String) request.getSession().getAttribute("code");
+    	if(null == code || "".equals(code)){
+    		code = "";
+    	}
+    	String message = (String) request.getSession().getAttribute("message");
+    	if(null == message || "".equals(message)){
+    		message = "";
+    	}
+        model.addAttribute("code", code);
+        model.addAttribute("message", message);
+        model.addAttribute("host", WebLoginUitls.getPath(request));
+        return WebLoginConstants.PAGE_ERROR_URL;
     }
+    
+    
+    /*
+     * cas server return method
+     * 
+     */
+    @RequestMapping(value = "/getLockInfo")
+    public String getLockInfo(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
+    	String ip = CommonUtils.getIpAddrAdvanced(request);
+    	Map<String,Object> mp  = sysUserService.getLockCount(ip);
+    	int lockCnt = Integer.parseInt(mp.get("CNT").toString());
+    	if(lockCnt == 0){
+    		request.getSession().setAttribute("code", ExceptionEnumServiceImpl.USER_STATUS_ERROR.getCode());
+    		request.getSession().setAttribute("message",ExceptionEnumServiceImpl.USER_STATUS_ERROR.getMessage());
+        	return  WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_ERROR_CONTROLLER);
+    	}
+    	String sysLockCnt = PropertiesUtil.getPropery("portal.lock.count");
+		int setLockCnt = Integer.parseInt(sysLockCnt);
+		int remainLockCnt = setLockCnt - lockCnt;
+		String userId = mp.get("AUD_USER").toString();
+		//通过用户名称查询用户状态falase->0:禁用；true->1：启用
+		Map<String,Object> userMap = sysUserService.isExitUserInfoByUserId(userId);
+		//用户不存在
+		if(null == userMap || userMap.isEmpty()){
+			request.getSession().setAttribute("code", ExceptionEnumServiceImpl.NO_THIS_USER.getCode());
+			request.getSession().setAttribute("message",userId + ExceptionEnumServiceImpl.NO_THIS_USER.getMessage());
+			return  WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_ERROR_CONTROLLER);
+		}
+		String userState = userMap.get("USER_STATE").toString();
+		//用户禁用
+		if(null != userState && WebLoginConstants.FORBIDDEN_USER_STATE.equals(userState)){
+			userId = mp.get("AUD_USER").toString();
+			request.getSession().setAttribute("code", ExceptionEnumServiceImpl.USER_STATUS_LOCKING.getCode());
+			request.getSession().setAttribute("message",userId+ExceptionEnumServiceImpl.USER_STATUS_LOCKING.getMessage());
+			return  WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_ERROR_CONTROLLER);
+		}
+		if(remainLockCnt > 0){
+			request.getSession().setAttribute("code", ExceptionEnumServiceImpl.USER_STATUS_WARING.getCode());
+			request.getSession().setAttribute("message",WebLoginConstants.USER_STATUS_WARING_PREFIX+remainLockCnt+WebLoginConstants.USER_STATUS_WARING_SUFFIX);
+		}else{	
+		    userId = mp.get("AUD_USER").toString();
+			sysUserService.updateUserStatueByUersId(userId);
+			request.getSession().setAttribute("code", ExceptionEnumServiceImpl.USER_STATUS_LOCKING.getCode());
+			request.getSession().setAttribute("message",userId+ExceptionEnumServiceImpl.USER_STATUS_LOCKING.getMessage());
+		}
+		return  WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_ERROR_CONTROLLER);
+    }
+    
 }

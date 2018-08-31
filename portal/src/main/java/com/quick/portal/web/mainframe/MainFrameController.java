@@ -17,8 +17,6 @@
  */
 package com.quick.portal.web.mainframe;
 
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,15 +34,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.quick.core.base.ISysBaseService;
 import com.quick.core.base.SysBaseController;
+import com.quick.core.base.exception.ExceptionEnumServiceImpl;
 import com.quick.core.util.common.JsonUtil;
-import com.quick.core.util.common.QCommon;
 import com.quick.core.util.common.QCookie;
-import com.quick.core.util.web.WebUtil;
-import com.quick.portal.security.authority.metric.PropertiesUtil;
 import com.quick.portal.sysMenu.ISysMenuService;
 import com.quick.portal.sysUser.ISysUserService;
 import com.quick.portal.userAccessLog.IUserAccessLogService;
 import com.quick.portal.userAccessLog.UserAccessLogConstants;
+import com.quick.portal.userRoleRela.IUserRoleRelaService;
+import com.quick.portal.web.login.WebLoginConstants;
 import com.quick.portal.web.login.WebLoginUitls;
 import com.quick.portal.web.login.WebLoginUser;
 
@@ -61,6 +59,9 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
     
     @Resource(name = "mainFrameService")
     private MainFrameService mainFrameService;
+    
+    @Resource(name = "userRoleRelaService")
+    private IUserRoleRelaService userRoleRelaService;
     
     @Override
     public ISysBaseService getBaseService(){
@@ -87,7 +88,7 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
         //根据cookie拿到当前用户的id
         String userId = QCookie.getValue(request, "ids");
         String rid = QCookie.getValue(request, "sbd.role");
-        if(PORTAL_ZORE_VAL.equals(userId) || null == userId || PORTAL_ZORE_VAL.equals(rid) || null == rid){
+        if(WebLoginConstants.PORTAL_ZORE_VAL.equals(userId) || null == userId || WebLoginConstants.PORTAL_ZORE_VAL.equals(rid) || null == rid){
         	WebLoginUser loginer = loadCASUserInfo(request,response);
         	userId = loginer.getUser_id().toString();
         }
@@ -97,10 +98,16 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
             if(null != menuList && menuList.size()> 0){
             	  MainFrameBean menuTree = this.convertListToTree(menuList);
                   jsonStr = JsonUtil.toJson(menuTree.getChildren());
-            }  
+            }else{
+            	request.getSession().setAttribute("code", ExceptionEnumServiceImpl.USER_RESOURCE_NULL.getCode());
+            	request.getSession().setAttribute("message",ExceptionEnumServiceImpl.USER_RESOURCE_NULL.getMessage());
+            	return WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_ERROR_CONTROLLER);
+            }
             model.addAttribute("data", jsonStr);
         } catch (Exception e){
-        	throw new Exception("查询权限菜单异常,权限菜单数据:jsonStr="+jsonStr +"ERROR:="+e.getMessage());
+        	request.setAttribute("code", ExceptionEnumServiceImpl.NO_PERMITION.getCode());
+        	request.setAttribute("message",ExceptionEnumServiceImpl.NO_PERMITION.getMessage()+"ERROR:="+e.getMessage());
+        	 return WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_ERROR_CONTROLLER);
         }
         return "page/index/mainframe";
     }
@@ -168,59 +175,21 @@ public class MainFrameController extends SysBaseController<MainFrameBean>{
     	 for(CommonProfile profile : profiles){
     		 account =  profile.getId();
     	 }
-        if (null !=account && !"".equals(account)) {
+		if (null !=account && !"".equals(account)) {
 			Map<String, Object> parm = new HashMap<>();
 			parm.put("user_name", account);
 			Map<String, Object> u = sysUserService.selectMap(parm);
-			WebLoginUser user = new WebLoginUser();
-			user.setRole_id(Integer.valueOf(WebLoginUitls.getVal(u, "role_id")) );
-			user.setUser_real_name(WebLoginUitls.getVal(u, "user_real_name"));
-			user.setUser_id(Integer.valueOf(WebLoginUitls.getVal(u, "user_id")));
-			user.setUser_global_id(WebLoginUitls.getVal(u, "user_global_id"));
-			user.setUser_name(WebLoginUitls.getVal(u, "user_name"));
-		    user.setUser_state(Integer.valueOf(WebLoginUitls.getVal(u, "user_state")));
-	        user.setRole_type_id(Integer.valueOf(WebLoginUitls.getVal(u, "role_type_id")));
+			if(null == u || u.isEmpty()){
+				return null;
+			}
+			parm.put("user_id", u.get("user_id"));
+            List<Map<String, Object>> roles = userRoleRelaService.select(parm);
+            WebLoginUser user = WebLoginUitls.getLoginUser(u, roles);
 			user.saveSession(request, response);//保存至本地
 			return user;
 		}
+        
 		return null;
 	}
     
-    private String getCasLogoutUrl(HttpServletRequest req){
-   	 req.getSession().invalidate();
-        String casUrl = PropertiesUtil.getPropery("cas.serverUrl");
-        String cUrl = req.getScheme() + "://" + req.getServerName()
-                + ":" + req.getServerPort() + req.getContextPath()
-                + "/"; 
-        String casLogoutUrl =casUrl.concat("/logout?service=").concat(QCommon.urlEncode(cUrl));
-        return casLogoutUrl;
-   }
-    
-  //前台弹出alert框
-  	public void toAlert(HttpServletResponse response,HttpServletRequest request){
-  		String casLogoutUrl = getCasLogoutUrl(request); 
-  	    try {
-  	         response.setContentType("text/html;charset=UTF-8");
-  	         response.setCharacterEncoding("UTF-8");
-  	            
-  	         OutputStreamWriter out = new OutputStreamWriter(response.getOutputStream());   
-  	         
-  	         String msg="由于您长时间没有操作，session已过期，请重新登录！";
-  	         msg=new String(msg.getBytes("UTF-8"));
-  	         
-  	         out.write("<meta http-equiv='Content-Type' content='text/html';charset='UTF-8'>");
-  	         out.write("<script>");
-  	         out.write("alert('"+msg+"');");
-  	         out.write("top.location.href = '"+casLogoutUrl+"'; ");
-  	         out.write("</script>");
-  	         out.flush();
-  	         out.close();
-
-  	    } catch (IOException e) {
-  	        e.printStackTrace();
-  	    }
-  	}
-  	
-	public static final String PORTAL_ZORE_VAL = "0";
-	public static final String INDEX_MSG = "指标管理系统";
 }

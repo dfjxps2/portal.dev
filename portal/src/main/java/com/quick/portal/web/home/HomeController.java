@@ -18,13 +18,12 @@
  */
 package com.quick.portal.web.home;
 
-import com.quick.core.base.SysWebController;
-import com.quick.core.base.model.DataStore;
-import com.quick.core.util.common.JsonUtil;
-import com.quick.core.util.common.QCommon;
-import com.quick.portal.menuPrivilege.IMenuPrivilegeService;
-import com.quick.portal.search.infomng.IInfoMngService;
-import com.quick.portal.web.model.DataResult;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,10 +31,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.quick.core.base.SysWebController;
+import com.quick.core.base.model.DataStore;
+import com.quick.core.util.common.JsonUtil;
+import com.quick.core.util.common.QCommon;
+import com.quick.portal.menuPrivilege.IMenuPrivilegeService;
+import com.quick.portal.search.infomng.IInfoMngService;
+import com.quick.portal.web.login.WebLoginConstants;
+import com.quick.portal.web.login.WebLoginUitls;
+import com.quick.portal.web.model.DataResult;
 
 /**
  * 门户请求类
@@ -65,10 +69,7 @@ public class HomeController extends SysWebController {
     @RequestMapping
     public String main(Model model) {
         //查找管理员按钮权限
-        int isadmin = 0;
         Map<String, Object> parm = new HashMap<>();
-        parm.put("menu_name", "sys_admin");
-        parm.put("role_type_id",loginer.getRole_type_id());
         parm.put("user_id", loginer.getUser_id());
         //获取用户应用列表,如果没有，从menu_privilege表读取对应角色默认应用列表
         List<Map<String, Object>> apps = queryUserApp();
@@ -80,9 +81,16 @@ public class HomeController extends SysWebController {
 
         String habitInfo = infoMngService.getPersonalHabitsInfo(loginer.getUser_id().toString());
         model.addAttribute("txtdata", habitInfo);  //信息搜索
-
         model.addAttribute("apps", JsonUtil.toJson(apps));
-        model.addAttribute("roleTypeId", loginer.getRole_type_id()); //管理员ROLEID
+        String typeIds = loginer.getRole_type_ids();
+        boolean bool = WebLoginUitls.isAdminRoleType(typeIds);
+        String flag = WebLoginConstants.ADMINISTRATOR_ROLE_TYPE;       
+        if(bool){
+        	flag = WebLoginConstants.ADMINISTRATOR_ROLE_TYPE;
+        }else{
+        	flag = WebLoginConstants.BUSINESS_ROLE_TYPE;
+        }    
+        model.addAttribute("roleTypeId", flag); //管理员ROLEID
         return view();
     }
 

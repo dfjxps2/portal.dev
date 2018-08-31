@@ -1,18 +1,18 @@
 package com.quick.portal.web.login;
 
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.quick.core.util.common.QCommon;
 import com.quick.core.util.common.QCookie;
 import com.quick.portal.security.authority.metric.PropertiesUtil;
 import com.quick.portal.sysUser.SysUserDO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.HashMap;
 
 /**
  * Created by cc on 2018/4/14.
@@ -42,6 +42,11 @@ public class WebLoginUser extends SysUserDO {
     public void setRole_id(Integer role_id) {
         this.role_id = role_id;
     }
+    
+    
+    private String role_ids;
+    
+    private String role_type_ids;
 
     /**
      * 保存系统登录信息至Cookies中
@@ -68,7 +73,7 @@ public class WebLoginUser extends SysUserDO {
 			if (QCommon.isNullOrEmpty(rtype))
 				rtype = "0";
 			 
-            this.setRole_id(Integer.valueOf(rid));
+            this.setRole_ids(rid);
             this.setUser_real_name(uname);
             this.setUser_id(Integer.valueOf(ids));
             this.setUser_global_id(gid);
@@ -76,7 +81,7 @@ public class WebLoginUser extends SysUserDO {
             String requestSerial = QCookie.getValue(request, "request.serial");
             this.setRequestSerial(requestSerial == null ? 0 : Integer.valueOf(requestSerial));
 			this.setUser_state(Integer.valueOf(ustate));
-			this.setRole_type_id(Integer.valueOf(rtype));
+			this.setRole_type_ids(rtype);
         } catch (Exception e) {
             System.out.print("无法缓存用户会话信息");
             e.printStackTrace();
@@ -102,12 +107,12 @@ public class WebLoginUser extends SysUserDO {
 
             QCookie.set(response, "sbd.user", userNm, cookieTTL);
             QCookie.set(response, "sbd.uid", this.getUser_name(), cookieTTL);
-            QCookie.set(response, "sbd.role", this.getRole_id().toString(), cookieTTL);
+            QCookie.set(response, "sbd.role", this.getRole_ids(), cookieTTL);
             QCookie.set(response, "sbd.tk", this.createToken(request), cookieTTL); //验证参数是否被修改
             QCookie.set(response, "sbd.gid", this.getUser_global_id(), cookieTTL);
             QCookie.set(response, "request.serial", String.valueOf(this.requestSerial), cookieTTL);
 			QCookie.set(response, "sbd.ustate", String.valueOf(this.getUser_state()),cookieTTL);
-			QCookie.set(response, "sbd.rtype", String.valueOf(this.getRole_type_id()),cookieTTL);
+			QCookie.set(response, "sbd.rtype", this.getRole_type_ids(),cookieTTL);
 
         } catch (Exception e) {
             System.out.print("无法缓存用户会话信息");
@@ -123,4 +128,20 @@ public class WebLoginUser extends SysUserDO {
                 + this.getUser_id() + "," + this.getRole_id();
         return QCommon.toMD5(seek);
     }
+
+	public String getRole_ids() {
+		return role_ids;
+	}
+
+	public void setRole_ids(String role_ids) {
+		this.role_ids = role_ids;
+	}
+
+	public String getRole_type_ids() {
+		return role_type_ids;
+	}
+
+	public void setRole_type_ids(String role_type_ids) {
+		this.role_type_ids = role_type_ids;
+	}
 }

@@ -33,15 +33,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.quick.core.base.AppResource;
+import com.quick.core.base.exception.ExceptionEnumServiceImpl;
 import com.quick.core.util.common.QCommon;
 import com.quick.core.util.common.QCookie;
 import com.quick.portal.security.authority.metric.PropertiesUtil;
 import com.quick.portal.sysUser.ISysUserService;
-import com.quick.portal.sysUser.SysUserDO;
 import com.quick.portal.userAccessLog.IUserAccessLogService;
 import com.quick.portal.userAccessLog.UserAccessLogConstants;
 import com.quick.portal.userRoleRela.IUserRoleRelaService;
@@ -70,31 +68,33 @@ public class WebLoginController {
     @RequestMapping(value = "/")
     public String index(HttpServletRequest request, HttpServletResponse response) {
         WebLoginUser loginer = new WebLoginUser().loadSession(request, response);
-        String userGlobalID = null, rid = null;
-        if (null !=loginer.getRole_type_id() && loginer.getRole_type_id() == 0) {
+        String userGlobalID = null;
+        if (null ==loginer.getRole_type_ids() || "0".equals(loginer.getRole_type_ids())) {
             loginer = loadCASUserInfo(request, response);
             if (null == loginer) {
+            	request.getSession().setAttribute("code", ExceptionEnumServiceImpl.USER_ROLE_ISVALID.getCode());
+            	request.getSession().setAttribute("message", ExceptionEnumServiceImpl.USER_ROLE_ISVALID.getMessage());
                 logger.error("Can't get user information from user profile and user database.");
-                return "redirect:" + LOGOUT_URL;
+                return WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_ERROR_CONTROLLER);
             } else {
-            	rid = String.valueOf(loginer.getRole_id());
             	userGlobalID = loginer.getUser_global_id();
             }
         }
-        String rType = String.valueOf(loginer.getRole_type_id());
-
-        if(null !=loginer.getUser_state() && loginer.getUser_state() == DISABLE_USER_STATE){
-        	return "redirect:" + LOCK_URL;
+        String rType = String.valueOf(loginer.getRole_type_ids());
+        if(null !=loginer.getUser_state() && loginer.getUser_state() == WebLoginConstants.DISABLE_USER_STATE){
+        	request.setAttribute("code", ExceptionEnumServiceImpl.USER_STATUS_LOCKING.getCode());
+        	request.setAttribute("message", loginer.getUser_name()+":"+ExceptionEnumServiceImpl.USER_STATUS_LOCKING.getMessage());
+        	 return WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_ERROR_CONTROLLER);
     	}else{
 	        loginer.setRequestSerial(1);
 	        loginer.saveSession(request, response);
 	        userAccessLogService.saveLog(request, UserAccessLogConstants.SYS_LOG_TYPE_ID, UserAccessLogConstants.LOGIN_USER_OP_TYPE, 1, loginer.getUser_real_name() + "登录成功", loginer.getUser_id().toString(), loginer.getUser_name());
 	        //平台用户:1:app;2:sys;公服用户:1:app
 	        String flag = getSysUrlByUserGlobalID(userGlobalID, rType);
-	        if (SYS_MENU_FLAG.equals(flag)) {
-	            return "redirect:"+MAINFRAME_URL;
+	        if (WebLoginConstants.SYS_MENU_FLAG.equals(flag)) {
+	        	return WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.MAINFRAME_URL);
 	        } else {
-	            return "redirect:"+MAIN_URL;
+	        	return WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.MAIN_URL);
 	        }
     	}
     }
@@ -108,54 +108,11 @@ public class WebLoginController {
         return "page/home/login";
     }
 
-    //服务请求
-    @RequestMapping(value = "/home/dologin", method = RequestMethod.POST)
-    @ResponseBody
-    public String dologin(String username, String password, String code, HttpServletRequest request, HttpServletResponse response) {
-        String flag = "1";
-        try {
-            if (username.equals("null") || password.equals("null")) {
-                return "用户名或密码为空";
-            }
-            username = QCommon.urlDecode(username);
-            Map<String, Object> parm = new HashMap<>();
-            parm.put("user_name", username);
-            SysUserDO loginUser = sysUserService.selectObj(parm);
-            if (loginUser == null) {
-                return "用户名或密码错误";
-            }
-            //密码比较
-            if (!loginUser.getUser_password().equals(password)) {
-                return "用户名或密码错误";
-            }
-            //if(!"1".equals(loginUser.getUser_state())){
-            //	   return "帐号被锁，请联系管理员";
-            //}
-            parm.clear();
-            parm.put("user_id", loginUser.getUser_id());
 
-            List<Map<String, Object>> roles = userRoleRelaService.select(parm);
-            saveSession(loginUser, roles, request, response);
-            userAccessLogService.saveLog(request, UserAccessLogConstants.SYS_LOG_TYPE_ID, UserAccessLogConstants.LOGIN_USER_OP_TYPE, 1, loginUser.getUser_real_name() + "登录成功", loginUser.getUser_id().toString(), loginUser.getUser_name());
-            String rid = null;
-            if (null != loginUser.getRole_id() && !"".equals(loginUser.getRole_id())) {
-                rid = String.valueOf(loginUser.getRole_id());
-            } else {
-                return "用户名角色为空";
-            }
-            // 平台用户:1:app;2:sys;公服用户:1:app
-            flag = getSysUrlByUserGlobalID(loginUser.getUser_global_id(), rid);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return e.getMessage();
-        }
-        return flag;
-    }
 
     @RequestMapping(value = "/home/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
         logger.info("user logout.");
-
         //记录日志
         String ids = QCookie.getValue(request, "ids");
         if (ids != null && ids.length() > 0)
@@ -179,40 +136,28 @@ public class WebLoginController {
         return retUrl;
     }
 
-    public void saveSession(SysUserDO loginUser, List<Map<String, Object>> roles, HttpServletRequest request, HttpServletResponse response) {
-        String ids = "";
-        for (Map<String, Object> m : roles)
-            ids += "," + m.get("role_id").toString();
-        ids = ids.substring(1);
-        QCookie.set(response, "ids", loginUser.getUser_id().toString());
-        QCookie.set(response, "sbd.user", loginUser.getUser_name(), 4 * 3600);
-        QCookie.set(response, "sbd.role", ids, 4 * 3600);
-        QCookie.set(response, "sbd.gid", loginUser.getUser_global_id(), 4 * 3600);
-        QCookie.set(response, "sbd.uid", loginUser.getUser_name(), 4 * 3600);
-    }
 
     public WebLoginUser loadCASUserInfo(HttpServletRequest request, HttpServletResponse response) {
-    	 String account = null;
-    	 List<CommonProfile> profiles = WebLoginUitls.getProfiles(request, response);
-    	 for(CommonProfile profile : profiles){
-    		 account =  profile.getId();
-    	 }
-        if (null !=account && !"".equals(account)) {
-            Map<String, Object> parm = new HashMap<>();
-            parm.put("user_name", account);
-            Map<String, Object> u = sysUserService.selectMap(parm);
-            WebLoginUser user = new WebLoginUser();
-            user.setRole_id(Integer.valueOf(WebLoginUitls.getVal(u, "role_id")));
-            user.setUser_real_name(WebLoginUitls.getVal(u, "user_real_name"));
-            user.setUser_id(Integer.valueOf(WebLoginUitls.getVal(u, "user_id")));
-            user.setUser_global_id(WebLoginUitls.getVal(u, "user_global_id"));
-            user.setUser_name(WebLoginUitls.getVal(u, "user_name"));
-            user.setUser_state(Integer.valueOf(WebLoginUitls.getVal(u, "user_state")));
-            user.setRole_type_id(Integer.valueOf(WebLoginUitls.getVal(u, "role_type_id")));
-            user.saveSession(request, response);//保存至本地
-            return user;
-        }
-        return null;
+		String account = null;
+		List<CommonProfile> profiles = WebLoginUitls.getProfiles(request,
+				response);
+		for (CommonProfile profile : profiles) {
+			account = profile.getId();
+		}
+		if (null != account && !"".equals(account)) {
+			Map<String, Object> parm = new HashMap<>();
+			parm.put("user_name", account);
+			Map<String, Object> u = sysUserService.selectMap(parm);
+			if (null == u || u.isEmpty()) {
+				return null;
+			}
+			parm.put("user_id", u.get("user_id"));
+			List<Map<String, Object>> roles = userRoleRelaService.select(parm);
+			WebLoginUser user = WebLoginUitls.getLoginUser(u, roles);
+			user.saveSession(request, response);// 保存至本地
+			return user;
+		}
+		return null;
     }
 
 
@@ -223,51 +168,21 @@ public class WebLoginController {
      * 公服用户:1:app
      * 1:app;2:sys
      */
-
     public String getSysUrlByUserGlobalID(String userGlobalID, String rType) {
         String flag = null;
         //平台用户
         if (null == userGlobalID || "".equals(userGlobalID)) {
-            if (ADMINISTRATOR_ROLE_TYPE.equals(rType) || PORTAL_ROLE_TYPE.equals(rType)) {
-                flag = SYS_MENU_FLAG;
-            } else {
-                flag = APP_MENU_FLAG;
-            }
+            boolean bool = WebLoginUitls.isAdminRoleType(rType);
+            if(bool){
+            	  flag = WebLoginConstants.SYS_MENU_FLAG;
+            }else{
+            	 flag = WebLoginConstants.APP_MENU_FLAG;
+            }   
             //公服用户
         } else {
-            flag = APP_MENU_FLAG;
+            flag = WebLoginConstants.APP_MENU_FLAG;
         }
         return flag;
     }
-    
-    
-
-    @RequestMapping(value = "/home/lock")
-    public String prompt(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
-        String url = request.getScheme() + "://" + request.getServerName()
-                + ":" + request.getServerPort() + request.getContextPath();
-        String userId = QCookie.getValue(request, "sbd.uid");
-        if(null ==userId || "".equals(userId)){
-        	userId = "";
-        }
-        model.addAttribute("host", url);
-        model.addAttribute("uid", userId);
-        return "page/home/lock";
-    }
-    
-    
-    public final static String ADMINISTRATOR_USER = "admin";
-    public final static String ADMINISTRATOR_ROLE_TYPE = "1";
-    public final static String PORTAL_ROLE_TYPE = "2";
-
-    public final static String SYS_MENU_FLAG = "2";
-    public final static String APP_MENU_FLAG = "1";
-    
-    public final static int ENABLED_USER_STATE = 1;
-    public final static int DISABLE_USER_STATE = 0;
-    protected static final String LOCK_URL = "/home/lock";
-    protected static final String MAINFRAME_URL = "/mainframe";
-    protected static final String MAIN_URL = "/home/main";
-    
     
 }

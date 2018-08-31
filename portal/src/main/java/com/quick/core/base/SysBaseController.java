@@ -19,6 +19,33 @@
 
 package com.quick.core.base;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.DateFormat;
+import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.pac4j.core.profile.CommonProfile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.UrlPathHelper;
+
 import com.quick.core.base.model.DataStore;
 import com.quick.core.base.model.JsonDataGrid;
 import com.quick.core.base.model.PageBounds;
@@ -27,27 +54,9 @@ import com.quick.core.util.common.JsonUtil;
 import com.quick.core.util.common.QCommon;
 import com.quick.core.util.common.QRequest;
 import com.quick.portal.sysUser.ISysUserService;
+import com.quick.portal.userRoleRela.IUserRoleRelaService;
 import com.quick.portal.web.login.WebLoginUitls;
 import com.quick.portal.web.login.WebLoginUser;
-
-import org.pac4j.core.profile.CommonProfile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.util.UrlPathHelper;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.text.DateFormat;
-import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * 通用控制层抽象类
@@ -70,7 +79,10 @@ public abstract class SysBaseController<T> {
 	protected UrlPathHelper urlPathHelper; // 路径助手
 
 	@Resource(name = "sysUserService")
-	private ISysUserService loginerService;
+	private ISysUserService sysUserService;
+	
+	@Resource(name = "userRoleRelaService")
+	private IUserRoleRelaService userRoleRelaService;
 
 	// <editor-fold defaultstate="collapsed" desc="自定义方法">
 
@@ -89,7 +101,7 @@ public abstract class SysBaseController<T> {
 			HttpServletResponse response) {
 		Boolean b = true;
 		getCurrentLoginUser(request,response);
-/*		if (loginer == null) {
+		if (loginer == null) {
 			b = false;
 			try {
 				if(isAjax(request)){
@@ -101,7 +113,7 @@ public abstract class SysBaseController<T> {
 				logger.error("无法拦截登录退出:" + ex.getMessage());
 				ex.printStackTrace();
 			}
-		}*/
+		}
 		return b;
 	}
 
@@ -258,7 +270,9 @@ public abstract class SysBaseController<T> {
 		this.request = request;
 		this.response = response;
 
-        getCurrentLoginUser(request,response);
+//      getCurrentLoginUser(request,response);
+		if (!isLogin(request, response))
+			return;
 	}
 
 	@InitBinder
@@ -329,6 +343,10 @@ public abstract class SysBaseController<T> {
 			if(loginer.getUser_id() == null || loginer.getUser_id() == 0 
 					|| loginer.getRole_id() == null || loginer.getRole_id() == 0){
 				loginer = loadCASUserInfo(req,res);
+				if(null == loginer){
+					return null;
+				}
+				
 			}
 		}
 
@@ -344,25 +362,24 @@ public abstract class SysBaseController<T> {
     	 for(CommonProfile profile : profiles){
     		 account =  profile.getId();
     	 }
-    	 if (null !=account && !"".equals(account)) {
+    	if (null !=account && !"".equals(account)) {
 			Map<String, Object> parm = new HashMap<>();
 			parm.put("user_name", account);
-			Map<String, Object> u = loginerService.selectMap(parm);
-			WebLoginUser user = new WebLoginUser();
-			user.setRole_id(Integer.valueOf(val(u, "role_id")) );
-			user.setUser_real_name(val(u, "user_real_name"));
-			user.setUser_id(Integer.valueOf(val(u, "user_id")));
-			user.setUser_global_id(val(u, "user_global_id"));
-			user.setUser_name(WebLoginUitls.getVal(u, "user_name"));
-			user.setUser_state(Integer.valueOf(WebLoginUitls.getVal(u, "user_state")));
-			user.setRole_type_id(Integer.valueOf(WebLoginUitls.getVal(u, "role_type_id")));
-
+			Map<String, Object> u = sysUserService.selectMap(parm);
+			if(null == u || u.isEmpty()){
+				return null;
+			}
+			parm.put("user_id", u.get("user_id"));
+            List<Map<String, Object>> roles = userRoleRelaService.select(parm);
+            WebLoginUser user = WebLoginUitls.getLoginUser(u, roles);
 			user.saveSession(request, response);//保存至本地
-
 			return user;
 		}
 		return null;
 	}
+	
+	
+	
 	public Boolean isWhiteList(){
 		return false;
 	}
@@ -390,8 +407,9 @@ public abstract class SysBaseController<T> {
 		outString+="<link href=\""+url+"/res/layer/skin/default/layer.css\" rel=\"stylesheet\">";
 		outString+="<link href=\""+url+"/res/layer/skin/moon/style.css\" rel=\"stylesheet\">";
 		outString+="<script src=\""+url+"/res/layer/layer.js\"></script>";
-		outString+= "<script language=javascript>layer.msg('"+msg+"',{icon: 1, time: 2000, skin: 'layer-ext-moon'},function(){(window.parent||window).location='"
-				+ url + "/';});</script>";
+/*		outString+= "<script language=javascript>layer.msg('"+msg+"',{icon: 1, time: 2000, skin: 'layer-ext-moon'},function(){(window.parent||window).location='"
+				+ url + "/';});</script>";*/
+		outString+= "<script language=javascript>layer.msg('"+msg+"',{icon: 1, time: 2000, skin: 'layer-ext-moon'})</script>";
 		try {
 			response.getWriter().print(outString);
 		} catch (IOException ex) {
