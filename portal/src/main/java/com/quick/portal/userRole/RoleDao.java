@@ -57,5 +57,8 @@ public interface RoleDao extends ISysBaseDao<Role> {
     List<Map<String,Object>> listUser(Map<String, Object> m, PageBounds page);
     int recountUsers(Map<String, Object> m);
     void addRoleUsers(ArrayList<Object> list);
+    
+    //该角色下是否有用户
+    int getRoleHasUser(String rid);
 
 }

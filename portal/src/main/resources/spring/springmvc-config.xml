@@ -33,33 +33,30 @@
     <!--Spring3.1版本开始的注解 HandlerMapping -->
     <!--<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>-->
     <bean name='handlerMapping' class='com.quick.core.base.spring.MethodRequestMappingHandlerMapping' />
-
-    <bean id="jackson2HttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
-        <property name="objectMapper">
-            <bean class="com.fasterxml.jackson.databind.ObjectMapper">
-                <property name="dateFormat">
-                    <bean class="java.text.SimpleDateFormat">
-                        <constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss" />
-                    </bean>
-                </property>
-            </bean>
-        </property>
-        <property name="supportedMediaTypes">
-            <list>
-                <value>application/json;charset=UTF-8</value>
-                <value>text/json;charset=UTF-8</value>
-                <value>text/plain;charset=UTF-8</value>
-                <value>text/html;charset=UTF-8</value>
-            </list>
-        </property>
-    </bean>
-
     <!--Spring3.1版本开始的注解 HandlerAdapter -->
      <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
         <property name="messageConverters">
             <list>
              	<bean class="org.springframework.http.converter.StringHttpMessageConverter" />
-                <ref bean="jackson2HttpMessageConverter"/>
+                <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                    <property name="objectMapper">
+                        <bean class="com.fasterxml.jackson.databind.ObjectMapper">
+                             <property name="dateFormat">
+                                  <bean class="java.text.SimpleDateFormat">
+                                      <constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss" />
+                                  </bean>
+                             </property>
+                        </bean>
+                    </property>
+                    <property name="supportedMediaTypes">
+                        <list>
+                            <value>application/json;charset=UTF-8</value>
+                            <value>text/json;charset=UTF-8</value>
+                            <value>text/plain;charset=UTF-8</value>
+                            <value>text/html;charset=UTF-8</value>
+                        </list>
+                    </property>
+                </bean>
             </list>
         </property>
     </bean>
@@ -68,7 +65,25 @@
         <property name="messageConverters">
             <list>
                 <bean class="org.springframework.http.converter.StringHttpMessageConverter" />
-                <ref bean="jackson2HttpMessageConverter"/>
+                <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                    <property name="objectMapper">
+                        <bean class="com.fasterxml.jackson.databind.ObjectMapper">
+                            <property name="dateFormat">
+                                <bean class="java.text.SimpleDateFormat">
+                                    <constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss" />
+                                </bean>
+                            </property>
+                        </bean>
+                    </property>
+                    <property name="supportedMediaTypes">
+                        <list>
+                            <value>application/json;charset=UTF-8</value>
+                            <value>text/json;charset=UTF-8</value>
+                            <value>text/plain;charset=UTF-8</value>
+                            <value>text/html;charset=UTF-8</value>
+                        </list>
+                    </property>
+                </bean>
             </list>
         </property>
     </bean>
@@ -248,6 +263,7 @@
         <property name="suffix" value=".html" />  
         <property name="contentType" value="text/html;charset=utf-8" />  <!-- 模板输出内容编码，此处应与defaultEncoding保持一致 -->
         <property name="exposeRequestAttributes" value="true" />  <!-- 允许访问请求属性，默认为false -->
+        <property name="allowSessionOverride" value="true"/>
         <property name="exposeSessionAttributes" value="true" />  <!-- 允许访问会话属性，默认为false -->
         <property name="exposeSpringMacroHelpers" value="true" />  
         <property name="requestContextAttribute" value="rc" /> <!-- 页面上下文，类似于request.contextPath -->

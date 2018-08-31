@@ -49,7 +49,8 @@
     
     <!--查询-->
 	<select id="select" parameterType="map" resultType="map">
-		select * from user_role_rela
+		select a.* ,r.role_type_id from user_role_rela a inner join user_role r on a.role_id=r.role_id
+		and r.role_state=1
 		<where>
 			<include refid="where" />
 		</where>

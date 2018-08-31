@@ -223,8 +223,29 @@
            return s;
        }
 
+function isRoleHasUser(id){
+	var flag;
+	 $.ajax({
+		  type: "post",
+		  async:false,
+		  url: '${G.host}/role/getRoleHasUser',
+		  data:{rid:id},
+		  success: function(data){
+			  flag = data;
+		  }
+		  
+	  });
+	return flag;	
+}
+
  /*删除*/
  function del(id,name){
+	 var flag =isRoleHasUser(id);
+	 if(flag=="1"){
+		 var desc = "该角色下还有系统用户，不能删除角色！";
+		 layer.msg(desc,{icon:1,time: 2000,skin: 'layer-ext-moon'});
+		 return;
+	 }
 	 var msg ="确认将该角色【"+name+"】从系统中删除？删除后不可恢复";
 	  layer.confirm(
 			 msg,

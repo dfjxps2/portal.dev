@@ -51,8 +51,22 @@ public interface ISysUserDao<SysUserDO> extends ISysBaseDao<SysUserDO> {
 	 */
 	void updateUserStatueByUersId (String userId);
 
+	
+	/*
+	 * 查询指定IP,密码错误次数
+	 */
+	 List<Map<String,Object>> getLockCount(String ip);
+	 
+	 
+	 /*
+	  * 通过用户名称查询用户信息
+	  */
+	 List<Map<String,Object>> isExitUserInfoByUserId (String userId);
+
+
     Map<String,Object> getUserEdit(Map<String,Object> p);
     void  updateUserRole(Map<String,Object> p);
     void deleteUserRole(String id);
     void addRoleUsers(ArrayList<Object> list);
+
 }

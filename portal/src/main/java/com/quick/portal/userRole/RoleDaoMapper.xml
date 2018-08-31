@@ -206,4 +206,15 @@ SELECT urr.user_id FROM user_role_rela urr WHERE urr.role_id = #{role_id}) ur  o
 	<select id="getRoleType" parameterType="map" resultType="map">
 		SELECT  role_type_id,role_type_name FROM  ROLE_TYPE 
 	</select>
+	
+
+    
+    <!--该角色下是否有用户-->
+    <select id="getRoleHasUser" parameterType="String" resultType="int">
+		<![CDATA[	
+		SELECT COUNT(1) FROM USER_ROLE_RELA A INNER JOIN SYS_USER U 
+			ON U.USER_ID=A.USER_ID WHERE  U.USER_STATE =1
+			AND A.ROLE_ID =#{rid}
+	]]>
+	</select>
 </mapper>

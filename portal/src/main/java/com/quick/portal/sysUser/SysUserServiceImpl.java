@@ -18,6 +18,9 @@
  */
 package com.quick.portal.sysUser;
 
+import java.util.List;
+import java.util.Map;
+
 import com.quick.core.base.SysBaseService;
 import com.quick.core.base.ISysBaseDao;
 
@@ -97,5 +100,33 @@ public class SysUserServiceImpl extends SysBaseService<SysUserDO> implements ISy
 	public void updateUserStatueByUersId(String userId) {
 		 dao.updateUserStatueByUersId(userId);
 		
+	}
+	
+	
+	/*
+	 * 查询指定IP,密码错误次数
+	 */
+	@Override
+	public Map<String, Object> getLockCount(String ip) {
+		// TODO Auto-generated method stub
+		List<Map<String,Object>> retList = dao.getLockCount(ip);
+		if(null  != retList && retList.size()>0){
+			return retList.get(0);
+		}	
+		return null;
+	}
+	
+	/*
+	 *  通过用户名称查询用户信息
+	 * (non-Javadoc)
+	 * @see com.quick.portal.sysUser.ISysUserService#isExitUserInfoByUserId(java.lang.String)
+	 */
+	@Override
+	public Map<String, Object> isExitUserInfoByUserId(String userId) {
+		List<Map<String,Object>> retList = dao.isExitUserInfoByUserId(userId);
+		if(null  != retList && retList.size()>0){
+			return retList.get(0);
+		}	
+		return null;
 	}
 }

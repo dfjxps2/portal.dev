@@ -353,6 +353,13 @@ public class RoleController extends SysBaseController<Role> {
         }
         return json.toString();
     }
+    
+    
+    @RequestMapping("/getRoleHasUser")
+    @ResponseBody
+    public String getRoleHasUser(String rid){
+        return roleService.getRoleHasUser(rid);
+    };
 
 
 }

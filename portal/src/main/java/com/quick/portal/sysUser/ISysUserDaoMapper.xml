@@ -141,7 +141,7 @@
 
 	<select id="select" parameterType="map" resultType="map">
 		select urd.*,uj.job_name from (select udrn.*, udn.dep_name from(select urn.*,udr.dep_id,udr.rela_id from (select su.*,rn.role_name role_name,rn.rel_id rel_id,rn.role_type_id role_type_id,rn.role_id role_id from sys_user su
-		left join(select urr.user_id, ur.role_name,ur.role_type_id,urr.rel_id,ur.role_id from  user_role ur , user_role_rela urr where ur.role_id = urr.role_id) rn on su.user_id = rn.user_id where 1=1) urn
+		inner join(select urr.user_id, ur.role_name,ur.role_type_id,urr.rel_id,ur.role_id from  user_role ur , user_role_rela urr where ur.role_id = urr.role_id and ur.role_state=1) rn on su.user_id = rn.user_id where 1=1) urn
 		left join user_dep_rela udr on urn.user_id = udr.user_id where 1=1) udrn left join user_department udn
 		on udrn.dep_id = udn.dep_id  where 1=1)urd left join user_job uj on urd.job_id=uj.job_id
 		<where>
@@ -234,5 +234,38 @@
 	<update id="updateUserStatueByUersId" parameterType="java.lang.String">
 		update sys_user  set user_state=0, upd_time =now()  where user_name = #{user_name}
 	</update>
+	
+	
+		<!--查询当前IP,密码错误次数-->
+	<select id="getLockCount" parameterType="java.lang.String" resultType="map">
+	<![CDATA[		        		
+			SELECT
+			AUD_USER,
+			COUNT(AUD_DATE) AS CNT
+			FROM COM_AUDIT_TRAIL
+			WHERE  AUD_ACTION = 'AUTHENTICATION_FAILED'
+			AND AUD_CLIENT_IP = #{ip}
+			AND AUD_DATE > date_sub(now(), INTERVAL 1 DAY)
+			AND AUD_USER IN (
+				SELECT  AUD_USER
+				FROM  COM_AUDIT_TRAIL
+				WHERE
+					AUD_DATE IN (
+						SELECT
+							MAX(AUD_DATE)
+						FROM COM_AUDIT_TRAIL
+						WHERE AUD_ACTION = 'AUTHENTICATION_FAILED'
+						AND AUD_CLIENT_IP = #{ip}
+							)
+		   )		
+		]]>
+	</select>
+	<!--  通过用户名称查询用户信息 -->
+	<select id="isExitUserInfoByUserId" parameterType="java.lang.String" resultType="map">
+	<![CDATA[		        		
+			SELECT USER_STATE, COUNT(1) AS CNT FROM SYS_USER WHERE USER_NAME=#{userName}
+		]]>
+	</select>
+	
 
 </mapper>

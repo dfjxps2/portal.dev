@@ -22,15 +22,16 @@ import com.quick.core.base.SysBaseService;
 import com.quick.core.base.ISysBaseDao;
 import com.quick.core.base.model.PageBounds;
 import com.quick.core.util.common.QCommon;
-
 import com.quick.core.util.common.QRequest;
 import com.quick.portal.userRoleRela.UserRoleRelaDO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.util.*;
 
@@ -199,6 +200,22 @@ public class RoleServiceImpl extends SysBaseService<Role> implements RoleService
             }
         }
     }
+    /*
+     * 该角色下是否有用户
+     * (non-Javadoc)
+     * @see com.quick.portal.userRole.RoleService#getRoleHasUser(java.lang.String)
+     */
+	@Override
+	public String getRoleHasUser(String rid) {
+		String flag = "1";
+		int count = dao.getRoleHasUser(rid);
+		if(count >0 ){
+			flag = "1";
+		}else{
+			flag = "0";
+		}
+		return flag;
+	}
 
 
 }

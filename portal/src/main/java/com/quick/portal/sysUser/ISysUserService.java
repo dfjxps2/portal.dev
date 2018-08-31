@@ -18,7 +18,10 @@
  */
 package com.quick.portal.sysUser;
 
+import java.util.Map;
+
 import com.quick.core.base.ISysBaseService;
+
 
 /**
  * sys_user服务接口
@@ -29,5 +32,16 @@ public interface ISysUserService extends ISysBaseService<SysUserDO> {
 	 * 锁定用户帐号
 	 */
 	void updateUserStatueByUersId (String userId);
+	
+	/*
+	 * 查询指定IP,密码错误次数
+	 */
+	Map<String,Object> getLockCount(String ip);
+	
+	/*
+		通过用户名称查询用户信息
+	 * 
+	 */
+	Map<String,Object> isExitUserInfoByUserId(String userId);
 
 }

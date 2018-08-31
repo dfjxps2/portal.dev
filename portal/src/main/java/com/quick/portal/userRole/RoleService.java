@@ -23,6 +23,7 @@ import com.quick.core.base.model.PageBounds;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.util.List;
 import java.util.Map;
 
@@ -51,5 +52,7 @@ public interface RoleService extends ISysBaseService<Role> {
     void  delRoleUser(HttpServletResponse res, HttpServletRequest req);
 
     void addRoleUser(HttpServletResponse res, HttpServletRequest req);
+    //该角色下是否有用户
+    String getRoleHasUser(String rid);
 
 }
