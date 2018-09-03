@@ -1,3 +1,4 @@
+
 package com.quick.portal.web.login;
 
 /**
@@ -40,6 +41,5 @@ public class WebLoginConstants {
 	public static final String PORTAL_ZORE_VAL = "0";
     
 
-
-
 }
+
