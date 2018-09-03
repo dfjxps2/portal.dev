@@ -51,7 +51,7 @@
 
 </html>
 <script>
-      var _tmpls={},_layout = ${layout},co = [],name,_page=${pageJson}, _metUrl='${MEASURES_URL}',time='${time}';
+      var _tmpls={},_layout = ${layout},co = [],name,_page=${pageJson}, _metUrl='${MEASURES_URL}',time='${time}',logUrl='${mea_log}';
     var tData = [];
     
     window.onload = function() {
@@ -128,6 +128,7 @@
             }
         }
         getMetricData(metricList);
+        senLog(metricList);
     }
     function getMetricData(metricList){
         if(metricList == null || metricList.length == 0)
@@ -155,6 +156,20 @@
             }
         });
     }
+
+    function senLog(metricList) {
+		$.ajax({
+			url:logUrl+metricList,
+			//data:{meaId:'123'},
+            type:'get',
+			success:function () {
+				//alert("senLog ok")
+            },error:function () {
+				alert("senLog is failed")
+            }
+		})
+    }
+
     function initMenu(dt){
         var str = [];
         for(var i = 0; i <dt.length; i++){

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quick.portal.monitor.IMeaLogDao">
+    <!-- 新增application -->
+    <insert id="insert" parameterType="java.util.Map" useGeneratedKeys="true" keyProperty="log_id">
+        insert into user_access_log (log_type_id,user_id,user_ip,user_op_type,menu_id,log_detail)
+          values(#{log_type_id},#{user_id},#{user_ip},#{user_op_type},#{menu_id},#{log_detail})
+        <selectKey resultType="int" order="AFTER" keyProperty="log_id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+</mapper>

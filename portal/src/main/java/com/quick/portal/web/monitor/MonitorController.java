@@ -84,6 +84,7 @@ public class MonitorController extends SysWebController {
         
         String url = PropertiesUtil.getPropery("index.service.url");
     	String port = PropertiesUtil.getPropery("index.service.port");
+    	String logUrl = PropertiesUtil.getPropery("portal.mysql.ip");
     	String serviceUrl = url.concat(MetricPrivilegeConstants.SERVICE_PORT).concat(port).concat(MetricPrivilegeConstants.GET_MEASURES_SERVICE_NAME);
     	model.addAttribute("MEASURES_URL", serviceUrl);
         model.addAttribute("app", app);
@@ -91,6 +92,7 @@ public class MonitorController extends SysWebController {
         model.addAttribute("pageJson", JsonUtil.serialize(plist));
         model.addAttribute("layout", layout.getData());
         model.addAttribute("time", time);
+        model.addAttribute("mea_log",logUrl);
         return view();
     }
     
