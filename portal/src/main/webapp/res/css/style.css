@@ -110,8 +110,13 @@ body.body-small .navbar-top-links li:last-child {
 }
 
 .navbar-top-links li a {
-    padding: 10px 10px;
-    min-height: 50px;
+    padding: 0px 10px;
+    min-height: 60px;
+    line-height: 55px;
+}
+.hidden-xs > a i{
+    font-size:18px;
+    vertical-align:middle;
 }
 
 .dropdown-menu {
@@ -7591,10 +7596,8 @@ body.skin-3 {
 }
 
 .nav-close {
-    padding: 10px 10px 10px 20px;
-   /*  display: block; */
+    padding: 15px 10px 15px 20px;
     position: absolute;
-   /*  right: 5px; */
     top: 5px;
     font-size: 1.4em;
     cursor: pointer;
