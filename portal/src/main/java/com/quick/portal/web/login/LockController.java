@@ -74,6 +74,7 @@ public class LockController {
     @RequestMapping(value = "/getLockInfo")
     public String getLockInfo(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
     	String ip = CommonUtils.getIpAddrAdvanced(request);
+    	System.out.println("------------------ip---------------="+ip);
     	Map<String,Object> mp  = sysUserService.getLockCount(ip);
     	int lockCnt = Integer.parseInt(mp.get("CNT").toString());
     	if(lockCnt == 0){
