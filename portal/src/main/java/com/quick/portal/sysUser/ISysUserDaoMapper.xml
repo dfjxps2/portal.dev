@@ -238,26 +238,28 @@
 	
 		<!--查询当前IP,密码错误次数-->
 	<select id="getLockCount" parameterType="java.lang.String" resultType="map">
-	<![CDATA[		        		
-			SELECT
+	<![CDATA[		        			
+		   SELECT
 			AUD_USER,
 			COUNT(AUD_DATE) AS CNT
 			FROM COM_AUDIT_TRAIL
 			WHERE  AUD_ACTION = 'AUTHENTICATION_FAILED'
 			AND AUD_CLIENT_IP = #{ip}
-			AND AUD_DATE > date_sub(now(), INTERVAL 1 DAY)
+			AND AUD_DATE > date_sub(now(), INTERVAL 5 MINUTE)
 			AND AUD_USER IN (
 				SELECT  AUD_USER
 				FROM  COM_AUDIT_TRAIL
-				WHERE
-					AUD_DATE IN (
+				WHERE  AUD_ACTION = 'AUTHENTICATION_FAILED'
+				AND AUD_CLIENT_IP = #{ip}
+				AND	AUD_DATE IN (
 						SELECT
 							MAX(AUD_DATE)
 						FROM COM_AUDIT_TRAIL
 						WHERE AUD_ACTION = 'AUTHENTICATION_FAILED'
 						AND AUD_CLIENT_IP = #{ip}
-							)
-		   )		
+						AND AUD_DATE > date_sub(now(), INTERVAL 1 MINUTE)
+						)
+		   )			
 		]]>
 	</select>
 	<!--  通过用户名称查询用户信息 -->
