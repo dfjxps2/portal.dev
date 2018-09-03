@@ -109,7 +109,7 @@ public class LoginFilter extends HttpServlet implements Filter {
             String url = request.getScheme() + "://" + request.getServerName()
                     + ":" + request.getServerPort() + request.getContextPath()
                     + "/";
-            String retUrl = casUrl.concat("logout?service=").concat(QCommon.urlEncode(url));
+            String retUrl = casUrl.concat("/logout?service=").concat(QCommon.urlEncode(url));
 
             writeMsg("会话已超时，请重新登录！", host, retUrl, request, response);
         }
