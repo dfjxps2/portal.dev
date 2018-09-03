@@ -51,6 +51,8 @@ public class MeaLogController {
             String ids  = QCookie.getValue(request,"ids");
             System.out.println("ids"+ids);
             System.out.println("meaid"+meaid);
+            String usname = QCookie.getValue(request,"sbd.uid");
+
 /*            String ip = request.getHeader( "x-forwarded-for" );
             if ( ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase( ip ) )
             {
@@ -68,7 +70,7 @@ public class MeaLogController {
             map.put("user_id",ids);
             map.put("user_ip",ip);
             map.put("user_op_type",2);
-            map.put("log_detail","用户调取了指标接口,查看了"+meaid+"指标");
+            map.put("log_detail","用户名:"+usname+"调取了指标接口,查看了"+meaid+"指标");
             map.put("log_type_id",1);
             map.put("menu_id",2);
             meaLogService.sendLog(map);
