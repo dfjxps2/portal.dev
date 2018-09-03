@@ -51,7 +51,7 @@ public class LockController {
      * 异常信息返回到页面
      */
     @RequestMapping(value = "/error")
-    public String prompt(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
+    public String getError(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
     	String code = (String) request.getSession().getAttribute("code");
     	if(null == code || "".equals(code)){
     		code = "";
@@ -60,9 +60,11 @@ public class LockController {
     	if(null == message || "".equals(message)){
     		message = "";
     	}
+    	String path = WebLoginUitls.getPath(request).concat("/home/logout");
         model.addAttribute("code", code);
         model.addAttribute("message", message);
-        model.addAttribute("host", WebLoginUitls.getPath(request));
+        model.addAttribute("host",  WebLoginUitls.getPath(request));
+        model.addAttribute("path", path);
         return WebLoginConstants.PAGE_ERROR_URL;
     }
     
@@ -80,7 +82,7 @@ public class LockController {
     	if(lockCnt == 0){
     		request.getSession().setAttribute("code", ExceptionEnumServiceImpl.USER_STATUS_ERROR.getCode());
     		request.getSession().setAttribute("message",ExceptionEnumServiceImpl.USER_STATUS_ERROR.getMessage());
-        	return  WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_ERROR_CONTROLLER);
+        	return  WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_INFO_CONTROLLER);
     	}
     	String sysLockCnt = PropertiesUtil.getPropery("portal.lock.count");
 		int setLockCnt = Integer.parseInt(sysLockCnt);
@@ -88,11 +90,12 @@ public class LockController {
 		String userId = mp.get("AUD_USER").toString();
 		//通过用户名称查询用户状态falase->0:禁用；true->1：启用
 		Map<String,Object> userMap = sysUserService.isExitUserInfoByUserId(userId);
+		int userCnt = Integer.parseInt(userMap.get("CNT").toString());
 		//用户不存在
-		if(null == userMap || userMap.isEmpty()){
+		if(userCnt == 0){
 			request.getSession().setAttribute("code", ExceptionEnumServiceImpl.NO_THIS_USER.getCode());
 			request.getSession().setAttribute("message",userId + ExceptionEnumServiceImpl.NO_THIS_USER.getMessage());
-			return  WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_ERROR_CONTROLLER);
+			return  WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_INFO_CONTROLLER);
 		}
 		String userState = userMap.get("USER_STATE").toString();
 		//用户禁用
@@ -100,7 +103,7 @@ public class LockController {
 			userId = mp.get("AUD_USER").toString();
 			request.getSession().setAttribute("code", ExceptionEnumServiceImpl.USER_STATUS_LOCKING.getCode());
 			request.getSession().setAttribute("message",userId+ExceptionEnumServiceImpl.USER_STATUS_LOCKING.getMessage());
-			return  WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_ERROR_CONTROLLER);
+			return  WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_INFO_CONTROLLER);
 		}
 		if(remainLockCnt > 0){
 			request.getSession().setAttribute("code", ExceptionEnumServiceImpl.USER_STATUS_WARING.getCode());
@@ -111,7 +114,27 @@ public class LockController {
 			request.getSession().setAttribute("code", ExceptionEnumServiceImpl.USER_STATUS_LOCKING.getCode());
 			request.getSession().setAttribute("message",userId+ExceptionEnumServiceImpl.USER_STATUS_LOCKING.getMessage());
 		}
-		return  WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_ERROR_CONTROLLER);
+		return  WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_INFO_CONTROLLER);
+    }
+    
+    
+    /*
+     * 异常信息返回到页面
+     */
+    @RequestMapping(value = "/info")
+    public String getInfo(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
+    	String code = (String) request.getSession().getAttribute("code");
+    	if(null == code || "".equals(code)){
+    		code = "";
+    	}
+    	String message = (String) request.getSession().getAttribute("message");
+    	if(null == message || "".equals(message)){
+    		message = "";
+    	}
+        model.addAttribute("code", code);
+        model.addAttribute("message", message);
+        model.addAttribute("host",  WebLoginUitls.getPath(request));
+        return WebLoginConstants.PAGE_INFO_URL;
     }
     
 }

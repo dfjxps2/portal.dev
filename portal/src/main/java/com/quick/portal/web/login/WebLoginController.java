@@ -84,7 +84,7 @@ public class WebLoginController {
         if(null !=loginer.getUser_state() && loginer.getUser_state() == WebLoginConstants.DISABLE_USER_STATE){
         	request.setAttribute("code", ExceptionEnumServiceImpl.USER_STATUS_LOCKING.getCode());
         	request.setAttribute("message", loginer.getUser_name()+":"+ExceptionEnumServiceImpl.USER_STATUS_LOCKING.getMessage());
-        	 return WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_ERROR_CONTROLLER);
+        	return WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_ERROR_CONTROLLER);
     	}else{
 	        loginer.setRequestSerial(1);
 	        loginer.saveSession(request, response);

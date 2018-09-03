@@ -10,7 +10,9 @@ package com.quick.portal.web.login;
 public class WebLoginConstants {
 
     public static final String COMMON_ERROR_CONTROLLER = "/lock/error";
+    public static final String COMMON_INFO_CONTROLLER = "/lock/info";
     public static final String PAGE_ERROR_URL = "page/error/error";
+    public static final String PAGE_INFO_URL = "page/error/info";
     public static final String USER_STATUS_WARING_PREFIX = "输错密码次数太多，还可以";
     public static final String USER_STATUS_WARING_SUFFIX = "次尝试后账户将被锁定";
     public static final String FORBIDDEN_USER_STATE = "0";   
