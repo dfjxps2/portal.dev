@@ -178,7 +178,7 @@ $(document).ready(function () {
 
             $('.clockpicker').clockpicker();
 
-            $( '#file-pretty input[type="file"]' ).prettyFile();
+ //           $( '#file-pretty input[type="file"]' ).prettyFile();
 
         });
         var config = {
@@ -203,7 +203,7 @@ $(document).ready(function () {
         $("#ionrange_1").ionRangeSlider({
             min: 0,
             max: 1000,
-            from: 400,
+            from: 300,
             to: 500,
             type: 'double',
             step: 100,

@@ -91,28 +91,32 @@ public class MonitorApiController extends SysApiController {
     }*/
     
     
-    @RequestMapping(value = "/settingUser",produces="application/json;charset=utf-8")
+    @RequestMapping(value = "/settingUser")
   	@ResponseBody
       public DataResult settingUser(String app_id,String page_id) {
     	int aid = Integer.valueOf(app_id);
     	int pid = Integer.valueOf(page_id);
     	String user_id = rstr("u", loginer.getUser_id().toString());
     	String time = rstr("time","").toString();
+    	/*
         List<Map<String, Object>> plist = queryPage(aid);
         if((page_id == null||"".equals(page_id)) && plist != null && plist.size() > 0){
         	pid = (Integer)TypeUtil.parse(Integer.class, plist.get(0).get("page_id"));
         }
         ApplicationDO app = applicationService.selectObj(app_id);
+        */
         List<Map<String, Object>>  restList = sectionService.selectLayoutJsonByApp(pid,Integer.parseInt(user_id),time);
+        /*  
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("urlShow", getmectricUrl());
         map.put("page_id", page_id);
         map.put("app", app);
         map.put("page", plist);
         
-   /*     map.put("app", JsonUtil.serialize(app));
-        map.put("page", JsonUtil.serialize(plist));*/
+        map.put("app", JsonUtil.serialize(app));
+        map.put("page", JsonUtil.serialize(plist));
         restList.add(map);
+        */
         return  new DataResult(restList);
     }
     
