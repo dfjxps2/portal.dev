@@ -341,7 +341,7 @@ public abstract class SysBaseController<T> {
 		if(loginer == null){
 			loginer = new WebLoginUser().loadSession(req, res);
 			if(loginer.getUser_id() == null || loginer.getUser_id() == 0 
-					|| loginer.getRole_id() == null || loginer.getRole_id() == 0){
+					|| loginer.getRole_ids() == null || "0".equals(loginer.getRole_ids())){
 				loginer = loadCASUserInfo(req,res);
 				if(null == loginer){
 					return null;
