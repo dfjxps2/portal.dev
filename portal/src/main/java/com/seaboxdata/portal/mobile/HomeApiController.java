@@ -36,6 +36,7 @@ import com.quick.core.base.model.DataStore;
 import com.quick.core.util.common.JsonUtil;
 import com.quick.core.util.common.QCommon;
 import com.quick.portal.web.home.IHomeService;
+import com.quick.portal.web.login.WebLoginConstants;
 import com.quick.portal.web.model.DataResult;
 
 /**
@@ -177,7 +178,7 @@ public class HomeApiController extends SysApiController {
         String uid = rstr("u", loginer.getUser_id().toString());
         String role_id = rstr("r", loginer.getRole_ids().toString());
         urlMap.put("user_id", uid);
-        urlMap.put("role_id", role_id);
+        urlMap.put("role_id", role_id.replace(WebLoginConstants.OCTOTHORPE_SPECIAL_CHARACTER, WebLoginConstants.COMMA_SPECIAL_CHARACTER));
         List<Map<String, Object>> list = homeService.queryUnSubscribeByApp(urlMap);
         fixUrl(list);
         return new DataResult(list);
@@ -193,7 +194,7 @@ public class HomeApiController extends SysApiController {
         String uid = rstr("u", loginer.getUser_id().toString());
         String role_id = rstr("r", loginer.getRole_ids().toString());
         urlMap.put("user_id", uid);
-        urlMap.put("role_id", role_id);
+        urlMap.put("role_id", role_id.replace(WebLoginConstants.OCTOTHORPE_SPECIAL_CHARACTER, WebLoginConstants.COMMA_SPECIAL_CHARACTER));
 
         List<Map<String, Object>> list = homeService.queryUserAllByApp(urlMap);
         fixUrl(list);

@@ -98,8 +98,8 @@ public class WebLoginUitls {
         String rstate  = "";
         //一个用户多角色
         for (Map<String, Object> m : roles){
-        	rids += "," + m.get("role_id").toString();
-        	rstate += "," + m.get("role_type_id").toString();
+        	rids += WebLoginConstants.OCTOTHORPE_SPECIAL_CHARACTER + m.get("role_id").toString();
+        	rstate += WebLoginConstants.OCTOTHORPE_SPECIAL_CHARACTER + m.get("role_type_id").toString();
         } 
         rids = rids.substring(1);
         user.setRole_ids(rids);
