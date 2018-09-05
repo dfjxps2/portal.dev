@@ -25,8 +25,8 @@ $(function () {
         ],
         yAxis : [
                  {
-                     type : 'value',
-                     axisLine:{show:true,
+                     type : 'value'
+/*                     axisLine:{show:true,
                      lineStyle:{color:'#ccc'}
                      },
                      axisTick:{
@@ -38,7 +38,7 @@ $(function () {
                      },
                      min:0,
                      max:100,
-                     splitNumber:8
+                     splitNumber:8*/
                       
                  }
         ],
