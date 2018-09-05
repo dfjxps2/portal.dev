@@ -202,11 +202,11 @@ $(document).ready(function () {
 
         $("#ionrange_1").ionRangeSlider({
             min: 0,
-            max: 1000,
-            from: 300,
-            to: 500,
-            type: 'double',
-            step: 100,
+            max: 50,
+            from: 23,
+//            to: 23,
+//            type: 'double',
+            step: 10,
             maxPostfix: "+",
             prettify: false,
             hasGrid: true
@@ -214,25 +214,28 @@ $(document).ready(function () {
 
         $("#ionrange_2").ionRangeSlider({
         	 min: 100,
-             max: 5000,
-        	 type: "double",
+             max: 500,
+ //       	 type: "double",
              grid: true,
-             from: 500,
-             to: 2000,
-             step: 500,
+             from: 301,
+//             to: 2000,
+             step: 50,
              maxPostfix: "+",
              prettify: false,
              hasGrid: true
 
         });
+        
+        
+
 
         $("#ionrange_3").ionRangeSlider({
         	 min: 100,
              max: 500,
-        	 type: "double",
+ //       	 type: "double",
              grid: true,
-             from: 200,
-             to: 300,
+             from: 201,
+//             to: 300,
              step: 50,
              maxPostfix: "+",
              prettify: false,
@@ -240,13 +243,13 @@ $(document).ready(function () {
         });
 
         $("#ionrange_4").ionRangeSlider({
-        	min: 10,
-            max: 50,
-       	 	type: "double",
+        	min: 0,
+            max: 10,
+//       	 	type: "double",
             grid: true,
-            from: 20,
-            to: 30,
-            step: 10,
+            from: 2,
+//            to: 30,
+            step: 1,
             maxPostfix: "+",
             prettify: false,
             hasGrid: true

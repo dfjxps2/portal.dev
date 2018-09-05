@@ -184,13 +184,13 @@
   content: "\f000";
 }
 .fa-music:before {
-  content: "\f003";
+/*  content: "\f003";*/
 }
 .fa-search:before {
   content: "\f002";
 }
 .fa-envelope-o:before {
-  content: "\f0c2";
+/*  content: "\f0c2";*/
 }
 .fa-heart:before {
   content: "\f004";
@@ -601,7 +601,7 @@
   content: "\f090";
 }
 .fa-trophy:before {
-  content: "\273f";
+/*  content: "\273f";*/
 }
 .fa-github-square:before {
   content: "\f092";
@@ -707,7 +707,7 @@
   content: "\f0c1";
 }
 .fa-cloud:before {
-  content: "\2638";
+ /* content: "\2638";*/
 }
 .fa-flask:before {
   content: "\f0c3";
@@ -828,6 +828,7 @@
 }
 .fa-sitemap:before {
   content: "\2193";
+  color: #f01a12;
 }
 .fa-umbrella:before {
   content: "\f0e9";
