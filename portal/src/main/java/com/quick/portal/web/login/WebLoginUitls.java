@@ -68,7 +68,7 @@ public class WebLoginUitls {
     public static boolean isAdminRoleType(String rType){
 		boolean bool = false;
 		if (null != rType && !"".equals(rType)) {
-			String[] rTypes = rType.split(",");
+			String[] rTypes = rType.split(WebLoginConstants.OCTOTHORPE_SPECIAL_CHARACTER);
 			for (String type : rTypes) {
 				if (WebLoginConstants.ADMINISTRATOR_ROLE_TYPE.equals(type)
 						|| WebLoginConstants.PORTAL_ROLE_TYPE.equals(type)) {
@@ -98,8 +98,8 @@ public class WebLoginUitls {
         String rstate  = "";
         //一个用户多角色
         for (Map<String, Object> m : roles){
-        	rids += "," + m.get("role_id").toString();
-        	rstate += "," + m.get("role_type_id").toString();
+        	rids += WebLoginConstants.OCTOTHORPE_SPECIAL_CHARACTER + m.get("role_id").toString();
+        	rstate += WebLoginConstants.OCTOTHORPE_SPECIAL_CHARACTER + m.get("role_type_id").toString();
         } 
         rids = rids.substring(1);
         user.setRole_ids(rids);
