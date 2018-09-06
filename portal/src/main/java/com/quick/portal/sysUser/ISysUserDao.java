@@ -69,4 +69,5 @@ public interface ISysUserDao<SysUserDO> extends ISysBaseDao<SysUserDO> {
     void deleteUserRole(String id);
     void addRoleUsers(ArrayList<Object> list);
 
+    List<SysUserDO> getUserInfo(Map<String, Object> m);
 }

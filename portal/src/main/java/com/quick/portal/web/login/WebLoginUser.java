@@ -2,10 +2,15 @@ package com.quick.portal.web.login;
 
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.quick.portal.userRole.UserRoleDO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,57 +40,48 @@ public class WebLoginUser extends SysUserDO {
         this.requestSerial = requestSerial;
     }
 
-    public Integer getRole_id() {
-        return role_id;
+    public WebLoginUser() {
     }
 
-    public void setRole_id(Integer role_id) {
-        this.role_id = role_id;
+    public WebLoginUser(SysUserDO u) {
+        super(u);
     }
-    
-    
-    private String role_ids;
-    
-    private String role_type_ids;
 
     /**
      * 保存系统登录信息至Cookies中
      */
     public WebLoginUser loadSession(HttpServletRequest request, HttpServletResponse response) {
         try {
-            String rid = QCookie.getValue(request, "sbd.role");
-            String ids = QCookie.getValue(request, "ids");
-            String uname = QCookie.getValue(request, "sbd.user");
+            String userRole = QCookie.getValue(request, "sbd.user_role");
+            String userId = QCookie.getValue(request, "sbd.user_id");
+            String userRealName = QCookie.getValue(request, "sbd.user_real_name");
             String gid = QCookie.getValue(request, "sbd.gid");
-            String uid = QCookie.getValue(request, "sbd.uid");
-			String ustate = QCookie.getValue(request, "sbd.ustate");
-			String rtype = QCookie.getValue(request, "sbd.rtype");
-			
+            String uid = QCookie.getValue(request, "sbd.user_name");
+            String userState = QCookie.getValue(request, "sbd.ustate");
 
-            if (!QCommon.isNullOrEmpty(uname))
-                uname = URLDecoder.decode(uname, "utf-8");
-            if (QCommon.isNullOrEmpty(rid))
-                rid = "0";
-            if (QCommon.isNullOrEmpty(ids))
-                ids = "0";
-			if (QCommon.isNullOrEmpty(ustate))
-            	ustate = "0";
-			if (QCommon.isNullOrEmpty(rtype))
-				rtype = "0";
-			 
-            this.setRole_ids(rid);
-            this.setUser_real_name(uname);
-            this.setUser_id(Integer.valueOf(ids));
+
+            if (!QCommon.isNullOrEmpty(userRealName))
+                userRealName = URLDecoder.decode(userRealName, "utf-8");
+            if (QCommon.isNullOrEmpty(userRole))
+                userRole = "";
+            if (QCommon.isNullOrEmpty(userId))
+                userId = "0";
+            if (QCommon.isNullOrEmpty(userState))
+                userState = "0";
+
+            this.setRoleList(this.extractRoleListStr(userRole));
+            this.setUser_real_name(userRealName);
+            this.setUser_id(Integer.valueOf(userId));
             this.setUser_global_id(gid);
             this.setUser_name(uid);
             String requestSerial = QCookie.getValue(request, "request.serial");
             this.setRequestSerial(requestSerial == null ? 0 : Integer.valueOf(requestSerial));
-			this.setUser_state(Integer.valueOf(ustate));
-			this.setRole_type_ids(rtype);
+            this.setUser_state(Integer.valueOf(userState));
         } catch (Exception e) {
-            System.out.print("无法缓存用户会话信息");
+            System.out.print("无法从会话中读取用户信息");
             e.printStackTrace();
         }
+
         return this;
     }
 
@@ -94,25 +90,22 @@ public class WebLoginUser extends SysUserDO {
      */
     public WebLoginUser saveSession(HttpServletRequest request, HttpServletResponse response) {
         try {
-            QCookie.set(response, "ids", this.getUser_id().toString()); //浏览器关闭就过期
             String userNm = "";
-            if(null ==this.getUser_real_name() || this.getUser_real_name().equals("")){
-            	userNm = userNm;
-            }else{
-            	userNm = URLEncoder.encode(this.getUser_real_name(), "utf-8");
+            if (null != this.getUser_real_name() && !this.getUser_real_name().equals("")) {
+                userNm = URLEncoder.encode(this.getUser_real_name(), "utf-8");
             }
 
             int cookieTTL = Integer.valueOf(PropertiesUtil.getPropery("portal.session.timeout"));
             logger.debug("Set portal session  timeout to {} seconds.", cookieTTL);
 
-            QCookie.set(response, "sbd.user", userNm, cookieTTL);
-            QCookie.set(response, "sbd.uid", this.getUser_name(), cookieTTL);
-            QCookie.set(response, "sbd.role", this.getRole_ids(), cookieTTL);
+            QCookie.set(response, "sbd.user_id", this.getUser_id().toString()); //浏览器关闭就过期
+            QCookie.set(response, "sbd.user_real_name", userNm, cookieTTL);
+            QCookie.set(response, "sbd.user_name", this.getUser_name(), cookieTTL);
+            QCookie.set(response, "sbd.user_role", this.constructRoleListStr(), cookieTTL);
             QCookie.set(response, "sbd.tk", this.createToken(request), cookieTTL); //验证参数是否被修改
             QCookie.set(response, "sbd.gid", this.getUser_global_id(), cookieTTL);
             QCookie.set(response, "request.serial", String.valueOf(this.requestSerial), cookieTTL);
-			QCookie.set(response, "sbd.ustate", String.valueOf(this.getUser_state()),cookieTTL);
-			QCookie.set(response, "sbd.rtype", this.getRole_type_ids(),cookieTTL);
+            QCookie.set(response, "sbd.ustate", String.valueOf(this.getUser_state()), cookieTTL);
 
         } catch (Exception e) {
             System.out.print("无法缓存用户会话信息");
@@ -125,23 +118,25 @@ public class WebLoginUser extends SysUserDO {
         String seek = request.getHeader("User-Agent")
                 + request.getRemoteAddr()
                 + KEY
-                + this.getUser_id() + "," + this.getRole_id();
+                + this.getUser_id();
         return QCommon.toMD5(seek);
     }
 
-	public String getRole_ids() {
-		return role_ids;
-	}
+    public String constructRoleListStr() {
+        return getRoleList().stream()
+                .map((r) -> r.getRole_id().toString() + ":" + r.getRole_type_id().toString())
+                .reduce("", (r1, r2) -> r1 + "#" + r2);
+    }
 
-	public void setRole_ids(String role_ids) {
-		this.role_ids = role_ids;
-	}
-
-	public String getRole_type_ids() {
-		return role_type_ids;
-	}
-
-	public void setRole_type_ids(String role_type_ids) {
-		this.role_type_ids = role_type_ids;
-	}
+    public List<UserRoleDO> extractRoleListStr(String roleListStr) {
+        return Arrays.stream(roleListStr.split("#"))
+                .filter((s) -> s.length() > 0)
+                .map((s) -> {
+                    String[] a = s.split(":");
+                    UserRoleDO roleDO = new UserRoleDO();
+                    roleDO.setRole_id(Integer.valueOf(a[0]));
+                    roleDO.setRole_type_id(Integer.valueOf(a[1]));
+                    return roleDO;
+                }).collect(Collectors.toList());
+    }
 }

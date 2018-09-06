@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 public class LoginFilter extends HttpServlet implements Filter {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final static String COOKIE_ROLE_ID = "sbd.role";
+    private final static String COOKIE_ROLE_ID = "sbd.user_role";
 
     private final static ArrayList<String> prefixIgnores = new ArrayList<>();
 

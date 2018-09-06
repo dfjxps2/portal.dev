@@ -44,7 +44,7 @@ public abstract class SysBaseService<T> implements ISysBaseService<T> {
     public String NameKey = "";
     public DataStore ActionMsg;
     
-    private ISysBaseDao baseDao;
+    private ISysBaseDao<T> baseDao;
     private Class<T> entityClass;
     
     public SysBaseService(){
@@ -55,12 +55,12 @@ public abstract class SysBaseService<T> implements ISysBaseService<T> {
     @Resource(name = "sqlDao")
     private SysSqlDao sqlDao;
 
-    public void setDao(ISysBaseDao dao){
+    public void setDao(ISysBaseDao<T> dao){
         this.baseDao = dao;
     }
     
     @Override
-    public ISysBaseDao getDao(){
+    public ISysBaseDao<T> getDao(){
         return baseDao;
     }
     
@@ -96,8 +96,14 @@ public abstract class SysBaseService<T> implements ISysBaseService<T> {
             ReflectUtil.trySetValue(entity, "upd_time", DateTime.Now().getTime(), entityClass);
             c = getDao().update(entity);
         }
-        if(c == 0)
-            return ActionMsg.setError("操作失败");
+
+        if(c == 0) {
+            int error = Integer.valueOf(
+                    ReflectUtil.getValue(entity, "error_no", entityClass).toString());
+            if (error == 0)
+                return ActionMsg.setError("操作失败");
+        }
+
         ActionMsg.setValue(entity);
         return ActionMsg.setOk("操作成功");
     }

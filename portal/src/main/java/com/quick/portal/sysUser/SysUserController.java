@@ -52,6 +52,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -152,56 +153,12 @@ public class SysUserController extends SysBaseController<SysUserDO> {
 
    //添加用户
     @RequestMapping(value = "/addUser")
-    public void addUsrDetail(Model model, SysUserDO usrDetail, String user_name,  HttpServletResponse res) throws IOException {
-        res.setContentType("text/html");
-        res.setCharacterEncoding("utf-8");
-        JSONArray json = new JSONArray();
-        Date date= Calendar.getInstance().getTime();//当前添加时间
-        SysUserDO sysUserDO = null;
-        sysUserDO = new SysUserDO();
-        if(usrDetail.getUser_state() != null && !usrDetail.getUser_state().equals ("undefined") && !"null".equals(usrDetail.getUser_real_name())){
-            sysUserDO.setUser_state(usrDetail.getUser_state());;//角色状态
-        }
-        if(usrDetail.getUser_real_name() != null && !usrDetail.getUser_real_name().equals ("undefined") && !"null".equals(usrDetail.getDep_id())){
-            sysUserDO.setUser_real_name(usrDetail.getUser_real_name());//真实名称
-        }
-
-        if(usrDetail.getDep_id() != null && !usrDetail.getDep_id().equals ("undefined") && !"null".equals(usrDetail.getDep_id())){
-            sysUserDO.setDep_id(usrDetail.getDep_id());//部门名称
-        }
-        if(usrDetail.getJob_id() != null && !usrDetail.getJob_id().equals ("undefined") && !"null".equals(usrDetail.getJob_id())){
-            sysUserDO.setJob_id(usrDetail.getJob_id());//岗位名称
-        }
-        if (!usrDetail.getUser_addr().equals("")&& !usrDetail.getUser_addr().equals ("undefined") && !"null".equals(usrDetail.getUser_addr())){
-            sysUserDO.setUser_addr(usrDetail.getUser_addr());;//地址
-        }
-        if (!usrDetail.getUser_tel().equals("")&& !usrDetail.getUser_tel().equals ("undefined") && !"null".equals(usrDetail.getUser_tel())){
-            sysUserDO.setUser_tel(usrDetail.getUser_tel());;//电话
-        }
+    @ResponseBody
+    public DataStore addUsrDetail(@RequestBody SysUserDO usrDetail) {
         String password = "21232f297a57a5a743894a0e4a801fc3";
-        sysUserDO.setUser_password(password);
-        sysUserDO.setCre_time(date);
-        sysUserDO.setUpd_time(date);
-        sysUserDO.setUser_name(usrDetail.getUser_name());
-        iSysUserDao.insert(sysUserDO);
+        usrDetail.setUser_password(password);
 
-        //将角色和用户关系放入user_role_rela中
-        UserRoleRelaDO userRoleRelaDO = new UserRoleRelaDO();
-        if(usrDetail.getRole_id() != null && !usrDetail.getRole_id().equals ("undefined") && !"null".equals(usrDetail.getRole_id())){
-            userRoleRelaDO.setRole_id(usrDetail.getRole_id());//角色ID
-        }
-        userRoleRelaDO.setCre_time(date);
-        userRoleRelaDO.setUpd_time(null);
-        String roleid = iSysUserDao.selectUserId();
-        userRoleRelaDO.setUser_id(Integer.parseInt(roleid));
-        iUserRoleRelaDao.insert(userRoleRelaDO);
-         sysUserDO = new SysUserDO();
-         sysUserDO.setUser_id(Integer.parseInt(roleid));
-         sysUserDO.setDep_id(usrDetail.getDep_id());
-         iSysUserDao.insertUserDepRela(sysUserDO);
-        json.put("1");
-        res.getWriter().write(json.toString());
-
+        return sysUserService.save(usrDetail);
     }
 
      //修改密码
@@ -212,7 +169,7 @@ public class SysUserController extends SysBaseController<SysUserDO> {
          try{
              res.setContentType("text/html");
              res.setCharacterEncoding("utf-8");
-             Integer user_id = Integer.parseInt(QCookie.getValue(request,"ids")) ;
+             Integer user_id = Integer.parseInt(QCookie.getValue(request,"sbd.user_id")) ;
 //             PortalPasswordEncoder passwordEncoder = new PortalPasswordEncoder("MD5","");
 //             String password = passwordEncoder.encode(newPw);
              sysUserDO.setUser_password(new_password);
@@ -232,7 +189,7 @@ public class SysUserController extends SysBaseController<SysUserDO> {
 //        PortalPasswordEncoder passwordEncoder = new PortalPasswordEncoder("MD5","");
 //        String oldps = passwordEncoder.encode(oldPw);
         map.put("user_password",user_old_pw);
-        Integer user_id = Integer.parseInt(QCookie.getValue(request,"ids")) ;
+        Integer user_id = Integer.parseInt(QCookie.getValue(request,"sbd.user_id")) ;
         map.put("user_id",user_id);
         List<Map<String,Object>> result = sysUserService.select(map);
         if(result.size()!= 0){

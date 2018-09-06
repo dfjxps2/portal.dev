@@ -175,9 +175,7 @@ public class HomeApiController extends SysApiController {
     @ResponseBody
     public DataResult getApp(HttpServletRequest request,HttpServletResponse response){
         String uid = rstr("u", loginer.getUser_id().toString());
-        String role_id = rstr("r", loginer.getRole_id().toString());
         urlMap.put("user_id", uid);
-        urlMap.put("role_id", role_id);
         List<Map<String, Object>> list = homeService.queryUnSubscribeByApp(urlMap);
         fixUrl(list);
         return new DataResult(list);
@@ -191,9 +189,7 @@ public class HomeApiController extends SysApiController {
     @ResponseBody
     public DataResult getAllApp(){
         String uid = rstr("u", loginer.getUser_id().toString());
-        String role_id = rstr("r", loginer.getRole_id().toString());
         urlMap.put("user_id", uid);
-        urlMap.put("role_id", role_id);
 
         List<Map<String, Object>> list = homeService.queryUserAllByApp(urlMap);
         fixUrl(list);

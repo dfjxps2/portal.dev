@@ -19,8 +19,12 @@
 package com.quick.portal.sysUser;
 
 import com.quick.core.base.model.PageBounds;
+import com.quick.portal.userDepartment.UserDepartmentDO;
+import com.quick.portal.userRole.UserRoleDO;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -29,7 +33,23 @@ import java.util.Date;
 public class SysUserDO  implements java.io.Serializable {
 	
     private static final long serialVersionUID = 1L;
-	
+
+    public SysUserDO(){}
+
+    public SysUserDO(SysUserDO u){
+        setUser_id(u.getUser_id());
+        setUser_name(u.getUser_name());
+        setUser_real_name(u.getUser_real_name());
+        setJob_id(u.getJob_id());
+        setUser_state(u.getUser_state());
+        setUser_addr(u.getUser_addr());
+        setUser_tel(u.getUser_tel());
+        setUser_global_id(u.getUser_global_id());
+        setCre_time(u.getCre_time());
+        setUpd_time(u.getUpd_time());
+        setRoleList(u.getRoleList());
+        setDepList(u.getDepList());
+    }
     // <editor-fold defaultstate="collapsed" desc="私有成员">
     /**
      *用户ID
@@ -85,6 +105,8 @@ public class SysUserDO  implements java.io.Serializable {
      */
     private  String dep_name;
 
+    private Integer job_level;
+
     /**
      * 用户-部门关系id
      * @return
@@ -103,9 +125,45 @@ public class SysUserDO  implements java.io.Serializable {
   
   	private Integer role_type_id;
 
+    private String job_name;
+
+    private Integer role_id;
+
+    private  String roles;
+
+    private List<UserRoleDO> roleList;
+    private List<UserDepartmentDO> depList;
+
+    public List<UserRoleDO> getRoleList() {
+        return roleList;
+    }
+
+    public void setRoleList(List<UserRoleDO> roleList) {
+        this.roleList = roleList;
+    }
+
+    public List<UserDepartmentDO> getDepList() {
+        return depList;
+    }
+
+    public void setDepList(List<UserDepartmentDO> depList) {
+        this.depList = depList;
+    }
+
+    private int error_no;
+
+    public int getError_no() {
+        return error_no;
+    }
+
+    public void setError_no(int error_no) {
+        this.error_no = error_no;
+    }
+
     public Integer getRela_id() {
         return rela_id;
     }
+
 
     public void setRela_id(Integer rela_id) {
         this.rela_id = rela_id;
@@ -135,17 +193,14 @@ public class SysUserDO  implements java.io.Serializable {
         this.job_name = job_name;
     }
 
-    private String job_name;
 
-    private Integer role_id;
-
-    public Integer getRole_id() {
-        return role_id;
-    }
-
-    public void setRole_id(Integer role_id) {
-        this.role_id = role_id;
-    }
+//    public Integer getRole_id() {
+//        return role_id;
+//    }
+//
+//    public void setRole_id(Integer role_id) {
+//        this.role_id = role_id;
+//    }
 
     public Integer getRole_oid() {
         return role_oid;
@@ -162,8 +217,6 @@ public class SysUserDO  implements java.io.Serializable {
     public void setRole_oid(Integer role_oid) {
         this.role_oid = role_oid;
     }
-
-    private  String roles;
 
     public String getRoles() {
         return roles;
@@ -365,5 +418,14 @@ public class SysUserDO  implements java.io.Serializable {
 	public void setRole_type_id(Integer role_type_id) {
 		this.role_type_id = role_type_id;
 	}
+
+    public Integer getJob_level() {
+        return job_level;
+    }
+
+    public void setJob_level(Integer job_level) {
+        this.job_level = job_level;
+    }
+
 
 }

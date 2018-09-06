@@ -19,6 +19,7 @@
 package com.quick.portal.web.home;
 
 import com.quick.core.base.ISysBaseDao;
+import com.quick.portal.application.ApplicationDO;
 
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,7 @@ import java.util.Map;
 /**
  * application数据访问接口
  */
-public interface IHomeDao<ApplicationDO> extends ISysBaseDao<ApplicationDO> {
+public interface IHomeDao extends ISysBaseDao<ApplicationDO> {
 
     /**
      * 查询用户所有应用

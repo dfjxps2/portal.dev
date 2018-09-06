@@ -104,7 +104,7 @@ public class PageController extends SysBaseController<PageDO> {
     @Override
     public DataStore save(PageDO model){
     	//获取当前用户id
-    	 String user_id = QCookie.getValue(request, "ids");
+    	 String user_id = QCookie.getValue(request, "sbd.user_id");
         Integer app_id = rint("app_id");
         Integer page_id = model.getPage_id();
         if(page_id == null){

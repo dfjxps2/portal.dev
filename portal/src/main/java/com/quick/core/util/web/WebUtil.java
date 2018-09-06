@@ -23,7 +23,7 @@ public class WebUtil {
 		Cookie[]cookies = request.getCookies();
 		if (cookies!=null) {
 			for (Cookie cookie : cookies) {
-				if (cookie.getName().equals("ids")) {
+				if (cookie.getName().equals("sbd.user_id")) {
 					usrid = cookie.getValue();
 				}
 			}

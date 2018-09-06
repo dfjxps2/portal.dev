@@ -75,7 +75,7 @@ public class SecMetricConfigController extends SysBaseController<SecMetricConfig
     @ResponseBody
     public Object getData(String json) {
         //用户ID
-        String userId = QCookie.getValue(request, "ids");//获取当前用户id
+        String userId = QCookie.getValue(request, "sbd.user_id");//获取当前用户id
         String str = "[]";
         if (json == null)
         json = "data";
@@ -161,7 +161,7 @@ public class SecMetricConfigController extends SysBaseController<SecMetricConfig
     @RequestMapping(value = "/use")    //启用指标配置
     @ResponseBody
     public Object use() throws Exception {
-        String userId = QCookie.getValue(request, "ids");//获取当前用户id
+        String userId = QCookie.getValue(request, "sbd.user_id");//获取当前用户id
 
         int term_type_id = 0;//获取终端设备类型id  0 电脑 1手机 2 pad 9 全部
        String is_active=request.getParameter("is_active");
@@ -191,7 +191,7 @@ public class SecMetricConfigController extends SysBaseController<SecMetricConfig
     @ResponseBody
     public Object updateVerNa() throws Exception {
         Map<String, Object> queryMap = getQueryMap(request);
-        String userId = QCookie.getValue(request, "ids");//获取当前用户id
+        String userId = QCookie.getValue(request, "sbd.user_id");//获取当前用户id
         int user_id=Integer.parseInt(userId);
         int term_type_id = 0;//获取终端设备类型id  0 电脑 1手机 2 pad 9 全部
         queryMap.put("user_id",user_id);

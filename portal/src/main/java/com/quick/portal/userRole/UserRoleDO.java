@@ -27,7 +27,7 @@ import java.util.Date;
 public class UserRoleDO implements java.io.Serializable {
 	
     private static final long serialVersionUID = 1L;
-	
+
     // <editor-fold defaultstate="collapsed" desc="私有成员">
     /**
      *用户角色ID
@@ -50,7 +50,8 @@ public class UserRoleDO implements java.io.Serializable {
      */
     private Date  upd_time;   	
 	// </editor-fold>
-    
+
+    private Integer role_type_id;
     // <editor-fold defaultstate="collapsed" desc="成员Get/Set">
     /**
      * 用户角色ID  Get方法
@@ -123,4 +124,13 @@ public class UserRoleDO implements java.io.Serializable {
         this.upd_time = upd_time;
     }
     // </editor-fold>
+
+
+    public Integer getRole_type_id() {
+        return role_type_id;
+    }
+
+    public void setRole_type_id(Integer role_type_id) {
+        this.role_type_id = role_type_id;
+    }
 }

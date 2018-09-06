@@ -38,7 +38,8 @@
 	</sql>
 
 	<!-- 新增sys_user -->
-	<insert id="insert" parameterType="com.quick.portal.sysUser.SysUserDO">
+	<insert id="insert" parameterType="com.quick.portal.sysUser.SysUserDO" statementType="CALLABLE">
+	<!--
 		insert into sys_user (
     		  user_name,
     		  user_password,
@@ -59,7 +60,21 @@
 			 #{user_tel},
 			 #{cre_time},
 			 #{upd_time}
-			)
+		);
+	-->
+		{CALL CREATE_PORTAL_USER(
+			#{user_name, mode=IN},
+			#{user_password, mode=IN},
+			#{user_real_name, mode=IN},
+			#{user_state, mode=IN},
+			#{job_id, mode=IN},
+			#{user_addr, mode=IN},
+			#{user_tel, mode=IN},
+			#{user_global_id, mode=IN},
+			#{roleList[0].role_id, mode=IN},
+			#{depList[0].dep_id, mode=IN},
+			#{error_no, jdbcType=INTEGER, mode=OUT}
+		)}
 	</insert>
 
 	<!--删除用户的角色-->
@@ -268,6 +283,90 @@
 			SELECT USER_STATE, COUNT(1) AS CNT FROM SYS_USER WHERE USER_NAME=#{userName}
 		]]>
 	</select>
-	
+
+	<select id="getUserInfo" parameterType="map" resultMap="userInfoMap">
+        select u.*,
+            r.role_id, r.role_name, r.role_type_id, r.role_state
+            ,d.dep_id, d.super_dep_id, d.dep_name, d.dep_level, d.dep_state, d.dep_global_id, d.sup_dep_global_id
+          ,j.job_name, j.job_level
+        from sys_user u
+            ,user_role_rela ur_rel
+            ,user_role r
+            ,user_dep_rela ud_rel
+            ,user_department d
+            ,user_job j
+        where
+            u.user_id = ur_rel.user_id
+        and r.role_id = ur_rel.role_id
+        and u.user_id = ud_rel.user_id
+        and d.dep_id = ud_rel.dep_id
+        and u.job_id = j.job_id
+        <if test="user_id != null and user_id != ''"><![CDATA[
+	       and u.user_id = #{user_id}
+	    ]]></if>
+        <if test="user_name != null and user_name != ''"><![CDATA[
+	       and u.user_name = #{user_name}
+	    ]]></if>
+    </select>
+
+	<!--<resultMap id="userInfoMap" type="com.quick.portal.sysUser.SysUserDO">-->
+        <!--<id property="user_id" column="user_id"/>-->
+        <!--<result property="user_name" column="user_name"/>-->
+        <!--<result property="user_real_name" column="user_real_name"/>-->
+        <!--<result property="user_state" column="user_state"/>-->
+        <!--<result property="job_id" column="job_id"/>-->
+        <!--<result property="user_addr" column="user_addr"/>-->
+        <!--<result property="user_tel" column="user_tel"/>-->
+        <!--<result property="user_global_id" column="user_global_id"/>-->
+        <!--<result property="cre_time" column="cre_time"/>-->
+        <!--<result property="upd_time" column="upd_time"/>-->
+        <!--<result property="job_name" column="job_name"/>-->
+        <!--<result property="job_level" column="job_level"/>-->
+        <!--<collection property="roleList" ofType="map" >-->
+            <!--<id property="role_id" column="role_id"/>-->
+            <!--<result property="role_name" column="role_name"/>-->
+            <!--<result property="role_type_id" column="role_type_id"/>-->
+            <!--<result property="role_state" column="role_state"/>-->
+        <!--</collection>-->
+        <!--<collection property="depList" ofType="map">-->
+            <!--<id property="dep_id" column="dep_id"/>-->
+            <!--<result property="dep_name" column="dep_name"/>-->
+            <!--<result property="super_dep_id" column="super_dep_id"/>-->
+            <!--<result property="dep_level" column="dep_level"/>-->
+            <!--<result property="dep_state" column="dep_state"/>-->
+            <!--<result property="dep_global_id" column="dep_global_id"/>-->
+            <!--<result property="sup_dep_global_id" column="sup_dep_global_id"/>-->
+        <!--</collection>-->
+    <!--</resultMap>-->
+
+	<resultMap id="userInfoMap" type="com.quick.portal.sysUser.SysUserDO">
+		<id property="user_id" column="user_id"/>
+		<result property="user_name" column="user_name"/>
+		<result property="user_real_name" column="user_real_name"/>
+		<result property="user_state" column="user_state"/>
+		<result property="job_id" column="job_id"/>
+		<result property="user_addr" column="user_addr"/>
+		<result property="user_tel" column="user_tel"/>
+		<result property="user_global_id" column="user_global_id"/>
+		<result property="cre_time" column="cre_time"/>
+		<result property="upd_time" column="upd_time"/>
+		<result property="job_name" column="job_name"/>
+		<result property="job_level" column="job_level"/>
+		<collection property="roleList" ofType="com.quick.portal.userRole.UserRoleDO">
+			<id property="role_id" column="role_id"/>
+			<result property="role_name" column="role_name"/>
+			<result property="role_type_id" column="role_type_id"/>
+			<result property="role_state" column="role_state"/>
+		</collection>
+		<collection property="depList" ofType="com.quick.portal.userDepartment.UserDepartmentDO">
+			<id property="dep_id" column="dep_id"/>
+			<result property="dep_name" column="dep_name"/>
+			<result property="super_dep_id" column="super_dep_id"/>
+			<result property="dep_level" column="dep_level"/>
+			<result property="dep_state" column="dep_state"/>
+			<result property="dep_global_id" column="dep_global_id"/>
+			<result property="sup_dep_global_id" column="sup_dep_global_id"/>
+		</collection>
+	</resultMap>
 
 </mapper>

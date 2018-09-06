@@ -1,20 +1,3 @@
-/**
- * <h3>标题 : Quick通用系统框架 </h3>
- * <h3>描述 : 应用中的相关配置信息都放在此</h3>
- * <h3>日期 : 2014-03-23</h3>
- * <h3>版权 : Copyright (C) 海口鑫网计算机网络有限公司</h3>
- *
- * <p>
- * @author admin admin@xinwing.com.cn
- * @version <b>v1.0.0</b>
- *
- * <b>修改历史:</b>
- * ------------------------------------------- 修改人 修改日期 修改描述
- * -------------------------------------------
- *
- *
- * </p>
- */
 package com.quick.portal.web.mainframe;
 
 import java.util.HashMap;
@@ -54,142 +37,137 @@ import com.quick.portal.web.login.WebLoginUser;
 @Controller
 @Scope("prototype")
 
-public class MainFrameController extends SysBaseController<MainFrameBean>{
+public class MainFrameController extends SysBaseController<MainFrameBean> {
 
-    
+
     @Resource(name = "mainFrameService")
     private MainFrameService mainFrameService;
-    
-    @Resource(name = "userRoleRelaService")
-    private IUserRoleRelaService userRoleRelaService;
-    
+
     @Override
-    public ISysBaseService getBaseService(){
+    public ISysBaseService getBaseService() {
         return mainFrameService;
     }
-    
+
     @Resource(name = "userAccessLogService")
     private IUserAccessLogService userAccessLogService;
-    
+
     @Resource(name = "sysMenuService")
     private ISysMenuService sysMenuService;
-    
-    @Resource(name = "sysUserService")
-    private ISysUserService sysUserService;
-    
-    
+
     /*
      * 查询菜单权限
-     * 
+     *
      */
-    @RequestMapping(value = "/mainframe" )
-    public String goMainFrame(HttpServletRequest request, HttpServletResponse response,Model model) throws Exception {
-    	String jsonStr = "false";
+    @RequestMapping(value = "/mainframe")
+    public String goMainFrame(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+        String jsonStr = "false";
         //根据cookie拿到当前用户的id
-        String userId = QCookie.getValue(request, "ids");
-        String rid = QCookie.getValue(request, "sbd.role");
-        if(WebLoginConstants.PORTAL_ZORE_VAL.equals(userId) || null == userId || WebLoginConstants.PORTAL_ZORE_VAL.equals(rid) || null == rid){
-        	WebLoginUser loginer = loadCASUserInfo(request,response);
-        	userId = loginer.getUser_id().toString();
-        }
-        try{
-        	 //权限菜单
+        String userId = QCookie.getValue(request, "sbd.user_id");
+        String rid = QCookie.getValue(request, "sbd.user_role");
+
+        try {
+            //权限菜单
             List<MainFrameBean> menuList = mainFrameService.searchMainFrame(userId);
-            if(null != menuList && menuList.size()> 0){
-            	  MainFrameBean menuTree = this.convertListToTree(menuList);
-                  jsonStr = JsonUtil.toJson(menuTree.getChildren());
-            }else{
-            	request.getSession().setAttribute("code", ExceptionEnumServiceImpl.USER_RESOURCE_NULL.getCode());
-            	request.getSession().setAttribute("message",ExceptionEnumServiceImpl.USER_RESOURCE_NULL.getMessage());
-            	return WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_ERROR_CONTROLLER);
+            if (null != menuList && menuList.size() > 0) {
+                MainFrameBean menuTree = this.convertListToTree(menuList);
+                jsonStr = JsonUtil.toJson(menuTree.getChildren());
+            } else {
+                request.getSession().setAttribute("code", ExceptionEnumServiceImpl.USER_RESOURCE_NULL.getCode());
+                request.getSession().setAttribute("message", ExceptionEnumServiceImpl.USER_RESOURCE_NULL.getMessage());
+                return WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_ERROR_CONTROLLER);
             }
             model.addAttribute("data", jsonStr);
-        } catch (Exception e){
-        	request.setAttribute("code", ExceptionEnumServiceImpl.NO_PERMITION.getCode());
-        	request.setAttribute("message",ExceptionEnumServiceImpl.NO_PERMITION.getMessage()+"ERROR:="+e.getMessage());
-        	 return WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_ERROR_CONTROLLER);
+        } catch (Exception e) {
+            request.setAttribute("code", ExceptionEnumServiceImpl.NO_PERMITION.getCode());
+            request.setAttribute("message", ExceptionEnumServiceImpl.NO_PERMITION.getMessage() + "ERROR:=" + e.getMessage());
+            return WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_ERROR_CONTROLLER);
         }
         return "page/index/mainframe";
     }
-    
 
-    
+
     /*
      * 菜单数据至拼装
-     * 
+     *
      */
     private MainFrameBean convertListToTree(List<MainFrameBean> menuList) {
-		if (menuList == null || menuList.size() <= 0){
-			return new MainFrameBean();
-		}
-		MainFrameBean frameCol = null;
-		int depth = 0;
-		for (MainFrameBean mfrBean : menuList) {
-			//二级及以下菜单
-			if (mfrBean.getSuperMenuId()==0) {
-				frameCol = mfrBean;
-				frameCol.setParent(true);
-				frameCol.setDepth(depth);
-				break;
-			}
-		}
-		frameCol.buildChildren(menuList);
-		return frameCol;
-	}
-    
-    
+        if (menuList == null || menuList.size() <= 0) {
+            return new MainFrameBean();
+        }
+        MainFrameBean frameCol = null;
+        int depth = 0;
+        for (MainFrameBean mfrBean : menuList) {
+            //二级及以下菜单
+            if (mfrBean.getSuperMenuId() == 0) {
+                frameCol = mfrBean;
+                frameCol.setParent(true);
+                frameCol.setDepth(depth);
+                break;
+            }
+        }
+        frameCol.buildChildren(menuList);
+        return frameCol;
+    }
+
+
     /*
      * 查询菜单权限
-     * 
+     *
      */
-    @RequestMapping(value = "/goIframe" )
+    @RequestMapping(value = "/goIframe")
     public String goIframe(HttpServletRequest request, Model model) throws Exception {
         return "page/index/i2";
     }
-    
-    
+
+
     //添加用户
     @RequestMapping(value = "/sendLog")
     @ResponseBody
-    public void sendLog(HttpServletRequest request, int menuId,String menuNm) throws Exception {
-    	//记录日志
-    	try{
-    		 userAccessLogService.saveLog(request, UserAccessLogConstants.SYS_LOG_TYPE_ID, UserAccessLogConstants.OPER_MENU_USER_OP_TYPE,menuId,UserAccessLogConstants.OPER_MENU_USER_OP_DESC.concat(menuNm),null,"");
-    	}catch(Exception e){
-    		throw new Exception("记录日志异常："+e.getMessage());
-    	}
+    public void sendLog(HttpServletRequest request, int menuId, String menuNm) throws Exception {
+        //记录日志
+        try {
+            userAccessLogService.saveLog(request,
+                    UserAccessLogConstants.SYS_LOG_TYPE_ID,
+                    UserAccessLogConstants.OPER_MENU_USER_OP_TYPE,
+                    menuId,
+                    UserAccessLogConstants.OPER_MENU_USER_OP_DESC.concat(menuNm),
+                    null,
+                    "");
+        } catch (Exception e) {
+            throw new Exception("记录日志异常：" + e.getMessage());
+        }
     }
-    
+
     //APP:1;MENU:0
     @RequestMapping(value = "/getIsAppMenuByID")
     @ResponseBody
-    public void getIsAppMenuByID(HttpServletRequest req,HttpServletResponse res,int menuId) throws Exception {
-    	String	flag = sysMenuService.getIsAppMenuByID(menuId);
+    public void getIsAppMenuByID(HttpServletRequest req, HttpServletResponse res, int menuId) throws Exception {
+        String flag = sysMenuService.getIsAppMenuByID(menuId);
         res.getWriter().write(flag);
     }
-    
-    
-    public WebLoginUser loadCASUserInfo(HttpServletRequest request,HttpServletResponse response){
-    	 String account = null;
-    	 List<CommonProfile> profiles = WebLoginUitls.getProfiles(request, response);
-    	 for(CommonProfile profile : profiles){
-    		 account =  profile.getId();
-    	 }
-		if (null !=account && !"".equals(account)) {
-			Map<String, Object> parm = new HashMap<>();
-			parm.put("user_name", account);
-			Map<String, Object> u = sysUserService.selectMap(parm);
-			if(null == u || u.isEmpty()){
-				return null;
-			}
-			parm.put("user_id", u.get("user_id"));
-            List<Map<String, Object>> roles = userRoleRelaService.select(parm);
-            WebLoginUser user = WebLoginUitls.getLoginUser(u, roles);
-			user.saveSession(request, response);//保存至本地
-			return user;
-		}
-        
-		return null;
-	}
-    
+
+
+//    public WebLoginUser loadPortalUserInfo(HttpServletRequest request, HttpServletResponse response){
+//    	 String account = null;
+//    	 List<CommonProfile> profiles = WebLoginUitls.getProfiles(request, response);
+//    	 for(CommonProfile profile : profiles){
+//    		 account =  profile.getId();
+//    	 }
+//		if (null !=account && !"".equals(account)) {
+//			Map<String, Object> parm = new HashMap<>();
+//			parm.put("user_name", account);
+//			Map<String, Object> u = sysUserService.selectMap(parm);
+//			if(null == u || u.isEmpty()){
+//				return null;
+//			}
+//			parm.put("user_id", u.get("user_id"));
+//            List<Map<String, Object>> roles = userRoleRelaService.select(parm);
+//            WebLoginUser user = WebLoginUitls.getLoginUser(u, roles);
+//			user.saveSession(request, response);//保存至本地
+//			return user;
+//		}
+//
+//		return null;
+//	}
+
 }

@@ -69,7 +69,7 @@ public class InfoMngController extends SysBaseController<InfoMngDO> {
 	    //页面请求
 	    @RequestMapping
 	    public String list(ModelMap model) {
-	    	String ids = QCookie.getValue(request, "ids");
+	    	String ids = QCookie.getValue(request, "sbd.user_id");
 	    	String habitInfo = infoMngService.getPersonalHabitsInfo(ids);
 	    	model.addAttribute("data", habitInfo);
 	        return view();
@@ -105,7 +105,7 @@ public class InfoMngController extends SysBaseController<InfoMngDO> {
 				int pageNo = QRequest.getInteger(request, "page", 1); // 获取datagrid传来的页码
 				PageBounds pager = new PageBounds(pageNo, pageSize);
 				//当前用户编号
-				String ids = QCookie.getValue(request, "ids");
+				String ids = QCookie.getValue(request, "sbd.user_id");
 				List retList = infoMngService.getSolrInfo(queryMap, pager,ids,type,"");
 				if(null !=retList && retList.size()>0){
 					dt = (List)retList.get(1);
@@ -158,7 +158,7 @@ public class InfoMngController extends SysBaseController<InfoMngDO> {
 				}
 				filePath = URLDecoder.decode(filePath,
 						MetricPrivilegeConstants.LANGUAGE_CODE_UTF);
-				String ids = QCookie.getValue(request, "ids");
+				String ids = QCookie.getValue(request, "sbd.user_id");
 				infoMngService.saveVisitInfo(filePath, Integer.parseInt(type),
 					Integer.parseInt(ids));
 				//消息：2，有内容附件和上传附件
@@ -192,7 +192,7 @@ public class InfoMngController extends SysBaseController<InfoMngDO> {
 	    @RequestMapping(value = "/getPersonalHabitsInfo")
 		public void getPersonalHabitsInfo(HttpServletRequest request,
 				HttpServletResponse response) throws Exception {
-	    	 String userID = QCookie.getValue(request, "ids");
+	    	 String userID = QCookie.getValue(request, "sbd.user_id");
 	    	 String json = infoMngService.getPersonalHabitsInfo(userID);
 	         try {
 	        	 response.getWriter().write(json);

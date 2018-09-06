@@ -124,7 +124,7 @@ public abstract class SysApiController extends SysBaseController<DataStore> {
 				parm.put("user_id", account);
 				Map<String, Object> u = loginerService.selectMap(parm);
 				loginer = new WebLoginUser();
-				loginer.setRole_id(Integer.valueOf(val(u, "role_id")) );
+//				loginer.setRole_id(Integer.valueOf(val(u, "role_id")) );
 				loginer.setUser_real_name(val(u, "user_real_name"));
 				loginer.setUser_id(Integer.valueOf(val(u, "user_id")));
 				loginer.setUser_global_id(val(u, "user_global_id"));
