@@ -97,34 +97,8 @@ public class WebLoginUitls {
 			flag = WebLoginConstants.APP_MENU_FLAG;
 		}
 		return flag;
+
 	}
-    
-//	public static WebLoginUser getLoginUser(Map<String, Object> u,List<Map<String, Object>> roles){
-//		WebLoginUser user = new WebLoginUser();
-//		user.setUser_real_name(val(u, "user_real_name"));
-//		user.setUser_id(Integer.valueOf(val(u, "user_id")));
-//		user.setUser_global_id(val(u, "user_global_id"));
-//		user.setUser_name(getVal(u, "user_name"));
-//		user.setUser_state(Integer.valueOf(getVal(u, "user_state")));
-//		user = getLoginUserRole(roles, user);
-//		return user;
-//	}
-//
-//	public static WebLoginUser getLoginUserRole(List<Map<String, Object>> roles,WebLoginUser user){
-//		String rids = "";
-//        String rstate  = "";
-//        //一个用户多角色
-//        for (Map<String, Object> m : roles){
-//        	rids += "," + m.get("role_id").toString();
-//        	rstate += "," + m.get("role_type_id").toString();
-//        }
-//        rids = rids.substring(1);
-//        user.setRole_ids(rids);
-//        rstate = rstate.substring(1);
-//        user.setRole_type_ids(rstate);
-//        return user;
-//	}
-	
 
 	public static String val(Map<String, Object> m, String key){
 		Object obj = m.get(key);

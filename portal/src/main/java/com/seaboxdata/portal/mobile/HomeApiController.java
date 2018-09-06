@@ -36,6 +36,7 @@ import com.quick.core.base.model.DataStore;
 import com.quick.core.util.common.JsonUtil;
 import com.quick.core.util.common.QCommon;
 import com.quick.portal.web.home.IHomeService;
+import com.quick.portal.web.login.WebLoginConstants;
 import com.quick.portal.web.model.DataResult;
 
 /**

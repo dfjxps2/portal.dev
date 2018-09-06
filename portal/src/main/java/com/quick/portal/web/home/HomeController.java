@@ -206,7 +206,9 @@ public class HomeController extends SysWebController {
     public Object getApp() {
         String uid = rstr("u", loginer.getUser_id().toString());
         urlMap.put("user_id", uid);
+
         List<Map<String, Object>> list = homeService.queryApp(urlMap);
+
         PortalUtils.fixUrl(request, list);
         return list;
     }

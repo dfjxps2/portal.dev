@@ -39,7 +39,10 @@ public class WebLoginConstants {
     public final static String BUSINESS_ROLE_TYPE = "3";
     
 	public static final String PORTAL_ZORE_VAL = "0";
+	
+	
+	public static final String OCTOTHORPE_SPECIAL_CHARACTER = "#";
     
-
+	public static final String COMMA_SPECIAL_CHARACTER = ",";
 }
 

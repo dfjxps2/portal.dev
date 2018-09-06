@@ -24,42 +24,56 @@ $(function () {
             }
         ],
         yAxis : [
-            {
-                type : 'value',
-                
-            }
+                 {
+                     type : 'value'
+/*                     axisLine:{show:true,
+                     lineStyle:{color:'#ccc'}
+                     },
+                     axisTick:{
+                     show:false,                         
+                     },
+                     axisLabel:{
+                     show:true,
+                     inside:true
+                     },
+                     min:0,
+                     max:100,
+                     splitNumber:8*/
+                      
+                 }
         ],
          series : [
-        {
-            name:'经济运行',
-            type:'line',
-            stack: '总量',
-            data:[120, 132, 101, 134, 90, 230, 210]
-        },
+        
         {
             name:'城市生态',
             type:'line',
-            stack: '总量',
-            data:[220, 182, 191, 234, 290, 330, 310]
+//            stack: '总量',
+            data:[0, 0, 0, 0, 0, 0, 10]
         },
         {
             name:'城市交通',
             type:'line',
-            stack: '总量',
-            data:[150, 232, 201, 154, 190, 330, 410]
+//            stack: '总量',
+            data:[0, 0, 0, 0, 0, 0, 20]
         },
         {
             name:'政务服务',
             type:'line',
-            stack: '总量',
-            data:[320, 332, 301, 334, 390, 330, 320]
+//            stack: '总量',
+            data:[0, 0, 0, 0, 0, 0, 30]
         },
         {
             name:'民生服务',
             type:'line',
-            stack: '总量',
-            data:[820, 932, 901, 934, 1290, 1330, 1320]
-        }
+//            stack: '总量',
+            data:[0, 0, 0, 0, 0, 0, 40]
+        },
+        {
+            name:'经济运行',
+            type:'line',
+//            stack: '总量',
+            data:[0, 5, 10, 15, 20, 30, 50]
+        },
     ]
     };
 
@@ -79,7 +93,7 @@ $(function () {
         legend: {
             orient : 'vertical',
             x : 'left',
-            data:['经济运行','智慧生态','智慧交通','民生服务','社会舆情']
+            data:['经济运行','城市生态','城市交通','政务服务','民生服务']
         },
         calculable : true,
         series : [
@@ -89,11 +103,11 @@ $(function () {
                 radius : '55%',
                 center: ['50%', '60%'],
                 data:[
-                    {value:3350, name:'经济运行'},
-                    {value:3100, name:'智慧生态'},
-                    {value:2340, name:'智慧交通'},
-                    {value:5350, name:'社会舆情'},
-                    {value:10480, name:'民生服务'}
+                    {value:50, name:'经济运行'},
+                    {value:10, name:'城市生态'},
+                    {value:20, name:'城市交通'},
+                    {value:30, name:'政务服务'},
+                    {value:40, name:'民生服务'}
                 ]
             }
         ]

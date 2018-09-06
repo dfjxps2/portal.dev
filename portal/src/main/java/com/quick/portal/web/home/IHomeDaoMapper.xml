@@ -75,7 +75,8 @@
 		    (select ${dashboard_id}, m.app_id, 1, p.show_order, now() from menu_privilege p
 		     left join sys_menu m on p.menu_id=m.menu_id
 		     and m.menu_state=0
-		     where p.role_id=#{role_id} and p.show_on_init=1 and m.app_id is not null)
+		     where p.role_id  in (${role_id})
+		     and p.show_on_init=1 and m.app_id is not null)
 	</insert>
 	<select id="countDashboard" parameterType="map" resultType="int">
 		select count(*) from user_dashboard
