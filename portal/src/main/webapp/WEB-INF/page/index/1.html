@@ -1,57 +1,778 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="IE=edge" >
-<title>test</title>
-  <link href="res/plugin/bootstrap/css/bootstrap.min.css"  rel="stylesheet" type="text/css" >
-  <link href="res/fonts/font-awesome/css/font-awesome.min.css"  rel="stylesheet" type="text/css" >
-  <script src="res/plugin/jQuery/jquery-3.2.0.min.js" type="text/javascript"></script>
-  <script src="res/plugin/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-  <link href="res/css/main.css"  rel="stylesheet" type="text/css" >
-  <script src="res/js/Common/cookie.js" type="text/javascript"></script>
+<html lang="en">
 
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="pragma" content="no-cache">
+<title></title>
+<link rel="stylesheet" type="text/css" href="assets/styles/reset.css">
+<link rel="stylesheet" type="text/css" href="assets/fonts/iconfont.css">
+<link rel="stylesheet" type="text/css" href="assets/styles/flowgrid.css">
+<link rel="stylesheet" type="text/css" href="assets/styles/custom.css">
+<link rel="stylesheet" type="text/css" href="assets/styles/market.css">
+<link rel="stylesheet" type="text/css" href="assets/styles/style.css">
+<style>
+.qs_header {
+	line-height: 43px;
+}
+
+select option {
+	background-color: #111328;
+}
+
+#fg-item-pillar-industry {
+	width: 240px;
+	height: 200px;
+	top: 72px;
+	left: 20px;
+}
+
+#fg-item-province-industry {
+	width: 530px;
+	height: 730px;
+	top: 68px;
+	right: 20px;
+}
+
+#fg-item-province-industry.fg-item .fg-item-content-head-icon {
+	left: 600px;
+}
+
+#fg-item-province-industry.fg-item .fg-item-content-head-text {
+	left: 660px;
+}
+
+#fg-item-industrial-evolution {
+	width: 613px;
+	height: 312px;
+	bottom: -60px;
+	left: 20px;
+}
+
+#fg-item-investment-evolution {
+	width: 613px;
+	height: 242px;
+	bottom: 20px;
+	left: 653px;
+}
+
+#fg-item-trading-evolution {
+	width: 613px;
+	height: 242px;
+	bottom: 20px;
+	left: 1286px;
+}
+
+.switch-container {
+	position: absolute;
+	bottom: 20px;
+	right: 20px;
+	width: 247px;
+}
+
+.switch-container .switch-item {
+	margin-bottom: 20px;
+	height: 49px;
+	line-height: 49px;
+	text-align: center;
+	position: relative;
+	cursor: pointer;
+}
+
+.switch-container .switch-item span {
+	position: relative;
+	z-index: 2;
+	font-size: 20px;
+	font-weight: bold;
+	color: #0a94f5;
+}
+
+.switch-container .switch-item img {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	top: 0;
+	left: 0;
+}
+
+.switch-container .switch-item.active span {
+	color: #10f7f4;
+}
+
+.switch-container .switch-item img.active {
+	display: none;
+}
+
+.switch-container .switch-item.active img.normal {
+	display: none;
+}
+
+.switch-container .switch-item.active img.active, .switch-container .switch-item:hover img.active
+	{
+	display: inline;
+}
+
+#fg-item-jingbin-park {
+	top: 270px;
+	right: 40px;
+	width: 247px;
+	height: 248px;
+}
+
+#fg-item-pillar-industry .index-sub-title {
+	position: absolute;
+	font-size: 15px;
+	color: rgba(255, 255, 255, 0.5);
+	text-align: center;
+}
+
+#fg-item-pillar-industry .fg-item-content-head-icon .icon {
+	color: #0afbfe;
+	position: relative;
+	top: 10px;
+	left: 20px;
+	font-size: 40px;
+}
+
+#fg-item-pillar-industry .fg-item-content-body {
+	position: relative;
+	color: #fff;
+	height: 100%;
+	margin-top: 40px;
+}
+
+#fg-item-pillar-industry .index-sub-title {
+	position: absolute;
+	font-size: 15px;
+	color: rgba(255, 255, 255, 0.5);
+	text-align: center;
+}
+
+#fg-item-pillar-industry .index-number {
+	position: absolute;
+	text-align: center;
+	font-size: 25px;
+}
+/* 指标 */
+#fg-item-pillar-industry .index-1-sub-title {
+	top: 40px;
+	left: 10px;
+}
+
+#fg-item-pillar-industry .index-1-number {
+	left: 10px;
+	top: 65px;
+}
+/* 指标 */
+#fg-item-pillar-industry .index-2-sub-title {
+	top: 40px;
+	left: 160px;
+}
+
+#fg-item-pillar-industry .index-2-number {
+	left: 130px;
+	top: 65px;
+	font-size: 25px;
+}
+
+#fg-item-pillar-industry .index-2-number span {
+	position: relative;
+	top: -5px;
+}
+/* 指标 */
+#fg-item-pillar-industry .index-3-sub-title {
+	top: 105px;
+	left: 10px;
+}
+
+#fg-item-pillar-industry .index-3-number {
+	left: 10px;
+	top: 130px;
+}
+/* 指标 */
+#fg-item-pillar-industry .index-4-sub-title {
+	top: 105px;
+	left: 160px;
+}
+
+#fg-item-pillar-industry .index-4-number {
+	left: 130px;
+	top: 130px;
+	font-size: 25px;
+}
+
+#fg-item-pillar-industry .index-4-number span {
+	position: relative;
+	top: -5px;
+}
+
+fg-item-content1 {
+	position: absolute;
+	top: 200;
+	left: -300px;
+	right: 200px;
+	bottom: 100;
+}
+
+.fg-item-content1 {
+	position: absolute;
+	top: 0;
+	left: 550px;
+	right: 0;
+	bottom: 0;
+}
+
+.fg-item-content-head-text1 {
+	background: linear-gradient(to bottom, #1eb7fd, #0174df);
+	-webkit-background-clip: text;
+	color: transparent;
+	font-weight: bold;
+	font-size: 26px;
+	position: absolute;
+	left: -500px;
+	top: 18px;
+}
+
+.top-n-container {
+	box-sizing: border-box;
+	/*margin: 0 20px;*/
+	padding: 20px 0;
+	height: 100%;
+	overflow: auto;
+	position: relative;
+}
+
+#number-of-top-product-categories {
+	overflow: hidden;
+}
+
+.form-control, .single-line {
+	background-color: #0D1648;
+	background-image: none;
+	border: 1px solid #e5e6e7;
+	border-radius: 1px;
+	color: inherit;
+	display: block;
+	padding: 60px 12px;
+	-webkit-transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s
+		ease-in-out 0s;
+	transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s
+		ease-in-out 0s;
+	width: 100%;
+	font-size: 20px;
+	color: white;
+}
+
+#fg-item-pillar-industry1 {
+	width: 240px;
+	height: 200px;
+	top: 2px;
+	left: 400px;
+}
+
+#fg-item-pillar-industry1 .index-1-sub-title {
+	top: 40px;
+	left: -540px;
+}
+
+#fg-item-pillar-industry1 .index-sub-title {
+	position: absolute;
+	font-size: 15px;
+	color: rgba(255, 255, 255, 0.5);
+	text-align: center;
+}
+
+#fg-item-pillar-industry1 .index-1-number {
+	left: -540px;
+	top: 65px;
+}
+
+#fg-item-pillar-industry1 .index-number {
+	position: absolute;
+	text-align: center;
+	font-size: 25px;
+}
+
+#fg-item-pillar-industry1 .index-2-sub-title {
+	top: 40px;
+	left: -380px;
+}
+
+#fg-item-pillar-industry1 .index-2-number {
+	left: -410px;
+	top: 65px;
+	font-size: 25px;
+}
+
+#fg-item-pillar-industry1 .index-3-sub-title {
+	top: 105px;
+	left: -540px;
+}
+
+#fg-item-pillar-industry1 .index-4-sub-title {
+	top: 105px;
+	left: -380px;
+}
+
+#fg-item-pillar-industry1 .index-3-number {
+	left: -540px;
+	top: 130px;
+}
+
+#fg-item-pillar-industry1 .index-4-number {
+	left: -410px;
+	top: 130px;
+	font-size: 25px;
+}
+
+#fg-item-pillar-industry2 {
+	width: 240px;
+	height: 200px;
+	top: 50px;
+	left: 1000px;
+}
+
+.fg-item-content2 {
+	position: absolute;
+	top: 1px;
+	left: 550px;
+	right: 0;
+	bottom: 0;
+}
+
+#fg-item-pillar-industry2 .index-1-sub-title {
+	top: 50px;
+	left: 1000px;
+}
+
+#fg-item-pillar-industry2 .index-1-sub-title {
+	top: 30px;
+	left: -530px;
+}
+
+#fg-item-pillar-industry2 .index-1-number {
+	left: -530px;
+	top: 55px;
+}
+
+#fg-item-pillar-industry2 .index-2-sub-title {
+	top: 30px;
+	left: -380px;
+}
+
+#fg-item-pillar-industry2 .index-2-number {
+	left: -410px;
+	top: 55px;
+	font-size: 25px;
+}
+
+#fg-item-pillar-industry2 .index-3-sub-title {
+	top: 95px;
+	left: -530px;
+}
+
+#fg-item-pillar-industry2 .index-3-number {
+	left: -530px;
+	top: 120px;
+}
+
+#fg-item-pillar-industry2 .index-4-sub-title {
+	top: 95px;
+	left: -380px;
+}
+
+#fg-item-pillar-industry2 .index-4-number {
+	left: -410px;
+	top: 120px;
+	font-size: 25px;
+}
+</style>
 </head>
+
 <body>
-<div class="container">
-    <div class="row" >
-        <div class="col-xs-6 col-sm-3" 
-            style="background-color: #dedef8;
-            box-shadow: inset 1px -1px 1px #444, inset -1px 1px 1px #444;">
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-        </div>
-        <div class="col-xs-6 col-sm-3" 
-        style="background-color: #dedef8;box-shadow: 
-        inset 1px -1px 1px #444, inset -1px 1px 1px #444;">
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do 
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut 
-            enim ad minim veniam, quis nostrud exercitation ullamco laboris 
-            nisi ut aliquip ex ea commodo consequat.
-            </p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do 
-            eiusmod tempor incididunt ut. 
-            </p>
-        </div>
- 
-        <div class="clearfix visible-xs"></div>
- 
-        <div class="col-xs-6 col-sm-3" 
-        style="background-color: #dedef8;
-        box-shadow:inset 1px -1px 1px #444, inset -1px 1px 1px #444;">
-            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco 
-            laboris nisi ut aliquip ex ea commodo consequat. 
-            </p>
-        </div>
-        <div class="col-xs-6 col-sm-3" 
-        style="background-color: #dedef8;box-shadow: 
-        inset 1px -1px 1px #444, inset -1px 1px 1px #444;">
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do 
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut 
-            enim ad minim 
-            </p>
-        </div>
-    </div>
-</div>
+	<!-- 头部 -->
+	<div class="app-header">
+
+		<img src="views/park_overview/header.png" width="1920">
+
+		<!-- 导航按钮 -->
+		<a class="header-btn menu-btn" title="导航菜单"> <i
+			class="icon iconfont icon-caidan"></i>
+		</a>
+		<!-- 退出按钮 -->
+		<a class="header-btn logout-btn" title="退出"> <i
+			class="icon iconfont icon-tuichu"></i>
+		</a>
+	</div>
+
+	<!-- 园区支柱产业发展分析比较 -->
+	<div id="earth" style="-moz-user-select: none;">
+		<div
+			style="position: relative; overflow: hidden; width: 1245px; height: 1010px; padding: 0px; margin: 0px; border-width: 0px; cursor: default;">
+			<canvas
+				style="width: 1245px; height: 1010px; position: absolute; left: 0px; top: 0px;"
+				width="1245" height="1010"></canvas>
+		</div>
+	</div>
+	<div class="fg-item" id="fg-item-pillar-industry">
+		<!-- 内容区, 摆放展示内容 -->
+
+
+		<div class="fg-item-content">
+			<!-- 内容头 -->
+			<div class="fg-item-content-head-text">京滨工业园</div>
+			<div class="fg-item-content-head-icon">
+				<!--<i class="icon iconfont icon-taiwansheng"></i>-->
+				<img src="./assets/images/fg-item-head-icon.png" width="30">
+			</div>
+			<!-- 内容体 -->
+			<div class="fg-item-content-body clearfix" id="taiwan">
+				<!-- 指标 -->
+				<div class="index-sub-title index-1-sub-title">进口总额 (万美元)</div>
+				<div class="index-number index-1-number">65079.37</div>
+				<!-- 指标 -->
+				<div class="index-sub-title index-2-sub-title">进口增幅</div>
+				<div class="index-number index-2-number">
+					<img src="./assets/images/index-up.png"
+						style="height: 20px; width: 20px; left: 150px;"> <span>87.4%</span>
+				</div>
+				<!-- 指标 -->
+				<div class="index-sub-title index-3-sub-title">出口总额 (万美元)</div>
+				<div class="index-number index-3-number">17301.59</div>
+				<!-- 指标 -->
+				<div class="index-sub-title index-4-sub-title">出口增幅</div>
+				<div class="index-number index-4-number">
+					<img src="./assets/images/index-up.png"
+						style="height: 20px; width: 20px; left: 150px;"> <span>44.7%</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="fg-item" id="fg-item-pillar-industry1">
+			<div class="fg-item-content1">
+				<!-- 内容头 -->
+				<div class="fg-item-content-head-text1">京滨工业园1</div>
+				<div class="fg-item-content-head-icon">
+					<!--<i class="icon iconfont icon-taiwansheng"></i>-->
+					<img src="./assets/images/fg-item-head-icon.png" width="30"
+						style="left: -540px;">
+				</div>
+				<!-- 内容体 -->
+				<div class="fg-item-content-body clearfix" id="taiwan1">
+					<!-- 指标 -->
+					<div class="index-sub-title index-1-sub-title">进口总额 (万美元)</div>
+					<div class="index-number index-1-number">65079.37</div>
+					<!-- 指标 -->
+					<div class="index-sub-title index-2-sub-title">进口增幅</div>
+					<div class="index-number index-2-number">
+						<img src="./assets/images/index-up.png"
+							style="height: 20px; width: 20px; left: 150px;"> <span>87.4%</span>
+					</div>
+					<!-- 指标 -->
+					<div class="index-sub-title index-3-sub-title">出口总额 (万美元)</div>
+					<div class="index-number index-3-number">17301.59</div>
+					<!-- 指标 -->
+					<div class="index-sub-title index-4-sub-title">出口增幅</div>
+					<div class="index-number index-4-number">
+						<img src="./assets/images/index-up.png"
+							style="height: 20px; width: 20px; left: 150px;"> <span>44.7%</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="fg-item" id="fg-item-pillar-industry2">
+			<div class="fg-item-content2">
+				<!-- 内容头 -->
+				<div class="fg-item-content-head-text1">京滨工业园2</div>
+				<div class="fg-item-content-head-icon">
+					<!--<i class="icon iconfont icon-taiwansheng"></i>-->
+					<img src="./assets/images/fg-item-head-icon.png" width="30"
+						style="left: -540px;">
+				</div>
+				<!-- 内容体 -->
+				<div class="fg-item-content-body clearfix" id="taiwan1">
+					<!-- 指标 -->
+					<div class="index-sub-title index-1-sub-title">进口总额 (万美元)</div>
+					<div class="index-number index-1-number">65079.37</div>
+					<!-- 指标 -->
+					<div class="index-sub-title index-2-sub-title">进口增幅</div>
+					<div class="index-number index-2-number">
+						<img src="./assets/images/index-up.png"
+							style="height: 20px; width: 20px; left: 150px;"> <span>87.4%</span>
+					</div>
+					<!-- 指标 -->
+					<div class="index-sub-title index-3-sub-title">出口总额 (万美元)</div>
+					<div class="index-number index-3-number">17301.59</div>
+					<!-- 指标 -->
+					<div class="index-sub-title index-4-sub-title">出口增幅</div>
+					<div class="index-number index-4-number">
+						<img src="./assets/images/index-up.png"
+							style="height: 20px; width: 20px; left: 150px;"> <span>44.7%</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<!--
+      <div class="fg-item-content-body" id="fg-item-pillar-industry-chart">
+
+      </div>-->
+
+
+		<div class="qpanel1">
+			<div class="qs_header" style="line-height: 64px;">
+				<span class="qs_title2  t1">道路监控规划分析</span>
+			</div>
+			<div id="chart2" class="qs_body  dlimage1"></div>
+		</div>
+	</div>
+
+
+
+
+	<!-- 全区产业发展分析比较 -->
+	<div class="fg-item" id="fg-item-province-industry">
+		<!-- 内容区, 摆放展示内容 -->
+		<div class="fg-item-content">
+
+
+			<div class="fg-item-content-head-icon">
+				<img src="assets/images/fg-item-head-icon.png" width="30"
+					style="left: -560px;">
+			</div>
+			<div class="fg-item-content-head-text" style="left: 80px;">
+				园区简介</div>
+
+			<textarea id="original" rows="5" style="height: 726px;"
+				class="form-control">天津京滨工业园，国家自主创新示范区、高新技术产业园区。位于天津市武清区，北接北京通州、西接河北廊坊，地处京津冀“金三角”核心区域。距首都国际机场65公里，滨海新区75公里，周边有三条高速公路四个出入口，5-15分钟车程即可到达。优越的区位交通为区域开放发展提供了先决条件。
+                                    </textarea>
+
+			<!--
+      <div class="fg-item-content-body" id="fg-item-province-industry-map" style="width: calc(100% - 170px)">
+
+      </div>-->
+		</div>
+	</div>
+
+	<!-- 组织机构 -->
+	<div class="fg-item" id="fg-item-industrial-evolution">
+		<!-- 内容区, 摆放展示内容 -->
+		<div class="fg-item-content">
+			<div class="fg-item-content-head-icon">
+				<img src="assets/images/fg-item-head-icon.png" width="30">
+			</div>
+			<div class="fg-item-content-head-text">组织机构</div>
+
+			<!-- 内容体 -->
+			<div class="fg-item-content-body clearfix" id="taiwan-investment">
+
+			</div>
+		</div>
+		<!-- 装饰块 -->
+		<div class="fg-zoom-bar"></div>
+	</div>
+
+
+
+	<!-- 基础设施 -->
+	<div class="fg-item" id="fg-item-investment-evolution">
+		<!-- 内容区, 摆放展示内容 -->
+		<div class="fg-item-content">
+			<div class="fg-item-content-head-icon">
+				<img src="assets/images/fg-item-head-icon.png" width="30">
+			</div>
+			<div class="fg-item-content-head-text" style="right: 50px;">
+				基础设施</div>
+
+			<textarea id="original" rows="6" class="form-control">园区总体规划20平方公里。在“开放、友好、诚信、共赢”的办区宗旨指导下，坚持高起点规划、高标准建设、高效能管理。经过几年的发展，已经形成电子信息、智能制造和现代服务三大产业体系。引进国内外企业2600余家。阿里巴巴、当当网、聚美优品、京东、美国凡士通、一汽大众、北汽海纳川、大禹节水、法国法雷奥等一大批知名企业及中科院化学所、北京化工大学等大院大所项目落户园区。
+                                    </textarea>
+			<!--
+
+      <div class="fg-item-content-body" id="fg-item-investment-evolution-chart">
+
+      </div>-->
+		</div>
+	</div>
+
+	<!-- 配套设施 -->
+	<div class="fg-item" id="fg-item-trading-evolution">
+		<!-- 内容区, 摆放展示内容 -->
+		<div class="fg-item-content">
+			<div class="fg-item-content-head-icon">
+				<img src="assets/images/fg-item-head-icon.png" width="30">
+			</div>
+			<div class="fg-item-content-head-text">配套设施</div>
+			<textarea id="original" rows="6" class="form-control">按照“建筑风格别致、资源集约利用、环境布局精美”的城市化建设标准，谋划实施了总投资50亿元的城市功能建设。五星级酒店、高新公寓、特勤级消防队、公交车站、大型超市、综合教育园区、行政服务中心、医院、住宅小区、工商银行、中国银行、农业银行等金融机构等功能性项目建设使园区基础设施日益完善。
+                                    </textarea>
+			<!--
+      <div class="fg-item-content-body" id="fg-item-trading-evolution-chart">-->
+
+		</div>
+	</div>
+	</div>
+
+
+
+
+	<script type="text/javascript" src="assets/scripts/jquery.min.js"></script>
+	<script type="text/javascript" src="components/nav/nav.js"></script>
+	<!--<script type="text/javascript" src="assets/scripts/scale.js"></script>-->
+	<script type="text/javascript" src="assets/scripts/template-web.js"></script>
+	<script type="text/javascript" src="assets/scripts/axios.min.js"></script>
+	<script type="text/javascript" src="assets/scripts/app.js"></script>
+	<!--<script type="text/javascript" src="assets/scripts/flowgrid.js"></script>-->
+	<script type="text/javascript" src="assets/scripts/echarts.min.js"></script>
+	<script type="text/javascript" src="components/charts/ag-charts.js"></script>
+	<script type="text/javascript" src="components/charts/bubble.js"></script>
+	<script type="text/javascript" src="components/charts/line-area.js"></script>
+	<script type="text/javascript" src="components/charts/tianjin.js"></script>
+
+
+	<!--<script type="text/javascript" src="assets/scripts/flowgrid.js"></script>-->
+	<script type="text/javascript" src="assets/scripts/echarts.min.js"></script>
+	<script type="text/javascript" src="assets/scripts/echarts-gl.min.js"></script>
+	<script type="text/javascript" src="components/charts/ag-charts.js"></script>
+	<script type="text/javascript" src="components/charts/columns.js"></script>
+	<script type="text/javascript"
+		src="components/charts/positive-negative.js"></script>
+
+	<script type="text/javascript" src="components/charts/earth/earth.js"></script>
+	<!--
+   <script src="components/echarts/echarts-gl.js"></script>
+    <script src="components/echarts/map/world.js"></script>
+    <script src="components/echarts/finance.js"></script>-->
+	<script>
+		$(document)
+				.ready(
+						function() {
+
+							// 切换块
+							var index = 1;
+							$(".switch-container .switch-item").on(
+									'click',
+									function() {
+										index = $(this).attr('index') * 1;
+										$(".switch-container .switch-item")
+												.removeClass('active');
+										$(this).addClass('active');
+										changeData(index);
+									});
+
+							// 全市生产总值比较
+							function changeData(index) {
+								//  天津地图
+								axios
+										.all(
+												[
+														axios
+																.get(app.req.base
+																		+ '/park_overview/province-industry'
+																		+ index
+																		+ app.req.suffix),
+														(!echarts
+																.getMap('world') ? axios
+																.get('assets/map/tianjin'
+																		+ app.req.suffix)
+																: undefined) ])
+										.then(
+												axios
+														.spread(function(
+																resData, resGeo) {
+															// 注册地图
+															resGeo
+																	&& echarts
+																			.registerMap(
+																					'tianjin',
+																					resGeo.data);
+															// 构建数据
+															agChart.map.tianjin
+																	.init(
+																			'#fg-item-province-industry-map',
+																			'',
+																			resData.data.content);
+														}));
+							}
+							changeData(index);
+
+							// 园区支柱产业发展比较
+							axios
+									.get(
+											app.req.base
+													+ '/park_overview/pillar-industry'
+													+ app.req.suffix)
+									.then(
+											function(response) {
+												var data = response.data.content;
+												agChart.bubble.bubbles
+														.init(
+																'#fg-item-pillar-industry-chart',
+																'', data);
+											});
+
+							// 工业产业发展演化
+							axios
+									.get(
+											app.req.base
+													+ '/park_overview/industrial-evolution'
+													+ app.req.suffix)
+									.then(
+											function(response) {
+												var data = response.data.content;
+												agChart.line.area
+														.init(
+																'#fg-item-industrial-evolution-chart',
+																'', data);
+											});
+
+							// 第三产业发展演化
+							axios
+									.get(
+											app.req.base
+													+ '/park_overview/investment-evolution'
+													+ app.req.suffix)
+									.then(
+											function(response) {
+												var data = response.data.content;
+												agChart.line.area
+														.init(
+																'#fg-item-investment-evolution-chart',
+																'', data);
+											});
+
+							// 固定资产投资发展变化
+							axios
+									.get(
+											app.req.base
+													+ '/park_overview/trading-evolution'
+													+ app.req.suffix)
+									.then(
+											function(response) {
+												var data = response.data.content;
+												agChart.line.area
+														.init(
+																'#fg-item-trading-evolution-chart',
+																'', data);
+											});
+
+							// 组织机构
+							axios
+									.get(
+											app.req.base
+													+ '/trade_development/taiwan-investment'
+													+ app.req.suffix, {
+												params : {}
+											}).then(
+											function(response) {
+												agChart.bar.columns.init(
+														'#taiwan-investment',
+														'',
+														response.data.content);
+											});
+
+						})
+	</script>
 </body>
-</html>
