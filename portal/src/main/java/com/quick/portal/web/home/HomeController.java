@@ -71,6 +71,8 @@ public class HomeController extends SysWebController {
         //查找管理员按钮权限
         Map<String, Object> parm = new HashMap<>();
         parm.put("user_id", loginer.getUser_id());
+        String role_id = rstr("r", loginer.getRole_ids().toString());
+        parm.put("role_id", role_id.replace(WebLoginConstants.OCTOTHORPE_SPECIAL_CHARACTER, WebLoginConstants.COMMA_SPECIAL_CHARACTER));
         //获取用户应用列表,如果没有，从menu_privilege表读取对应角色默认应用列表
         List<Map<String, Object>> apps = queryUserApp();
         if(apps == null || apps.size() == 0){
@@ -203,7 +205,7 @@ public class HomeController extends SysWebController {
         String uid = rstr("u", loginer.getUser_id().toString());
         String role_id = rstr("r", loginer.getRole_ids().toString());
         urlMap.put("user_id", uid);
-        urlMap.put("role_id", role_id);
+        urlMap.put("role_id", role_id.replace(WebLoginConstants.OCTOTHORPE_SPECIAL_CHARACTER, WebLoginConstants.COMMA_SPECIAL_CHARACTER));
         List<Map<String, Object>> list =   homeService.queryApp(urlMap);
         fixUrl(list);
         return list;
@@ -217,8 +219,8 @@ public class HomeController extends SysWebController {
     public Object getAllApp(){
         String uid = rstr("u", loginer.getUser_id().toString());
         String role_id = rstr("r", loginer.getRole_ids().toString());
-        urlMap.put("user_id", uid);
-        urlMap.put("role_id", role_id);
+        urlMap.put("user_id", uid);          
+        urlMap.put("role_id", role_id.replace(WebLoginConstants.OCTOTHORPE_SPECIAL_CHARACTER, WebLoginConstants.COMMA_SPECIAL_CHARACTER));
 
         List<Map<String, Object>> list =   homeService.queryUserAllApp(urlMap);
         fixUrl(list);
