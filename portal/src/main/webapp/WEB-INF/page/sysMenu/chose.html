@@ -108,7 +108,7 @@
         var role_id = $.request.queryString["role_id"];
         $.ajax({
             type: "get",
-            url: "${G.host}/role/listMenuPri",
+            url: "${G.host}/roleDO/listMenuPri",
             async:false,
             data:{role_id:role_id},
             dataType: "json",

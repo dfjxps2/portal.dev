@@ -19,6 +19,7 @@
 package com.quick.portal.sysUser;
 
 import com.quick.core.base.ISysBaseDao;
+import com.quick.core.base.model.DataStore;
 import com.quick.core.base.model.PageBounds;
 import com.quick.portal.userDepartment.UserDepartmentDO;
 import com.quick.portal.userJob.UserJobDO;
@@ -70,4 +71,6 @@ public interface ISysUserDao<SysUserDO> extends ISysBaseDao<SysUserDO> {
     void addRoleUsers(ArrayList<Object> list);
 
     List<SysUserDO> getUserInfo(Map<String, Object> m);
+
+    int delete(SysUserDO sysUserDO);
 }

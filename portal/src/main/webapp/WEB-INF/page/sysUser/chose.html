@@ -98,42 +98,44 @@
 </body>
 <script>
 
+    quick.baseUrl = "${G.host}";
+    quick.serverUrl = "${G.serverUrl}";  // /sysUser
+    quick.objName = "${G.objName}";
+    quick.idField = "${G.idField}";
+    quick.listUrl = quick.serverUrl + "/list";
+
     function config() {
-        quick.serverUrl = "${G.serverUrl}";
-        quick.objName = "${G.objName}";
-        quick.idField = "${G.idField}";
-        quick.listUrl = quick.serverUrl + "/list";
     }
 
     //下拉框
-    function selectData(){
+    function selectJob(){
         $.ajax({
             type: "get",
-            url: "getJob",
+            url: quick.baseUrl + "/userJob/getData",
             async:false,
             dataType: "json",
             success: function(data){
                 $("#job_id").append("<option selected hidden value=''>选择岗位</option><option value= ''>选择岗位</option>");
                 for (var i = 0; i < data.length; i++) {
                     var item = data[i];
-                    $("#job_id").append("<option  value=" +item.jobid+ ">  "+item.jobname+"</option>");
+                    $("#job_id").append("<option  value=" +item.job_id+ ">  "+item.job_name+"</option>");
                 }
             }
         });
     }
-    selectData();
+    selectJob();
 
     function selectDep(){
         $.ajax({
             type: "get",
-            url: "getDep",
+            url: quick.baseUrl + "/userDepartment/getData",
             async:false,
             dataType: "json",
             success: function(data){
                 $("#dep_id").append("<option selected hidden value=''>选择部门</option><option value= ''>选择部门</option>");
                 for (var i = 0; i < data.length; i++) {
                     var item = data[i];
-                    $("#dep_id").append("<option  value=" +item.depid+ "> "+  item.depname+"</option>");
+                    $("#dep_id").append("<option  value=" +item.dep_id+ "> "+  item.dep_name+"</option>");
                 }
             }
         });
@@ -143,14 +145,14 @@
     function selectRole(){
         $.ajax({
             type: "get",
-            url: "getRole",
+            url: quick.baseUrl + "/role/getData",
             async:false,
             dataType: "json",
             success: function(data){
                 $("#role_id").append("<option selected hidden value=''>选择用户角色</option><option value= ''>选择用户角色</option>");
                 for (var i = 0; i < data.length; i++) {
                     var item = data[i];
-                    $("#role_id").append("<option  value=" +item.roleid+ ">"+item.rolename+"</option>");
+                    $("#role_id").append("<option  value=" +item.role_id+ ">"+item.role_name+"</option>");
                 }
             }
         });
@@ -232,7 +234,7 @@
                 dataType: "JSON",
                 contentType: "application/json",
                 success: function(data){
-                    if(data.code == "1"){
+                    if(data.code === 1){
                         layer.msg('添加用户成功，密码为初始密码！', {icon:1,time: 1000,skin: 'layer-ext-moon'},function(){
                             window.location.href = quick.serverUrl+"/list";
                         });

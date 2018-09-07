@@ -19,18 +19,14 @@
  */
 package com.quick.portal.sysUser;
 
-import java.util.List;
-import java.util.Map;
-
 import com.quick.core.base.SysBaseService;
-import com.quick.core.base.ISysBaseDao;
-
+import com.quick.core.base.model.DataStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.quick.core.base.model.DataStore;
-import com.quick.core.util.common.DateTime;
+import java.util.List;
+import java.util.Map;
 
 /**
  * sys_user服务实现类
@@ -55,45 +51,22 @@ public class SysUserServiceImpl extends SysBaseService<SysUserDO> implements ISy
 
     private ISysUserDao<SysUserDO> dao;
 
-//    @Override
-//    public ISysBaseDao<SysUserDO> getDao() {
-//        return dao;
-//    }
-
-    /**
-     * 保存业务
-     * @return
-     */
-//    @Override
-//    public DataStore save(SysUserDO entity) {
-//        //如果编号为空,新增实体对象,否则更新实体对象
-//        Integer val = entity.getUser_id();
-//        int c = 0;
-//        if (val == null || val == 0) {
-//            entity.setCre_time(DateTime.Now().getTime());  //新增时间
-//            entity.setUpd_time(DateTime.Now().getTime());  //修改时间
-//
-//            c = dao.insert(entity);
-//        } else {
-//            entity.setUpd_time(DateTime.Now().getTime());  //修改时间
-//
-//            c = dao.update(entity);
-//        }
-//        if (c == 0)
-//            return ActionMsg.setError("操作失败");
-//        ActionMsg.setValue(entity);
-//        return ActionMsg.setOk("操作成功");
-//    }
-
     /**
      * 删除业务
-     * @param sysid
+     * @param user_id
      * @return
      */
     @Override
-    public DataStore delete(String sysid) {
-        dao.delete(sysid);
-        return ActionMsg.setOk("操作成功");
+    public DataStore delete(String user_id) {
+        SysUserDO sysUserDO = new SysUserDO();
+
+        sysUserDO.setUser_id(Integer.valueOf(user_id));
+
+        dao.delete(sysUserDO);
+        if (sysUserDO.getError_no() == 1)
+            return ActionMsg.setOk("操作成功");
+        else
+            return ActionMsg.setError("操作失败");
     }
 
 

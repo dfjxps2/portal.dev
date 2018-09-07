@@ -1,22 +1,3 @@
-/**
- * <h3>标题 : Quick通用系统框架 </h3>
- * <h3>描述 : 应用中的相关配置信息都放在此</h3>
- * <h3>日期 : 2014-03-23</h3>
- * <h3>版权 : Copyright (C) 海口鑫网计算机网络有限公司</h3>
- *
- * <p>
- *
- * @author admin admin@xinwing.com.cn
- * @version <b>v1.0.0</b>
- *
- * <b>修改历史:</b>
- * -------------------------------------------
- * 修改人 修改日期 修改描述
- * -------------------------------------------
- *
- *
- * </p>
- */
 
 package com.quick.core.base;
 
@@ -79,12 +60,6 @@ public abstract class SysBaseController<T> {
 
     protected UrlPathHelper urlPathHelper; // 路径助手
 
-    @Resource(name = "sysUserService")
-    private ISysUserService sysUserService;
-
-    @Resource(name = "userRoleRelaService")
-    private IUserRoleRelaService userRoleRelaService;
-
     // <editor-fold defaultstate="collapsed" desc="自定义方法">
 
     public SysBaseController() {
@@ -94,6 +69,7 @@ public abstract class SysBaseController<T> {
 
     /**
      * 判断用户是否已登录(集成CAS)
+     *
      * @param request
      * @param response
      * @return
@@ -216,11 +192,12 @@ public abstract class SysBaseController<T> {
                                            String columnNames, String tableName, String whereStr,
                                            String orderStr) {
         Map<String, Object> map = getQueryMap(request);
+
         map.put("_sql_select", columnNames);
         map.put("_sql_table", tableName);
         map.put("_sql_where", whereStr);
         map.put("_sql_order", orderStr);
-        map.putAll(urlMap);
+
         return map;
     }
 
@@ -395,7 +372,7 @@ public abstract class SysBaseController<T> {
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="自定义接口">
-    public ISysBaseService getBaseService() {
+    public ISysBaseService<T> getBaseService() {
         return null;
     }
 
@@ -419,14 +396,7 @@ public abstract class SysBaseController<T> {
     @ResponseBody
     public DataStore saveAction(T model) {
         return save(model);
-		/*ActionMsg = saveBefore(model);
-		if(ActionMsg.isError())
-			return ActionMsg;
-		ActionMsg = save(model);
-		if(ActionMsg.isError())
-			return ActionMsg;
 
-		return saveAfter(model);*/
     }
 
     public DataStore saveBefore(T model) {
@@ -543,7 +513,7 @@ public abstract class SysBaseController<T> {
         return obj;
     }
 
-    @RequestMapping(value = "/getList", method = RequestMethod.POST)
+    @RequestMapping(value = "/getList")
     @ResponseBody
     public Object getList() throws Exception {
         return getData("page");
@@ -561,20 +531,21 @@ public abstract class SysBaseController<T> {
      *
      * @return
      */
-    @RequestMapping(value = "/getData", method = RequestMethod.POST)
+    @RequestMapping(value = "/getData")
     @ResponseBody
     public Object getData(String json) {
         String str = "[]";
         if (json == null)
             json = "data";
+
         int pageSize = QRequest.getInteger(request, "pageSize", 10); // 获取datagrid传来的行数
         // //每页显示条数
         int pageNo = QRequest.getInteger(request, "page", 1); // 获取datagrid传来的页码
-        // //当前页
-        // json=obj时只查一行
-        if (json == "obj") {
+
+        if (json.equals("obj")) {
             pageSize = 1;
         }
+
         // 表名
         String tableName = getTableName();
         // 主键
@@ -589,18 +560,23 @@ public abstract class SysBaseController<T> {
         String dateTimeFormat = QRequest.getString(request, "dateTimeFormat",
                 "yyyy-MM-dd HH:mm"); // 例：dateTimeFormat=yyyy-MM-dd HH:mm
 
-        // 默认输出html(?)
-        // String contentType = QRequest.getString(request, "responseType",
-        // "json"); //输出json 为： responseType=json
         response.setContentType(QRequest.getResponseType("json")); // 输出JS文件
+
         // 默认O条数据
         int recordCount = 0;
+
         Map<String, Object> queryMap = getQueryMap(request, fieldShow,
                 tableName, whereStr, fieldOrder);
         PageBounds pager = new PageBounds(pageNo, pageSize);
 
-        List<Map<String, Object>> dt = getBaseService().select(queryMap, pager);
-        recordCount = pager.getTotal();
+        List<Map<String, Object>> dt;
+        if (json.equals("page")) {
+            dt = getBaseService().select(queryMap, pager);
+            recordCount = pager.getTotal();
+        }else{
+            dt = getBaseService().select(queryMap);
+            recordCount = dt.size();
+        }
 
         switch (json) {
             case "data": // 全表格[{}]

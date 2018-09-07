@@ -39,29 +39,6 @@
 
 	<!-- 新增sys_user -->
 	<insert id="insert" parameterType="com.quick.portal.sysUser.SysUserDO" statementType="CALLABLE">
-	<!--
-		insert into sys_user (
-    		  user_name,
-    		  user_password,
-    		  user_real_name,
-    		  user_state,
-    		  job_id,
-    		  user_addr,
-    		  user_tel,
-    		  cre_time,
-    		  upd_time
-		)values(
-			 #{user_name},
-			 #{user_password},
-			 #{user_real_name},
-			 #{user_state},
-			 #{job_id},
-			 #{user_addr},
-			 #{user_tel},
-			 #{cre_time},
-			 #{upd_time}
-		);
-	-->
 		{CALL CREATE_PORTAL_USER(
 			#{user_name, mode=IN},
 			#{user_password, mode=IN},
@@ -145,8 +122,10 @@
 
 
 	<!-- 删除 -->
-	<delete id="delete" parameterType="String">
-		delete from sys_user where user_id = #{user_id}
+	<delete id="delete" parameterType="com.quick.portal.sysUser.SysUserDO" statementType="CALLABLE">
+		{
+			CALL DELETE_PORTAL_USER(#{user_id, mode=IN}, #{error_no, jdbcType=INTEGER, mode=OUT})
+		}
 	</delete>
 
 	<delete id="deleteUserDepRela" parameterType="String">
@@ -155,13 +134,40 @@
 
 
 	<select id="select" parameterType="map" resultType="map">
-		select urd.*,uj.job_name from (select udrn.*, udn.dep_name from(select urn.*,udr.dep_id,udr.rela_id from (select su.*,rn.role_name role_name,rn.rel_id rel_id,rn.role_type_id role_type_id,rn.role_id role_id from sys_user su
-		inner join(select urr.user_id, ur.role_name,ur.role_type_id,urr.rel_id,ur.role_id from  user_role ur , user_role_rela urr where ur.role_id = urr.role_id and ur.role_state=1) rn on su.user_id = rn.user_id where 1=1) urn
-		left join user_dep_rela udr on urn.user_id = udr.user_id where 1=1) udrn left join user_department udn
-		on udrn.dep_id = udn.dep_id  where 1=1)urd left join user_job uj on urd.job_id=uj.job_id
+		select u.user_id
+		, u.user_name
+		, u.user_real_name
+		, u.user_state
+		, u.job_id
+		, u.user_addr
+		, u.user_tel
+		, u.user_global_id
+		, u.cre_time
+		, u.upd_time
+		,group_concat(r.role_name) as role_name
+		,group_concat(d.dep_name) as dep_name
+		,j.job_name, j.job_level
+		from sys_user u
+		join user_role_rela ur_rel on u.user_id = ur_rel.user_id
+		join user_role r on r.role_id = ur_rel.role_id
+		join user_dep_rela ud_rel on u.user_id = ud_rel.user_id
+		join user_department d on d.dep_id = ud_rel.dep_id
+		join user_job j on u.job_id = j.job_id
 		<where>
 		<include refid="where" />
 		</where>
+		group by u.user_id
+		, u.user_name
+		, u.user_real_name
+		, u.user_state
+		, u.job_id
+		, u.user_addr
+		, u.user_tel
+		, u.user_global_id
+		, u.cre_time
+		, u.upd_time
+		, j.job_name
+		, j.job_level
 		<if test="_sql_order != null and _sql_order != ''">
 		order by ${_sql_order}
      	</if>
@@ -192,46 +198,6 @@
 	<select id="selectDep" parameterType="map" resultType="map">
 		SELECT  ud.dep_id,ud.dep_name FROM  user_department ud
 		WHERE  ud.dep_state = 1
-	</select>
-
-	<!--初始化和查询-->
-	<select id="getAllUser"  parameterType="map" resultType="map">
-		select urd.*,uj.job_name from (select udrn.*, udn.dep_name from(select urn.*,udr.dep_id,udr.rela_id from (select su.*,rn.role_name role_name,rn.rel_id rel_id from sys_user su
-		left join(select urr.user_id, GROUP_CONCAT(role_name) role_name,urr.rel_id from  user_role ur INNER JOIN user_role_rela urr on ur.role_id = urr.role_id GROUP BY urr.user_id) rn on su.user_id = rn.user_id where 1=1) urn
-		left join user_dep_rela udr on urn.user_id = udr.user_id where 1=1) udrn left join user_department udn
-		on udrn.dep_id = udn.dep_id  where 1=1)urd left join user_job uj on urd.job_id=uj.job_id where 1=1
-		<if test="job_id != null and job_id != '' and  !'null'.equals(job_id)"><![CDATA[
-	       and  uj.job_id = #{job_id}
-	    ]]></if>
-		<if test="dep_id != null and dep_id != '' and  !'null'.equals(dep_id)"><![CDATA[
-	       and  urd.dep_id = #{dep_id}
-	    ]]></if>
-		<if test="role_name != null and role_name != '' and  !'null'.equals(role_name)"><![CDATA[
-	       and  urd.role_name = #{role_name}
-	    ]]></if>
-		<if test="user_name != null and user_name != '' and !'null'.equals(user_name)"><![CDATA[
-	       and urd.user_name = #{user_name}
-	    ]]></if>
-		<!--<if test="_sql_where != null and _sql_where != ''"> <![CDATA[-->
-            <!--and ${_sql_where}-->
-        <!--]]> </if>-->
-		<if test="_sql_order != null and _sql_order != ''">
-			order by ${_sql_order}
-		</if>
-	</select>
-
-	<!-- 查询总记录数 -->
-	<select id="count" parameterType="map" resultType="int">
-
-		select count(*) from sys_user
-		<where>
-			<include refid="where" />
-		</where>
-	</select>
-
-	<select id="recount" parameterType="java.lang.String" resultType="int">
-		select count(*) from user_dep_rela
-		where dep_id = #{depid}
 	</select>
 
 	<!--用户编辑角色-->
@@ -309,35 +275,6 @@
 	    ]]></if>
     </select>
 
-	<!--<resultMap id="userInfoMap" type="com.quick.portal.sysUser.SysUserDO">-->
-        <!--<id property="user_id" column="user_id"/>-->
-        <!--<result property="user_name" column="user_name"/>-->
-        <!--<result property="user_real_name" column="user_real_name"/>-->
-        <!--<result property="user_state" column="user_state"/>-->
-        <!--<result property="job_id" column="job_id"/>-->
-        <!--<result property="user_addr" column="user_addr"/>-->
-        <!--<result property="user_tel" column="user_tel"/>-->
-        <!--<result property="user_global_id" column="user_global_id"/>-->
-        <!--<result property="cre_time" column="cre_time"/>-->
-        <!--<result property="upd_time" column="upd_time"/>-->
-        <!--<result property="job_name" column="job_name"/>-->
-        <!--<result property="job_level" column="job_level"/>-->
-        <!--<collection property="roleList" ofType="map" >-->
-            <!--<id property="role_id" column="role_id"/>-->
-            <!--<result property="role_name" column="role_name"/>-->
-            <!--<result property="role_type_id" column="role_type_id"/>-->
-            <!--<result property="role_state" column="role_state"/>-->
-        <!--</collection>-->
-        <!--<collection property="depList" ofType="map">-->
-            <!--<id property="dep_id" column="dep_id"/>-->
-            <!--<result property="dep_name" column="dep_name"/>-->
-            <!--<result property="super_dep_id" column="super_dep_id"/>-->
-            <!--<result property="dep_level" column="dep_level"/>-->
-            <!--<result property="dep_state" column="dep_state"/>-->
-            <!--<result property="dep_global_id" column="dep_global_id"/>-->
-            <!--<result property="sup_dep_global_id" column="sup_dep_global_id"/>-->
-        <!--</collection>-->
-    <!--</resultMap>-->
 
 	<resultMap id="userInfoMap" type="com.quick.portal.sysUser.SysUserDO">
 		<id property="user_id" column="user_id"/>

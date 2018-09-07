@@ -124,7 +124,7 @@ public class ApplicationController extends SysBaseController<ApplicationDO> {
     @RequestMapping(value = "/getBizList", method = RequestMethod.POST)
     @ResponseBody
     public Object getBizList() throws Exception {
-        return getQuery("is_app_page=1");
+        return getQuery("is_app_page=1");   // Select portal-configured application.
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
