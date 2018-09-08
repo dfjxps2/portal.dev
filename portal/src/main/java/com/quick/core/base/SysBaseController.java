@@ -392,7 +392,7 @@ public abstract class SysBaseController<T> {
     // </editor-fold>
 
     // <editor-fold desc="保存Action">
-    @RequestMapping(value = "/save", method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
+    @RequestMapping(value = "/save")
     @ResponseBody
     public DataStore saveAction(T model) {
         return save(model);
@@ -420,15 +420,7 @@ public abstract class SysBaseController<T> {
     public DataStore deleteAction() {
         String id = rstr(getBaseService().getPrimaryKey());
         return delete(id);
-		/*
-		ActionMsg= delBefore(id);
-		if(ActionMsg.isError())
-			return ActionMsg;
-		ActionMsg=delete(id);
-		if(ActionMsg.isError())
-			return ActionMsg;
-		return delAfter(id);
-		*/
+
     }
 
     public DataStore delBefore(String id) {

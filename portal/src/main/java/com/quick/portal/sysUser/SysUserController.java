@@ -109,27 +109,27 @@ public class SysUserController extends SysBaseController<SysUserDO> {
         }
     }
 
-    //获取编辑对象数据
-    @RequestMapping(value = "/getEditData")
-    @ResponseBody
-    public Map<String, Object> getObj() throws Exception {
+//    //获取编辑对象数据
+//    @RequestMapping(value = "/getEditData")
+//    @ResponseBody
+//    public Map<String, Object> getObj() throws Exception {
+//
+//        String sysid = QRequest.getString(request, "user_id");
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("user_id", sysid);
+//        Map<String, Object> obj = iSysUserDao.getUserEdit(map);
+//        return obj;
+//    }
 
-        String sysid = QRequest.getString(request, "user_id");
-        Map<String, Object> map = new HashMap<>();
-        map.put("user_id", sysid);
-        Map<String, Object> obj = iSysUserDao.getUserEdit(map);
-        return obj;
-    }
-
-    //添加用户
-    @RequestMapping(value = "/addUser")
-    @ResponseBody
-    public DataStore save(@RequestBody SysUserDO sysUserDO) {
-        String password = "21232f297a57a5a743894a0e4a801fc3";
-        sysUserDO.setUser_password(password);
-
-        return super.save(sysUserDO);
-    }
+//    //添加用户
+//    @RequestMapping(value = "/addUser")
+//    @ResponseBody
+//    public DataStore save(@RequestBody SysUserDO sysUserDO) {
+//        String password = "21232f297a57a5a743894a0e4a801fc3";
+//        sysUserDO.setUser_password(password);
+//
+//        return super.save(sysUserDO);
+//    }
 
     //修改密码
     @RequestMapping(value = "/changPw")
@@ -208,12 +208,6 @@ public class SysUserController extends SysBaseController<SysUserDO> {
             sysUserDO.setUser_id(usrDetail.getUser_id());//用户ID
         }
         sysUserDO.setUpd_time(date);
-        if (usrDetail.getRela_id() != null && !usrDetail.getRela_id().equals("undefined") && !"null".equals(usrDetail.getRela_id())) {
-            sysUserDO.setRela_id(usrDetail.getRela_id());
-            iSysUserDao.updateUserDepRela(sysUserDO);
-        } else {
-            iSysUserDao.insertUserDepRela(sysUserDO);
-        }
         iSysUserDao.update(sysUserDO);
         //将角色和用户关系放入user_role_rela中
         UserRoleRelaDO userRoleRelaDO = new UserRoleRelaDO();
@@ -278,20 +272,20 @@ public class SysUserController extends SysBaseController<SysUserDO> {
         }
     }
 
-    /**
-     *删除功能
-     * @throws IOException
-     */
-    @RequestMapping(value = "/deleteUser")
-    @ResponseBody
-    public DataStore deleteUser(String user_id) throws IOException {
-
-        if (user_id != null && !user_id.equals("undefined") && !"null".equals(user_id)) {
-            return sysUserService.delete(user_id);
-        }
-
-        return ActionMsg.setError("用户ID不存在！");
-    }
+//    /**
+//     *删除功能
+//     * @throws IOException
+//     */
+//    @RequestMapping(value = "/deleteUser")
+//    @ResponseBody
+//    public DataStore deleteUser(String user_id) throws IOException {
+//
+//        if (user_id != null && !user_id.equals("undefined") && !"null".equals(user_id)) {
+//            return sysUserService.delete(user_id);
+//        }
+//
+//        return ActionMsg.setError("用户ID不存在！");
+//    }
 
 
     @RequestMapping(value = "/userEndecrypt")

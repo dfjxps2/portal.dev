@@ -55,7 +55,7 @@
                                     <label class="col-xs-3 lable_top"><span class="span_require">*</span>角色名称</label>
                                     <div class="col-xs-9"><select
                                             class="form-control required select_change selectpicker" id="role_id"
-                                            data-live-search="false" multiple name="role_id"></select></div>
+                                            data-live-search="false" multiple name="role_ids"></select></div>
                                 </div>
                             </div>
 
@@ -154,12 +154,13 @@
         quick.listUrl = quick.serverUrl + "/list";
     }
 
+    var selector = $('.selectpicker');
     var selectedValues = [];
 
     $(window).on('load', function () {
-        $('.selectpicker').selectpicker('val', '');
-        $('.selectpicker').selectpicker('refresh');
-    })
+        selector.selectpicker('val', '');
+        selector.selectpicker('refresh');
+    });
 
     window.onload = function () {
         /*自定义错误提示信息的方法*/
@@ -200,7 +201,7 @@
                             }
                         }
                     }
-                },
+                }
             },
             messages: {
                 user_name: {
@@ -209,77 +210,6 @@
             }
         });
 
-        function setEditForm(obj) {
-            if (!obj) {
-                obj = request.getAll();
-            } else if (typeof (obj) == "string") {
-                obj = eval("(" + obj + ")");
-            }
-            for (var name in obj) {
-                var val = obj[name] === null ? '' : obj[name];
-                var nodes = document.getElementsByName(name);
-                if (nodes == null || nodes.length == 0) {
-                    _selector = $("#" + name);
-                } else {
-                    _selector = $(nodes);
-                }
-                if (_selector == null || _selector.length == 0)
-                    continue;
-                var nodeType = _selector[0].nodeName.toLowerCase();
-                if (nodeType == "input") {
-                    var etype = _selector.attr("type") || "text";
-                    if (etype == "checkbox") {
-                        CheckBoxInit(name, val);
-                    } else if (etype == "radio") {
-                        _selector.each(function () {
-                            if ($(this).val() == decodeURI(val)) {
-                                $(this).attr("checked", "checked");
-                                if (typeof ($(this).parent().parent().attr("data-toggle")) != "undefined") {
-                                    $(this).parent().parent().find('label').removeClass("active");
-                                    $(this).parent().addClass("active");
-                                }
-                            }
-                        });
-                    } else {
-                        _selector.val(val);
-                    }
-
-                } else if (nodeType == "select") {
-                    ListInit(name, decodeURI(val));
-                } else if (nodeType == "button") {
-                    _selector.val(val);
-                } else {
-                    _selector.text(decodeURI(val));
-                }
-            }
-
-            //选中多选下拉框的值
-            function ListInit(obj, v) {
-                if (!obj) return false;
-                var x = v.split(',');
-                $("#" + obj).find("option").each(function () {
-                    for (var i = 0; i < x.length; i++) {
-                        if (x[i] == this.value)
-                            this.selected = "selected";
-                    }
-                });
-            }
-
-            function CheckBoxInit(obj, v) {
-                if (null == obj || v == '') return false;
-                var chks = document.getElementsByName(obj);
-                var vs = v.split(',');
-                for (var i = 0; i < chks.length; i++) {
-                    chks[i].checked = false;
-                    for (var j = 0; j < vs.length; j++) {
-                        if (vs[j] == chks[i].value) {
-                            chks[i].checked = true;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
 
         /*加载数据*/
         var mode = $.request.queryString["mode"];
@@ -289,10 +219,12 @@
             $('#pagename').html("修改用户信息");
             $("input,textarea").attr("placeholder", "");
             $(".hidefield").show();
-            $.post(quick.serverUrl + '/getEditData?user_id=' + sysid + "&i=" + Math.random(), function (data) {
-                var rolename = data.role_id.split(",");
-                $('.selectpicker').selectpicker('val', rolename);
-                setEditForm(data);
+            $.post(quick.serverUrl + '/getObj?user_id=' + sysid + "&i=" + Math.random(), function (data) {
+
+                setForm(data);
+
+                $('.selectpicker').selectpicker('val', data.role_ids.split(","));
+
                 document.getElementsByName("user_state").checked = false;
                 if (data.user_state == 1) {
                     $("#user_state1").attr("checked", "checked");
@@ -304,7 +236,6 @@
                 }
             });
         }
-        ;
 
         // 保存
         $("#submit-form").click(function () {
@@ -318,40 +249,123 @@
             if (!($("#form").valid())) {
                 return false;
             }
-            ;
 
-            var subData = {
-                user_name: $("#user_name").val(),
-                dep_id: $("#dep_id").val(),
-                job_id: $("#job_id").val(),
-                user_state: $('input:radio[name="user_state"]:checked').val(),
-                user_addr: $("#user_addr").val(),
-                user_tel: $("#user_tel").val(),
-                roles: roles,
-                user_id: $("#user_id").val(),
-                user_real_name: $("#user_real_name").val(),
-                rela_id: $("#rela_id").val()
-            }
-            $.ajax({
-                type: "post",
-                url: "editUser",
-                data: subData,
-                dataType: "json",
-                success: function (data) {
-                    if (data == "1") {
-                        layer.msg('保存成功！', {icon: 1, time: 1000, skin: 'layer-ext-moon'}, function () {
-                            window.location.href = quick.serverUrl + "/list";
-                        });
-                    } else {
-                        layer.msg('保存失败！', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
-                    }
-                },
-                error: function () {
-                    layer.msg('保存失败！', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+
+            // var subData = {
+            //     user_name: $("#user_name").val(),
+            //     dep_id: $("#dep_id").val(),
+            //     job_id: $("#job_id").val(),
+            //     user_state: $('input:radio[name="user_state"]:checked').val(),
+            //     user_addr: $("#user_addr").val(),
+            //     user_tel: $("#user_tel").val(),
+            //     roles: roles,
+            //     user_id: $("#user_id").val(),
+            //     user_real_name: $("#user_real_name").val(),
+            //     rela_id: $("#rela_id").val()
+            // };
+            // $.ajax({
+            //     type: "post",
+            //     url: "save",
+            //     data: subData,
+            //     dataType: "json",
+            //     success: function (data) {
+            //         if (data.code === 1) {
+            //             layer.msg('保存成功！', {icon: 1, time: 1000, skin: 'layer-ext-moon'}, function () {
+            //                 window.location.href = quick.serverUrl + "/list";
+            //             });
+            //         } else {
+            //             layer.msg('保存失败！', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+            //         }
+            //     },
+            //     error: function () {
+            //         layer.msg('保存失败！', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+            //     }
+            // });
+
+            quick.submit(function(data) {
+                if(data.code != "1"){
+                    layer.msg('保存失败,'+ data.msg,{icon:1,time: 3000,skin: 'layer-ext-moon'});
+                    isdone=true;
+                    return;
                 }
+                layer.msg('保存成功',{icon:1,time: 1500,skin: 'layer-ext-moon'}, function(){
+                    cancel();
+                });
             });
         })
-    }
+    };
+
+    // function setEditForm(obj) {
+    //     if (!obj) {
+    //         obj = request.getAll();
+    //     } else if (typeof (obj) == "string") {
+    //         obj = eval("(" + obj + ")");
+    //     }
+    //     for (var name in obj) {
+    //         var val = obj[name] === null ? '' : obj[name];
+    //         var nodes = document.getElementsByName(name);
+    //         if (nodes == null || nodes.length == 0) {
+    //             _selector = $("#" + name);
+    //         } else {
+    //             _selector = $(nodes);
+    //         }
+    //         if (_selector == null || _selector.length == 0)
+    //             continue;
+    //         var nodeType = _selector[0].nodeName.toLowerCase();
+    //         if (nodeType == "input") {
+    //             var etype = _selector.attr("type") || "text";
+    //             if (etype == "checkbox") {
+    //                 CheckBoxInit(name, val);
+    //             } else if (etype == "radio") {
+    //                 _selector.each(function () {
+    //                     if ($(this).val() == decodeURI(val)) {
+    //                         $(this).attr("checked", "checked");
+    //                         if (typeof ($(this).parent().parent().attr("data-toggle")) != "undefined") {
+    //                             $(this).parent().parent().find('label').removeClass("active");
+    //                             $(this).parent().addClass("active");
+    //                         }
+    //                     }
+    //                 });
+    //             } else {
+    //                 _selector.val(val);
+    //             }
+    //
+    //         } else if (nodeType == "select") {
+    //             ListInit(name, decodeURI(val));
+    //         } else if (nodeType == "button") {
+    //             _selector.val(val);
+    //         } else {
+    //             _selector.text(decodeURI(val));
+    //         }
+    //     }
+    //
+    //     //选中多选下拉框的值
+    //     function ListInit(obj, v) {
+    //         if (!obj) return false;
+    //         var x = v.split(',');
+    //         $("#" + obj).find("option").each(function () {
+    //             for (var i = 0; i < x.length; i++) {
+    //                 if (x[i] == this.value)
+    //                     this.selected = "selected";
+    //             }
+    //         });
+    //     }
+    //
+    //     function CheckBoxInit(obj, v) {
+    //         if (null == obj || v == '') return false;
+    //         var chks = document.getElementsByName(obj);
+    //         var vs = v.split(',');
+    //         for (var i = 0; i < chks.length; i++) {
+    //             chks[i].checked = false;
+    //             for (var j = 0; j < vs.length; j++) {
+    //                 if (vs[j] == chks[i].value) {
+    //                     chks[i].checked = true;
+    //                     break;
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 
 
     var jobid = $("#job_id").val();

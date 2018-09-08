@@ -6,31 +6,28 @@
 	<sql id="where">
 		1=1
 		<if test="user_id != null and user_id != '' and !'null'.equals(user_id)"><![CDATA[
-	       and user_id = #{user_id}
+	       and u.user_id = #{user_id}
 	    ]]></if>
 		<if test="user_password != null and user_password != '' and !'null'.equals(user_password)"><![CDATA[
-	       and user_password = #{user_password}
+	       and u.user_password = #{user_password}
 	    ]]></if>
 		<if test="user_state != null and user_state != '' and !'null'.equals(user_state)"><![CDATA[
-	       and user_state = #{user_state}
+	       and u.user_state = #{user_state}
 	    ]]></if>
 		<if test="user_real_name != null and user_real_name != '' and !'null'.equals(user_real_name)"><![CDATA[
-	     and user_real_name = #{user_real_name}
+	     and u.user_real_name = #{user_real_name}
        ]]></if>
 		<if test="job_id != null and job_id != '' and !'null'.equals(job_id)"><![CDATA[
-	       and job_id = #{job_id}
-	    ]]></if>
-		<if test="dep_id != null and dep_id != '' and !'null'.equals(dep_id)"><![CDATA[
-	       and dep_id = #{dep_id}
+	       and u.job_id = #{job_id}
 	    ]]></if>
 		<if test="user_name != null and user_name != '' and !'null'.equals(user_name)"><![CDATA[
-	       and user_name = #{user_name}
+	       and u.user_name = #{user_name}
 	    ]]></if>
 		<if test="cre_time != null and cre_time != '' and !'null'.equals(cre_time)"><![CDATA[
-	       and cre_time >= #{cre_time}
+	       and u.cre_time >= #{cre_time}
 	    ]]></if>
 		<if test="upd_time != null and upd_time != '' and !'null'.equals(upd_time)"><![CDATA[
-	       and upd_time >= #{upd_time}
+	       and u.upd_time >= #{upd_time}
 	    ]]></if>
 		<if test="_sql_where != null and _sql_where != ''"> <![CDATA[
             and ${_sql_where}
@@ -48,8 +45,8 @@
 			#{user_addr, mode=IN},
 			#{user_tel, mode=IN},
 			#{user_global_id, mode=IN},
-			#{roleList[0].role_id, mode=IN},
-			#{depList[0].dep_id, mode=IN},
+			#{roles, mode=IN},
+			#{dep_id, mode=IN},
 			#{error_no, jdbcType=INTEGER, mode=OUT}
 		)}
 	</insert>
@@ -84,17 +81,20 @@
 	</insert>
 
 	<!-- 修改sys_user -->
-	<update id="update" parameterType="com.quick.portal.sysUser.SysUserDO">
-		update sys_user 
-		   set
-		      user_name = #{user_name},
-		      user_real_name = #{user_real_name},
-		      user_addr = #{user_addr},
-		      user_state=#{user_state},
-			  user_tel=#{user_tel},
-			  job_id=#{job_id},
-			  upd_time=#{upd_time}
-		 where user_id = #{user_id}
+	<update id="update" parameterType="com.quick.portal.sysUser.SysUserDO" statementType="CALLABLE">
+		{CALL UPDATE_PORTAL_USER(
+			#{user_id, mode=IN},
+			#{user_name, mode=IN},
+			#{user_real_name, mode=IN},
+			#{user_state, mode=IN},
+			#{job_id, mode=IN},
+			#{user_addr, mode=IN},
+			#{user_tel, mode=IN},
+			#{user_global_id, mode=IN},
+			#{roles, mode=IN},
+			#{dep_id, mode=IN},
+			#{error_no, jdbcType=INTEGER, mode=OUT}
+		)}
 	</update>
 
 	<update id="updateUserDepRela" parameterType="com.quick.portal.sysUser.SysUserDO">
@@ -146,6 +146,8 @@
 		, u.upd_time
 		,group_concat(r.role_name) as role_name
 		,group_concat(d.dep_name) as dep_name
+		,group_concat(r.role_id) as role_ids
+		,group_concat(d.dep_id) as dep_id
 		,j.job_name, j.job_level
 		from sys_user u
 		join user_role_rela ur_rel on u.user_id = ur_rel.user_id

@@ -36,7 +36,7 @@
                             <div class="form-group" style="left: auto;width:90px;">
                                 <span class="input-group-btn" style="display:inline-block;"><button
                                         class="btn btn-primary " type="button"
-                                        onclick="addUser();"> 新增用户</button></span>
+                                        onclick="location.href='edit';"> 新增用户</button></span>
                             </div>
 
                             <input type="hidden" id="user_tel" name="user_tel">
@@ -102,9 +102,10 @@
                     }
                 }
             ], onPageChange: function (number, size) {
+                $("#IDS_PAGESIZE").val(size);
+                $("#IDS_PAGENUM").val(number);
                 pageNum = number;
                 pageSize = size;
-
             }, onPostBody: function (data) {
                 if (queryParm == '' && (data == null || data.length == 0)) {
                     $(".no-records-found td").html('您还没有添加相关信息，请点击<a onclick="add();" href="javascript:void(0);">添加</a>');
@@ -200,7 +201,7 @@
             function () {
                 $.ajax({
                     type: "post",
-                    url: quick.serverUrl + '/deleteUser?user_id=' + node,
+                    url: quick.serverUrl + '/delete?user_id=' + node,
                     dataType: "json",
                     success: function (data) {
                         if (data.code === 1) {

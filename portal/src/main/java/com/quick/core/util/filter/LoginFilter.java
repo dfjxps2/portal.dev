@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 public class LoginFilter extends HttpServlet implements Filter {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final static String COOKIE_ROLE_ID = "sbd.user_role";
+    private final static String COOKIE_USER_ID = "sbd.user_id";
 
     private final static ArrayList<String> prefixIgnores = new ArrayList<>();
 
@@ -43,7 +43,7 @@ public class LoginFilter extends HttpServlet implements Filter {
                          FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
-        String rid = QCookie.getValue(req, COOKIE_ROLE_ID);
+        String user_id = QCookie.getValue(req, COOKIE_USER_ID);
         String url = req.getRequestURI();
 
         //白名单不认证
@@ -53,8 +53,8 @@ public class LoginFilter extends HttpServlet implements Filter {
             return;
         }
 
-        if (rid == null || "0".equals(rid)) {
-            logger.warn("Request for {} without valid user role, possibly because of session timeout.",
+        if (user_id == null || "0".equals(user_id)) {
+            logger.warn("Request for {} without valid user id, possibly because of session timeout.",
                     ((HttpServletRequest) request).getRequestURI());
 
             ((HttpServletRequest)request).getSession().invalidate();

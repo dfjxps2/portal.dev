@@ -51,6 +51,16 @@ public class SysUserServiceImpl extends SysBaseService<SysUserDO> implements ISy
 
     private ISysUserDao<SysUserDO> dao;
 
+    @Override
+    public DataStore save(SysUserDO sysUserDO) {
+        if (sysUserDO.getUser_password() == null || sysUserDO.getUser_password().equals(""))
+            sysUserDO.setUser_password("21232f297a57a5a743894a0e4a801fc3");
+
+        sysUserDO.setRoles(String.join(",", sysUserDO.getRole_ids()));
+
+        return super.save(sysUserDO);
+    }
+
     /**
      * 删除业务
      * @param user_id

@@ -96,40 +96,16 @@ public class SysUserDO  implements java.io.Serializable {
      */
     private Date  upd_time;
 
-    /**
-     * 角色名
-     */
-    private  String role_name;
-    /**
-     * 部门名称
-     */
-    private  String dep_name;
-
-    private Integer job_level;
-
-    /**
-     * 用户-部门关系id
-     * @return
-     */
-    private Integer rela_id;
-
-    /**
-     * 用户编辑原始用户角色值
-     */
-    private  Integer role_oid;
-
-    private  Integer rel_id;
-
-
     private String user_global_id;
   
-  	private Integer role_type_id;
-
-    private String job_name;
-
-    private Integer role_id;
+    private String[] role_ids;
+    private String[] dep_ids;
 
     private  String roles;
+    private String deps;
+
+    private String job_name;
+    private int job_level;
 
     private List<UserRoleDO> roleList;
     private List<UserDepartmentDO> depList;
@@ -160,64 +136,6 @@ public class SysUserDO  implements java.io.Serializable {
         this.error_no = error_no;
     }
 
-    public Integer getRela_id() {
-        return rela_id;
-    }
-
-
-    public void setRela_id(Integer rela_id) {
-        this.rela_id = rela_id;
-    }
-
-    public String getRole_name() {
-        return role_name;
-    }
-
-    public void setRole_name(String role_name) {
-        this.role_name = role_name;
-    }
-
-    public String getDep_name() {
-        return dep_name;
-    }
-
-    public void setDep_name(String dep_name) {
-        this.dep_name = dep_name;
-    }
-
-    public String getJob_name() {
-        return job_name;
-    }
-
-    public void setJob_name(String job_name) {
-        this.job_name = job_name;
-    }
-
-
-//    public Integer getRole_id() {
-//        return role_id;
-//    }
-//
-//    public void setRole_id(Integer role_id) {
-//        this.role_id = role_id;
-//    }
-
-    public Integer getRole_oid() {
-        return role_oid;
-    }
-
-    public Integer getRel_id() {
-        return rel_id;
-    }
-
-    public void setRel_id(Integer rel_id) {
-        this.rel_id = rel_id;
-    }
-
-    public void setRole_oid(Integer role_oid) {
-        this.role_oid = role_oid;
-    }
-
     public String getRoles() {
         return roles;
     }
@@ -226,20 +144,7 @@ public class SysUserDO  implements java.io.Serializable {
         this.roles = roles;
     }
 
-    /**
-     * 角色创建时间
-     */
-    private Date ur_cre_time;
 
-    public Date getUr_cre_time() {
-        return ur_cre_time;
-    }
-
-    public void setUr_cre_time(Date ur_cre_time) {
-        this.ur_cre_time = ur_cre_time;
-    }
-    // </editor-fold>
-    
     // <editor-fold defaultstate="collapsed" desc="成员Get/Set">
     /**
      * 用户ID  Get方法
@@ -411,21 +316,43 @@ public class SysUserDO  implements java.io.Serializable {
 		this.user_global_id = user_global_id;
 	}
 
-	public Integer getRole_type_id() {
-		return role_type_id;
-	}
+    public String[] getRole_ids() {
+        return role_ids;
+    }
 
-	public void setRole_type_id(Integer role_type_id) {
-		this.role_type_id = role_type_id;
-	}
+    public void setRole_ids(String[] role_ids) {
+        this.role_ids = role_ids;
+    }
 
-    public Integer getJob_level() {
+    public String[] getDep_ids() {
+        return dep_ids;
+    }
+
+    public void setDep_ids(String[] dep_ids) {
+        this.dep_ids = dep_ids;
+    }
+
+    public String getDeps() {
+        return deps;
+    }
+
+    public void setDeps(String deps) {
+        this.deps = deps;
+    }
+
+    public String getJob_name() {
+        return job_name;
+    }
+
+    public void setJob_name(String job_name) {
+        this.job_name = job_name;
+    }
+
+    public int getJob_level() {
         return job_level;
     }
 
-    public void setJob_level(Integer job_level) {
+    public void setJob_level(int job_level) {
         this.job_level = job_level;
     }
-
-
 }
