@@ -1,11 +1,11 @@
 
 $(function () {
-	if (top != window){
-		 top.location.href = window.location.href;  
-	}
-	     
+    if (top != window){
+        top.location.href = window.location.href;
+    }
+
     //计算元素集合的总宽度
-	var minMarginLetVal = 990;
+    var minMarginLetVal = 990;
     function calSumWidth(elements) {
         var width = 0;
         $(elements).each(function () {
@@ -42,7 +42,7 @@ $(function () {
     }
     //查看左侧隐藏的选项卡
     function scrollTabLeft() {
-    	
+
         var marginLeftVal = Math.abs(parseInt($('.page-tabs-content').css('margin-left')));
         // 可视区域非tab宽度
         var tabOuterWidth = calSumWidth($(".content-tabs").children().not(".J_menuTabs"));
@@ -50,7 +50,7 @@ $(function () {
         var visibleWidth = $(".content-tabs").outerWidth(true) - tabOuterWidth;
         //实际滚动宽度
         var scrollVal = 0;
-        var cw =$(".page-tabs-content").width(); 
+        var cw =$(".page-tabs-content").width();
         if (($(".page-tabs-content").width() < visibleWidth) && (marginLeftVal < minMarginLetVal)) {
             return false;
         } else {
@@ -121,12 +121,12 @@ $(function () {
             mId = $(this).attr('tabIndex'),
             menuName = $.trim($(this).text()),
             flag = true;
- //       if (dataUrl == undefined || $.trim(dataUrl).length == 0)return false;
+        //       if (dataUrl == undefined || $.trim(dataUrl).length == 0)return false;
 
         // 选项卡菜单已存在
         $('.J_menuTab').each(function () {
-        //    if ($(this).data('id') == dataUrl) {
-        	//判断重复URL+NAME&& menuName
+            //    if ($(this).data('id') == dataUrl) {
+            //判断重复URL+NAME&& menuName
             if ($(this).data('id') == dataUrl && $.trim($(this).text())==menuName) {
                 if (!$(this).hasClass('active')) {
                     $(this).addClass('active').siblings('.J_menuTab').removeClass('active');
@@ -153,13 +153,13 @@ $(function () {
 //            $('.J_mainContent').find('iframe.J_iframe').hide().parents('.J_mainContent').append(str1);
             var isFlag  = isApp(mId);
             if(isFlag=="1"){
-            	var targetOrigin = dataUrl;
-            	window.open(targetOrigin,'_blank');
+                var targetOrigin = dataUrl;
+                window.open(targetOrigin,'_blank');
             }else{
-            	$('.J_mainContent').find('iframe.J_iframe').hide().parents('.J_mainContent').append(str1);
-            	// 添加选项卡
-            	$('.J_menuTabs .page-tabs-content').append(str);
-            	scrollToTab($('.J_menuTab.active'));
+                $('.J_mainContent').find('iframe.J_iframe').hide().parents('.J_mainContent').append(str1);
+                // 添加选项卡
+                $('.J_menuTabs .page-tabs-content').append(str);
+                scrollToTab($('.J_menuTab.active'));
             }
             sendLog(mId,menuName);
         }
@@ -170,38 +170,58 @@ $(function () {
         }
         return false;
     }
-    
-    
 
-	
-	function isApp(id){
-		var bool;
-		 $.ajax({
-			  type: "post",
-			  async:false,
-			  url:  'getIsAppMenuByID?T='+Math.random(),
-			  data:{menuId:id},
-			  success: function(data){
-				  bool = data;
-			  },
-			  error:function(err){
-				   if(err.status ="0"){
-						top.location.href = window.location.href;  
-				   }
-			  }
-		  });
-		return bool;	
-	}
-	    
+
+
+
+    function isApp(id){
+        var bool;
+        $.ajax({
+            type: "post",
+            async:false,
+            url:  'getIsAppMenuByID',
+            data:{menuId:id},
+            success: function(data){
+                if(data.code == '-99'){
+                    layer.msg(data.msg, {
+                        icon : 1,
+                        time : 1000,
+                        skin : 'layer-ext-seaning'
+                    });
+
+                    top.location.href = data.url;
+                }else{
+                    bool = data;
+                }
+
+            },
+            error:function(err){
+                if(err.status ="0"){
+                    top.location.href = window.location.href;
+                }
+            }
+        });
+        return bool;
+    }
+
     function sendLog(id,mn){
-		  $.ajax({
-			  type: "post",
-			  url:  'sendLog?T='+Math.random(),
-			  data:{menuId:id,menuNm:mn},
-			  success: function(data){
-			  }
-		  });
-	  }
+        $.ajax({
+            type: "post",
+            url:  'sendLog',
+            data:{menuId:id,menuNm:mn},
+            success: function(data){
+                if(data.code == '-99'){
+                    layer.msg(data.msg, {
+                        icon : 1,
+                        time : 1000,
+                        skin : 'layer-ext-seaning'
+                    });
+
+                    top.location.href = data.url;
+                }
+            }
+        });
+    }
 
     $('.J_menuItem').on('click', menuItem);
 
