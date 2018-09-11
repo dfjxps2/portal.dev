@@ -176,7 +176,7 @@
             data: subData,
             dataType: "json",
             success: function (data) {
-                if (data == "1") {
+                if (data.code === 1) {
                     layer.msg('密码修改已完成！', {icon: 1, time: 1500, skin: 'layer-ext-moon'});
                     setTimeout("var index = parent.layer.getFrameIndex(window.name);parent.layer.close(index);", 1800);
                 } else {
