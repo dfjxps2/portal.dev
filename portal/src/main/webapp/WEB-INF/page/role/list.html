@@ -85,7 +85,7 @@
        //列表初始化
      function  config(){
 //         quick.serverUrl = "${G.serverUrl}";
-         quick.serverUrl = "${G.host}/role";
+         quick.serverUrl = "${G.host}/roleDO";
          quick.editUrl = "${G.editUrl}";
          quick.objName = "${G.objName}";
          quick.idField = "${G.idField}";
@@ -194,7 +194,7 @@
            if(RFlag==1){
              queryParm=getParm();
            }
-           var url='${G.host}/role/detail?IDS_ROLEID='+value+queryParm + "&pageNum="+pageNum+"&pageSize="+pageSize;
+           var url='${G.host}/roleDO/detail?IDS_ROLEID='+value+queryParm + "&pageNum="+pageNum+"&pageSize="+pageSize;
            window.location.href = url;
        }
 
@@ -203,7 +203,7 @@
            navAppend("权限配置");/*获取父页面元素并动态赋值父页面title*/
            if(quick.authUrl){}
            else{
-               quick.authUrl = "${G.host}/role/roleAuth.do";
+               quick.authUrl = "${G.host}/roleDO/roleAuth.do";
            }
            window.location.href=quick.authUrl + "?role_id="+role_id + getDetailParm();//跳转到另一个页面，并且还在当前框架
        }
@@ -213,7 +213,7 @@
            navAppend("指标权限配置");/*获取父页面元素并动态赋值父页面title*/
            if(quick.authUrl){}
            else{
-               quick.authUrl = "${G.host}/role/metricAuth.do";
+               quick.authUrl = "${G.host}/roleDO/metricAuth.do";
            }
            window.location.href=quick.authUrl + "?role_id="+role_id + getDetailParm();//跳转到另一个页面，并且还在当前框架
        }
@@ -228,7 +228,7 @@ function isRoleHasUser(id){
 	 $.ajax({
 		  type: "post",
 		  async:false,
-		  url: '${G.host}/role/getRoleHasUser',
+		  url: '${G.host}/roleDO/getRoleHasUser',
 		  data:{rid:id},
 		  success: function(data){
 			  flag = data;
@@ -253,7 +253,7 @@ function isRoleHasUser(id){
 			 function(){
 				 $.ajax({
 					 type: "post",
-					 url: '${G.host}/role/delete',
+					 url: '${G.host}/roleDO/delete',
 					 dataType: "json",
 					 data:{role_id:id},
 					 success: function(data){
@@ -270,7 +270,7 @@ function isRoleHasUser(id){
      //编辑
 	function edit(role_id,role_name){
       navAppend("修改角色");/*获取父页面元素并动态赋值父页面title*/
-        var pageURL="${G.host}/role/edit?role_id="+role_id;
+        var pageURL="${G.host}/roleDO/edit?role_id="+role_id;
 	   window.location.href=pageURL;//跳转到另一个页面，并且还在当前框架
 	}
 

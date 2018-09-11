@@ -1,21 +1,4 @@
-/**
- * <h3>标题 : Quick通用系统框架 </h3>
- * <h3>描述 : 请求类</h3>
- * <h3>日期 : 2017-04-10</h3>
- * <h3>版权 : Copyright (C) 海口鑫网计算机网络有限公司</h3>
- * 
- * <p>
- * @author wtj wtj@xinwing.com.cn
- * @version <b>v1.0.0</b>
- *          
- * <b>修改历史:</b>
- * -------------------------------------------
- * 修改人 修改日期 修改描述
- * -------------------------------------------
- *          
- *          
- * </p>
- */
+
 package com.quick.portal.userRole;
 
 import java.io.IOException;
@@ -54,7 +37,7 @@ import com.quick.portal.security.authority.metric.PropertiesUtil;
 @Controller
 @Scope("prototype")
 @RequestMapping(value = "/role")
-public class RoleController extends SysBaseController<Role> {
+public class RoleController extends SysBaseController<RoleDO> {
     //角色服务
     @Resource(name = "roleService")
     private RoleService roleService;
@@ -63,7 +46,7 @@ public class RoleController extends SysBaseController<Role> {
     private  RoleDao roleDao;
     
     @Override
-    public ISysBaseService getBaseService(){
+    public ISysBaseService<RoleDO> getBaseService(){
         return roleService;
     }
     
@@ -100,7 +83,7 @@ public class RoleController extends SysBaseController<Role> {
      * @return
      */
     @Override
-    public DataStore save(Role model) {
+    public DataStore save(RoleDO model) {
         Date now = DateTime.Now().getTime();
         //名称不能重复
         if(roleService.exist("job_name", model.getRole_name(), model.getRole_id()))
@@ -115,7 +98,7 @@ public class RoleController extends SysBaseController<Role> {
     @Override
     public Map<String, Object> getObj(){
         Map<String,Object> m= getQueryMap(request);
-        Role obj= roleService.selectObj(m);
+        RoleDO obj= roleService.selectObj(m);
        if(obj==null){
            return null;
        }
@@ -130,7 +113,7 @@ public class RoleController extends SysBaseController<Role> {
     @ResponseBody
     public Map<String, Object> getObjByName(){
         Map<String,Object> m= getQueryMap(request);
-        Role obj= roleService.selectObjByName(m);
+        RoleDO obj= roleService.selectObjByName(m);
         if(obj==null){
             return null;
         }
@@ -255,7 +238,7 @@ public class RoleController extends SysBaseController<Role> {
      */
     @RequestMapping(value = "/insertRole")
     @ResponseBody
-    public String Role(Role model){
+    public String Role(RoleDO model){
         try{
         roleService.insert(model);}
         catch (Exception e)
@@ -274,7 +257,7 @@ public class RoleController extends SysBaseController<Role> {
      */
     @RequestMapping
 //    @ResponseBody
-    public String updataRole(Role model){
+    public String updataRole(RoleDO model){
         try {
             if(!"".equals(model.getRole_name()))
                 model.setRole_name(URLDecoder.decode(model.getRole_name(), "UTF-8"));

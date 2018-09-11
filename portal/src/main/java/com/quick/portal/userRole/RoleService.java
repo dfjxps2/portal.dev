@@ -19,7 +19,6 @@
 package com.quick.portal.userRole;
 
 import com.quick.core.base.ISysBaseService;
-import com.quick.core.base.model.PageBounds;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,13 +30,13 @@ import java.util.Map;
  * 服务接口
  * @author Administrator
  */
-public interface RoleService extends ISysBaseService<Role> {
+public interface RoleService extends ISysBaseService<RoleDO> {
     //新增角色
-    int insert(Role role);
+    int insert(RoleDO roleDO);
     //更新角色
-    int update(Role role);
+    int update(RoleDO roleDO);
 
-    Role selectObjByName(Map<String,Object> map);
+    RoleDO selectObjByName(Map<String,Object> map);
 
     List<Map<String,Object>> listAllMenu(Map<String, Object> m);
 

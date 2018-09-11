@@ -1,279 +1,325 @@
 <!DOCTYPE html>
 <html>
-  <head>
-	  <#include "/WEB-INF/include/reslist.html" />
-	<style type="text/css">
-	.fixed-table-container {
-		margin-top: 16px;
-		padding-bottom:25px;
-	}
-	select::-ms-expand{
-		display: none;
-	}
-	</style>	  
-  </head>
-   <script>
-       var pageNum=1;
-       var pageSize=10;
-       var queryParm = '';
-       var flag=true;
-       var pageFlag=0;
-       
-       $("#menu_id").val("null");
-       _gridPool["menu_ids"]=new BCombobox("#menu_ids");
-       _gridPool["menu_ids"].load("${G.host}/sysMenu/getData", {textField:"menu_cn_name",valueField:"menu_id",emptyObj:{menu_id:"",menu_cn_name:"请选择菜单"} });
-	   //初始化表格
-	   function  config(){
-           var RFlag=$.request.queryString["RFlag"];
-		   quick.serverUrl = "${G.serverUrl}";
-		   quick.editUrl = "${G.editUrl}";
-		   quick.objName = "${G.objName}";
-		   quick.idField = "${G.idField}";
-           
-		   $("#list").bootstrapTable("destroy");
-		   _gd["list"]=new BGrid("#list");
-		   _gd["list"].config({
-			   url:quick.serverUrl+"/getList?i=" + Math.random(),
-			   idField: quick.idField,
-			   sortName: quick.idField,
-               cache:false,
-			   height: $(document.body).height()-50,
-			   toolbar:"#formSearch",
-			   columns: [
-						{title: '选择', checkbox: true },
-			             { field: 'menu_cn_name',  title: '菜单中文名称' ,align: 'center',width: '11%', formatter:function(value,row,index){
-		                       return "<a href='javascript:void(0)' onclick='info("+row.menu_id+")' id='"+row.menu_id+"'>"+row.menu_cn_name+"</a>";
-		                   }},
-		                   { field: 'menu_name', title: '菜单英文名称',align: 'center', width: 110  },
-		                   { field: 'super_menu_name', title: '上级菜单', align: 'center',width: 100  },
-		                   { field: 'menu_level', title: '级别',align: 'center', width: 50  },
-		                   { field: 'disp_order', title: '显示顺序',align: 'center', width: 80  },
-		                   { field: 'menu_state', title: '菜单状态', align: 'center',width: 80 , formatter:function(value,row,index){
-		                	   var state = '<span style="color:#CFCFCF">禁用</span>';  
-		                	   if (row.menu_state==1) {
-		                		   state = '<span style="color:#9ACD32">激活</span>';  
-		                	   }
-		                	   return state;
-		                   }},
-		                   { field: 'app_name', title: '应用系统', width: 100 ,align: 'center', formatter:function(value,row,index){
-		                	   var appName = "无对应系统";  
-		                	   if (row.app_name != null) {
-		                		   appName = row.app_name;  
-		                	   }
-		                	   return appName;
-		                   }},
-		                   { field: 'upd_time', title: '更新时间',align: 'center', width: 140   },
-						   { field: 'CZ',  title: '操作',align: 'center',width: 122, formatter:function(value,row,index){
-							   var  str = "<button type='button' class='btn_el' onclick='edit(\""+row.menu_id+"\")'>修改</button>|"
-							   +"<button type='button' class='btn_el' onclick='del(\""+row.menu_id+"\",\""+row.menu_cn_name+"\",\""+"1"+"\")'><span>激活</span></button>";
-							   if (row.menu_state==1) {  
-								   str = "<button type='button' class='btn_el' onclick='edit(\""+row.menu_id+"\")'>修改</button>|"
-								   +"<button type='button' class='btn_el' onclick='del(\""+row.menu_id+"\",\""+row.menu_cn_name+"\",\""+"0"+"\")'><span style='color:#FF4040'>禁用</span></button>";
-							} 
-							   return str;
-						   }}
-			   ],
-			   singleSelect:false,//单选或多选
-			   onPageChange:function(number, size){
-                   $("#IDS_PAGESIZE").val(size);
-                   $("#IDS_PAGENUM").val(number);
-                   pageNum=number;
-                   pageSize=size;
-               },
-               onPostBody:function(data){
-				   if(queryParm=='' &&　(data == null || data.length == 0)){
-					   $(".no-records-found td").html('您还没有添加相关信息，请点击<a onclick="add();" href="javascript:void(0);">添加</a>');
-                   }
-			   }
-		   });
+<head>
+    <#include "/WEB-INF/include/reslist.html" />
+    <style type="text/css">
+        .fixed-table-container {
+            margin-top: 16px;
+            padding-bottom: 25px;
+        }
 
-           if(RFlag==1){
-               requery();
-           }else{
-               _gd["list"].init();
-           }
-	   }
+        select::-ms-expand {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content wrapper-content-x animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox ibox-x">
+                <div class="ibox-content ibox-content-x">
+                    <div class="panel-mar">
+                        <form id="formSearch" class="form-inline">
+                            <div class="form-group"
+                                 style="padding: 0px;width:160px;margin-right: 0px;margin-left: 48px;">
+                                <input id="menu_cn_name" name="menu_cn_name" class="input-sm form-control" type="text"
+                                       placeholder="输入菜单中文名称"/>
+                            </div>
+                            <div class="form-group" style="padding: 0px;width:155px;">
+                                <div class="col-xs-8">
+                                    <select id="menu_ids" name="menu_ids" onclick="superId()"
+                                            class="input-group form-control form-control-green select_change"
+                                            style="width: 150px"></select>
+                                    <input type="hidden" id="menu_id" name="menu_id"/>
+                                </div>
+                            </div>
+                            <div class="form-group" style="padding: 0px;width:96px;">
+
+                                <select name="menu_state"
+                                        class="input-group form-control form-control-green select_change"
+                                        id="IDS_SYSPLATFORM">
+                                    <option value="">菜单状态</option>
+                                    <option value="1">激活</option>
+                                    <option value="0">禁用</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="padding: 0px;width:200px;margin-right: 1px;">
+                                <span class="input-group-btn" style="display:inline-block;"><button
+                                        class="btn btn-primary " type="button" onclick="query();" style="width:72px;"> 查询</button> </span>
+                            </div>
+                            <div class="form-group" style="width:330px;margin-right: 0px;">
+                                <span class="input-group-btn" style="padding-right: 42px;"><button
+                                        class="btn btn-primary " type="button" onclick="addsum();" style="width:72px;"> 新增菜单</button> </span>
+                                <span class="input-group-btn" style="padding-right: 0px;"><button
+                                        class="btn btn-primary " type="button" onclick="disable(1);"
+                                        style="width:72px;"> 激活</button> </span>
+                                <span class="input-group-btn" style="padding-right: 0px;"><button
+                                        class="btn btn-primary " type="button" onclick="disable(0);"
+                                        style="width:72px;"> 禁用</button> </span>
+                            </div>
+                        </form>
+                    </div>
+                    <div style="margin:5px;">
+                        <table id="list" class="table-striped" style="table-layout:fixed"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--   <input type="hidden"  id="IDS_PAGENUM" name="IDS_PAGENUM">
+          <input type="hidden"  id="IDS_PAGESIZE" name="IDS_PAGENUM"> -->
+    </div>
+</div>
+</body>
+<script>
+    var pageNum = 1;
+    var pageSize = 10;
+    var queryParm = '';
+    var flag = true;
+    var pageFlag = 0;
+
+    $("#menu_id").val("null");
+    _gridPool["menu_ids"] = new BCombobox("#menu_ids");
+    _gridPool["menu_ids"].load("${G.host}/sysMenu/getData", {
+        textField: "menu_cn_name",
+        valueField: "menu_id",
+        emptyObj: {menu_id: "", menu_cn_name: "请选择菜单"}
+    });
+
+    //初始化表格
+    function config() {
+        var RFlag = $.request.queryString["RFlag"];
+        quick.serverUrl = "${G.serverUrl}";
+        quick.editUrl = "${G.editUrl}";
+        quick.objName = "${G.objName}";
+        quick.idField = "${G.idField}";
+
+        $("#list").bootstrapTable("destroy");
+        _gd["list"] = new BGrid("#list");
+        _gd["list"].config({
+            url: quick.serverUrl + "/getList?i=" + Math.random(),
+            idField: quick.idField,
+            sortName: quick.idField,
+            cache: false,
+            height: $(document.body).height() - 50,
+            toolbar: "#formSearch",
+            columns: [
+                {title: '选择', checkbox: true},
+                {
+                    field: 'menu_cn_name',
+                    title: '菜单中文名称',
+                    align: 'center',
+                    width: '11%',
+                    formatter: function (value, row, index) {
+                        return "<a href='javascript:void(0)' onclick='info(" + row.menu_id + ")' id='" + row.menu_id + "'>" + row.menu_cn_name + "</a>";
+                    }
+                },
+                {field: 'menu_name', title: '菜单英文名称', align: 'center', width: 110},
+                {field: 'super_menu_name', title: '上级菜单', align: 'center', width: 100},
+                {field: 'menu_level', title: '级别', align: 'center', width: 50},
+                {field: 'disp_order', title: '显示顺序', align: 'center', width: 80},
+                {
+                    field: 'menu_state',
+                    title: '菜单状态',
+                    align: 'center',
+                    width: 80,
+                    formatter: function (value, row, index) {
+                        var state = '<span style="color:#CFCFCF">禁用</span>';
+                        if (row.menu_state == 1) {
+                            state = '<span style="color:#9ACD32">激活</span>';
+                        }
+                        return state;
+                    }
+                },
+                {
+                    field: 'app_name',
+                    title: '应用系统',
+                    width: 100,
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var appName = "无对应系统";
+                        if (row.app_name != null) {
+                            appName = row.app_name;
+                        }
+                        return appName;
+                    }
+                },
+                {field: 'upd_time', title: '更新时间', align: 'center', width: 140},
+                {
+                    field: 'CZ', title: '操作', align: 'center', width: 122, formatter: function (value, row, index) {
+                        var str = "<button type='button' class='btn_el' onclick='edit(\"" + row.menu_id + "\")'>修改</button>|"
+                            + "<button type='button' class='btn_el' onclick='del(\"" + row.menu_id + "\",\"" + row.menu_cn_name + "\",\"" + "1" + "\")'><span>激活</span></button>";
+                        if (row.menu_state == 1) {
+                            str = "<button type='button' class='btn_el' onclick='edit(\"" + row.menu_id + "\")'>修改</button>|"
+                                + "<button type='button' class='btn_el' onclick='del(\"" + row.menu_id + "\",\"" + row.menu_cn_name + "\",\"" + "0" + "\")'><span style='color:#FF4040'>禁用</span></button>";
+                        }
+                        return str;
+                    }
+                }
+            ],
+            singleSelect: false,//单选或多选
+            onPageChange: function (number, size) {
+                $("#IDS_PAGESIZE").val(size);
+                $("#IDS_PAGENUM").val(number);
+                pageNum = number;
+                pageSize = size;
+            },
+            onPostBody: function (data) {
+                if (queryParm == '' && (data == null || data.length == 0)) {
+                    $(".no-records-found td").html('您还没有添加相关信息，请点击<a onclick="add();" href="javascript:void(0);">添加</a>');
+                }
+            }
+        });
+
+        if (RFlag == 1) {
+            requery();
+        } else {
+            _gd["list"].init();
+        }
+    }
 
     //删除记录
-    function del(menu_id,name,state){
-    	var infoBefore =  "确认将激活【"+name+"】菜单吗？<br/>激活后，菜单将可正常显示！";
-    	var infoAfter = "菜单【"+name+"】激活成功！";
-    	var title = "激活菜单";
-    	if (state == "0") {
-    		infoBefore =  "确认将禁用【"+name+"】菜单吗？<br/>禁用后，菜单将无法显示！";
-        	infoAfter = "菜单【"+name+"】禁用成功！";
-        	title = "禁用菜单";
-		}
-    	var menuid = [];
-    	menuid.push(menu_id);
-       layer.confirm(
-    		infoBefore,
-		   {icon:3,title:title,skin: 'layer-ext-moon'},
-		   function(){
-			   $.ajax({
-				   type: "post",
-				   url: quick.serverUrl + '/deletes?menu_id=' + menuid+'&state='+state,
-				   dataType: "json",
-				   //data:{ID:node},
-				   success: function(data){
-					   layer.msg(infoAfter, {icon:1,time: 1000,skin: 'layer-ext-moon'});
-                       _gd["list"].refresh();
-				   },
-				   error:function(err){
-					   layer.msg("结果异常！",{icon:1,time: 1000,skin: 'layer-ext-moon'});
-				   }
-			   });
-		   }
-       );
+    function del(menu_id, name, state) {
+        var infoBefore = "确认将激活【" + name + "】菜单吗？<br/>激活后，菜单将可正常显示！";
+        var infoAfter = "菜单【" + name + "】激活成功！";
+        var title = "激活菜单";
+        if (state == "0") {
+            infoBefore = "确认将禁用【" + name + "】菜单吗？<br/>禁用后，菜单将无法显示！";
+            infoAfter = "菜单【" + name + "】禁用成功！";
+            title = "禁用菜单";
+        }
+        var menuid = [];
+        menuid.push(menu_id);
+        layer.confirm(
+            infoBefore,
+            {icon: 3, title: title, skin: 'layer-ext-moon'},
+            function () {
+                $.ajax({
+                    type: "post",
+                    url: quick.serverUrl + '/deletes?menu_id=' + menuid + '&state=' + state,
+                    dataType: "json",
+                    //data:{ID:node},
+                    success: function (data) {
+                        layer.msg(infoAfter, {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+                        _gd["list"].refresh();
+                    },
+                    error: function (err) {
+                        layer.msg("结果异常！", {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+                    }
+                });
+            }
+        );
     }
-    
-	//查看详细信息
-	function info(id){
-      navAppend("编辑集成系统");/*获取父页面元素并动态赋值父页面title*/
-        var url = '${G.host}/sysMenu/info'+ "?menu_id="+id + getDetailParm();
-        window.location.href = url;
-	}
-	
-	
-	function edit(id){
-        navAppend("编辑集成系统");/*获取父页面元素并动态赋值父页面title*/
-	    window.location.href=quick.editUrl + "?menu_id="+id + getDetailParm();//跳转到另一个页面，并且还在当前框架
-	}
-	function add(){
-		menuGoto(quick.editUrl);
-	}
-	
-	function addsum(){
-		var url = '${G.host}/sysMenu/edit';
-		window.location.href = url;
-	}
-	
-    //将url查询信息传至详细信息页面,返回时调用
-	function goDetail(obj){
-		var value = $(obj).attr("id");
-		navAppend("详情信息");/*获取父页面元素并动态赋值父页面title*/
-		window.location.href=quick.editUrl + "?mode=browse&menu_id="+id + getDetailParm();
-	}
-    function query(){
-       _gd['list'].refresh();
-       queryParm=getParm();
-    }
-    
-    function disable (state){
-    	var menuid = [];
-    	$("input:checkbox[name='btSelectItem']:checked").each(function() { // 遍历name=test的多选框
-    		menuid.push($(this).val());
-    		});
 
-    	if (menuid.length === 0) {
+    //查看详细信息
+    function info(id) {
+        navAppend("编辑集成系统");
+        /*获取父页面元素并动态赋值父页面title*/
+        var url = '${G.host}/sysMenu/info' + "?menu_id=" + id + getDetailParm();
+        window.location.href = url;
+    }
+
+
+    function edit(id) {
+        navAppend("编辑集成系统");
+        /*获取父页面元素并动态赋值父页面title*/
+        window.location.href = quick.editUrl + "?menu_id=" + id + getDetailParm();//跳转到另一个页面，并且还在当前框架
+    }
+
+    function add() {
+        menuGoto(quick.editUrl);
+    }
+
+    function addsum() {
+        var url = '${G.host}/sysMenu/edit';
+        window.location.href = url;
+    }
+
+    //将url查询信息传至详细信息页面,返回时调用
+    function goDetail(obj) {
+        var value = $(obj).attr("id");
+        navAppend("详情信息");
+        /*获取父页面元素并动态赋值父页面title*/
+        window.location.href = quick.editUrl + "?mode=browse&menu_id=" + id + getDetailParm();
+    }
+
+    function query() {
+        _gd['list'].refresh();
+        queryParm = getParm();
+    }
+
+    function disable(state) {
+        var menuid = [];
+        $("input:checkbox[name='btSelectItem']:checked").each(function () { // 遍历name=test的多选框
+            menuid.push($(this).val());
+        });
+
+        if (menuid.length === 0) {
             layer.msg("请至少选择一个菜单项", {icon: 1, time: 1000, skin: 'layer-ext-moon'});
             return;
         }
 
-    	var infoBefore =  "确认将激活【 "+menuid.length+" 】个菜单吗？<br/>激活后，菜单将可正常显示！";
-    	var infoAfter = "菜单激活成功！";
-    	var title = "激活菜单";
-    	if (state == "0") {
-    		infoBefore =  "确认将禁用【 "+menuid.length+" 】个菜单吗？<br/>禁用后，菜单将无法显示！";
-        	infoAfter = "菜单禁用成功！";
-        	title = "禁用菜单";
-		}
-    	 layer.confirm(
-    	    		infoBefore,
-    			   {icon:3,title:title,skin: 'layer-ext-moon'},
-    			   function(){
-    				   $.ajax({
-    					   type: "post",
-    					   url: quick.serverUrl + '/deletes?menu_id=' + menuid+'&state='+state,
-    					   dataType: "json",
-    					   //data:{ID:node},
-    					   success: function(data){
-    						   layer.msg(infoAfter, {icon:1,time: 1000,skin: 'layer-ext-moon'});
-    	                       _gd["list"].refresh();
-    					   },
-    					   error:function(err){
-    						   layer.msg("结果异常！",{icon:1,time: 1000,skin: 'layer-ext-moon'});
-    					   }
-    				   });
-    			   }
-    	       );
+        var infoBefore = "确认将激活【 " + menuid.length + " 】个菜单吗？<br/>激活后，菜单将可正常显示！";
+        var infoAfter = "菜单激活成功！";
+        var title = "激活菜单";
+        if (state == "0") {
+            infoBefore = "确认将禁用【 " + menuid.length + " 】个菜单吗？<br/>禁用后，菜单将无法显示！";
+            infoAfter = "菜单禁用成功！";
+            title = "禁用菜单";
+        }
+        layer.confirm(
+            infoBefore,
+            {icon: 3, title: title, skin: 'layer-ext-moon'},
+            function () {
+                $.ajax({
+                    type: "post",
+                    url: quick.serverUrl + '/deletes?menu_id=' + menuid + '&state=' + state,
+                    dataType: "json",
+                    //data:{ID:node},
+                    success: function (data) {
+                        layer.msg(infoAfter, {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+                        _gd["list"].refresh();
+                    },
+                    error: function (err) {
+                        layer.msg("结果异常！", {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+                    }
+                });
+            }
+        );
     }
-    
+
     //获取返回时传回的数据
-    function requery(){
-       var pn = Number($.request.queryString["IpageNum"]) || 1;
-       var ps =  $.request.queryString["IpageSize"] || 10;
-       
-       _gd["list"].config({
-           pageSize: ps
-           ,onLoadSuccess:function(){
-               if(pageFlag>0){
-                   return;
-               }
-               $('#list').bootstrapTable('selectPage', pn);
-               pageFlag++;
-           }
-       });
-       _gd["list"].init();
+    function requery() {
+        var pn = Number($.request.queryString["IpageNum"]) || 1;
+        var ps = $.request.queryString["IpageSize"] || 10;
+
+        _gd["list"].config({
+            pageSize: ps
+            , onLoadSuccess: function () {
+                if (pageFlag > 0) {
+                    return;
+                }
+                $('#list').bootstrapTable('selectPage', pn);
+                pageFlag++;
+            }
+        });
+        _gd["list"].init();
     }
+
     //获取查询框数据
-	function getParm(){
-		var s = '&I'+$("#formSearch").serialize().replace(/&/g, "&I");
-		return s;
-	}
-	function getDetailParm(){
-		var s= queryParm + "&IpageNum="+pageNum+"&IpageSize="+pageSize;
-		return s;
-	}
-	
-	function superId(){
-		$("#menu_id").val($("#menu_ids").val());
-	}
-  </script>
-  <body class="gray-bg">
-   <div class="wrapper wrapper-content wrapper-content-x animated fadeInRight">
-	  <div class="row">
-		  <div class="col-sm-12">
-			  <div class="ibox ibox-x">
-				  <div class="ibox-content ibox-content-x">
-					  <div class="panel-mar">
-							  <form id="formSearch" class="form-inline">
-                                  <div class="form-group" style="padding: 0px;width:160px;margin-right: 0px;margin-left: 48px;">
-                                      <input id="menu_cn_name" name="menu_cn_name" class="input-sm form-control" type="text" placeholder="输入菜单中文名称" /> 
-								  </div>
-                                  <div class="form-group" style="padding: 0px;width:155px;">
-                                     <div class="col-xs-8">
-                                	  <select id="menu_ids" name="menu_ids" onclick="superId()" class="input-group form-control form-control-green select_change" style="width: 150px"></select>
-                                		<input type="hidden" id="menu_id" name="menu_id" />
-                                </div>
-								  </div>
-                                  <div class="form-group" style="padding: 0px;width:96px;">
-                                  
-                        				 <select name="menu_state" class="input-group form-control form-control-green select_change" id="IDS_SYSPLATFORM">
-										  <option value="">菜单状态</option>
-										  <option value="1">激活</option>
-										  <option value="0">禁用</option>
-									  </select>
-									</div>
-									<div class="form-group" style="padding: 0px;width:200px;margin-right: 1px;">
-								  		<span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="query();" style="width:72px;"> 查询</button> </span>
-									</div>
-									<div class="form-group" style="width:330px;margin-right: 0px;">
-										<span class="input-group-btn" style="padding-right: 42px;"><button class="btn btn-primary " type="button" onclick="addsum();" style="width:72px;"> 新增菜单</button> </span>
-										<span class="input-group-btn" style="padding-right: 0px;"><button class="btn btn-primary " type="button" onclick="disable(1);" style="width:72px;"> 激活</button> </span>
-										<span class="input-group-btn" style="padding-right: 0px;"><button class="btn btn-primary " type="button" onclick="disable(0);" style="width:72px;"> 禁用</button> </span>
-									</div>
-							  </form>
-						</div>
-					  <div style ="margin:5px;">
-						  <table id="list" class="table-striped" style="table-layout:fixed"></table>
-					  </div>
-				  </div>
-			  </div>
-		  </div>
-		<!--   <input type="hidden"  id="IDS_PAGENUM" name="IDS_PAGENUM">
-		  <input type="hidden"  id="IDS_PAGESIZE" name="IDS_PAGENUM"> -->
-	  </div>
-  </div>
-  </body>
+    function getParm() {
+        var s = '&I' + $("#formSearch").serialize().replace(/&/g, "&I");
+        return s;
+    }
+
+    function getDetailParm() {
+        var s = queryParm + "&IpageNum=" + pageNum + "&IpageSize=" + pageSize;
+        return s;
+    }
+
+    function superId() {
+        $("#menu_id").val($("#menu_ids").val());
+    }
+</script>
 </html>

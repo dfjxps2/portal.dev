@@ -642,7 +642,7 @@ public class MesManageController extends SysBaseController<MesManageDO> {
         }
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss ");
         map.put("appr_time",new Date());
-        String useId = QCookie.getValue(request,"ids");
+        String useId = QCookie.getValue(request,"sbd.user_id");
         map.put("appr_user_id",useId);
         if(msgids!=null && msgids.length>0){
             String[] msgs = msgids[0].split(",");

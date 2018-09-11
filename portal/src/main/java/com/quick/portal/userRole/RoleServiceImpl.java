@@ -1,26 +1,8 @@
-/**
- * <h3>标题 : Quick通用系统框架 </h3>
- * <h3>描述 : 服务类</h3>
- * <h3>日期 : 2017-04-10</h3>
- * <h3>版权 : Copyright (C) 海口鑫网计算机网络有限公司</h3>
- * 
- * <p>
- * @author wtj wtj@xinwing.com.cn
- * @version <b>v1.0.0</b>
- *          
- * <b>修改历史:</b>
- * -------------------------------------------
- * 修改人 修改日期 修改描述
- * -------------------------------------------
- *          
- *          
- * </p>
- */
+
 package com.quick.portal.userRole;
 
 import com.quick.core.base.SysBaseService;
 import com.quick.core.base.ISysBaseDao;
-import com.quick.core.base.model.PageBounds;
 import com.quick.core.util.common.QCommon;
 import com.quick.core.util.common.QRequest;
 import com.quick.portal.userRoleRela.UserRoleRelaDO;
@@ -40,7 +22,7 @@ import java.util.*;
  * @author Administrator
  */
  @Service("roleService")
-public class RoleServiceImpl extends SysBaseService<Role> implements RoleService {
+public class RoleServiceImpl extends SysBaseService<RoleDO> implements RoleService {
 
     //初始化
     public RoleServiceImpl() {
@@ -55,19 +37,19 @@ public class RoleServiceImpl extends SysBaseService<Role> implements RoleService
 
     //重写dao
     @Override
-    public ISysBaseDao getDao(){
+    public ISysBaseDao<RoleDO> getDao(){
         return dao;
     }
 
     //新增角色
     @Override
-    public int insert(Role role) {
-        return dao.insert(role);
+    public int insert(RoleDO roleDO) {
+        return dao.insert(roleDO);
     }
     //更新角色
     @Override
-    public int update(Role role) {
-        return dao.update(role);
+    public int update(RoleDO roleDO) {
+        return dao.update(roleDO);
     }
 
     @Override
@@ -130,7 +112,7 @@ public class RoleServiceImpl extends SysBaseService<Role> implements RoleService
     }
     /* 根据姓名精确查找*/
     @Override
-    public Role selectObjByName(Map<String,Object> map){
+    public RoleDO selectObjByName(Map<String,Object> map){
         return dao.selectObjByName(map);
     }
 

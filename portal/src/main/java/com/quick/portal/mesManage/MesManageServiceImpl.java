@@ -159,7 +159,7 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
                 response.getWriter().flush();
             }else{
                 mesManageDO.setAppr_state(MesInfoConstants.AUTOMATIC_APPROVAL);
-                String userId = QCookie.getValue(request,"ids");
+                String userId = QCookie.getValue(request,"sbd.user_id");
                 mesManageDO.setPub_user_id(Integer.parseInt(userId));
                 mesManageDao.insert(mesManageDO);
                 map.clear();
@@ -290,7 +290,7 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
             deleteFile(newpath);
            Calendar calendar = Calendar.getInstance();
            Date date = calendar.getTime();
-            String useId = QCookie.getValue(request,"ids");
+            String useId = QCookie.getValue(request,"sbd.user_id");
             map.put("pub_user_id",Integer.parseInt(useId));
             map.put("pub_time",date);
             map.put("appr_time",date);
@@ -457,7 +457,7 @@ public class MesManageServiceImpl extends SysBaseService<MesManageDO> implements
             datacontent = parseFile(fi)+datacontent;
             SolrUtils.addSolrInfo(msg_content,datacontent,type,title,attach);
         }
-        String useId = QCookie.getValue(request,"ids");
+        String useId = QCookie.getValue(request,"sbd.user_id");
         map.put("pub_user_id",Integer.parseInt(useId));
         Calendar calendar = Calendar.getInstance();
         Date date = calendar.getTime();

@@ -47,7 +47,7 @@
 			</div>
 			<div class="ibox">
 				<div class="ibox-content ibox-content-ad">
-					<form style="padding-top: 30px;" id="form" action="${G.host}/role/updataRole" class="wizard-big">
+					<form style="padding-top: 30px;" id="form" action="${G.host}/roleDO/updataRole" class="wizard-big">
 						<input type="hidden" id="role_id" name="role_id" value=""/>
 						<div class="row">
 							<div class="col-sm-8 form_ipt_botm">
@@ -221,7 +221,7 @@
 					nameFuc:true,
 					nameFuc1:true,
 					remote: {
-						url: "${G.host}/role/getObjByName",     //后台处理程序
+						url: "${G.host}/roleDO/getObjByName",     //后台处理程序
 						type: "post",               //数据发送方式
 						dataType: "json",           //接受数据格式
 						data: {                     //要传递的数据
@@ -256,7 +256,7 @@
 			var flag=false;
 			$.ajax({
 				type: "post",
-				url:  '${G.host}/role/getObjByName?T='+Math.random(),
+				url:  '${G.host}/roleDO/getObjByName?T='+Math.random(),
 				async: false,
 				data:{role_name:$("#role_name").val()},
 				success: function(data){

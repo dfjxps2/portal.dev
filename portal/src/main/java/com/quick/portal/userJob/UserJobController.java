@@ -43,7 +43,7 @@ public class UserJobController extends SysBaseController<UserJobDO> {
     private IUserJobService userJobService;
     
     @Override
-    public ISysBaseService getBaseService(){
+    public ISysBaseService<UserJobDO> getBaseService(){
         return userJobService;
     }
     

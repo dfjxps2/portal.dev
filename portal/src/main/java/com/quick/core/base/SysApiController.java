@@ -5,6 +5,7 @@
  * <h3>版权 : Copyright (C) 海口鑫网计算机网络有限公司</h3>
  *
  * <p>
+ *
  * @author admin admin@xinwing.com.cn
  * @version <b>v1.0.0</b>
  *
@@ -44,31 +45,30 @@ import com.quick.portal.web.login.WebLoginUser;
  */
 public abstract class SysApiController extends SysBaseController<DataStore> {
     public final static int ROLEID_ADMIN = 1;
-    
-	protected HttpServletRequest request;
-	protected HttpServletResponse response;
-	
-	
-	public Map<String, Object> urlMap;
 
-	public WebLoginUser loginer;
+    protected HttpServletRequest request;
+    protected HttpServletResponse response;
 
-	public DataStore ActionMsg;
 
-	protected UrlPathHelper urlPathHelper; // 路径助手
+    public Map<String, Object> urlMap;
 
-	@Resource(name = "sysUserService")
-	private ISysUserService sysUserService;
-	
-	@Resource(name = "userRoleRelaService")
-	private IUserRoleRelaService userRoleRelaService;
-    
-    
-    
-    public SysApiController(){
-		urlMap=new HashMap<String,Object>();
-	}
-    
+    public WebLoginUser loginer;
+
+    public DataStore ActionMsg;
+
+    protected UrlPathHelper urlPathHelper; // 路径助手
+
+    @Resource(name = "sysUserService")
+    private ISysUserService sysUserService;
+
+    @Resource(name = "userRoleRelaService")
+    private IUserRoleRelaService userRoleRelaService;
+
+
+    public SysApiController() {
+        urlMap = new HashMap<String, Object>();
+    }
+
     /**
      * 当Action方法执行后被调用
      */
@@ -95,12 +95,13 @@ public abstract class SysApiController extends SysBaseController<DataStore> {
 
         }
     }
-    
 
-    public void config(){}
+
+    public void config() {
+    }
 
     @Override
-    public DataStore deleteAction(){
+    public DataStore deleteAction() {
         return null;
     }
 
@@ -108,62 +109,67 @@ public abstract class SysApiController extends SysBaseController<DataStore> {
     public Object getData(String json) {
         return null;
     }
-    
-	/**
-	 * 初始化函数，设置相关参数
-	 */
-	public void init(HttpServletRequest request, HttpServletResponse response,
-			Object handler) {
-		this.urlPathHelper = new UrlPathHelper();
-		this.request = request;
-		this.response = response;
-		setMobileCurrentLoginUser(request,response);
-	}
-    
-    public WebLoginUser setMobileCurrentLoginUser(HttpServletRequest request,HttpServletResponse response){
-		if(loginer == null){
-			String account = request.getParameter("u");	    	 
-	    	 if (null !=account && !"".equals(account)) {
-	 			Map<String, Object> parm = new HashMap<>();
-	 			parm.put("user_name", account);
-	 			Map<String, Object> u = sysUserService.selectMap(parm);
-	 			if(null == u || u.isEmpty()){
-	 				return null;
-	 			}
-	 			parm.put("user_id", u.get("user_id"));
-	             List<Map<String, Object>> roles = userRoleRelaService.select(parm);
-	             WebLoginUser user = WebLoginUitls.getLoginUser(u, roles);
-	 			 user.saveSession(request, response);//保存至本地
-	 			 return user;
-	 		}
-		}	
-		return loginer;
-	}
-    
-    
-	public String val(Object obj){
-		if(obj == null)
-			return "";
-		return obj.toString();
-	}
-	public String val(Map<String, Object> m, String key){
-		Object obj = m.get(key);
-		if(obj == null)
-			return "";
-		return obj.toString();
-	}
-	public String rstr(String name){
-		return QRequest.getString(request, name);
-	}
-	public String rstr(String name, String defValue){
-		return QRequest.getString(request, name, defValue);
-	}
-	public Integer rint(String name){
-		return QRequest.getInteger(request, name);
-	}
-	public Integer rint(String name, Integer defValue){
-		return QRequest.getInteger(request, name, defValue);
-	}
+
+    /**
+     * 初始化函数，设置相关参数
+     */
+    public void init(HttpServletRequest request, HttpServletResponse response,
+                     Object handler) {
+        this.urlPathHelper = new UrlPathHelper();
+        this.request = request;
+        this.response = response;
+        setMobileCurrentLoginUser(request, response);
+    }
+
+    public WebLoginUser setMobileCurrentLoginUser(HttpServletRequest request, HttpServletResponse response) {
+        if (loginer == null) {
+            String account = request.getParameter("u");
+            if (null != account && !"".equals(account)) {
+
+                Map<String, Object> parm = new HashMap<>();
+                parm.put("user_name", account);
+                Map<String, Object> u = sysUserService.selectMap(parm);
+                if (null == u || u.isEmpty()) {
+                    return null;
+                }
+                parm.put("user_id", u.get("user_id"));
+                WebLoginUser user = new WebLoginUser(sysUserService.getUserInfo(parm).get(0));
+                user.saveSession(request, response);//保存至本地
+                return user;
+            }
+        }
+        return loginer;
+    }
+
+
+    public String val(Object obj) {
+        if (obj == null)
+            return "";
+        return obj.toString();
+    }
+
+    public String val(Map<String, Object> m, String key) {
+        Object obj = m.get(key);
+        if (obj == null)
+            return "";
+        return obj.toString();
+    }
+
+    public String rstr(String name) {
+        return QRequest.getString(request, name);
+    }
+
+    public String rstr(String name, String defValue) {
+        return QRequest.getString(request, name, defValue);
+    }
+
+    public Integer rint(String name) {
+        return QRequest.getInteger(request, name);
+    }
+
+    public Integer rint(String name, Integer defValue) {
+        return QRequest.getInteger(request, name, defValue);
+    }
 
 
 }

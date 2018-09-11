@@ -111,15 +111,15 @@ public class UserAccessLogServiceImpl extends SysBaseService<UserAccessLogDO> im
 	public void saveLog(HttpServletRequest request,int logTypeId, int userOpType, int menuId,
 			String message,String userID, String userNM) {
 		 //用户ID
-		 String userId = QCookie.getValue(request, "ids");
+		 String userId = QCookie.getValue(request, "sbd.user_id");
 		 int uid = 0 ;
 		 if(null != userId && !"".equals(userId)){
 			 uid = Integer.parseInt(userId);
 		 }else{
 			 uid = Integer.parseInt(userID);
 		 }
-		 //用户名sbd.uid
-		 String uname = QCookie.getValue(request, "sbd.uid");
+		 //用户名sbd.user_name
+		 String uname = QCookie.getValue(request, "sbd.user_name");
 		 if(null == uname  || "".equals(uname)){
 			 uname = userNM;
 			 if(null == uname || "".equals(uname)){

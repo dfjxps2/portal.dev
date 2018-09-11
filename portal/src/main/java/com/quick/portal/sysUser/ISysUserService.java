@@ -18,9 +18,12 @@
  */
 package com.quick.portal.sysUser;
 
+import java.util.List;
 import java.util.Map;
 
 import com.quick.core.base.ISysBaseService;
+import com.quick.core.base.model.DataStore;
+import com.quick.core.base.model.PageBounds;
 
 
 /**
@@ -43,5 +46,10 @@ public interface ISysUserService extends ISysBaseService<SysUserDO> {
 	 * 
 	 */
 	Map<String,Object> isExitUserInfoByUserId(String userId);
+
+
+	List<SysUserDO> getUserInfo(Map<String, Object> m);
+
+    DataStore updatePassword(SysUserDO sysUserDO);
 
 }

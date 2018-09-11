@@ -48,10 +48,10 @@ public class MeaLogController {
             for(Cookie cs : cookies){
                 System.out.println("cookieName"+cs.getName()+"---------"+"cookieValue"+cs.getValue());
             }*/
-            String ids  = QCookie.getValue(request,"ids");
+            String ids  = QCookie.getValue(request,"sbd.user_id");
             System.out.println("ids"+ids);
             System.out.println("meaid"+meaid);
-            String usname = QCookie.getValue(request,"sbd.uid");
+            String usname = QCookie.getValue(request,"sbd.user_name");
 
 /*            String ip = request.getHeader( "x-forwarded-for" );
             if ( ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase( ip ) )
