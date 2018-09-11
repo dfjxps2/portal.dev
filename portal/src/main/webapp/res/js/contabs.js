@@ -194,12 +194,8 @@ $(function () {
                     bool = data;
                 }
 
-            },
-            error:function(err){
-                if(err.status ="0"){
-                    top.location.href = window.location.href;
-                }
             }
+
         });
         return bool;
     }
