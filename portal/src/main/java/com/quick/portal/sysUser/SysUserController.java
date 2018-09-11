@@ -66,11 +66,6 @@ public class SysUserController extends SysBaseController<SysUserDO> {
         return view();
     }
 
-//    @RequestMapping
-//    public String chose(ModelMap model) {
-//        return view();
-//    }
-//
 
     @RequestMapping
     public String changepw(ModelMap model) {
@@ -141,11 +136,5 @@ public class SysUserController extends SysBaseController<SysUserDO> {
         }
         res.getWriter().flush();
     }
-
-    @RequestMapping(value = "/userEndecrypt")
-    public String userEndecrypt(ModelMap model) {
-        return view();
-    }
-
 
 }
