@@ -250,38 +250,6 @@
                 return false;
             }
 
-
-            // var subData = {
-            //     user_name: $("#user_name").val(),
-            //     dep_id: $("#dep_id").val(),
-            //     job_id: $("#job_id").val(),
-            //     user_state: $('input:radio[name="user_state"]:checked').val(),
-            //     user_addr: $("#user_addr").val(),
-            //     user_tel: $("#user_tel").val(),
-            //     roles: roles,
-            //     user_id: $("#user_id").val(),
-            //     user_real_name: $("#user_real_name").val(),
-            //     rela_id: $("#rela_id").val()
-            // };
-            // $.ajax({
-            //     type: "post",
-            //     url: "save",
-            //     data: subData,
-            //     dataType: "json",
-            //     success: function (data) {
-            //         if (data.code === 1) {
-            //             layer.msg('保存成功！', {icon: 1, time: 1000, skin: 'layer-ext-moon'}, function () {
-            //                 window.location.href = quick.serverUrl + "/list";
-            //             });
-            //         } else {
-            //             layer.msg('保存失败！', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
-            //         }
-            //     },
-            //     error: function () {
-            //         layer.msg('保存失败！', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
-            //     }
-            // });
-
             quick.submit(function(data) {
                 if(data.code != "1"){
                     layer.msg('保存失败,'+ data.msg,{icon:1,time: 3000,skin: 'layer-ext-moon'});
@@ -294,81 +262,6 @@
             });
         })
     };
-
-    // function setEditForm(obj) {
-    //     if (!obj) {
-    //         obj = request.getAll();
-    //     } else if (typeof (obj) == "string") {
-    //         obj = eval("(" + obj + ")");
-    //     }
-    //     for (var name in obj) {
-    //         var val = obj[name] === null ? '' : obj[name];
-    //         var nodes = document.getElementsByName(name);
-    //         if (nodes == null || nodes.length == 0) {
-    //             _selector = $("#" + name);
-    //         } else {
-    //             _selector = $(nodes);
-    //         }
-    //         if (_selector == null || _selector.length == 0)
-    //             continue;
-    //         var nodeType = _selector[0].nodeName.toLowerCase();
-    //         if (nodeType == "input") {
-    //             var etype = _selector.attr("type") || "text";
-    //             if (etype == "checkbox") {
-    //                 CheckBoxInit(name, val);
-    //             } else if (etype == "radio") {
-    //                 _selector.each(function () {
-    //                     if ($(this).val() == decodeURI(val)) {
-    //                         $(this).attr("checked", "checked");
-    //                         if (typeof ($(this).parent().parent().attr("data-toggle")) != "undefined") {
-    //                             $(this).parent().parent().find('label').removeClass("active");
-    //                             $(this).parent().addClass("active");
-    //                         }
-    //                     }
-    //                 });
-    //             } else {
-    //                 _selector.val(val);
-    //             }
-    //
-    //         } else if (nodeType == "select") {
-    //             ListInit(name, decodeURI(val));
-    //         } else if (nodeType == "button") {
-    //             _selector.val(val);
-    //         } else {
-    //             _selector.text(decodeURI(val));
-    //         }
-    //     }
-    //
-    //     //选中多选下拉框的值
-    //     function ListInit(obj, v) {
-    //         if (!obj) return false;
-    //         var x = v.split(',');
-    //         $("#" + obj).find("option").each(function () {
-    //             for (var i = 0; i < x.length; i++) {
-    //                 if (x[i] == this.value)
-    //                     this.selected = "selected";
-    //             }
-    //         });
-    //     }
-    //
-    //     function CheckBoxInit(obj, v) {
-    //         if (null == obj || v == '') return false;
-    //         var chks = document.getElementsByName(obj);
-    //         var vs = v.split(',');
-    //         for (var i = 0; i < chks.length; i++) {
-    //             chks[i].checked = false;
-    //             for (var j = 0; j < vs.length; j++) {
-    //                 if (vs[j] == chks[i].value) {
-    //                     chks[i].checked = true;
-    //                     break;
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-
-
-    var jobid = $("#job_id").val();
 
     function selectJob() {
         $.ajax({
@@ -388,8 +281,6 @@
 
     selectJob();
 
-    var depid = $("#dep_id").val();
-
     function selectDep() {
         $.ajax({
             type: "get",
@@ -407,8 +298,6 @@
     }
 
     selectDep();
-
-    var roleid = $("#role_id").val();
 
     function selectRole() {
         $('.selectpicker').selectpicker({

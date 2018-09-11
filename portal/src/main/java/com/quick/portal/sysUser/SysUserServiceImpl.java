@@ -124,4 +124,13 @@ public class SysUserServiceImpl extends SysBaseService<SysUserDO> implements ISy
         }
         return null;
     }
+
+    public DataStore updatePassword(SysUserDO sysUserDO){
+        int c = dao.updatePassword(sysUserDO);
+
+        if (c == 1)
+            return ActionMsg.setOk("密码修改成功");
+        else
+            return ActionMsg.setError("密码修改失败");
+    }
 }

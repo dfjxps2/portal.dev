@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.quick.core.base.ISysBaseService;
+import com.quick.core.base.model.DataStore;
 import com.quick.core.base.model.PageBounds;
 
 
@@ -48,5 +49,7 @@ public interface ISysUserService extends ISysBaseService<SysUserDO> {
 
 
 	List<SysUserDO> getUserInfo(Map<String, Object> m);
+
+    DataStore updatePassword(SysUserDO sysUserDO);
 
 }

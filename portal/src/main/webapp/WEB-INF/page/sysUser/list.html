@@ -218,15 +218,6 @@
         );
     }
 
-    var sysid = $.request.queryString["user_id"];
-
-    //查看详细信息
-    function addUser(sysid) {
-        navAppend("编辑集成系统");
-        /*获取父页面元素并动态赋值父页面title*/
-        window.location.href = "chose?user_id=" + sysid;//跳转到另一个页面，并且还在当前框架
-    }
-
 
     function edit(id) {
         navAppend("编辑集成系统");
@@ -248,7 +239,7 @@
                     url: "resetPass?account=" + node + "&state=" + state,
                     dataType: "json",
                     success: function (data) {
-                        if (data == 1) {
+                        if (data.code === 1) {
                             layer.msg('重置密码成功', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
                         } else {
                             layer.msg('重置密码失败', {icon: 2, time: 1000, skin: 'layer-ext-moon'});
@@ -266,13 +257,6 @@
         menuGoto(quick.editUrl);
     }
 
-    //将url查询信息传至详细信息页面,返回时调用
-    function goDetail(obj) {
-        var value = $(obj).attr("id");
-        navAppend("详情信息");
-        /*获取父页面元素并动态赋值父页面title*/
-        window.location.href = quick.editUrl + "?mode=browse&user_id=" + id + getDetailParm();
-    }
 
     function query() {
         _gd['list'].refresh();
@@ -308,10 +292,6 @@
         return s;
     }
 
-    //密码修改
-    function modipw() {
-        window.location.href = quick.serverUrl + "/changepw";
-    }
 </script>
 
 </html>
