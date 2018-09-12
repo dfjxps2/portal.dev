@@ -78,8 +78,8 @@ public class MainFrameController extends SysBaseController<MainFrameBean> {
             }
             model.addAttribute("data", jsonStr);
         } catch (Exception e) {
-            request.setAttribute("code", ExceptionEnumServiceImpl.NO_PERMITION.getCode());
-            request.setAttribute("message", ExceptionEnumServiceImpl.NO_PERMITION.getMessage() + "ERROR:=" + e.getMessage());
+            request.getSession().setAttribute("code", ExceptionEnumServiceImpl.NO_PERMITION.getCode());
+            request.getSession().setAttribute("message", ExceptionEnumServiceImpl.NO_PERMITION.getMessage() + "ERROR:=" + e.getMessage());
             return WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_ERROR_CONTROLLER);
         }
         return "page/index/mainframe";
