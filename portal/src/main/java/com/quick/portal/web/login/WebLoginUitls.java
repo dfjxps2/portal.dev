@@ -69,7 +69,7 @@ public class WebLoginUitls {
 		return loginer.getRoleList().stream().map((r) -> {
 		    String roleType = r.getRole_type_id().toString();
 		    return roleType.equals(WebLoginConstants.ADMINISTRATOR_ROLE_TYPE) ||
-                    roleType.equals(WebLoginConstants.PORTAL_ROLE_TYPE);
+					roleType.equals(WebLoginConstants.PORTAL_ROLE_TYPE);
         }).reduce(false, (r1, r2) -> (r1 || r2));
 
     }

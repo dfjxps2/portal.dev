@@ -269,6 +269,7 @@
         and u.user_id = ud_rel.user_id
         and d.dep_id = ud_rel.dep_id
         and u.job_id = j.job_id
+		and r.role_state = 1
         <if test="user_id != null and user_id != ''"><![CDATA[
 	       and u.user_id = #{user_id}
 	    ]]></if>

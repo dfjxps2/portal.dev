@@ -71,12 +71,23 @@
 	</insert>
 	<insert id="addDashboard_Apps" parameterType="map">
 		insert into dashboard_app_config
-		    (dashboard_id, app_id, param_id, param_value, cre_time)
-		    (select ${dashboard_id}, m.app_id, 1, p.show_order, now() from menu_privilege p
-		     left join sys_menu m on p.menu_id=m.menu_id
-		     and m.menu_state=0
-		     where p.role_id  in (${role_id})
-		     and p.show_on_init=1 and m.app_id is not null)
+		(dashboard_id, app_id, param_id, param_value, cre_time)
+		(
+		  select ${dashboard_id}
+		  ,m.app_id
+		  , 1
+		  , min(p.show_order) as show_order
+		  , now()
+		  from menu_privilege p join sys_menu m on p.menu_id=m.menu_id
+		  join user_role_rela ur on p.role_id = ur.role_id
+		  join user_role ro on ur.role_id = ro.role_id
+		  where ur.user_id = ${user_id}
+		  and m.menu_state=0
+		  and ro.role_state = 1
+		  and p.show_on_init=1
+		  and m.app_id is not null
+		  group by m.app_id
+		)
 	</insert>
 	<select id="countDashboard" parameterType="map" resultType="int">
 		select count(*) from user_dashboard
