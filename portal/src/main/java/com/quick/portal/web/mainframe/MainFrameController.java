@@ -1,33 +1,24 @@
 package com.quick.portal.web.mainframe;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.pac4j.core.profile.CommonProfile;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.quick.core.base.ISysBaseService;
 import com.quick.core.base.SysBaseController;
 import com.quick.core.base.exception.ExceptionEnumServiceImpl;
 import com.quick.core.util.common.JsonUtil;
 import com.quick.core.util.common.QCookie;
 import com.quick.portal.sysMenu.ISysMenuService;
-import com.quick.portal.sysUser.ISysUserService;
 import com.quick.portal.userAccessLog.IUserAccessLogService;
 import com.quick.portal.userAccessLog.UserAccessLogConstants;
-import com.quick.portal.userRoleRela.IUserRoleRelaService;
 import com.quick.portal.web.login.WebLoginConstants;
-import com.quick.portal.web.login.WebLoginUitls;
-import com.quick.portal.web.login.WebLoginUser;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 查询菜单权限
@@ -63,8 +54,6 @@ public class MainFrameController extends SysBaseController<MainFrameBean> {
         String jsonStr = "false";
         //根据cookie拿到当前用户的id
         String userId = QCookie.getValue(request, "sbd.user_id");
-        String rid = QCookie.getValue(request, "sbd.user_role");
-
         try {
             //权限菜单
             List<MainFrameBean> menuList = mainFrameService.searchMainFrame(userId);
@@ -146,28 +135,5 @@ public class MainFrameController extends SysBaseController<MainFrameBean> {
         res.getWriter().write(flag);
     }
 
-
-//    public WebLoginUser loadPortalUserInfo(HttpServletRequest request, HttpServletResponse response){
-//    	 String account = null;
-//    	 List<CommonProfile> profiles = WebLoginUitls.getProfiles(request, response);
-//    	 for(CommonProfile profile : profiles){
-//    		 account =  profile.getId();
-//    	 }
-//		if (null !=account && !"".equals(account)) {
-//			Map<String, Object> parm = new HashMap<>();
-//			parm.put("user_name", account);
-//			Map<String, Object> u = sysUserService.selectMap(parm);
-//			if(null == u || u.isEmpty()){
-//				return null;
-//			}
-//			parm.put("user_id", u.get("user_id"));
-//            List<Map<String, Object>> roles = userRoleRelaService.select(parm);
-//            WebLoginUser user = WebLoginUitls.getLoginUser(u, roles);
-//			user.saveSession(request, response);//保存至本地
-//			return user;
-//		}
-//
-//		return null;
-//	}
 
 }
