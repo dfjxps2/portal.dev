@@ -17,6 +17,9 @@
 		<if test="user_real_name != null and user_real_name != '' and !'null'.equals(user_real_name)"><![CDATA[
 	     and u.user_real_name = #{user_real_name}
        ]]></if>
+		<if test="dep_id != null and dep_id != '' and !'null'.equals(dep_id)"><![CDATA[
+	       and d.dep_id = #{dep_id}
+	    ]]></if>
 		<if test="job_id != null and job_id != '' and !'null'.equals(job_id)"><![CDATA[
 	       and u.job_id = #{job_id}
 	    ]]></if>
@@ -144,10 +147,10 @@
 		, u.user_global_id
 		, u.cre_time
 		, u.upd_time
-		,group_concat(r.role_name) as role_name
-		,group_concat(d.dep_name) as dep_name
-		,group_concat(r.role_id) as role_ids
-		,group_concat(d.dep_id) as dep_id
+		,group_concat(distinct r.role_name) as role_name
+		,group_concat(distinct d.dep_name) as dep_name
+		,group_concat(distinct r.role_id) as role_ids
+		,group_concat(distinct d.dep_id) as dep_id
 		,j.job_name, j.job_level
 		from sys_user u
 		join user_role_rela ur_rel on u.user_id = ur_rel.user_id
@@ -269,6 +272,7 @@
         and u.user_id = ud_rel.user_id
         and d.dep_id = ud_rel.dep_id
         and u.job_id = j.job_id
+		and r.role_state = 1
         <if test="user_id != null and user_id != ''"><![CDATA[
 	       and u.user_id = #{user_id}
 	    ]]></if>

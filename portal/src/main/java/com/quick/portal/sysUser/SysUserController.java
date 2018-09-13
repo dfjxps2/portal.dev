@@ -122,17 +122,20 @@ public class SysUserController extends SysBaseController<SysUserDO> {
     }
 
     @RequestMapping(value = "/checkUser")
-    public void validateAccount(HttpServletResponse res, String username) throws Exception {
+    public void validateAccount(HttpServletResponse res, String username, String markname) throws Exception {
         Map<String, Object> param_map = new HashMap<>();
 
         param_map.put("user_name", username);
-
-        List<Map<String, Object>> map = sysUserService.select(param_map);
-
-        if (CollectionUtils.isEmpty(map)) {
+        List<Map<String, Object>> users = sysUserService.select(param_map);
+        if (users.size() == 0) {
             res.getWriter().write("false");
         } else {
-            res.getWriter().write("true");
+            param_map.put("user_id", markname);
+            users = sysUserService.select(param_map);
+            if (users.size() > 0)
+                res.getWriter().write("false");
+            else
+                res.getWriter().write("true");
         }
         res.getWriter().flush();
     }
