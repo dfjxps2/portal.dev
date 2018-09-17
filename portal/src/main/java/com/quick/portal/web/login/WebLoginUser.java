@@ -98,7 +98,7 @@ public class WebLoginUser extends SysUserDO {
             int cookieTTL = Integer.valueOf(PropertiesUtil.getPropery("portal.session.timeout"));
             logger.debug("Set portal session  timeout to {} seconds.", cookieTTL);
 
-            QCookie.set(response, "sbd.user_id", this.getUser_id().toString()); //浏览器关闭就过期
+            QCookie.set(response, "sbd.user_id", this.getUser_id().toString(), cookieTTL); //浏览器关闭就过期
             QCookie.set(response, "sbd.user_real_name", userNm, cookieTTL);
             QCookie.set(response, "sbd.user_name", this.getUser_name(), cookieTTL);
             QCookie.set(response, "sbd.user_role", this.constructRoleListStr(), cookieTTL);

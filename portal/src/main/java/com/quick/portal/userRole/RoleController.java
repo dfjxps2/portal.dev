@@ -77,20 +77,21 @@ public class RoleController extends SysBaseController<UserRoleDO> {
 
 
     //页面请求---结束
-    /**
-     * 保存角色
-     * @param model
-     * @return
-     */
-    @Override
-    public DataStore save(UserRoleDO model) {
-        Date now = DateTime.Now().getTime();
-        //名称不能重复
-        if(roleService.exist("job_name", model.getRole_name(), model.getRole_id()))
-            return ActionMsg.setError("名称已存在，请换一个");
-        roleService.save(model);
-        return ActionMsg.setOk("ok");
-    }
+//    /**
+//     * 保存角色
+//     * @param model
+//     * @return
+//     */
+//    @Override
+//    public DataStore save(UserRoleDO model) {
+//        Date now = DateTime.Now().getTime();
+//        //名称不能重复
+//        if(roleService.exist("job_name", model.getRole_name(), model.getRole_id()))
+//            return ActionMsg.setError("名称已存在，请换一个");
+//        roleService.save(model);
+//        return ActionMsg.setOk("ok");
+//    }
+
     /**
      *根据角色编码获取该角色对象
      * @return 角色对象

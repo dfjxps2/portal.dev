@@ -1,105 +1,111 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>新增角色</title>
-	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-	<!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
-	<script src="${G.host}/res/plugin/jQuery/jquery-1.11.3.min.js" type="text/javascript"></script>
-	<!--Bootstrap -->
-	<link href="${G.host}/res/plugin/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-	<script src="${G.host}/res/plugin/bootstrap/js/bootstrap.js"></script>
-	<script src="${G.host}/res/plugin/bootstrap/js/bootstrap.min.js"></script>
+    <title>新增角色</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+    <script src="${G.host}/res/plugin/jQuery/jquery-1.11.3.min.js" type="text/javascript"></script>
+    <!--Bootstrap -->
+    <link href="${G.host}/res/plugin/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="${G.host}/res/plugin/bootstrap/js/bootstrap.js"></script>
+    <script src="${G.host}/res/plugin/bootstrap/js/bootstrap.min.js"></script>
 
-	<link href="${G.host}/res/fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-	<link href="${G.host}/res/css/plugins/steps/jquery.steps.css" rel="stylesheet">
-	<link href="${G.host}/res/css/animate.min.css" rel="stylesheet">
-	<link href="${G.host}/res/css/styleIter.css" rel="stylesheet">
+    <link href="${G.host}/res/fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="${G.host}/res/css/plugins/steps/jquery.steps.css" rel="stylesheet">
+    <link href="${G.host}/res/css/animate.min.css" rel="stylesheet">
+    <link href="${G.host}/res/css/styleIter.css" rel="stylesheet">
 
-	<!-- Loading Flat UI -->
+    <!-- Loading Flat UI -->
 
-	<link rel="shortcut icon" href="${G.host}/res/plugin/FlatUI/img/favicon.ico">
+    <link rel="shortcut icon" href="${G.host}/res/plugin/FlatUI/img/favicon.ico">
 
-	<!-- jQuery (necessary for Flat UI's JavaScript plugins) -->
-	<!-- Include all compiled plugins (below), or include individual files as needed -->
-	<script src="${G.host}/res/plugin/FlatUI/js/flat-ui.min.js"></script>
+    <!-- jQuery (necessary for Flat UI's JavaScript plugins) -->
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="${G.host}/res/plugin/FlatUI/js/flat-ui.min.js"></script>
 
-	<link href="${G.host}/res/plugin/bootstrap-table/bootstrap-table.css" rel="stylesheet">
+    <link href="${G.host}/res/plugin/bootstrap-table/bootstrap-table.css" rel="stylesheet">
 
-	<script src="${G.host}/res/plugin//bootstrap-table/bootstrap-table.js"></script>
-	<script src="${G.host}/res/plugin/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
-	<#include "/WEB-INF/include/resedit.html" />
-	<style>
-		select::-ms-expand{
-			display: none;
-		}
-	</style>
+    <script src="${G.host}/res/plugin//bootstrap-table/bootstrap-table.js"></script>
+    <script src="${G.host}/res/plugin/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+    <#include "/WEB-INF/include/resedit.html" />
+    <style>
+        select::-ms-expand {
+            display: none;
+        }
+    </style>
 
 </head>
 
 <body class="gray-bg">
 <div class="wrapper wrapper-content animated fadeInRight">
-	<div class="row">
-		<div class="col-sm-12">
-			<div class="col-sm-10">
-				<div class="col-sm-12">
-					<label id="pagename" class="col-xs-8" style="text-align:center;font-size: 22px;color:blue;margin-left: 180px">角色编辑</label>
-				</div>
-			</div>
-			<div class="ibox">
-				<div class="ibox-content ibox-content-ad">
-					<form style="padding-top: 30px;" id="form" action="${G.host}/roleDO/updataRole" class="wizard-big">
-						<input type="hidden" id="role_id" name="role_id" value=""/>
-						<div class="row">
-							<div class="col-sm-8 form_ipt_botm">
-								<div class="form-group">
-									<label class="col-xs-2 lable_top"><span class="span_require">*</span>角色名称</label>
-									<div class="col-xs-9">
-										<input maxlength="10" placeholder="输入2-10中文汉字或英文字母或数字的组合" id="role_name" name="role_name" type="text" class="form-control required">
-									</div>
-								</div>
-							</div>
-							  <div class="col-sm-8 form_ipt_botm">
-								  <div class="form-group">
-									  <label class="col-xs-2 lable_top"><span class="span_require">*</span>角色类型</label>
-									  <div class="col-xs-9">
-										  <select name="role_type_id" class="form-control required select_change"  id="role_type_id">
-										  </select>
-									  </div>
-								  </div>
-							  </div>
-							  
-							<div class="col-sm-8 form_ipt_botm">
-								<div class="form-group">
-									<label class="col-xs-2 lable_top"><span class="span_require">*</span>角色状态</label>
-									<div class="col-xs-9">
-										<select name="role_state" class="form-control required" id="role_state">
-											<option value="1">启用</option>
-											<option value="0">停用</option>
-										</select>
-									</div>
-								</div>
-							</div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="col-sm-10">
+                <div class="col-sm-12">
+                    <label id="pagename" class="col-xs-8"
+                           style="text-align:center;font-size: 22px;color:blue;margin-left: 180px">角色编辑</label>
+                </div>
+            </div>
+            <div class="ibox">
+                <div class="ibox-content ibox-content-ad">
+                    <form style="padding-top: 30px;" id="form" action="${G.serverUrl}/save" class="wizard-big">
+                        <input type="hidden" id="role_id" name="role_id" value=""/>
+                        <div class="row">
+                            <div class="col-sm-8 form_ipt_botm">
+                                <div class="form-group">
+                                    <label class="col-xs-2 lable_top"><span class="span_require">*</span>角色名称</label>
+                                    <div class="col-xs-9">
+                                        <input maxlength="10" placeholder="输入2-10中文汉字或英文字母或数字的组合" id="role_name"
+                                               name="role_name" type="text" class="form-control required">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-8 form_ipt_botm">
+                                <div class="form-group">
+                                    <label class="col-xs-2 lable_top"><span class="span_require">*</span>角色类型</label>
+                                    <div class="col-xs-9">
+                                        <select name="role_type_id" class="form-control required select_change"
+                                                id="role_type_id">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
 
-							<div class="col-sm-8 form_ipt_botm">
-								<div class="form-group" style="width:800px;">
-									<div class="col-xs-5" style="padding-left:0px;width:170px;">
-										<input type="button" class="btn btn-primary " value="角色成员管理" onclick="roleUser();">
-									</div>
-									<div class="col-xs-5" style="width:130px;margin-left:50px;">
-										<input id="submit-form" type="button" class="btn btn-primary" value="保存">
-									</div>
-									<div class="col-xs-5" style="width:160px;padding-left:56px;margin-left:70px;">
-									<input type="button" class="btn btn-primary" value="返回" onclick="location.href='list';">
-								</div>
-								</div>
-							</div>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
+                            <div class="col-sm-8 form_ipt_botm">
+                                <div class="form-group">
+                                    <label class="col-xs-2 lable_top"><span class="span_require">*</span>角色状态</label>
+                                    <div class="col-xs-9">
+                                        <select name="role_state" class="form-control required" id="role_state">
+                                            <option value="1">启用</option>
+                                            <option value="0">停用</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
 
-	</div>
+                            <div class="col-sm-8 form_ipt_botm">
+                                <div class="form-group" style="width:800px;">
+                                    <div class="col-xs-5" style="padding-left:0px;width:170px;">
+                                        <input type="button" class="btn btn-primary " value="角色成员管理"
+                                               onclick="roleUser();">
+                                    </div>
+                                    <div class="col-xs-5" style="width:130px;margin-left:50px;">
+                                        <input id="submit-form" type="button" class="btn btn-primary" value="保存"
+                                               onclick="return thingOver();">
+                                    </div>
+                                    <div class="col-xs-5" style="width:160px;padding-left:56px;margin-left:70px;">
+                                        <input type="button" class="btn btn-primary" value="返回"
+                                               onclick="location.href='list';">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>
 
 </body>
@@ -115,213 +121,145 @@
 
 <script>
 
-	var iscommit=false;
+    var iscommit = false;
+
     //从URL,JSON中取值赋给表单元素
 
-        //选中多选下拉框的值
-        function ListInit(obj, v) {
-            if (!obj) return false;
-           var opts = document.getElementById('role_type_id').getElementsByTagName('option');
-                     for (var i in opts) {
-                        if(opts[i].value == v){
-                            opts[i].selected = true;
-                        }
-                     }
+    function config() {
+        quick.serverUrl = "${G.serverUrl}";
+        quick.objName = "${G.objName}";
+        quick.idField = "${G.idField}";
+        quick.listUrl = quick.serverUrl + "/list";
+    }
+
+    //选中多选下拉框的值
+    function ListInit(obj, v) {
+        if (!obj) return false;
+        var opts = $('#role_type_id option');
+        for (var i in opts) {
+            if (opts[i].value == v) {
+                opts[i].selected = true;
+            }
         }
+    }
 
-	var name=$("#role_name").val();
-    var role_id = $.request.queryString["role_id"];
-	window.onload = function() {
+    var sysid = $.request.queryString["role_id"];
+    window.onload = function () {
         selectRoleType();
-		$.ajax({
-			type: "post",
-			url: "getObj",
-			async:false,
-			data:{role_id:role_id},
-			dataType: "json",
-			success: function(data){
-				console.log(JSON.stringify(data));
-				if(data!=null){
-					var type = data.role_type_id;
-					var role_state = data.role_state;
-					var role_name = data.role_name;
-					var role_id = data.role_id;
-					$("#role_name").val(role_name);
-					$("#role_state").val(role_state);
-					$("#role_id").val(role_id);
-                    ListInit("role_type_id",data.role_type_id);
+        if (sysid) {
 
-				}
-			}
-		});
+            $.post(quick.serverUrl + '/getObj?role_id=' + sysid + "&i=" + Math.random(), function (data) {
+                // console.log(JSON.stringify(data));
+                if (data != null) {
+                    var role_state = data.role_state;
+                    var role_name = data.role_name;
+                    var role_id = data.role_id;
+                    $("#role_name").val(role_name);
+                    $("#role_state").val(role_state);
+                    $("#role_id").val(role_id);
+                    ListInit("role_type_id", data.role_type_id);
 
-        function selectRoleType(){
-            $.ajax({
-                type: "get",
-                url: "getRoleType",
-                async:false,
-                dataType: "json",
-                success: function(data){
-                    $("#role_type_id").append("<option selected hidden value=''>请选择角色类型</option><option value= ''>角色类型</option>");
-                    for (var i = 0; i < data.length; i++) {
-                        var item = data[i];
-                        $("#role_type_id").append("<option  value=" +item.roleTypeId+ ">  "+  item.roleTypeName+"</option>");
-                    }
                 }
             });
         }
 
+        jQuery.validator.addMethod("nameFuc", function (value, element) {//名称验证  只能是2-10中文汉字或英文字母或数字的组合
+            var tel = /^[\u4E00-\u9FA5a-zA-Z0-9]{0,100}$/;
+            return this.optional(element) || (tel.test(value));
+        }, "格式不符合");
+
+        jQuery.validator.addMethod("nameFuc1", function (value, element) {//名称验证
+            var flag = true;
+            if (value.length < 2 || value.length > 10) {
+                flag = false;
+            }
+            return this.optional(element) || flag;
+        }, "请输入2-10位字符");
 
 
+        $("#form").validate({
 
-        /*自定义错误提示信息的方法*/
-		jQuery.validator.addMethod("idFuc", function(value, element) {//编码验证  //2-20位英文字母或者数字的组合
-			var tel = /^[0-9a-zA-Z]{0,100}$/;
-			return this.optional(element) || (tel.test(value));
-		},"格式不符合");
+            errorPlacement: function (error, element) {
+                element.parent().append(error);
+            },
+            rules: {
+                confirm: {
+                    equalTo: "#role_id"
+                },
+                role_name: {
+                    required: true,
+                    nameFuc: true,
+                    nameFuc1: true,
+                    remote: {
+                        url: "${G.serverUrl}/VerifiedExists",     //后台处理程序
+                        type: "post",               //数据发送方式
+                        dataType: "json",           //接受数据格式
+                        data: {                     //要传递的数据
+                            fieldName: 'role_name',
+                            fieldValue: function () { return $("#role_name").val(); },
+                            id: function () { return $("#role_id").val(); }
+                        },
+                        dataFilter: function (data, type) {//判断控制器返回的内容
+                            return !(data === "true");
+                        }
+                    }
+                },
+                role_type_id: {
+                    required: true
+                }
+            },
+            messages: {
+                role_name: {
+                    remote: "已存在该角色名"
+                },
+                role_type_id: {
+                    required: "请选择角色类型"
+                }
+            }
+        });
+    };
 
-		jQuery.validator.addMethod("idFuc1", function(value, element) {//编码验证  //2-20位英文字母或者数字的组合
-			var flag=true;
-			if(value.length<2 || value.length>20){
-				flag=false;
-			}
-			return this.optional(element) || flag;
-		},"请输入2-20位字符");
-
-		jQuery.validator.addMethod("nameFuc", function(value, element) {//名称验证  只能是2-10中文汉字或英文字母或数字的组合
-			var tel = /^[\u4E00-\u9FA5a-zA-Z0-9]{0,100}$/;
-			return this.optional(element) || (tel.test(value));
-		}, "格式不符合");
-
-		jQuery.validator.addMethod("nameFuc1", function(value, element) {//名称验证
-			var flag=true;
-			if(value.length<2 || value.length>10){
-				flag=false;
-			}
-			return this.optional(element) || flag;
-		}, "请输入2-10位字符");
-
-
-		jQuery.validator.addMethod("phoneFuc", function(value, element) {//手机号码验证
-			var tel = /^[0-9]{11}$/;
-			return this.optional(element) || (tel.test(value));
-		}, "只能是11位的数字");
-
-		$("#form").validate({
-
-			errorPlacement: function(error, element) {
-				element.parent().append(error);
-			},
-		rules: {
-				confirm: {
-					equalTo: "#role_id"
-				},
-				role_name:{
-					required: true,
-					nameFuc:true,
-					nameFuc1:true,
-					remote: {
-						url: "${G.host}/role/getObjByName",     //后台处理程序
-						type: "post",               //数据发送方式
-						dataType: "json",           //接受数据格式
-						data: {                     //要传递的数据
-							role_name: function() {
-								return $("#role_name").val();
-							}
-						},
-						dataFilter: function (data, type) {//判断控制器返回的内容
-							// console.log(data);
-							for(var p in data ){
-								if(data[p]==name&&data !="" && data!=null){
-									return true;
-								}
-							}
-							if ( data =="" || data==null) {
-								return true;
-							}else{
-								return false;
-							}
-						}
-					}
-				}
-			},
-			messages:{
-				role_name:{
-					remote:"已存在该角色名"
-				}
-			}
-		});
-		/*保存前*/
-		function submitBefore(){
-			var flag=false;
-			$.ajax({
-				type: "post",
-				url:  '${G.host}/role/getObjByName?T='+Math.random(),
-				async: false,
-				data:{role_name:$("#role_name").val()},
-				success: function(data){
-					console.log(data);
-					if(data !="" && data!=null ){
-					    flag = false;
-					    return flag;
-					}
-				}
-			});
-			return flag;
-		}
-		/*完成*/
-		function thingOver(){
-			iscommit=true;
-			if(submitBefore()){
-				layer.msg('保存失败',{icon:1,time: 1000,skin: 'layer-ext-moon'});
-				iscommit=false;
-				return;
-			}else {
-				var type =$('#role_type_id option:selected') .val();
-				var role_name = $("#role_name").val();
-				var role_id = $("#role_id").val();
-				var role_state = $("#role_state").val();
-				var url = encodeURI("updataRole?role_type_id="+type+"&role_id=" + role_id + "&role_name=" + encodeURI(role_name) + "&role_state=" + role_state);
-				layer.msg('保存成功！', {icon: 1, time: 1000, skin: 'layer-ext-moon'}, function () {
-					window.location.href = url;
-				});
-			}
-		}
-
-		/*保存*/
-		$("#submit-form").click(function () {
-			if (!($("#form").validate())) {
-				return false;
-			}
-			
-			var role_type = $('#role_type_id option:selected').val();
-			  if(role_type ==null ||role_type.length==0){
-				  layer.msg('请输入角色类型',{icon:1,time: 1000,skin: 'layer-ext-moon'});
-				  return false;
-			  }
-
-			/*点击完成按钮跳转页面*/
-			if(!iscommit)
-				thingOver();
-
-		});
-	}
-	
-	
-	function selectRoleType(optionID){
-		var all_options = document.getElementById("role_type_id").options;
-		for (i=0; i<all_options.length; i++){
-			alert(all_options[i].value)
-			if (all_options[i].value == optionID) {
-				all_options[i].selected = true;
-			}
-		}
-	}
-
-	function roleUser() {
-        window.location.href= "roleUsers?role_id="+role_id;//跳转到另一个页面，并且还在当前框架
+    function selectRoleType() {
+        $.ajax({
+            type: "get",
+            url: "getRoleType",
+            async: false,
+            dataType: "json",
+            success: function (data) {
+                $("#role_type_id").append("<option selected hidden value=''>请选择角色类型</option><option value= ''>角色类型</option>");
+                for (var i = 0; i < data.length; i++) {
+                    var item = data[i];
+                    $("#role_type_id").append("<option  value=" + item.roleTypeId + ">  " + item.roleTypeName + "</option>");
+                }
+            }
+        });
     }
-	
 
+    function roleUser() {
+        window.location.href = "roleUsers?role_id=" + role_id;//跳转到另一个页面，并且还在当前框架
+    }
+
+    /*完成*/
+    function thingOver() {
+        iscommit = true;
+
+        if (!$("#form").valid())
+            return false;
+
+        quick.submit(function (data) {
+            if (data.code !== 1) {
+                layer.msg('保存失败,' + data.msg, {icon: 1, time: 3000, skin: 'layer-ext-moon'});
+                isdone = true;
+                return;
+            }
+            layer.msg('保存成功', {icon: 1, time: 1500, skin: 'layer-ext-moon'}, function () {
+                cancel();
+            });
+        });
+    }
+
+    function cancel() {
+        window.location.href = quick.listUrl + urlDel(location.search, 'mode', 'user_id') + '&RFlag=1';
+    }
 </script>
 </html>
