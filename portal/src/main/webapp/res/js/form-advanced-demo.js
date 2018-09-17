@@ -213,7 +213,7 @@ $(document).ready(function () {
         });
 
         $("#ionrange_2").ionRangeSlider({
-        	 min: 100,
+        	 min: 0,
              max: 500,
  //       	 type: "double",
              grid: true,
@@ -230,7 +230,7 @@ $(document).ready(function () {
 
 
         $("#ionrange_3").ionRangeSlider({
-        	 min: 100,
+        	 min: 0,
              max: 500,
  //       	 type: "double",
              grid: true,
