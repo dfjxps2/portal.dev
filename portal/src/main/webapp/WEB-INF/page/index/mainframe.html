@@ -20,7 +20,7 @@
 	<div id="wrapper">
 		<div class="row border-bottom nav-top">
 			<div style="z-index: 2034; left: 0px;" class="nav-close">
-				<p style="color:#fff;font-family:'Microsoft YaHei';font-size:20px;padding-left:32px;line-height: 100%;">北京城市大数据及领导驾驶舱</p>
+				<p style="color:#fff;font-family:'Microsoft YaHei';font-size:20px;padding-left:32px;line-height: 100%;">统一管理平台</p>
 				<!-- <a class="navbar-minimalize minimalize-styl-2  btn-primary"
                        href="#"><img  src="${G.host}/res/script/home/images/hanbao.png"> </a> -->
 			</div>
@@ -70,7 +70,6 @@
 		<!--左侧导航结束-->
 		<!--右侧部分开始-->
 		<div style="height:calc(100% - 90px);" id="page-wrapper" class="gray-bg dashbard-1">
-
 			<div class="row content-tabs">
 				<button class="roll-nav  J_tabLeft" style="display: none;">
 					<i class="fa fa-backward"></i>
@@ -94,7 +93,9 @@
 							<li class="J_tabCloseOther"><a>关闭其他选项卡</a></li>
 						</ul>
 					</div>
+				</nav>
 			</div>
+
 			<div class="row J_mainContent" id="content-main">
 				<iframe class="J_iframe" name="iframe0" style="scrolling: no"
 					width="100%" height="100%" src="${G.host}/goIframe" frameborder="0"
@@ -106,7 +107,6 @@
 			</div>
 		</div>
 		<!--右侧部分结束-->
-
 
 	</div>
 	<!-- 全局js -->
@@ -124,7 +124,9 @@
 </body>
 </html>
 <script>
-	var dt = ${data};
+	var dt = '${data}';
+    dt = JSON.parse(dt);
+
 	if (dt == false) {
 		layer.msg('该用户没有查询菜单权限,请联系管理员！异常信息:"'+dt+'"', {
 			icon : 1,
