@@ -70,8 +70,6 @@
 		<!--左侧导航结束-->
 		<!--右侧部分开始-->
 		<div style="height:calc(100% - 90px);" id="page-wrapper" class="gray-bg dashbard-1">
-
-			
 			<div class="row content-tabs">
 				<button class="roll-nav  J_tabLeft" style="display: none;">
 					<i class="fa fa-backward"></i>
@@ -95,7 +93,9 @@
 							<li class="J_tabCloseOther"><a>关闭其他选项卡</a></li>
 						</ul>
 					</div>
+				</nav>
 			</div>
+
 			<div class="row J_mainContent" id="content-main">
 				<iframe class="J_iframe" name="iframe0" style="scrolling: no"
 					width="100%" height="100%" src="${G.host}/goIframe" frameborder="0"
@@ -107,7 +107,6 @@
 			</div>
 		</div>
 		<!--右侧部分结束-->
-
 
 	</div>
 	<!-- 全局js -->
@@ -125,7 +124,9 @@
 </body>
 </html>
 <script>
-	var dt = ${data};
+	var dt = '${data}';
+    dt = JSON.parse(dt);
+
 	if (dt == false) {
 		layer.msg('该用户没有查询菜单权限,请联系管理员！异常信息:"'+dt+'"', {
 			icon : 1,
