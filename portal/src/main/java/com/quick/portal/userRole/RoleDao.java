@@ -29,13 +29,13 @@ import java.util.Map;
  * 数据访问接口
  * @author Administrator
  */
-public interface RoleDao extends ISysBaseDao<RoleDO> {
+public interface RoleDao extends ISysBaseDao<UserRoleDO> {
     //新增角色
     int insert(Map role);
     //更新角色
-    int update(RoleDO roleDO);
+    int update(UserRoleDO roleDO);
     //通过姓名精确查找
-    RoleDO selectObjByName(Map<String,Object> map);
+    UserRoleDO selectObjByName(Map<String,Object> map);
 
     List<Map<String,Object>> listAllMenu(Map<String, Object> m);
 

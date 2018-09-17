@@ -22,7 +22,7 @@ import java.util.*;
  * @author Administrator
  */
  @Service("roleService")
-public class RoleServiceImpl extends SysBaseService<RoleDO> implements RoleService {
+public class RoleServiceImpl extends SysBaseService<UserRoleDO> implements RoleService {
 
     //初始化
     public RoleServiceImpl() {
@@ -37,18 +37,18 @@ public class RoleServiceImpl extends SysBaseService<RoleDO> implements RoleServi
 
     //重写dao
     @Override
-    public ISysBaseDao<RoleDO> getDao(){
+    public ISysBaseDao<UserRoleDO> getDao(){
         return dao;
     }
 
     //新增角色
     @Override
-    public int insert(RoleDO roleDO) {
+    public int insert(UserRoleDO roleDO) {
         return dao.insert(roleDO);
     }
     //更新角色
     @Override
-    public int update(RoleDO roleDO) {
+    public int update(UserRoleDO roleDO) {
         return dao.update(roleDO);
     }
 
@@ -112,7 +112,7 @@ public class RoleServiceImpl extends SysBaseService<RoleDO> implements RoleServi
     }
     /* 根据姓名精确查找*/
     @Override
-    public RoleDO selectObjByName(Map<String,Object> map){
+    public UserRoleDO selectObjByName(Map<String,Object> map){
         return dao.selectObjByName(map);
     }
 

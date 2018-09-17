@@ -30,13 +30,13 @@ import java.util.Map;
  * 服务接口
  * @author Administrator
  */
-public interface RoleService extends ISysBaseService<RoleDO> {
+public interface RoleService extends ISysBaseService<UserRoleDO> {
     //新增角色
-    int insert(RoleDO roleDO);
+    int insert(UserRoleDO roleDO);
     //更新角色
-    int update(RoleDO roleDO);
+    int update(UserRoleDO roleDO);
 
-    RoleDO selectObjByName(Map<String,Object> map);
+    UserRoleDO selectObjByName(Map<String,Object> map);
 
     List<Map<String,Object>> listAllMenu(Map<String, Object> m);
 

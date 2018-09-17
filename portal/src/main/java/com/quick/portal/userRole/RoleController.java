@@ -37,7 +37,7 @@ import com.quick.portal.security.authority.metric.PropertiesUtil;
 @Controller
 @Scope("prototype")
 @RequestMapping(value = "/role")
-public class RoleController extends SysBaseController<RoleDO> {
+public class RoleController extends SysBaseController<UserRoleDO> {
     //角色服务
     @Resource(name = "roleService")
     private RoleService roleService;
@@ -46,7 +46,7 @@ public class RoleController extends SysBaseController<RoleDO> {
     private  RoleDao roleDao;
     
     @Override
-    public ISysBaseService<RoleDO> getBaseService(){
+    public ISysBaseService<UserRoleDO> getBaseService(){
         return roleService;
     }
     
@@ -83,7 +83,7 @@ public class RoleController extends SysBaseController<RoleDO> {
      * @return
      */
     @Override
-    public DataStore save(RoleDO model) {
+    public DataStore save(UserRoleDO model) {
         Date now = DateTime.Now().getTime();
         //名称不能重复
         if(roleService.exist("job_name", model.getRole_name(), model.getRole_id()))
@@ -98,7 +98,7 @@ public class RoleController extends SysBaseController<RoleDO> {
     @Override
     public Map<String, Object> getObj(){
         Map<String,Object> m= getQueryMap(request);
-        RoleDO obj= roleService.selectObj(m);
+        UserRoleDO obj= roleService.selectObj(m);
        if(obj==null){
            return null;
        }
@@ -113,7 +113,7 @@ public class RoleController extends SysBaseController<RoleDO> {
     @ResponseBody
     public Map<String, Object> getObjByName(){
         Map<String,Object> m= getQueryMap(request);
-        RoleDO obj= roleService.selectObjByName(m);
+        UserRoleDO obj= roleService.selectObjByName(m);
         if(obj==null){
             return null;
         }
@@ -238,7 +238,7 @@ public class RoleController extends SysBaseController<RoleDO> {
      */
     @RequestMapping(value = "/insertRole")
     @ResponseBody
-    public String Role(RoleDO model){
+    public String Role(UserRoleDO model){
         try{
         roleService.insert(model);}
         catch (Exception e)
@@ -257,7 +257,7 @@ public class RoleController extends SysBaseController<RoleDO> {
      */
     @RequestMapping
 //    @ResponseBody
-    public String updataRole(RoleDO model){
+    public String updataRole(UserRoleDO model){
         try {
             if(!"".equals(model.getRole_name()))
                 model.setRole_name(URLDecoder.decode(model.getRole_name(), "UTF-8"));

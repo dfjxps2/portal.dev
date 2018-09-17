@@ -24,7 +24,7 @@
 	</sql>
     
     <!-- 新增  -->
-	<insert id="insert" parameterType="com.quick.portal.userRole.RoleDO">
+	<insert id="insert" parameterType="com.quick.portal.userRole.UserRoleDO">
 		insert into user_role (
     		  role_name,
     		  role_state,
@@ -41,7 +41,7 @@
 	</insert>
 		
 	<!-- 修改 -->
-	<update id="update" parameterType="com.quick.portal.userRole.RoleDO">
+	<update id="update" parameterType="com.quick.portal.userRole.UserRoleDO">
 		update user_role
 		   set role_name=#{role_name}
 			  ,role_state=#{role_state}
@@ -198,7 +198,7 @@ SELECT urr.user_id FROM user_role_rela urr WHERE urr.role_id = #{role_id}) ur  o
 	<!--add by SongChaoqun-->
 	<!--根据角色名精确查找
 	-->
-	<select id="selectObjByName"  parameterType="map" resultType="com.quick.portal.userRole.RoleDO">
+	<select id="selectObjByName"  parameterType="map" resultType="com.quick.portal.userRole.UserRoleDO">
 		select * from user_role where role_name=#{role_name}
 	</select>
 
