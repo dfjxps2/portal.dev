@@ -174,7 +174,7 @@ $(function () {
 		 $.ajax({
 			  type: "post",
 			  async:false,
-			  url:  'getIsAppMenuByID?T='+Math.random(),
+			  url:  'getIsAppMenuByID',
 			  data:{menuId:id},
 			  success: function(data){
 				  bool = data;
@@ -191,7 +191,7 @@ $(function () {
     function sendLog(id,mn){
 		  $.ajax({
 			  type: "post",
-			  url:  'sendLog?T='+Math.random(),
+			  url:  'sendLog',
 			  data:{menuId:id,menuNm:mn},
 			  success: function(data){
 			  }
