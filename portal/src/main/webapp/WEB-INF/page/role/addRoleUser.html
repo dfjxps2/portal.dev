@@ -26,7 +26,7 @@
                                 <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="addUsers();"> 提交</button> </span>
                             </div>
                             <div class="form-group" style="left: auto;width:90px;">
-                                <span class="input-group-btn" style="display:inline-block;"><input type="button" class="btn btn-primary " value="返回" onclick="returnRoleUser();"></span>
+                                <span class="input-group-btn" style="display:inline-block;"><input type="button" class="btn btn-primary " value="返回" onclick="returnToRoleEdit();"></span>
                             </div>
                         </form>
                     </div>
@@ -38,14 +38,27 @@
         </div>
     </div>
 </div>
-</body>
 <script>
     var pageNum=1;
     var pageSize=10;
     var queryParm = '';
     var flag=true;
     var pageFlag=0;
+
+
+    var selected_users = {};
+    if (window.localStorage['selected_users']){
+        var users = window.localStorage['selected_users'].split(',');
+        users.forEach(function (value) {
+            selected_users[value] = value;
+        })
+    }
+
     var roleid = $.request.queryString["role_id"];
+    var filter = "";
+    if (roleid != null)
+        filter = "u.user_id not in (select user_id from user_role_rela where role_id = " + roleid + ")";
+
     //初始化表格
     function  config(){
         var RFlag=$.request.queryString["RFlag"];
@@ -56,7 +69,7 @@
         $("#list").bootstrapTable("destroy");
         _gridPool["list"]=new BGrid("#list");
         _gridPool["list"].config({
-            url:quick.serverUrl+"/getUserData?role_id="+roleid+"&i=" + Math.random(),
+            url: "${G.host}/sysUser/getList?filter=" + filter + "&i=" + Math.random(),
             idField: quick.idField,
             sortName: quick.idField,
             cache:false,
@@ -65,7 +78,8 @@
             columns: [
                 {  field: 'TAGSELECT', title: '选择',width: '5%', align: 'center',
                     formatter:function(value,rec){
-                        return "<input id=\"msgs"+rec.user_id+"\" title=\"msgs\" class=\"ck_qx\" type=\"checkbox\" name=\"msg\" value=\"" + rec.user_id+ "\" >";
+                        return "<input id=\"msgs"+rec.user_id+"\" title=\"msgs\" class=\"ck_qx\" type=\"checkbox\" name=\"msg\" value=\"" + rec.user_id + "\"" +
+                                " onclick='record_selection(this);'>";
                     }  },
                 { field: 'user_id', title: '用户ID', width: 70,align: 'center' },
                 { field: 'user_name', title: '用户名称', width: 90 ,align: 'center' },
@@ -89,6 +103,23 @@
             _gd["list"].init();
         }
     }
+
+
+    function record_selection(element) {
+        if ($(element).prop('checked'))
+            selected_users[$(element).val()] = $(element).val();
+        else
+            selected_users[$(element).val()] = undefined;
+    }
+
+    function init_selection() {
+        var items = $("input[name='msg']");
+        items.each(function(){
+            if (selected_users[$(this).val()])
+                $(this).prop('checked', true);
+        })
+    }
+
     //提交
     function addUsers(){
         var json = document.getElementsByName("msg");
@@ -130,10 +161,16 @@
             });
     }
 
-    function returnRoleUser() {
-        window.location.href= "roleUsers?role_id="+roleid;
+    function returnToRoleEdit() {
+        window.localStorage['selected_users'] = Object.getOwnPropertyNames(selected_users).join(',');
+        window.location.href= quick.editUrl + '?role_id=' + roleid;
     }
 
-</script>
+    window.onload = function() {
+        init_selection();
+    };
 
+
+</script>
+</body>
 </html>

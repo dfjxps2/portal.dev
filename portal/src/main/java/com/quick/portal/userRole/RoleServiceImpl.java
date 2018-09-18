@@ -3,14 +3,18 @@ package com.quick.portal.userRole;
 
 import com.quick.core.base.SysBaseService;
 import com.quick.core.base.ISysBaseDao;
+import com.quick.core.base.model.DataStore;
 import com.quick.core.util.common.QCommon;
 import com.quick.core.util.common.QRequest;
+import com.quick.portal.sysMenu.ISysMenuService;
+import com.quick.portal.sysUser.ISysUserService;
 import com.quick.portal.userRoleRela.UserRoleRelaDO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -25,14 +29,18 @@ import java.util.*;
 public class RoleServiceImpl extends SysBaseService<UserRoleDO> implements RoleService {
 
     //初始化
-    public RoleServiceImpl() {
+    @Autowired
+    public RoleServiceImpl(RoleDao dao) {
         BaseTable = "user_role";
         BaseComment = "";
         PrimaryKey = "role_id";
         NameKey = "role_name";
+        this.dao = dao;
     }
 
-    @Autowired
+    @Resource(name = "sysUserService")
+    private ISysUserService sysUserService;
+
     private RoleDao dao;
 
     //重写dao
@@ -50,6 +58,20 @@ public class RoleServiceImpl extends SysBaseService<UserRoleDO> implements RoleS
     @Override
     public int update(UserRoleDO roleDO) {
         return dao.update(roleDO);
+    }
+
+    @Transactional
+    @Override
+    public DataStore delete(String role_id) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("role_id", role_id);
+
+        List<Map<String, Object>> userList = sysUserService.select(params);
+
+        if (userList.size() > 0){
+            return ActionMsg.setError("该角色有用户正在使用，无法删除");
+        }else
+            return super.delete(role_id);
     }
 
     @Override

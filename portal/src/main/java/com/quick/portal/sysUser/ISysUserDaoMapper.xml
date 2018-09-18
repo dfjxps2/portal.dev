@@ -20,6 +20,9 @@
 		<if test="dep_id != null and dep_id != '' and !'null'.equals(dep_id)"><![CDATA[
 	       and d.dep_id = #{dep_id}
 	    ]]></if>
+		<if test="role_id != null and role_id != '' and !'null'.equals(role_id)"><![CDATA[
+	       and r.role_id = #{role_id}
+	    ]]></if>
 		<if test="job_id != null and job_id != '' and !'null'.equals(job_id)"><![CDATA[
 	       and u.job_id = #{job_id}
 	    ]]></if>

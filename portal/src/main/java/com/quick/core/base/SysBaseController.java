@@ -492,7 +492,7 @@ public abstract class SysBaseController<T> {
      * @return
      */
     public String getFilterCondition() {
-        return "";
+        return rstr("filter");
     }
 
     @RequestMapping(value = "/getObj", method = RequestMethod.POST)

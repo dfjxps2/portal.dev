@@ -49,7 +49,7 @@
     var flag=true;
     var pageFlag=0;
     //初始化表格
-    var  roleid=$.request.queryString["role_id"];
+    var  role_id=$.request.queryString["role_id"];
     function  config(){
         var RFlag=$.request.queryString["RFlag"];
         quick.serverUrl = "${G.serverUrl}";  // /sysUser
@@ -59,7 +59,8 @@
         $("#list").bootstrapTable("destroy");
         _gridPool["list"]=new BGrid("#list");
         _gridPool["list"].config({
-            url:quick.serverUrl+"/getRoleUsers?role_id=" +roleid +"&i="+ Math.random(),
+            // url:quick.serverUrl+"/getRoleUsers?role_id=" +roleid +"&i="+ Math.random(),
+            url: "${G.host}/sysUser/getList?role_id=" +role_id +"&i="+ Math.random(),
             idField: quick.idField,
             sortName: quick.idField,
             cache:false,
@@ -117,12 +118,12 @@
                     dataType: "json",
                     data:{
                         ROLE_USER_ID_LIST:check_val.join(","),
-                        role_id:roleid
+                        role_id:role_id
                     },
                     success: function (data) {
                         if (data == 1) {
                             layer.msg('删除记录成功', {icon: 1, time: 1000});
-                            window.location.href= "roleUsers?role_id="+roleid;
+                            window.location.href= "roleUsers?role_id="+role_id;
                         }else {
                             layer.msg('删除记录失败', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
 
@@ -137,11 +138,11 @@
 
     function addRoleUser (){
         navAppend("新增角色用户");/*获取父页面元素并动态赋值父页面title*/
-        window.location.href= "addRoleUser?role_id="+roleid;//跳转到另一个页面，并且还在当前框架
+        window.location.href= "addRoleUser?role_id="+role_id;//跳转到另一个页面，并且还在当前框架
     }
 
     function returnEdit() {
-        window.location.href= "edit?role_id="+roleid;
+        window.location.href= "edit?role_id="+role_id;
     }
 
 </script>
