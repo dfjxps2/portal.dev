@@ -162,27 +162,6 @@
 
     }
 
-    // /*隐藏三级title*/
-    // $(window.parent.document).find("#title_list_two").html($(this).find("span").html()).removeClass("title_list");
-    // $(window.parent.document).find(".icon-right").removeClass("glyphicon").removeClass("glyphicon-chevron-right").removeClass("title_list");
-    // $(window.parent.document).find("#title_list_thr").html("");
-
-    // //跳转到角色信息页面
-    // function goDetail(obj) {
-    //     /*获取父页面元素并动态赋值父页面title*/
-    //     $(window.parent.document).find(".icon-right").addClass("glyphicon").addClass("glyphicon-chevron-right").addClass("title_list");
-    //     $(window.parent.document).find("#title_list_two").addClass("title_list");
-    //     $(window.parent.document).find("#title_list_thr").html("基本信息");
-    //
-    //     //var value = $(obj).text();
-    //     var value = $(obj).attr("id");
-    //     if (RFlag == 1) {
-    //         queryParm = getParm();
-    //     }
-    //     var url = '${G.host}/role/detail?IDS_ROLEID=' + value + queryParm + "&pageNum=" + pageNum + "&pageSize=" + pageSize;
-    //     window.location.href = url;
-    // }
-
     //查看详细信息
     function auth(role_id, role_name) {
         navAppend("权限配置");
@@ -190,7 +169,7 @@
         if (quick.authUrl) {
         }
         else {
-            quick.authUrl = "${G.host}/role/roleAuth.do";
+            quick.authUrl = "${G.serverUrl}/roleAuthorize";
         }
         window.location.href = quick.authUrl + "?role_id=" + role_id + getDetailParm();//跳转到另一个页面，并且还在当前框架
     }
@@ -207,20 +186,6 @@
         window.location.href = quick.authUrl + "?role_id=" + role_id + getDetailParm();//跳转到另一个页面，并且还在当前框架
     }
 
-    // function isRoleHasUser(id) {
-    //     var flag;
-    //     $.ajax({
-    //         type: "post",
-    //         async: false,
-    //         url: '${G.host}/role/getRoleHasUser',
-    //         data: {rid: id},
-    //         success: function (data) {
-    //             flag = data;
-    //         }
-    //
-    //     });
-    //     return flag;
-    // }
 
     /*删除*/
     function del(id, name) {
@@ -258,38 +223,6 @@
         var pageURL = "${G.serverUrl}/edit?role_id=" + role_id + getDetailParm();
         window.location.href = pageURL;//跳转到另一个页面，并且还在当前框架
     }
-
-    // //返回按钮刷新
-    // function query() {
-    //     var pn = $.request.queryString["IpageNum"] || 1;
-    //     var ps = $.request.queryString["IpageSize"] || 15;
-    //
-    //     var ir = $.request.queryString["IIDS_ROLECODE"];
-    //     var is = $.request.queryString["IIDS_SYSID"];
-    //     var IroleName = $.request.queryString["IIDS_ROLENAME"];
-    //     if (ir != 'undefined') {
-    //         $("#IDS_ROLECODE").val(ir);
-    //     }
-    //     if (IroleName != 'undefined') {
-    //         $("#IDS_ROLENAME").val(IroleName);
-    //     }
-    //
-    //     _gridPool["tb_role"].config({
-    //         pageSize: ps
-    //         , onLoadSuccess: function (data) {
-    //             //console.log(data.total);
-    //             if (pageFlag > 0) {
-    //                 // $("#IDS_ROLEID").val(ir);
-    //                 return;
-    //             }
-    //             if (is != 'undefined')
-    //                 $("#IDS_SYSID").val(is);
-    //             $('#tb_role').bootstrapTable('selectPage', Number(pn));
-    //             pageFlag++;
-    //         }
-    //     });
-    //     _gridPool["tb_role"].init();
-    // }
 
     //获取返回时传回的数据
     function requery() {

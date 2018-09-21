@@ -1,25 +1,21 @@
 
 package com.quick.portal.userRole;
 
-import com.quick.core.base.SysBaseService;
 import com.quick.core.base.ISysBaseDao;
+import com.quick.core.base.SysBaseService;
 import com.quick.core.base.model.DataStore;
 import com.quick.core.util.common.QCommon;
-import com.quick.core.util.common.QRequest;
-import com.quick.portal.sysMenu.ISysMenuService;
+import com.quick.core.util.common.ReflectUtil;
 import com.quick.portal.sysUser.ISysUserService;
-import com.quick.portal.userRoleRela.UserRoleRelaDO;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 服务类
@@ -50,14 +46,36 @@ public class RoleServiceImpl extends SysBaseService<UserRoleDO> implements RoleS
     }
 
     //新增角色
-    @Override
-    public int insert(UserRoleDO roleDO) {
-        return dao.insert(roleDO);
+    @Transactional
+    public DataStore insert(UserRoleDO roleDO, String user_role_predicate)
+    {
+        Map<String, Object> params = ReflectUtil.toMap(roleDO);
+        params.put("error_no", new Integer(0));
+        params.put("user_role_predicate", user_role_predicate);
+
+        dao.insert(params);
+
+        if (params.get("error_no").toString().equals("0"))
+            return ActionMsg.setError("操作失败");
+        else
+            return ActionMsg.setOk("操作成功");
     }
+
     //更新角色
     @Override
-    public int update(UserRoleDO roleDO) {
-        return dao.update(roleDO);
+    public DataStore update(UserRoleDO roleDO, String user_role_predicate)
+    {
+        Map<String, Object> params = ReflectUtil.toMap(roleDO);
+        params.put("error_no", new Integer(0));
+        params.put("user_role_predicate", user_role_predicate);
+
+        dao.update(params);
+
+        if (params.get("error_no").toString().equals("0"))
+            return ActionMsg.setError("操作失败");
+        else
+            return ActionMsg.setOk("操作成功");
+
     }
 
     @Transactional
@@ -132,11 +150,7 @@ public class RoleServiceImpl extends SysBaseService<UserRoleDO> implements RoleS
         List<Map<String,Object>> result = dao.listMenuPri(role_id);
         return result;
     }
-    /* 根据姓名精确查找*/
-    @Override
-    public UserRoleDO selectObjByName(Map<String,Object> map){
-        return dao.selectObjByName(map);
-    }
+
 
     @Override
     public List<Map<String, Object>> listAllApp(Map<String, Object> m) {
@@ -148,78 +162,5 @@ public class RoleServiceImpl extends SysBaseService<UserRoleDO> implements RoleS
 	public List<Map<String, Object>> getRoleType() {
 		return dao.getRoleType();
 	}
-
-    @Override
-    public void delRoleUser(HttpServletResponse res, HttpServletRequest request) {
-        String users = QRequest.getString(request,"ROLE_USER_ID_LIST");
-        String roleid = QRequest.getString(request,"role_id");
-        Map<String,Object> map = new HashMap<>();
-        if(!users.equals("") && !users.equals("undefined") && users != null && roleid!=null && !roleid.equals("undefined") && !roleid.equals("")){
-            String[] userId = users.split(",");
-              map.put("array",userId);
-              map.put("role_id",roleid);
-             dao.deleteRoleUser(map);
-            try {
-                res.getWriter().write("1");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }else {
-            try {
-                res.getWriter().write("0");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @Override
-    public void addRoleUser(HttpServletResponse res, HttpServletRequest request) {
-        String users = QRequest.getString(request,"ROLE_USER_ID_LIST");
-        Integer roleid = QRequest.getInteger(request,"role_id");
-        ArrayList<Object> list = new ArrayList<>();
-        Date date= Calendar.getInstance().getTime();
-        UserRoleRelaDO userRoleRelaDO ;
-        if(!users.equals("") && !users.equals("undefined") && users != null && roleid!=null && !roleid.equals("undefined") && !roleid.equals("")){
-            String[] userId = users.split(",");
-            for(String value: userId){
-               userRoleRelaDO = new UserRoleRelaDO();
-               userRoleRelaDO.setUser_id(Integer.parseInt(value));
-               userRoleRelaDO.setRole_id(roleid);
-               userRoleRelaDO.setCre_time(date);
-               userRoleRelaDO.setUpd_time(date);
-               list.add(userRoleRelaDO);
-            }
-              dao.addRoleUsers(list);
-            try {
-                res.getWriter().write("1");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }else {
-            try {
-                res.getWriter().write("0");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-    /*
-     * 该角色下是否有用户
-     * (non-Javadoc)
-     * @see com.quick.portal.userRole.RoleService#getRoleHasUser(java.lang.String)
-     */
-	@Override
-	public String getRoleHasUser(String rid) {
-		String flag = "1";
-		int count = dao.getRoleHasUser(rid);
-		if(count >0 ){
-			flag = "1";
-		}else{
-			flag = "0";
-		}
-		return flag;
-	}
-
 
 }

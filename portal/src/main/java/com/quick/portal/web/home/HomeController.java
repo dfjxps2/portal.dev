@@ -25,7 +25,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import com.seaboxdata.portal.PortalPasswordEncoder;
 import com.seaboxdata.portal.common.PortalUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -38,7 +37,7 @@ import com.quick.core.base.SysWebController;
 import com.quick.core.base.model.DataStore;
 import com.quick.core.util.common.JsonUtil;
 import com.quick.core.util.common.QCommon;
-import com.quick.portal.menuPrivilege.IMenuPrivilegeService;
+import com.quick.portal.sysPrivilege.ISysPrivilegeService;
 import com.quick.portal.search.infomng.IInfoMngService;
 import com.quick.portal.web.login.WebLoginConstants;
 import com.quick.portal.web.login.WebLoginUitls;
@@ -58,7 +57,7 @@ public class HomeController extends SysWebController {
     private IHomeService homeService;
 
     @Resource(name = "menuPrivilegeService")
-    private IMenuPrivilegeService menuPrivilegeService;
+    private ISysPrivilegeService menuPrivilegeService;
 
     @Resource(name = "infoMngService")
     private IInfoMngService infoMngService;

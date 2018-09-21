@@ -12,7 +12,7 @@
 	       and role_state = #{role_state}
 	    ]]></if>
 		<if test="role_name != null and role_name != '' and role_name != 'null'"><![CDATA[
-	       and role_name like '%${role_name}%'
+	       and role_name = '${role_name}'
 	    ]]></if>
 		<if test="cre_time != null and cre_time != '' and cre_time != 'null'"><![CDATA[
 	       and cre_time >= #{cre_time}
@@ -24,30 +24,26 @@
 	</sql>
     
     <!-- 新增  -->
-	<insert id="insert" parameterType="com.quick.portal.userRole.UserRoleDO">
-		insert into user_role (
-    		  role_name,
-    		  role_state,
-    		  role_type_id,
-    		  cre_time,
-    		  upd_time
-		)values(
-			 #{role_name},
-			 #{role_state},
-			 #{role_type_id},
-			 now(),
-			 now()
-			)
+	<insert id="insert" parameterType="map" statementType="CALLABLE">
+		{CALL INSERT_USER_ROLE(
+			#{role_name, mode=IN},
+			#{role_state, mode=IN},
+			#{role_type_id, mode=IN},
+			#{user_role_predicate, mode=IN},
+			#{error_no, jdbcType=INTEGER, mode=OUT}
+		)}
 	</insert>
 		
 	<!-- 修改 -->
-	<update id="update" parameterType="com.quick.portal.userRole.UserRoleDO">
-		update user_role
-		   set role_name=#{role_name}
-			  ,role_state=#{role_state}
-			  ,role_type_id=#{role_type_id}
-			  ,upd_time = now()
-		 where role_id = #{role_id}
+	<update id="update" parameterType="map" statementType="CALLABLE">
+		{CALL UPDATE_USER_ROLE(
+			#{role_id, mode=IN},
+			#{role_name, mode=IN},
+			#{role_state, mode=IN},
+			#{role_type_id, mode=IN},
+			#{user_role_predicate, mode=IN},
+			#{error_no, jdbcType=INTEGER, mode=OUT}
+		)}
 	</update>
     
 	<!-- 删除 -->
@@ -57,76 +53,7 @@
 		delete from menu_privilege where role_id=#{role_id};
 	</delete>
 
-	<select id="listRoleUser" parameterType="map" resultType="map">
-	SELECT sus.user_id,sus.user_real_name,sus.user_name,sus.dep_name  FROM
-(SELECT su.user_id,su.user_name,su.user_real_name,udn.dep_name FROM sys_user su left join (
-SELECT  ud.dep_id ,udr.user_id,ud.dep_name FROM user_department ud left join user_dep_rela udr on ud.dep_id = udr.dep_id
-) udn on su.user_id = udn.user_id) sus   join
-(
-SELECT urr.user_id FROM user_role_rela urr WHERE urr.role_id = #{role_id}) ur  on  sus.user_id = ur.user_id
-	</select>
 
-	<select id="roleUserCount" parameterType="map" resultType="int">
-		SELECT  count(*) FROM (
-		SELECT sus.user_id,sus.user_real_name,sus.user_name,sus.dep_name  FROM
-(SELECT su.user_id,su.user_name,su.user_real_name,udn.dep_name FROM sys_user su left join (
-SELECT  ud.dep_id ,udr.user_id,ud.dep_name FROM user_department ud left join user_dep_rela udr on ud.dep_id = udr.dep_id
-) udn on su.user_id = udn.user_id) sus   join
-(
-SELECT urr.user_id FROM user_role_rela urr WHERE urr.role_id = #{role_id}) ur  on  sus.user_id = ur.user_id
-		) ru WHERE  1=1
-	</select>
-
-	<!--为角色增添用户-->
-	<select id="listUser" parameterType="map" resultType="map">
-            select udj.user_id,udj.user_name,udj.user_real_name,udj.user_state,udj.dep_name,udj.job_name  from
-            (select udn.user_id,udn.user_name,udn.user_real_name,udn.user_state,udn.dep_name,uj.job_name from
-            (select sd.user_id,sd.user_name,sd.user_real_name,sd.user_state,ud.dep_name,sd.job_id  from
-            (select su.user_id,su.job_id,su.user_name,su.user_real_name,su.user_state,udr.dep_id from
-            sys_user su left join user_dep_rela udr on su.user_id = udr.user_id) sd left join user_department ud
-            on sd.dep_id = ud.dep_id) udn left join user_job uj on udn.job_id = uj.job_id) udj  where udj.user_id
-			not in (select  user_id	from user_role_rela WHERE role_id = #{role_id})
-	</select>
-
-	<select id="recountUsers" resultType="int" parameterType="map">
-		SELECT count(*) FROM (
-		select udj.user_id,udj.user_name,udj.user_real_name,udj.user_state,udj.dep_name,udj.job_name  from
-            (select udn.user_id,udn.user_name,udn.user_real_name,udn.user_state,udn.dep_name,uj.job_name from
-            (select sd.user_id,sd.user_name,sd.user_real_name,sd.user_state,ud.dep_name,sd.job_id  from
-            (select su.user_id,su.job_id,su.user_name,su.user_real_name,su.user_state,udr.dep_id from
-            sys_user su left join user_dep_rela udr on su.user_id = udr.user_id) sd left join user_department ud
-            on sd.dep_id = ud.dep_id) udn left join user_job uj on udn.job_id = uj.job_id) udj  where udj.user_id
-			not in (select  user_id	from user_role_rela WHERE role_id = #{role_id})
-
-		) ur WHERE  1=1
-	</select>
-
-	<!--提交增加用户-->
-	<insert id="addRoleUsers" parameterType="java.util.List">
-		INSERT INTO  user_role_rela (user_id,role_id,cre_time,upd_time)
-		VALUES
-		<foreach collection="list" item="entity" separator=",">
-			(
-			#{entity.user_id},
-			#{entity.role_id},
-			#{entity.cre_time},
-			#{entity.upd_time}
-			)
-		</foreach>
-	</insert>
-
-	<!--删除角色下的用户-->
-	<delete id="deleteRoleUser" >
-		DELETE FROM user_role_rela  WHERE role_id = ${role_id}
-		<if test="array != null and array != ''">
-			AND
-			<foreach collection="array"  separator="OR"  item="entity">
-				 	user_id = ${entity}
-			</foreach>
-		</if>
-
-	</delete>
-    
     <!--查询-->
 	<select id="select" parameterType="map" resultType="map">
 		select r.*,e.role_type_name
@@ -147,7 +74,6 @@ SELECT urr.user_id FROM user_role_rela urr WHERE urr.role_id = #{role_id}) ur  o
 		</where>
 	</select>
 
-	<!--add by SongChaoqun-->
 	<select id="listAllMenu"  parameterType="map" resultType="map">
 		select m.*,p.show_on_init,p.show_order from sys_menu m
            left join (select show_on_init,show_order,menu_id from menu_privilege where role_id=#{role_id}) p on p.menu_id=m.menu_id
@@ -195,12 +121,6 @@ SELECT urr.user_id FROM user_role_rela urr WHERE urr.role_id = #{role_id}) ur  o
 	<select id="listMenuPri"  parameterType="String" resultType="map">
 		select * from menu_privilege where role_id=#{role_id}
 	</select>
-	<!--add by SongChaoqun-->
-	<!--根据角色名精确查找
-	-->
-	<select id="selectObjByName"  parameterType="map" resultType="com.quick.portal.userRole.UserRoleDO">
-		select * from user_role where role_name=#{role_name}
-	</select>
 
 	<!--角色类型的下拉框选项-->
 	<select id="getRoleType" parameterType="map" resultType="map">
@@ -208,13 +128,4 @@ SELECT urr.user_id FROM user_role_rela urr WHERE urr.role_id = #{role_id}) ur  o
 	</select>
 	
 
-    
-    <!--该角色下是否有用户-->
-    <select id="getRoleHasUser" parameterType="String" resultType="int">
-		<![CDATA[	
-		SELECT COUNT(1) FROM USER_ROLE_RELA A INNER JOIN SYS_USER U 
-			ON U.USER_ID=A.USER_ID WHERE  U.USER_STATE =1
-			AND A.ROLE_ID =#{rid}
-	]]>
-	</select>
 </mapper>

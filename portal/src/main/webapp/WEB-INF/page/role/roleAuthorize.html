@@ -24,7 +24,7 @@
             <div class="ibox float-e-margins">
                 <div class="ibox-content ibox-content-x">
                     <div class="pull-right">
-                        <button id="btnSave" class="btn btn-primary" type="button" onclick="saveRoleAuth();">保存</button>
+                        <button id="btnSave" class="btn btn-primary" type="button" onclick="saveRolePrivilege();">保存</button>
                         <button type="button" class="btn btn-primary" onclick="cancel();">返回</button>
                     </div>
                     <div class="tabs-container">
@@ -75,11 +75,11 @@
 <script>
     var zTreeObj, appTree;
     $(document).ready(function () {
-        listAllMenu();
+        listRolePrivilege();
         listAllApp();
     });
 
-    function listAllMenu() {
+    function listRolePrivilege() {
         var role_id = $.request.queryString["role_id"];
         zTreeObj = null;
         var ztreeSetting = {
@@ -95,60 +95,94 @@
         };
         $.ajax({
             type: "get",
-            url: "listAllMenu?role_id=" + role_id,
+            url: "${G.host}/sysPrivilege/listPrivilege?role_id=" + role_id + "&sort=menu_id",
             async: false,
             dataType: "json",
             success: function (data) {
                 //console.log(JSON.stringify(data));
-                var ztreeNodes = new Array();
+                var ztreeNodes = [];
                 if (data != null && data.length > 0) {
                     $.each(data, function (i, dataNode) {
                         var menu_id = dataNode.menu_id;
                         var super_menu_id = dataNode.super_menu_id;
                         var menu_cn_name = dataNode.menu_cn_name;
-                        var show_on_init = dataNode.show_on_init || '';
-                        var show_order = dataNode.show_order || '';
                         var is_app = dataNode.app_id ? 1 : 0;
                         ztreeNodes.push({
                             "id": menu_id,
                             "pId": super_menu_id,
                             "name": menu_cn_name,
-                            "app_id": is_app,
-                            "show_order": show_order,
-                            "show_on_init": show_on_init
+                            "app_id": is_app
                         });
                     });
                 }
                 zTreeObj = $.fn.zTree.init($("#treeDemo"), ztreeSetting, ztreeNodes);
-                checkMenuPri();
+                data.forEach(function(value, index, arry){
+                    if (value['role_id']){
+                        zTreeObj.checkNode(
+                            zTreeObj.getNodesByParam("id", value['menu_id'])[0]
+                            ,true
+                            ,false);
+                    }
+                });
+                // checkMenuPri();
             }
         });
     }
 
-    function checkMenuPri() {
-        var role_id = $.request.queryString["role_id"];
-        $.ajax({
-            type: "get",
-            url: "listMenuPri",
-            async: false,
-            data: {role_id: role_id},
-            dataType: "json",
-            success: function (data) {
-                if (data != null && data.length > 0) {
-                    $.each(data, function (i, checkMenu) {
-                        var menu_id_checked = checkMenu.menu_id;
-                        var hasCheckNode = zTreeObj.getNodesByParam("id", menu_id_checked);
-                        if (hasCheckNode != null && hasCheckNode.length > 0)
-                            zTreeObj.checkNode(hasCheckNode[0], true, false);
-                    });
-                }
+    // function checkMenuPri() {
+    //     var role_id = $.request.queryString["role_id"];
+    //     $.ajax({
+    //         type: "get",
+    //         url: "${G.host}/role/listMenuPri",
+    //         async: false,
+    //         data: {role_id: role_id},
+    //         dataType: "json",
+    //         success: function (data) {
+    //             if (data != null && data.length > 0) {
+    //                 $.each(data, function (i, checkMenu) {
+    //                     var menu_id_checked = checkMenu.menu_id;
+    //                     var hasCheckNode = zTreeObj.getNodesByParam("id", menu_id_checked);
+    //                     if (hasCheckNode != null && hasCheckNode.length > 0)
+    //                         zTreeObj.checkNode(hasCheckNode[0], true, false);
+    //                 });
+    //             }
+    //
+    //         }
+    //     });
+    // }
 
+    function saveRolePrivilege() {
+        var role_id = $.request.queryString["role_id"];
+        var rows = zTreeObj.getCheckedNodes(true).map(function (value){
+            return value['id'];
+        });
+
+        $.ajax({
+            type: "post",
+            url: '${G.host}/sysPrivilege/savePrivilege?role_id=' + role_id,
+            dataType: "json",
+            traditional: true,
+            data: {
+                privileges: rows
+            },
+            success: function (data) {
+                if (data.code === 1) {
+                    layer.msg('保存成功', {icon: 1, time: 2000, skin: 'layer-ext-moon'});
+
+                    cancel();
+                }
+                else
+                    layer.msg(data.msg, {icon: 1, time: 2000, skin: 'layer-ext-moon'});
+
+            },
+            error: function (err) {
+                layer.msg("结果异常", {icon: 1, time: 2000, skin: 'layer-ext-moon'});
             }
         });
     }
 
     function saveRoleAuth() {
-        var realCheckNode = new Array();
+        var realCheckNode = [];
         var allCheckedNodes = zTreeObj.getCheckedNodes(true);
         mergeNodes(allCheckedNodes);
         if (allCheckedNodes != null && allCheckedNodes.length > 0) {
@@ -171,7 +205,7 @@
     function cancel() {
         var IpageNum = $.request.queryString["IpageNum"];
         var IpageSize = $.request.queryString["IpageSize"];
-        var url = '${G.host}/roleDO/list?page=' + IpageNum + '&pageSize=' + IpageSize;
+        var url = '${G.host}/role/list?page=' + IpageNum + '&pageSize=' + IpageSize;
         window.location.href = url;
     }
 

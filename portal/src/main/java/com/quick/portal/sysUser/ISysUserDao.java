@@ -19,13 +19,7 @@
 package com.quick.portal.sysUser;
 
 import com.quick.core.base.ISysBaseDao;
-import com.quick.core.base.model.DataStore;
-import com.quick.core.base.model.PageBounds;
-import com.quick.portal.userDepartment.UserDepartmentDO;
-import com.quick.portal.userJob.UserJobDO;
-import com.quick.portal.userRoleRela.UserRoleRelaDO;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -34,19 +28,8 @@ import java.util.Map;
  */
 public interface ISysUserDao<SysUserDO> extends ISysBaseDao<SysUserDO> {
     int updatePassword(SysUserDO password);
-    String selectUserId();
-    UserRoleRelaDO getUserRoleRe(String urrid,String roleId);
-    List<Map<String,Object>> getAllUser(Map<String, Object> m, PageBounds page);
-    List<Map<String,Object>> selectByName(String username);
-    int deleteUserDepRela(String relaid);
-    int updateUserDepRela(SysUserDO rela);
-    void insertUserDepRela(SysUserDO userDO);
-    //根据部门查询计算总条数
-    int recount(String depid);
     int modifyPwdByApp(SysUserDO sysDO);
     
-    List<Map<String,Object>> selectRole(Map<String,Object> p);
-    List<Map<String,Object>> selectDep(Map<String,Object> p);
     /*
 	 * 锁定用户帐号
 	 */
@@ -64,11 +47,6 @@ public interface ISysUserDao<SysUserDO> extends ISysBaseDao<SysUserDO> {
 	  */
 	 List<Map<String,Object>> isExitUserInfoByUserId (String userId);
 
-
-    Map<String,Object> getUserEdit(Map<String,Object> p);
-    void  updateUserRole(Map<String,Object> p);
-    void deleteUserRole(String id);
-    void addRoleUsers(ArrayList<Object> list);
 
     List<SysUserDO> getUserInfo(Map<String, Object> m);
 

@@ -19,9 +19,7 @@
 package com.quick.portal.userRole;
 
 import com.quick.core.base.ISysBaseService;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import com.quick.core.base.model.DataStore;
 
 import java.util.List;
 import java.util.Map;
@@ -32,11 +30,9 @@ import java.util.Map;
  */
 public interface RoleService extends ISysBaseService<UserRoleDO> {
     //新增角色
-    int insert(UserRoleDO roleDO);
+    DataStore insert(UserRoleDO roleDO, String user_role_predicate);
     //更新角色
-    int update(UserRoleDO roleDO);
-
-    UserRoleDO selectObjByName(Map<String,Object> map);
+    DataStore update(UserRoleDO roleDO, String user_role_predicate);
 
     List<Map<String,Object>> listAllMenu(Map<String, Object> m);
 
@@ -47,11 +43,5 @@ public interface RoleService extends ISysBaseService<UserRoleDO> {
     List<Map<String,Object>> listAllApp(Map<String, Object> m);
     
     List<Map<String,Object>> getRoleType();
-
-    void  delRoleUser(HttpServletResponse res, HttpServletRequest req);
-
-    void addRoleUser(HttpServletResponse res, HttpServletRequest req);
-    //该角色下是否有用户
-    String getRoleHasUser(String rid);
 
 }

@@ -16,7 +16,7 @@
  *          
  * </p>
  */
-package com.quick.portal.menuPrivilege;
+package com.quick.portal.sysPrivilege;
 
 import com.quick.core.base.SysBaseService;
 import com.quick.core.base.ISysBaseDao;
@@ -26,27 +26,30 @@ import org.springframework.transaction.annotation.Transactional;
 import com.quick.core.base.model.DataStore;
 import com.quick.core.util.common.DateTime;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * menu_privilege服务实现类
  */
  @Transactional
- @Service("menuPrivilegeService")
-public class MenuPrivilegeServiceImpl extends SysBaseService<MenuPrivilegeDO> implements IMenuPrivilegeService {
+ @Service("sysPrivilegeService")
+public class SysPrivilegeServiceImpl extends SysBaseService<SysPrivilegeDO> implements ISysPrivilegeService {
     
     /**
      * 构造函数
      */
-    public MenuPrivilegeServiceImpl() {
+    public SysPrivilegeServiceImpl() {
         BaseTable = "menu_privilege";
         BaseComment = "menu_privilege";
         PrimaryKey = "pri_id";
     }
     
     @Autowired
-    private IMenuPrivilegeDao dao;
+    private ISysPrivilegeDao<SysPrivilegeDO> dao;
     
     @Override
-    public ISysBaseDao getDao(){
+    public ISysPrivilegeDao<SysPrivilegeDO> getDao(){
         return dao;
     }
     
@@ -55,7 +58,7 @@ public class MenuPrivilegeServiceImpl extends SysBaseService<MenuPrivilegeDO> im
      * @return 
      */
     @Override
-    public DataStore save(MenuPrivilegeDO entity) {
+    public DataStore save(SysPrivilegeDO entity) {
         //如果编号为空,新增实体对象,否则更新实体对象
         Integer val = entity.getPri_id();
         int c = 0;
@@ -83,6 +86,16 @@ public class MenuPrivilegeServiceImpl extends SysBaseService<MenuPrivilegeDO> im
     @Override
     public DataStore delete(String sysid) {
         dao.delete(sysid);
+        return ActionMsg.setOk("操作成功");
+    }
+
+    public List<Map<String, Object>> getPrivilegeForRole(Map<String, Object> params){
+        return dao.getPrivilegeForRole(params);
+    }
+
+    @Transactional
+    public DataStore savePrivilegeForRole(Integer role_id, Integer[] menuList){
+        dao.savePrivilegeForRole(role_id, menuList);
         return ActionMsg.setOk("操作成功");
     }
 }

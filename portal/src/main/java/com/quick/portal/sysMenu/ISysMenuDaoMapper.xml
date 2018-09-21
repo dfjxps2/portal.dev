@@ -11,14 +11,11 @@
 		<if test="super_menu_id != null and super_menu_id != ''  and super_menu_id != 'null'"><![CDATA[ 
 	       and a.super_menu_id = #{super_menu_id}
 	    ]]></if>
-	     <if test="menu_cn != null and menu_cn != '' and menu_cn != 'null'"><![CDATA[ 
-	       and a.menu_cn_name= #{menu_cn}
+	     <if test="menu_cn_name != null and menu_cn_name != '' and menu_cn_name != 'null'"><![CDATA[
+	       and a.menu_cn_name= '#{menu_cn_name}'
 	    ]]></if>
-	    <if test="menu_cn_name != null and menu_cn_name != '' and menu_cn_name != 'null'"><![CDATA[ 
-	       and a.menu_cn_name like  '%${menu_cn_name}%'
-	    ]]></if>
-	    <if test="menu_name != null and menu_name != '' and menu_name != 'null'"><![CDATA[ 
-	       and a.menu_name like '%${menu_name}%'
+	    <if test="menu_name != null and menu_name != '' and menu_name != 'null'"><![CDATA[
+	       and a.menu_name = '${menu_name}'
 	    ]]></if>
 		<if test="menu_level != null and menu_level != ''"><![CDATA[ 
 	       and a.menu_level = #{menu_level}

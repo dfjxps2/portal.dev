@@ -16,12 +16,18 @@
  *          
  * </p>
  */
-package com.quick.portal.menuPrivilege;
+package com.quick.portal.sysPrivilege;
 
 import com.quick.core.base.ISysBaseDao;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * menu_privilege数据访问接口
  */
-public interface IMenuPrivilegeDao<MenuPrivilegeDO> extends ISysBaseDao<MenuPrivilegeDO> {
+public interface ISysPrivilegeDao<SysPrivilegeDO> extends ISysBaseDao<SysPrivilegeDO> {
+    List<Map<String,Object>> getPrivilegeForRole(Map<String, Object> params);
+    int savePrivilegeForRole(@Param("role_id") Integer role_id, @Param("menuList") Integer[] menuList);
 }

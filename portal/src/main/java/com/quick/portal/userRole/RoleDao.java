@@ -31,11 +31,9 @@ import java.util.Map;
  */
 public interface RoleDao extends ISysBaseDao<UserRoleDO> {
     //新增角色
-    int insert(Map role);
+    int insert(Map<String, Object> map);
     //更新角色
-    int update(UserRoleDO roleDO);
-    //通过姓名精确查找
-    UserRoleDO selectObjByName(Map<String,Object> map);
+    int update(Map<String, Object> map);
 
     List<Map<String,Object>> listAllMenu(Map<String, Object> m);
 
@@ -51,14 +49,5 @@ public interface RoleDao extends ISysBaseDao<UserRoleDO> {
 
     List<Map<String,Object>> listAllApp(Map<String, Object> m);
     List<Map<String,Object>> getRoleType();
-    List<Map<String,Object>> listRoleUser(Map<String, Object> m, PageBounds page);
-    int roleUserCount(Map<String, Object> m);
-    void deleteRoleUser(Map<String, Object> m);
-    List<Map<String,Object>> listUser(Map<String, Object> m, PageBounds page);
-    int recountUsers(Map<String, Object> m);
-    void addRoleUsers(ArrayList<Object> list);
-    
-    //该角色下是否有用户
-    int getRoleHasUser(String rid);
 
 }

@@ -16,7 +16,7 @@
  *
  * </p>
  */
-package com.quick.portal.menuPrivilege;
+package com.quick.portal.sysPrivilege;
 
 import java.util.Date;
 
@@ -24,7 +24,7 @@ import java.util.Date;
 /**
  * menu_privilege数据对象
  */
-public class MenuPrivilegeDO implements java.io.Serializable {
+public class SysPrivilegeDO implements java.io.Serializable {
 	
     private static final long serialVersionUID = 1L;
 	
