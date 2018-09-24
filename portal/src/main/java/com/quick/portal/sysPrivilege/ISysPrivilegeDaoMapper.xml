@@ -73,7 +73,7 @@
     
     <!--查询-->
 	<select id="select" parameterType="map" resultType="map">
-		select * from sys_menu
+		select * from (select * from sys_menu where menu_state = 1 or app_id is not null) m
 		<where>
 			<include refid="where" />
 		</where>
@@ -85,7 +85,7 @@
 	<select id="getPrivilegeForRole" parameterType="map" resultType="map">
 		select m.*
 		,p.role_id
-		from (select * from sys_menu where menu_state = 1) m
+		from (select * from sys_menu where menu_state = 1 or app_id is not null) m
 		join menu_privilege p on m.menu_id = p.menu_id
 		<where>
 			<include refid="where" />
@@ -104,9 +104,7 @@
         ;
         delete from menu_privilege
         where role_id = #{role_id}
-        and menu_id not in (select menu_id from tmp_menu_privilege
-        union
-        select menu_id from sys_menu where menu_id = 0 and app_id is not null);
+        and menu_id not in (select menu_id from tmp_menu_privilege);
         insert into menu_privilege (menu_id, role_id, cre_time, upd_time)
         select menu_id, role_id, now(), now()
         from tmp_menu_privilege

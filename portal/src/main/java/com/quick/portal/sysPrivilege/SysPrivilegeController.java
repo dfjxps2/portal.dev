@@ -73,8 +73,6 @@ public class SysPrivilegeController extends SysBaseController<SysPrivilegeDO> {
     public List<Map<String, Object>> listPrivilege(String role_id) {
         Map<String, Object> param = new HashMap<>();
 
-        param.put("menu_state", Integer.valueOf(1));
-
         List<Map<String, Object>> privilegeDef = sysPrivilegeService.select(param);
 
         param.put("role_id", role_id);
