@@ -225,27 +225,31 @@
 		<!--查询当前IP,密码错误次数-->
 	<select id="getLockCount" parameterType="java.lang.String" resultType="map">
 	<![CDATA[		        			
-		   SELECT
-			AUD_USER,
-			COUNT(AUD_DATE) AS CNT
-			FROM COM_AUDIT_TRAIL
-			WHERE  AUD_ACTION = 'AUTHENTICATION_FAILED'
-			AND AUD_CLIENT_IP = #{ip}
-			AND AUD_DATE > date_sub(now(), INTERVAL 5 MINUTE)
-			AND AUD_USER IN (
-				SELECT  AUD_USER
-				FROM  COM_AUDIT_TRAIL
-				WHERE  AUD_ACTION = 'AUTHENTICATION_FAILED'
-				AND AUD_CLIENT_IP = #{ip}
-				AND	AUD_DATE IN (
-						SELECT
-							MAX(AUD_DATE)
-						FROM COM_AUDIT_TRAIL
-						WHERE AUD_ACTION = 'AUTHENTICATION_FAILED'
-						AND AUD_CLIENT_IP = #{ip}
-						AND AUD_DATE > date_sub(now(), INTERVAL 1 MINUTE)
-						)
-		   )			
+		     SELECT T.AUD_USER AS AUD_USER, COUNT(1) AS CNT
+                FROM COM_AUDIT_TRAIL T,
+                (
+                SELECT T1.AUD_USER, COALESCE(AUD_SUCC_DATE, DATE_SUB(NOW(), INTERVAL 5 MINUTE)) AS AUD_SUCC_DATE
+                FROM
+                (
+                    SELECT AUD_USER
+                    FROM COM_AUDIT_TRAIL
+                    WHERE AUD_CLIENT_IP = #{ip}
+                    AND AUD_DATE = (SELECT MAX(AUD_DATE) FROM COM_AUDIT_TRAIL WHERE AUD_CLIENT_IP = #{ip})
+                    AND AUD_ACTION IN ('AUTHENTICATION_FAILED','AUTHENTICATION_SUCCESS')
+                ) T1 LEFT JOIN
+                (
+                    SELECT AUD_USER, MAX(AUD_DATE) AS AUD_SUCC_DATE
+                    FROM COM_AUDIT_TRAIL
+                    WHERE AUD_ACTION = 'AUTHENTICATION_SUCCESS'
+                    AND AUD_CLIENT_IP = #{ip}
+                    AND AUD_DATE > DATE_SUB(NOW(), INTERVAL 5 MINUTE)
+                    GROUP BY AUD_USER
+                ) T2 ON T1.AUD_USER = T2.AUD_USER
+                ) X
+                WHERE T.AUD_USER = X.AUD_USER
+                AND T.AUD_ACTION = 'AUTHENTICATION_FAILED'
+                AND T.AUD_CLIENT_IP = #{ip}
+                AND T.AUD_DATE > X.AUD_SUCC_DATE
 		]]>
 	</select>
 	<!--  通过用户名称查询用户信息 -->
