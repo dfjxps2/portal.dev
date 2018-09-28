@@ -20,6 +20,7 @@ package com.quick.portal.userRole;
 
 import com.quick.core.base.ISysBaseDao;
 import com.quick.core.base.model.PageBounds;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +49,11 @@ public interface RoleDao extends ISysBaseDao<UserRoleDO> {
     List<Map<String,Object>> listMenuPri(String role_id);
 
     List<Map<String,Object>> listAllApp(Map<String, Object> m);
+
+    List<Map<String,Object>> listAppTree(Map<String, Object> m);
+
+    int saveInitApp(@Param("role_id") Integer role_id, @Param("menuList") List<Map<String, Object>> menuList);
+
     List<Map<String,Object>> getRoleType();
 
 }

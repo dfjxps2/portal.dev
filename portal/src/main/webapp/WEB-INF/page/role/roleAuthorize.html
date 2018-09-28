@@ -24,7 +24,8 @@
             <div class="ibox float-e-margins">
                 <div class="ibox-content ibox-content-x">
                     <div class="pull-right">
-                        <button id="btnSave" class="btn btn-primary" type="button" onclick="saveRolePrivilege();">保存</button>
+                        <button id="btnSave" class="btn btn-primary" type="button" onclick="saveAll();">保存
+                        </button>
                         <button type="button" class="btn btn-primary" onclick="cancel();">返回</button>
                     </div>
                     <div class="tabs-container">
@@ -116,12 +117,12 @@
                     });
                 }
                 zTreeObj = $.fn.zTree.init($("#treeDemo"), ztreeSetting, ztreeNodes);
-                data.forEach(function(value, index, arry){
-                    if (value['role_id']){
+                data.forEach(function (value, index, arry) {
+                    if (value['role_id']) {
                         zTreeObj.checkNode(
                             zTreeObj.getNodesByParam("id", value['menu_id'])[0]
-                            ,true
-                            ,false);
+                            , true
+                            , false);
                     }
                 });
                 // checkMenuPri();
@@ -151,9 +152,16 @@
     //     });
     // }
 
+    function saveAll(){
+        if (saveRolePrivilege() !== true)
+            return;
+
+        saveRoleInitApp();
+    }
+
     function saveRolePrivilege() {
         var role_id = $.request.queryString["role_id"];
-        var rows = zTreeObj.getCheckedNodes(true).map(function (value){
+        var rows = zTreeObj.getCheckedNodes(true).map(function (value) {
             return value['id'];
         });
 
@@ -167,18 +175,56 @@
             },
             success: function (data) {
                 if (data.code === 1) {
-                    layer.msg('保存成功', {icon: 1, time: 2000, skin: 'layer-ext-moon'});
+                    layer.msg('功能权限保存成功', {icon: 1, time: 2000, skin: 'layer-ext-moon'});
 
                     cancel();
                 }
-                else
-                    layer.msg(data.msg, {icon: 1, time: 2000, skin: 'layer-ext-moon'});
-
+                else {
+                    layer.msg(data.msg, {icon: 1, time: 5000, skin: 'layer-ext-moon'});
+                    return false;
+                }
             },
             error: function (err) {
-                layer.msg("结果异常", {icon: 1, time: 2000, skin: 'layer-ext-moon'});
+                layer.msg("功能权限保存失败", {icon: 1, time: 5000, skin: 'layer-ext-moon'});
+                return false;
             }
         });
+
+        return true;
+    }
+
+    function saveRoleInitApp() {
+        var role_id = $.request.queryString["role_id"];
+        var rows = appTree.getCheckedNodes(true).filter(function(node) {
+            return node.app_id === 1;
+        }).map(function (node) {
+            return [node['id'], $('#so_' + node.id).val()].join(',');
+        });
+
+        $.ajax({
+            type: "post",
+            url: '${G.serverUrl}/saveInitApp?role_id=' + role_id,
+            dataType: "json",
+            traditional: true,
+            data: {
+                appList: rows
+            },
+            success: function (data) {
+                if (data.code === 1) {
+                    layer.msg('默认应用设置保存成功', {icon: 1, time: 2000, skin: 'layer-ext-moon'});
+                }
+                else {
+                    layer.msg(data.msg, {icon: 1, time: 5000, skin: 'layer-ext-moon'});
+                    return false;
+                }
+            },
+            error: function (err) {
+                layer.msg("默认应用设置保存失败", {icon: 1, time: 5000, skin: 'layer-ext-moon'});
+                return false;
+            }
+        });
+
+        return true;
     }
 
     function saveRoleAuth() {
@@ -218,7 +264,7 @@
             aObj.after(editStr);
             var btn = $("#so_" + treeNode.id);
             if (btn) btn.bind("change", function () {
-                var v = btn.val() > 0 ? '1' : '';
+                var v = btn.val() > 0 ? '1' : '0';
                 $("#si_" + treeNode.id).val(v);
             });
         }
@@ -244,104 +290,128 @@
         };
         $.ajax({
             type: "get",
-            url: "listAllApp?role_id=" + role_id,
+            url: "listAppTree?role_id=" + role_id,
             dataType: "json",
             success: function (data) {
                 var ztreeNodes = [], addMap = {}, tmpMap = {}, appNodes = [];
                 if (data != null && data.length > 0) {
 
-                    $.each(data, function (i, dataNode) {
-                        var menu_id = dataNode.menu_id;
-                        var super_menu_id = dataNode.super_menu_id;
-                        var menu_cn_name = dataNode.menu_cn_name;
-                        var show_on_init = dataNode.show_on_init || '';
-                        var show_order = dataNode.show_order || '';
-                        var is_app = dataNode.app_id ? 1 : 0;
-                        var menu_url = dataNode.menu_url || '';
+                    data.forEach(function (value, index, array) {
                         var node = {
-                            "id": menu_id,
-                            "pId": super_menu_id,
-                            "name": menu_cn_name,
-                            "menu_url": menu_url,
-                            "app_id": is_app,
-                            "show_order": show_order,
-                            "show_on_init": show_on_init
+                            "id": value['menu_id'],
+                            "pId": value['super_menu_id'],
+                            "name": value['menu_cn_name'],
+                            "menu_url": value['menu_url'],
+                            "app_id": value['app_id'] ? 1 : 0,
+                            "show_order": value['show_order'] || '',
+                            "show_on_init": value['show_on_init'] || ''
                         };
-                        if (is_app == 0) {
-                            tmpMap[menu_id] = node;
+                        ztreeNodes.push(node);
+                    });
+
+                    appTree = $.fn.zTree.init($("#appTree"), ztreeSetting, ztreeNodes);
+
+                    data.forEach(function(value, index,array){
+                        if (value['show_on_init']){
+                            appTree.checkNode(
+                                appTree.getNodesByParam("id", value['menu_id'])[0]
+                                , true
+                                , false);
                         }
                     });
 
-                    $.each(data, function (i, dataNode) {
-                        var menu_id = dataNode.menu_id;
-                        var super_menu_id = dataNode.super_menu_id;
-                        var menu_cn_name = dataNode.menu_cn_name;
-                        var show_on_init = dataNode.show_on_init || '';
-                        var show_order = dataNode.show_order || '';
-                        var is_app = dataNode.app_id ? 1 : 0;
-                        var menu_url = dataNode.menu_url || '';
-                        var node = {
-                            "id": menu_id,
-                            "pId": super_menu_id,
-                            "name": menu_cn_name,
-                            "menu_url": menu_url,
-                            "app_id": is_app,
-                            "show_order": show_order,
-                            "show_on_init": show_on_init
-                        };
-                        if (is_app == 1) {
-                            appNodes.push(node);
-                            loadParentNode(appNodes, node, tmpMap, addMap);
-                        }
-                    });
-
-                    for (var i = 0; i < appNodes.length; i++)
-                        ztreeNodes.push(appNodes[i]);
+                    // $.each(data, function (i, dataNode) {
+                    //     var menu_id = dataNode.menu_id;
+                    //     var super_menu_id = dataNode.super_menu_id;
+                    //     var menu_cn_name = dataNode.menu_cn_name;
+                    //     var show_on_init = dataNode.show_on_init || '';
+                    //     var show_order = dataNode.show_order || '';
+                    //     var is_app = dataNode.app_id ? 1 : 0;
+                    //     var menu_url = dataNode.menu_url || '';
+                    //     var node = {
+                    //         "id": menu_id,
+                    //         "pId": super_menu_id,
+                    //         "name": menu_cn_name,
+                    //         "menu_url": menu_url,
+                    //         "app_id": is_app,
+                    //         "show_order": show_order,
+                    //         "show_on_init": show_on_init
+                    //     };
+                    //     if (is_app == 0) {
+                    //         tmpMap[menu_id] = node;
+                    //     }
+                    // });
+                    //
+                    // $.each(data, function (i, dataNode) {
+                    //     var menu_id = dataNode.menu_id;
+                    //     var super_menu_id = dataNode.super_menu_id;
+                    //     var menu_cn_name = dataNode.menu_cn_name;
+                    //     var show_on_init = dataNode.show_on_init || '';
+                    //     var show_order = dataNode.show_order || '';
+                    //     var is_app = dataNode.app_id ? 1 : 0;
+                    //     var menu_url = dataNode.menu_url || '';
+                    //     var node = {
+                    //         "id": menu_id,
+                    //         "pId": super_menu_id,
+                    //         "name": menu_cn_name,
+                    //         "menu_url": menu_url,
+                    //         "app_id": is_app,
+                    //         "show_order": show_order,
+                    //         "show_on_init": show_on_init
+                    //     };
+                    //     if (is_app == 1) {
+                    //         appNodes.push(node);
+                    //         loadParentNode(appNodes, node, tmpMap, addMap);
+                    //     }
+                    // });
+                    //
+                    // for (var i = 0; i < appNodes.length; i++)
+                    //     ztreeNodes.push(appNodes[i]);
                 }
-                appTree = $.fn.zTree.init($("#appTree"), ztreeSetting, ztreeNodes);
-                checkAppPri();
+                // appTree = $.fn.zTree.init($("#appTree"), ztreeSetting, ztreeNodes);
+                // checkAppPri();
             }
         });
     }
 
-    function loadParentNode(nodes, curr, mapper, adds) {
-        var n = curr.pId;
-        if (mapper[n]) {
-            if (mapper[n].pId == null && adds[n] == null) {
-                nodes.push(mapper[n]);
-                adds[n] = mapper[n];
-            } else {
-                if (adds[n] == null) {
-                    nodes.push(mapper[n]);
-                    adds[n] = mapper[n];
-                }
-                loadParentNode(nodes, mapper[n], mapper, adds);
-            }
-        }
-    }
-
-    function checkAppPri() {
-        var role_id = $.request.queryString["role_id"];
-        $.ajax({
-            type: "get",
-            url: "listMenuPri",
-            async: false,
-            data: {role_id: role_id},
-            dataType: "json",
-            success: function (data) {
-                if (data != null && data.length > 0) {
-                    $.each(data, function (i, node) {
-                        var menu_id_checked = node.menu_id;
-                        var hasCheckNode = appTree.getNodesByParam("id", menu_id_checked);
-                        if (hasCheckNode != null && hasCheckNode.length > 0) {
-                            appTree.checkNode(hasCheckNode[0], true, false);
-                        }
-                    });
-                }
-
-            }
-        });
-    }
+    // function loadParentNode(nodes, curr, mapper, adds) {
+    //     var n = curr.pId;
+    //     if (mapper[n]) {
+    //         if (mapper[n].pId == null && adds[n] == null) {
+    //             nodes.push(mapper[n]);
+    //             adds[n] = mapper[n];
+    //         } else {
+    //             if (adds[n] == null) {
+    //                 nodes.push(mapper[n]);
+    //                 adds[n] = mapper[n];
+    //             }
+    //             loadParentNode(nodes, mapper[n], mapper, adds);
+    //         }
+    //     }
+    // }
+    //
+    // function checkAppPri() {
+    //     var role_id = $.request.queryString["role_id"];
+    //     $.ajax({
+    //         type: "get",
+    //         url: "listMenuPri",
+    //         async: false,
+    //         data: {role_id: role_id},
+    //         dataType: "json",
+    //         success: function (data) {
+    //             if (data != null && data.length > 0) {
+    //                 $.each(data, function (i, node) {
+    //                     var menu_id_checked = node.menu_id;
+    //                     var hasCheckNode = appTree.getNodesByParam("id", menu_id_checked);
+    //                     if (hasCheckNode != null && hasCheckNode.length > 0) {
+    //                         appTree.checkNode(hasCheckNode[0], true, false);
+    //                     }
+    //                 });
+    //             }
+    //
+    //         }
+    //     });
+    // }
 
     function onAppCheck(e, treeId, treeNode) {
         if (!treeNode.checked) {

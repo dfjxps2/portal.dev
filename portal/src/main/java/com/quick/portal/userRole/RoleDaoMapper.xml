@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.quick.portal.userRole.RoleDao">
-	
+
     <!--查询条件-->
-	<sql id="where">
-		1=1
-		<if test="role_id != null and role_id != '' and role_id != 'null'"><![CDATA[
+    <sql id="where">
+        1=1
+        <if test="role_id != null and role_id != '' and role_id != 'null'"><![CDATA[
 	       and role_id = #{role_id}
 	    ]]></if>
-	   	<if test="role_state != null and role_state != '' and role_state != 'null'"><![CDATA[ 
+        <if test="role_state != null and role_state != '' and role_state != 'null'"><![CDATA[
 	       and role_state = #{role_state}
 	    ]]></if>
-		<if test="role_name != null and role_name != '' and role_name != 'null'"><![CDATA[
+        <if test="role_name != null and role_name != '' and role_name != 'null'"><![CDATA[
 	       and role_name = '${role_name}'
 	    ]]></if>
-		<if test="cre_time != null and cre_time != '' and cre_time != 'null'"><![CDATA[
+        <if test="cre_time != null and cre_time != '' and cre_time != 'null'"><![CDATA[
 	       and cre_time >= #{cre_time}
 	    ]]></if>
         <if test="_sql_where != null and _sql_where != ''"> <![CDATA[
             and ${_sql_where}
         ]]> </if>
 
-	</sql>
-    
+    </sql>
+
     <!-- 新增  -->
-	<insert id="insert" parameterType="map" statementType="CALLABLE">
+    <insert id="insert" parameterType="map" statementType="CALLABLE">
 		{CALL INSERT_USER_ROLE(
 			#{role_name, mode=IN},
 			#{role_state, mode=IN},
@@ -33,9 +33,9 @@
 			#{error_no, jdbcType=INTEGER, mode=OUT}
 		)}
 	</insert>
-		
-	<!-- 修改 -->
-	<update id="update" parameterType="map" statementType="CALLABLE">
+
+    <!-- 修改 -->
+    <update id="update" parameterType="map" statementType="CALLABLE">
 		{CALL UPDATE_USER_ROLE(
 			#{role_id, mode=IN},
 			#{role_name, mode=IN},
@@ -45,9 +45,9 @@
 			#{error_no, jdbcType=INTEGER, mode=OUT}
 		)}
 	</update>
-    
-	<!-- 删除 -->
-	<delete id="delete" parameterType="String">
+
+    <!-- 删除 -->
+    <delete id="delete" parameterType="String">
 		delete from user_role where role_id=#{role_id};
 		delete from user_role_rela where role_id=#{role_id};
 		delete from menu_privilege where role_id=#{role_id};
@@ -55,43 +55,47 @@
 
 
     <!--查询-->
-	<select id="select" parameterType="map" resultType="map">
-		select r.*,e.role_type_name
-		from user_role r inner join role_type e on r.role_type_id =e.role_type_id
-		<where>
-			<include refid="where" />
-		</where>
+    <select id="select" parameterType="map" resultType="map">
+        select r.*,e.role_type_name
+        from user_role r inner join role_type e on r.role_type_id =e.role_type_id
+        <where>
+            <include refid="where"/>
+        </where>
         <if test="_sql_order != null and _sql_order != ''">
             order by ${_sql_order}
         </if>
-	</select>
-	
-	<!-- 查询总记录数 -->
-	<select id="count" parameterType="map" resultType="int">
-		select count(*) from  user_role r inner join role_type e on r.role_type_id =e.role_type_id
-		<where>
-			<include refid="where" />
-		</where>
-	</select>
+    </select>
 
-	<select id="listAllMenu"  parameterType="map" resultType="map">
+    <!-- 查询总记录数 -->
+    <select id="count" parameterType="map" resultType="int">
+        select count(*) from user_role r inner join role_type e on r.role_type_id =e.role_type_id
+        <where>
+            <include refid="where"/>
+        </where>
+    </select>
+
+    <select id="listAllMenu" parameterType="map" resultType="map">
 		select m.*,p.show_on_init,p.show_order from sys_menu m
            left join (select show_on_init,show_order,menu_id from menu_privilege where role_id=#{role_id}) p on p.menu_id=m.menu_id
           where m.menu_state=1
 	</select>
 
-	<select id="listAllApp"  parameterType="map" resultType="map">
+    <select id="listAppTree" parameterType="map" resultType="map" statementType="CALLABLE">
+        {CALL PRODUCE_EXT_APP_LIST(#{role_id, mode=IN})}
+    </select>
+
+    <select id="listAllApp" parameterType="map" resultType="map">
 		select m.*,p.show_on_init,p.show_order from sys_menu m
 		left join (select show_on_init,show_order,menu_id from menu_privilege where role_id=#{role_id}) p on p.menu_id=m.menu_id
 		where 1=1
 		order by p.show_order asc
 	</select>
 
-	<delete id="removeMenuPriByRole" parameterType="map">
+    <delete id="removeMenuPriByRole" parameterType="map">
 		delete from menu_privilege where role_id=#{role_id}
 	</delete>
 
-	<insert id="saveMenuPri" parameterType="map">
+    <insert id="saveMenuPri" parameterType="map">
 		insert into menu_privilege (
 		menu_id,
 		role_id,
@@ -106,26 +110,46 @@
 		now()
 		)
 	</insert>
-	<update id="updateMenuPri" parameterType="map">
+
+    <update id="saveInitApp" parameterType="map">
+        create table if not exists tmp_init_app (
+        menu_id int not null,
+        show_order int not null,
+        primary key(menu_id)
+        ) ENGINE=MEMORY DEFAULT CHARSET=UTF8;
+        truncate table tmp_init_app;
+        <foreach collection="menuList" item="item" index="index" separator=";">
+            insert into tmp_init_app (menu_id, show_order) values (#{item.menu_id}, #{item.show_order})
+        </foreach>
+        ;
+        update menu_privilege set show_order = null, show_on_init = 0, upd_time = now()
+        where role_id = #{role_id}
+        and menu_id not in (select menu_id from tmp_init_app);
+        update menu_privilege p, tmp_init_app t set p.show_on_init = 1, p.show_order = t.show_order, upd_time = now()
+        where p.menu_id = t.menu_id
+        and p.role_id = #{role_id};
+    </update>
+
+    <update id="updateMenuPri" parameterType="map">
 		update menu_privilege
 		   set show_on_init=#{show_on_init},
 		        show_order=#{show_order}
 		 where role_id=#{role_id}
 		   and menu_id=#{menu_id}
 	</update>
-	<delete id="deleteMenuPri" parameterType="map">
+    <delete id="deleteMenuPri" parameterType="map">
 		delete from menu_privilege where role_id=#{role_id} and menu_id=#{menu_id};
 		delete from dashboard_app_config where app_id in (select app_id from sys_menu where app_id is not null and  menu_id=#{menu_id});
 	</delete>
 
-	<select id="listMenuPri"  parameterType="String" resultType="map">
+    <select id="listMenuPri" parameterType="String" resultType="map">
 		select * from menu_privilege where role_id=#{role_id}
 	</select>
 
-	<!--角色类型的下拉框选项-->
-	<select id="getRoleType" parameterType="map" resultType="map">
+    <!--角色类型的下拉框选项-->
+    <select id="getRoleType" parameterType="map" resultType="map">
 		SELECT  role_type_id,role_type_name FROM  ROLE_TYPE 
 	</select>
-	
+
 
 </mapper>

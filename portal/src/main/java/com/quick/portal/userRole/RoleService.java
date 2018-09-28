@@ -41,7 +41,10 @@ public interface RoleService extends ISysBaseService<UserRoleDO> {
     List<Map<String,Object>> listMenuPri(String role_id);
 
     List<Map<String,Object>> listAllApp(Map<String, Object> m);
-    
+
+    List<Map<String,Object>> listAppTree(Map<String, Object> m);
+
     List<Map<String,Object>> getRoleType();
 
+    DataStore saveInitApp(Integer role_id, List<Map<String, Object>> menuList);
 }

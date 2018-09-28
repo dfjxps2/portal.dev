@@ -18,9 +18,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Array;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 请求类
@@ -97,6 +97,23 @@ public class RoleController extends SysBaseController<UserRoleDO> {
     }
 
     @RequestMapping
+    @ResponseBody
+    public DataStore saveInitApp(String role_id, String[] appList) {
+
+        List<Map<String, Object>> dataList = Arrays.stream(appList).map(item -> {
+            Map<String, Object> map = new HashMap<>();
+            String[] cols = item.split(",");
+            map.put("menu_id", cols[0]);
+            map.put("show_order", Integer.valueOf(cols[1]));
+            return map;
+        }).collect(Collectors.toList());
+
+        DataStore result = roleService.saveInitApp(Integer.valueOf(role_id), dataList);
+
+        return result;
+    }
+
+    @RequestMapping
     public String metricAuth(ModelMap model) {
         String url = PropertiesUtil.getPropery("index.service.url");
         String port = PropertiesUtil.getPropery("index.service.port");
@@ -111,6 +128,17 @@ public class RoleController extends SysBaseController<UserRoleDO> {
         Map<String, Object> parm = new HashMap<>();
         parm.put("role_id", role_id);
         return roleService.listAllApp(parm);
+    }
+
+    @RequestMapping
+    @ResponseBody
+    public List<Map<String, Object>> listAppTree(String role_id) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("role_id", role_id);
+
+        List<Map<String, Object>> appListForRole = roleService.listAppTree(param);
+
+        return appListForRole;
     }
 
     //角色类型下拉框数据

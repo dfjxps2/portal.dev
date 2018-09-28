@@ -158,6 +158,18 @@ public class RoleServiceImpl extends SysBaseService<UserRoleDO> implements RoleS
         return result;
     }
 
+    @Transactional
+    public List<Map<String, Object>> listAppTree(Map<String, Object> m) {
+        List<Map<String,Object>> result = dao.listAppTree(m);
+        return result;
+    }
+
+    @Transactional
+    public DataStore saveInitApp(Integer role_id, List<Map<String, Object>> menuList){
+        dao.saveInitApp(role_id, menuList);
+        return ActionMsg.setOk("操作成功");
+    }
+
 	@Override
 	public List<Map<String, Object>> getRoleType() {
 		return dao.getRoleType();
