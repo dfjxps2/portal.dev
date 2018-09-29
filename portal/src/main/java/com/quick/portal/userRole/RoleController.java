@@ -1,8 +1,6 @@
 
 package com.quick.portal.userRole;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.quick.core.base.ISysBaseService;
 import com.quick.core.base.SysBaseController;
 import com.quick.core.base.model.DataStore;
@@ -15,11 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -52,6 +51,11 @@ public class RoleController extends SysBaseController<UserRoleDO> {
     }
 
     @RequestMapping
+    public String addRoleUser(ModelMap model) {
+        return view();
+    }
+
+    @RequestMapping
     public String roleAuthorize(ModelMap model) {
         return view();
     }
@@ -72,28 +76,39 @@ public class RoleController extends SysBaseController<UserRoleDO> {
     }
 
 
-    @RequestMapping("listAllMenu")
+//    @RequestMapping("listAllMenu")
+//    @ResponseBody
+//    public List<Map<String, Object>> listAllMenu(String role_id) {
+//        Map<String, Object> parm = new HashMap<>();
+//        parm.put("role_id", role_id);
+//        return roleService.listAllMenu(parm);
+//    }
+//
+//    @RequestMapping("listMenuPri")
+//    @ResponseBody
+//    public List<Map<String, Object>> listMenuPri(String role_id) {
+//        return roleService.listMenuPri(role_id);
+//    }
+//
+//    ;
+
+    //    @RequestMapping("saveMenuPri")
+//    public String saveMenuPri(String role_id, String menus) {
+//        JSONArray jsonObject = (JSONArray) JSONObject.parse(menus);
+//        List<String> menuList = jsonObject.toJavaList(String.class);
+//        roleService.saveMenuPri(role_id, menuList);
+//        return "page/role/list";
+//    }
+//
+    @RequestMapping
     @ResponseBody
-    public List<Map<String, Object>> listAllMenu(String role_id) {
-        Map<String, Object> parm = new HashMap<>();
-        parm.put("role_id", role_id);
-        return roleService.listAllMenu(parm);
-    }
+    public List<Map<String, Object>> listAppTree(String role_id) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("role_id", role_id);
 
-    @RequestMapping("listMenuPri")
-    @ResponseBody
-    public List<Map<String, Object>> listMenuPri(String role_id) {
-        return roleService.listMenuPri(role_id);
-    }
+        List<Map<String, Object>> appListForRole = roleService.listAppTree(param);
 
-    ;
-
-    @RequestMapping("saveMenuPri")
-    public String saveMenuPri(String role_id, String menus) {
-        JSONArray jsonObject = (JSONArray) JSONObject.parse(menus);
-        List<String> menuList = jsonObject.toJavaList(String.class);
-        roleService.saveMenuPri(role_id, menuList);
-        return "page/role/list";
+        return appListForRole;
     }
 
     @RequestMapping
@@ -121,25 +136,14 @@ public class RoleController extends SysBaseController<UserRoleDO> {
         model.addAttribute("METRIC_URL", serviceUrl);
         return "page/role/metricAuth";
     }
-
-    @RequestMapping("listAllApp")
-    @ResponseBody
-    public List<Map<String, Object>> listAllApp(String role_id) {
-        Map<String, Object> parm = new HashMap<>();
-        parm.put("role_id", role_id);
-        return roleService.listAllApp(parm);
-    }
-
-    @RequestMapping
-    @ResponseBody
-    public List<Map<String, Object>> listAppTree(String role_id) {
-        Map<String, Object> param = new HashMap<>();
-        param.put("role_id", role_id);
-
-        List<Map<String, Object>> appListForRole = roleService.listAppTree(param);
-
-        return appListForRole;
-    }
+//
+//    @RequestMapping("listAllApp")
+//    @ResponseBody
+//    public List<Map<String, Object>> listAllApp(String role_id) {
+//        Map<String, Object> parm = new HashMap<>();
+//        parm.put("role_id", role_id);
+//        return roleService.listAllApp(parm);
+//    }
 
     //角色类型下拉框数据
     @RequestMapping(value = "/getRoleType")

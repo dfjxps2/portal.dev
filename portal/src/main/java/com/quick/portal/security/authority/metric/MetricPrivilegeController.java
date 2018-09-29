@@ -25,6 +25,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.quick.core.base.model.DataStore;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -121,10 +122,11 @@ public class MetricPrivilegeController extends SysBaseController<MetricPrivilege
      */
     
     @RequestMapping(value = "/saveMetricPrivilege")
-    public String saveMetricPrivilege(String roleId,String ids){
+    @ResponseBody
+    public DataStore saveMetricPrivilege(String roleId, String ids){
         JSONArray jsonObject= (JSONArray) JSONObject.parse(ids);
         List<String> metricList = jsonObject.toJavaList(String.class);
         metricPrivilegeService.saveMetricPrivilege(roleId,metricList);
-        return "page/role/list";
+        return ActionMsg.setOk("操作成功");
     }
 }

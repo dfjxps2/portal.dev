@@ -77,7 +77,7 @@
     var zTreeObj, appTree;
     $(document).ready(function () {
         listRolePrivilege();
-        listAllApp();
+        listRoleInitApp();
     });
 
     function listRolePrivilege() {
@@ -100,7 +100,6 @@
             async: false,
             dataType: "json",
             success: function (data) {
-                //console.log(JSON.stringify(data));
                 var ztreeNodes = [];
                 if (data != null && data.length > 0) {
                     $.each(data, function (i, dataNode) {
@@ -125,38 +124,17 @@
                             , false);
                     }
                 });
-                // checkMenuPri();
             }
         });
     }
 
-    // function checkMenuPri() {
-    //     var role_id = $.request.queryString["role_id"];
-    //     $.ajax({
-    //         type: "get",
-    //         url: "${G.host}/role/listMenuPri",
-    //         async: false,
-    //         data: {role_id: role_id},
-    //         dataType: "json",
-    //         success: function (data) {
-    //             if (data != null && data.length > 0) {
-    //                 $.each(data, function (i, checkMenu) {
-    //                     var menu_id_checked = checkMenu.menu_id;
-    //                     var hasCheckNode = zTreeObj.getNodesByParam("id", menu_id_checked);
-    //                     if (hasCheckNode != null && hasCheckNode.length > 0)
-    //                         zTreeObj.checkNode(hasCheckNode[0], true, false);
-    //                 });
-    //             }
-    //
-    //         }
-    //     });
-    // }
 
     function saveAll(){
         if (saveRolePrivilege() !== true)
             return;
 
         saveRoleInitApp();
+        cancel();
     }
 
     function saveRolePrivilege() {
@@ -227,32 +205,10 @@
         return true;
     }
 
-    function saveRoleAuth() {
-        var realCheckNode = [];
-        var allCheckedNodes = zTreeObj.getCheckedNodes(true);
-        mergeNodes(allCheckedNodes);
-        if (allCheckedNodes != null && allCheckedNodes.length > 0) {
-            $.each(allCheckedNodes, function (i, checkNode) {
-                //id,show_on_init,show_order
-                var si = checkNode.show_on_init || '';
-                var so = checkNode.show_order || '';
-                realCheckNode.push(checkNode.id + "|" + si + "|" + so);
-            });
-        }
-        var role_id = $.request.queryString["role_id"];
-        var IpageNum = $.request.queryString["IpageNum"];
-        var IpageSize = $.request.queryString["IpageSize"];
-        var url = encodeURI("saveMenuPri?role_id=" + role_id + "&menus=" + JSON.stringify(realCheckNode));
-        layer.msg('保存成功！', {icon: 1, time: 1000, skin: 'layer-ext-moon'}, function () {
-            window.location.href = url;
-        });
-    }
-
     function cancel() {
         var IpageNum = $.request.queryString["IpageNum"];
         var IpageSize = $.request.queryString["IpageSize"];
-        var url = '${G.host}/role/list?page=' + IpageNum + '&pageSize=' + IpageSize;
-        window.location.href = url;
+        window.location.href = '${G.serverUrl}/list?page=' + IpageNum + '&pageSize=' + IpageSize;
     }
 
     var IDMark_A = "_a";
@@ -270,7 +226,26 @@
         }
     }
 
-    function listAllApp() {
+    function onAppCheck(e, treeId, treeNode) {
+        if (!treeNode.checked) {
+            $("#si_" + treeNode.id).val(0);
+            $("#so_" + treeNode.id).val('');
+            return;
+        }
+        $("#si_" + treeNode.id).val(1);
+        var so = $("#so_" + treeNode.id).val() || '';
+        var x = 1;
+        if (so == '') {
+            $(".sotxt").each(function () {
+                var v = parseInt(this.value);
+                if (v >= x)
+                    x = v + 1;
+            });
+        }
+        $("#so_" + treeNode.id).val(x);
+    }
+
+    function listRoleInitApp() {
         var role_id = $.request.queryString["role_id"];
         appTree = null;
         var ztreeSetting = {
@@ -293,7 +268,7 @@
             url: "listAppTree?role_id=" + role_id,
             dataType: "json",
             success: function (data) {
-                var ztreeNodes = [], addMap = {}, tmpMap = {}, appNodes = [];
+                var ztreeNodes = [];
                 if (data != null && data.length > 0) {
 
                     data.forEach(function (value, index, array) {
@@ -320,150 +295,9 @@
                         }
                     });
 
-                    // $.each(data, function (i, dataNode) {
-                    //     var menu_id = dataNode.menu_id;
-                    //     var super_menu_id = dataNode.super_menu_id;
-                    //     var menu_cn_name = dataNode.menu_cn_name;
-                    //     var show_on_init = dataNode.show_on_init || '';
-                    //     var show_order = dataNode.show_order || '';
-                    //     var is_app = dataNode.app_id ? 1 : 0;
-                    //     var menu_url = dataNode.menu_url || '';
-                    //     var node = {
-                    //         "id": menu_id,
-                    //         "pId": super_menu_id,
-                    //         "name": menu_cn_name,
-                    //         "menu_url": menu_url,
-                    //         "app_id": is_app,
-                    //         "show_order": show_order,
-                    //         "show_on_init": show_on_init
-                    //     };
-                    //     if (is_app == 0) {
-                    //         tmpMap[menu_id] = node;
-                    //     }
-                    // });
-                    //
-                    // $.each(data, function (i, dataNode) {
-                    //     var menu_id = dataNode.menu_id;
-                    //     var super_menu_id = dataNode.super_menu_id;
-                    //     var menu_cn_name = dataNode.menu_cn_name;
-                    //     var show_on_init = dataNode.show_on_init || '';
-                    //     var show_order = dataNode.show_order || '';
-                    //     var is_app = dataNode.app_id ? 1 : 0;
-                    //     var menu_url = dataNode.menu_url || '';
-                    //     var node = {
-                    //         "id": menu_id,
-                    //         "pId": super_menu_id,
-                    //         "name": menu_cn_name,
-                    //         "menu_url": menu_url,
-                    //         "app_id": is_app,
-                    //         "show_order": show_order,
-                    //         "show_on_init": show_on_init
-                    //     };
-                    //     if (is_app == 1) {
-                    //         appNodes.push(node);
-                    //         loadParentNode(appNodes, node, tmpMap, addMap);
-                    //     }
-                    // });
-                    //
-                    // for (var i = 0; i < appNodes.length; i++)
-                    //     ztreeNodes.push(appNodes[i]);
                 }
-                // appTree = $.fn.zTree.init($("#appTree"), ztreeSetting, ztreeNodes);
-                // checkAppPri();
             }
         });
     }
 
-    // function loadParentNode(nodes, curr, mapper, adds) {
-    //     var n = curr.pId;
-    //     if (mapper[n]) {
-    //         if (mapper[n].pId == null && adds[n] == null) {
-    //             nodes.push(mapper[n]);
-    //             adds[n] = mapper[n];
-    //         } else {
-    //             if (adds[n] == null) {
-    //                 nodes.push(mapper[n]);
-    //                 adds[n] = mapper[n];
-    //             }
-    //             loadParentNode(nodes, mapper[n], mapper, adds);
-    //         }
-    //     }
-    // }
-    //
-    // function checkAppPri() {
-    //     var role_id = $.request.queryString["role_id"];
-    //     $.ajax({
-    //         type: "get",
-    //         url: "listMenuPri",
-    //         async: false,
-    //         data: {role_id: role_id},
-    //         dataType: "json",
-    //         success: function (data) {
-    //             if (data != null && data.length > 0) {
-    //                 $.each(data, function (i, node) {
-    //                     var menu_id_checked = node.menu_id;
-    //                     var hasCheckNode = appTree.getNodesByParam("id", menu_id_checked);
-    //                     if (hasCheckNode != null && hasCheckNode.length > 0) {
-    //                         appTree.checkNode(hasCheckNode[0], true, false);
-    //                     }
-    //                 });
-    //             }
-    //
-    //         }
-    //     });
-    // }
-
-    function onAppCheck(e, treeId, treeNode) {
-        if (!treeNode.checked) {
-            $("#si_" + treeNode.id).val(0);
-            $("#so_" + treeNode.id).val('');
-            return;
-        }
-        $("#si_" + treeNode.id).val(1);
-        var so = $("#so_" + treeNode.id).val() || '';
-        var x = 1;
-        if (so == '') {
-            $(".sotxt").each(function () {
-                var v = parseInt(this.value);
-                if (v >= x)
-                    x = v + 1;
-            });
-        }
-        $("#so_" + treeNode.id).val(x);
-    }
-
-    function mergeNodes(nodes) {
-        var appNodes = appTree.getCheckedNodes(true);
-        for (var i = 0; i < appNodes.length; i++) {
-            var b = false, si, so;
-            for (var j = 0; j < nodes.length; j++) {
-                if (appNodes[i].id == nodes[j].id) {
-                    si = $("#si_" + appNodes[i].id).val() || '';
-                    so = $("#so_" + appNodes[i].id).val() || '';
-                    nodes[j].show_on_init = 1;
-                    nodes[j].show_order = so;
-                    b = true;
-                    break;
-                }
-            }
-            if (!b) {
-                si = $("#si_" + appNodes[i].id).val() || '';
-                so = $("#so_" + appNodes[i].id).val() || '';
-                appNodes[i].show_on_init = 1;
-                appNodes[i].show_order = so;
-                nodes.push(appNodes[i]);
-            }
-        }
-        var delNodes = appTree.getCheckedNodes(false);
-        for (var x = 0; x < delNodes.length; x++) {
-            for (var y = 0; y < nodes.length; y++) {
-                if (delNodes[x].id == nodes[y].id) {
-                    nodes.splice(y, 1);
-                    //nodes[y].show_on_init = 0;
-                    //nodes[y].show_order = '';
-                    break;
-                }
-            }
-        }
-    }
 </script>

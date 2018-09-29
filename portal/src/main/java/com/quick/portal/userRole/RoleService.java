@@ -34,14 +34,14 @@ public interface RoleService extends ISysBaseService<UserRoleDO> {
     //更新角色
     DataStore update(UserRoleDO roleDO, String user_role_predicate);
 
-    List<Map<String,Object>> listAllMenu(Map<String, Object> m);
-
-    void saveMenuPri(String role_id, List<String> menuList);
-
-    List<Map<String,Object>> listMenuPri(String role_id);
-
-    List<Map<String,Object>> listAllApp(Map<String, Object> m);
-
+//    List<Map<String,Object>> listAllMenu(Map<String, Object> m);
+//
+//    void saveMenuPri(String role_id, List<String> menuList);
+//
+//    List<Map<String,Object>> listMenuPri(String role_id);
+//
+//    List<Map<String,Object>> listAllApp(Map<String, Object> m);
+//
     List<Map<String,Object>> listAppTree(Map<String, Object> m);
 
     List<Map<String,Object>> getRoleType();

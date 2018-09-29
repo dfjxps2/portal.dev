@@ -70,8 +70,12 @@
     }
 
     var role_id = $.request.queryString["role_id"];
+    var role_name = $.request.queryString["role_name"] || '';
+    var role_type_id = $.request.queryString["role_type_id"] || '';
+    var role_state = $.request.queryString["role_state"] || 1;
 
     var filter = getUserFilter(role_id);
+
 
 
     function getUserFilter(role_id) {
@@ -166,7 +170,11 @@
 
     function returnToRoleEdit() {
         window.localStorage['mark_for_add'] = Object.getOwnPropertyNames(markForAdd).join(',');
-        window.location.href = quick.editUrl + '?role_id=' + role_id + "&userData=1";
+        window.location.href = quick.editUrl + '?role_id=' + role_id
+            + "&userData=1"
+            + "&role_name=" + role_name
+            + "&role_type_id=" + role_type_id
+            + "&role_state=" + role_state;
     }
 
 </script>

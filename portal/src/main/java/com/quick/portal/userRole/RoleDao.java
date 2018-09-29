@@ -36,20 +36,20 @@ public interface RoleDao extends ISysBaseDao<UserRoleDO> {
     //更新角色
     int update(Map<String, Object> map);
 
-    List<Map<String,Object>> listAllMenu(Map<String, Object> m);
-
-    void saveMenuPri(Map<String, Object> m);
-
-    void updateMenuPri(Map<String, Object> m);
-
-    void deleteMenuPri(Map<String, Object> m);
-
-    void removeMenuPriByRole(Map<String, Object> paramMap);
-
-    List<Map<String,Object>> listMenuPri(String role_id);
-
-    List<Map<String,Object>> listAllApp(Map<String, Object> m);
-
+//    List<Map<String,Object>> listAllMenu(Map<String, Object> m);
+//
+//    void saveMenuPri(Map<String, Object> m);
+//
+//    void updateMenuPri(Map<String, Object> m);
+//
+//    void deleteMenuPri(Map<String, Object> m);
+//
+//    void removeMenuPriByRole(Map<String, Object> paramMap);
+//
+//    List<Map<String,Object>> listMenuPri(String role_id);
+//
+//    List<Map<String,Object>> listAllApp(Map<String, Object> m);
+//
     List<Map<String,Object>> listAppTree(Map<String, Object> m);
 
     int saveInitApp(@Param("role_id") Integer role_id, @Param("menuList") List<Map<String, Object>> menuList);

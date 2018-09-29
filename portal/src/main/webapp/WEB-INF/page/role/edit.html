@@ -105,6 +105,10 @@
 
     var role_id = $.request.queryString["role_id"] || -1;
 
+    var role_name = $.request.queryString["role_name"] || '';
+    var role_type_id = $.request.queryString["role_type_id"] || '';
+    var role_state = $.request.queryString["role_state"] || 1;
+
     var filter = getQueryFilter();
 
     function config() {
@@ -227,6 +231,10 @@
 
                 }
             });
+        } else {
+            $("#role_name").val(role_name);
+            $("#role_state").val(role_state);
+            ListInit("role_type_id", role_type_id);
         }
 
         jQuery.validator.addMethod("nameFuc", function (value, element) {//名称验证  只能是2-10中文汉字或英文字母或数字的组合
@@ -323,7 +331,10 @@
         navAppend("新增角色用户");
         /*获取父页面元素并动态赋值父页面title*/
         saveUserSelection();
-        window.location.href = "addRoleUser?role_id=" + role_id;//跳转到另一个页面，并且还在当前框架
+        window.location.href = "addRoleUser?role_id=" + role_id
+            + "&role_name=" + $("#role_name").val()
+            + "&role_type_id=" + $("#role_type_id").val()
+            + "&role_state=" + $("#role_state").val(); //跳转到另一个页面，并且还在当前框架
     }
 
 
