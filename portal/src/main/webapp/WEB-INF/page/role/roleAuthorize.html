@@ -24,7 +24,7 @@
             <div class="ibox float-e-margins">
                 <div class="ibox-content ibox-content-x">
                     <div class="pull-right">
-                        <button id="btnSave" class="btn btn-primary" type="button" onclick="saveAll();">保存
+                        <button id="btnSave" class="btn btn-primary" type="button" onclick="saveRolePrivilege();">保存
                         </button>
                         <button type="button" class="btn btn-primary" onclick="cancel();">返回</button>
                     </div>
@@ -129,14 +129,6 @@
     }
 
 
-    function saveAll(){
-        if (saveRolePrivilege() !== true)
-            return;
-
-        saveRoleInitApp();
-        cancel();
-    }
-
     function saveRolePrivilege() {
         var role_id = $.request.queryString["role_id"];
         var rows = zTreeObj.getCheckedNodes(true).map(function (value) {
@@ -148,23 +140,26 @@
             url: '${G.host}/sysPrivilege/savePrivilege?role_id=' + role_id,
             dataType: "json",
             traditional: true,
+            async: false,
             data: {
                 privileges: rows
             },
             success: function (data) {
                 if (data.code === 1) {
-                    layer.msg('功能权限保存成功', {icon: 1, time: 2000, skin: 'layer-ext-moon'});
-
-                    cancel();
+                    layer.msg('功能权限保存成功', {icon: 1, time: 2000, skin: 'layer-ext-moon'}, function(){
+                        saveRoleInitApp();
+                    });
                 }
                 else {
-                    layer.msg(data.msg, {icon: 1, time: 5000, skin: 'layer-ext-moon'});
-                    return false;
+                    layer.msg(data.msg, {icon: 1, time: 5000, skin: 'layer-ext-moon'}, function(){
+                        cancel();
+                    });
                 }
             },
             error: function (err) {
-                layer.msg("功能权限保存失败", {icon: 1, time: 5000, skin: 'layer-ext-moon'});
-                return false;
+                layer.msg("功能权限保存失败", {icon: 1, time: 5000, skin: 'layer-ext-moon'}, function(){
+                    cancel();
+                });
             }
         });
 
@@ -172,8 +167,11 @@
     }
 
     function saveRoleInitApp() {
+        if (appTree == null)
+            cancel();
+
         var role_id = $.request.queryString["role_id"];
-        var rows = appTree.getCheckedNodes(true).filter(function(node) {
+        var rows = appTree.getCheckedNodes(true).filter(function (node) {
             return node.app_id === 1;
         }).map(function (node) {
             return [node['id'], $('#so_' + node.id).val()].join(',');
@@ -184,21 +182,26 @@
             url: '${G.serverUrl}/saveInitApp?role_id=' + role_id,
             dataType: "json",
             traditional: true,
+            async: false,
             data: {
                 appList: rows
             },
             success: function (data) {
                 if (data.code === 1) {
-                    layer.msg('默认应用设置保存成功', {icon: 1, time: 2000, skin: 'layer-ext-moon'});
+                    layer.msg('默认应用设置保存成功', {icon: 1, time: 2000, skin: 'layer-ext-moon'}, function(){
+                        cancel();
+                    });
                 }
                 else {
-                    layer.msg(data.msg, {icon: 1, time: 5000, skin: 'layer-ext-moon'});
-                    return false;
+                    layer.msg(data.msg, {icon: 1, time: 5000, skin: 'layer-ext-moon'}, function(){
+                        cancel();
+                    });
                 }
             },
             error: function (err) {
-                layer.msg("默认应用设置保存失败", {icon: 1, time: 5000, skin: 'layer-ext-moon'});
-                return false;
+                layer.msg("默认应用设置保存失败", {icon: 1, time: 5000, skin: 'layer-ext-moon'}, function(){
+                    cancel();
+                });
             }
         });
 
@@ -286,8 +289,8 @@
 
                     appTree = $.fn.zTree.init($("#appTree"), ztreeSetting, ztreeNodes);
 
-                    data.forEach(function(value, index,array){
-                        if (value['show_on_init']){
+                    data.forEach(function (value, index, array) {
+                        if (value['show_on_init']) {
                             appTree.checkNode(
                                 appTree.getNodesByParam("id", value['menu_id'])[0]
                                 , true

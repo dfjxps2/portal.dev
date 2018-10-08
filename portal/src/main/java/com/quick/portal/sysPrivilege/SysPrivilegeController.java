@@ -18,24 +18,20 @@
  */
 package com.quick.portal.sysPrivilege;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.quick.core.base.ISysBaseService;
 import com.quick.core.base.SysBaseController;
-import javax.annotation.Resource;
-
 import com.quick.core.base.model.DataStore;
-import com.quick.portal.sysMenu.SysMenuDO;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.lang.reflect.ParameterizedType;
-import java.util.*;
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * menu_privilege请求类
@@ -94,9 +90,6 @@ public class SysPrivilegeController extends SysBaseController<SysPrivilegeDO> {
     @RequestMapping
     @ResponseBody
     public DataStore savePrivilege(String role_id, Integer[] privileges){
-//        JSONArray jsonObject = (JSONArray) JSONObject.parse(privileges);
-//        List<SysMenuDO> menuList = jsonObject.toJavaList(SysMenuDO.class);
-
         DataStore result = sysPrivilegeService.savePrivilegeForRole(Integer.valueOf(role_id), privileges);
         return result;
     }

@@ -75,31 +75,6 @@ public class RoleController extends SysBaseController<UserRoleDO> {
             return roleService.insert(model, rstr("user_role_predicate"));
     }
 
-
-//    @RequestMapping("listAllMenu")
-//    @ResponseBody
-//    public List<Map<String, Object>> listAllMenu(String role_id) {
-//        Map<String, Object> parm = new HashMap<>();
-//        parm.put("role_id", role_id);
-//        return roleService.listAllMenu(parm);
-//    }
-//
-//    @RequestMapping("listMenuPri")
-//    @ResponseBody
-//    public List<Map<String, Object>> listMenuPri(String role_id) {
-//        return roleService.listMenuPri(role_id);
-//    }
-//
-//    ;
-
-    //    @RequestMapping("saveMenuPri")
-//    public String saveMenuPri(String role_id, String menus) {
-//        JSONArray jsonObject = (JSONArray) JSONObject.parse(menus);
-//        List<String> menuList = jsonObject.toJavaList(String.class);
-//        roleService.saveMenuPri(role_id, menuList);
-//        return "page/role/list";
-//    }
-//
     @RequestMapping
     @ResponseBody
     public List<Map<String, Object>> listAppTree(String role_id) {
@@ -136,14 +111,7 @@ public class RoleController extends SysBaseController<UserRoleDO> {
         model.addAttribute("METRIC_URL", serviceUrl);
         return "page/role/metricAuth";
     }
-//
-//    @RequestMapping("listAllApp")
-//    @ResponseBody
-//    public List<Map<String, Object>> listAllApp(String role_id) {
-//        Map<String, Object> parm = new HashMap<>();
-//        parm.put("role_id", role_id);
-//        return roleService.listAllApp(parm);
-//    }
+
 
     //角色类型下拉框数据
     @RequestMapping(value = "/getRoleType")
