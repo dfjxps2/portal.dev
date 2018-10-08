@@ -16,12 +16,18 @@
  *          
  * </p>
  */
-package com.quick.portal.menuPrivilege;
+package com.quick.portal.sysPrivilege;
 
 import com.quick.core.base.ISysBaseService;
+import com.quick.core.base.model.DataStore;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * menu_privilege服务接口
  */
-public interface IMenuPrivilegeService extends ISysBaseService<MenuPrivilegeDO> {
+public interface ISysPrivilegeService extends ISysBaseService<SysPrivilegeDO> {
+    List<Map<String, Object>> getPrivilegeForRole(Map<String, Object> params);
+    DataStore savePrivilegeForRole(Integer role_id, Integer[] menuList);
 }

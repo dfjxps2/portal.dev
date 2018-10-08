@@ -20,6 +20,7 @@ package com.quick.portal.userRole;
 
 import com.quick.core.base.ISysBaseDao;
 import com.quick.core.base.model.PageBounds;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,36 +30,30 @@ import java.util.Map;
  * 数据访问接口
  * @author Administrator
  */
-public interface RoleDao extends ISysBaseDao<RoleDO> {
+public interface RoleDao extends ISysBaseDao<UserRoleDO> {
     //新增角色
-    int insert(Map role);
+    int insert(Map<String, Object> map);
     //更新角色
-    int update(RoleDO roleDO);
-    //通过姓名精确查找
-    RoleDO selectObjByName(Map<String,Object> map);
+    int update(Map<String, Object> map);
 
-    List<Map<String,Object>> listAllMenu(Map<String, Object> m);
+//    List<Map<String,Object>> listAllMenu(Map<String, Object> m);
+//
+//    void saveMenuPri(Map<String, Object> m);
+//
+//    void updateMenuPri(Map<String, Object> m);
+//
+//    void deleteMenuPri(Map<String, Object> m);
+//
+//    void removeMenuPriByRole(Map<String, Object> paramMap);
+//
+//    List<Map<String,Object>> listMenuPri(String role_id);
+//
+//    List<Map<String,Object>> listAllApp(Map<String, Object> m);
+//
+    List<Map<String,Object>> listAppTree(Map<String, Object> m);
 
-    void saveMenuPri(Map<String, Object> m);
+    int saveInitApp(@Param("role_id") Integer role_id, @Param("menuList") List<Map<String, Object>> menuList);
 
-    void updateMenuPri(Map<String, Object> m);
-
-    void deleteMenuPri(Map<String, Object> m);
-
-    void removeMenuPriByRole(Map<String, Object> paramMap);
-
-    List<Map<String,Object>> listMenuPri(String role_id);
-
-    List<Map<String,Object>> listAllApp(Map<String, Object> m);
     List<Map<String,Object>> getRoleType();
-    List<Map<String,Object>> listRoleUser(Map<String, Object> m, PageBounds page);
-    int roleUserCount(Map<String, Object> m);
-    void deleteRoleUser(Map<String, Object> m);
-    List<Map<String,Object>> listUser(Map<String, Object> m, PageBounds page);
-    int recountUsers(Map<String, Object> m);
-    void addRoleUsers(ArrayList<Object> list);
-    
-    //该角色下是否有用户
-    int getRoleHasUser(String rid);
 
 }

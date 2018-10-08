@@ -60,8 +60,8 @@ public class ReflectUtil {
      * @param javaBean javaBean
      * @return Map对象
      */
-     public static Map toMap(Object javaBean) {
-        Map result = new HashMap();
+     public static Map<String, Object> toMap(Object javaBean) {
+        Map<String, Object> result = new HashMap<>();
         Method[] methods = javaBean.getClass().getDeclaredMethods();
         for (Method method : methods) {
             try {
@@ -75,6 +75,7 @@ public class ReflectUtil {
             }
             catch (Exception e)
             {
+                e.printStackTrace();
             }
         }
         return result;

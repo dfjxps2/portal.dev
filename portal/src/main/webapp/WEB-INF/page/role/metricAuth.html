@@ -3,7 +3,7 @@
 <head>
     <#include "/WEB-INF/include/resedit.html" />
     <link href="${G.host}/res/js/ztree/zTreeStyle/zTreeStyle.css" rel="stylesheet">
-    <script src="${G.host}/res/js/ztree/jquery.ztree.all.min.js" ></script>
+    <script src="${G.host}/res/js/ztree/jquery.ztree.all.min.js"></script>
 
 </head>
 <body class="gray-bg">
@@ -13,13 +13,15 @@
         <div class="col-sm-12">
             <div class="col-sm-10">
                 <div class="col-sm-12">
-                    <label id="pagename" class="col-xs-8" style="text-align:center;font-size: 22px;color:blue;margin-left: 180px">指标权限</label>
+                    <label id="pagename" class="col-xs-8"
+                           style="text-align:center;font-size: 22px;color:blue;margin-left: 180px">指标权限</label>
                 </div>
             </div>
             <div class="ibox float-e-margins">
                 <div class="ibox-content ibox-content-x">
                     <div class="pull-right">
-                        <button id="btnSave" class="btn btn-primary" type="button" onclick="saveMetricAuth();">保存</button>
+                        <button id="btnSave" class="btn btn-primary" type="button" onclick="saveMetricAuth();">保存
+                        </button>
                         <button type="button" class="btn btn-primary" onclick="cancel();">返回</button>
                     </div>
                     <div class="tabs-container">
@@ -53,51 +55,52 @@
 <script>
     var mUrl = '${METRIC_URL}';
     var zTreeObj;
-    $(document).ready(function(){
-    	getAllMetric();
-       
+    $(document).ready(function () {
+        getAllMetric();
+
     });
 
-  //var mUrl ="http://192.168.1.129:8082/services/reMeaSys";
-    function getAllMetric(){
-    	url = mUrl +"?T="+Math.random();
+    function getAllMetric() {
+        url = mUrl + "?T=" + Math.random();
         $.ajax({
             type: "post",
-            url:url,
-            async:false,
+            url: url,
+            async: false,
             dataType: "json",
-            success: function(data){
-            	var str = data.data;
-                var json =JSON.stringify(str);
+            success: function (data) {
+                var str = data.data;
+                var json = JSON.stringify(str);
                 sendData(json);
-            },            
-            error:function(err){
-            	 listAllMetric();
-				 layer.msg("请求指标信息异常",{icon:1,time: 1000,skin: 'layer-ext-moon'});
-				
-			 }
+            },
+            error: function (err) {
+                console.log(err);
+                listAllMetric();
+                layer.msg("请求指标信息异常", {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+
+            }
         });
     }
-	
-    function sendData(data){
-    	 var rid = $.request.queryString["role_id"];
-    	 var url = "${G.host}/metricPrivilege/saveMetricData.do?roleID="+rid+"&metricData="+data;
-    	 url = encodeURI(encodeURI(url));
-    	 $.ajax({
+
+    function sendData(data) {
+        var rid = $.request.queryString["role_id"];
+        var url = "${G.host}/metricPrivilege/saveMetricData.do?roleID=" + rid + "&metricData=" + data;
+        url = encodeURI(encodeURI(url));
+        $.ajax({
             type: "post",
             url: url,
-            async:false,
+            async: false,
             dataType: "json",
-            success: function(data){
-            	listAllMetric();
+            success: function (data) {
+                listAllMetric();
             },
-            error:function(err){
-            	listAllMetric();
-				layer.msg("同步指标信息异常",{icon:1,time: 1000,skin: 'layer-ext-moon'});
-			 }
+            error: function (err) {
+                listAllMetric();
+                layer.msg("同步指标信息异常", {icon: 1, time: 1000, skin: 'layer-ext-moon'});
+            }
         });
     }
-    function listAllMetric(){
+
+    function listAllMetric() {
         zTreeObj = null;
         var ztreeSetting = {
             check: {enable: true},
@@ -113,40 +116,40 @@
         $.ajax({
             type: "post",
             url: "${G.host}/metricPrivilege/listAllMetric.do",
-            async:false,
+            async: false,
             dataType: "json",
-            success: function(data){
+            success: function (data) {
                 console.log(JSON.stringify(data));
                 var ztreeNodes = new Array();
-                if(data!=null && data.length>0){
-                    $.each(data,function(i,dataNode){
+                if (data != null && data.length > 0) {
+                    $.each(data, function (i, dataNode) {
                         var srcMetricId = dataNode.src_metric_id;
                         var srcMetricSupId = dataNode.src_metric_sup_id;
                         var metricName = dataNode.metric_name;
-                        ztreeNodes.push({"id":srcMetricId, "pId":srcMetricSupId, "name":metricName});
+                        ztreeNodes.push({"id": srcMetricId, "pId": srcMetricSupId, "name": metricName});
                     });
                 }
                 zTreeObj = $.fn.zTree.init($("#treeDemo"), ztreeSetting, ztreeNodes);
                 checkMetricPri();
             }
-        }); 
-    } 
+        });
+    }
 
-    function checkMetricPri(){
+    function checkMetricPri() {
         var roleId = $.request.queryString["role_id"];
         $.ajax({
             type: "post",
             url: "${G.host}/metricPrivilege/listMetricPrivilege.do",
-            async:false,
-            data:{roleId:roleId},
+            async: false,
+            data: {roleId: roleId},
             dataType: "json",
-            success: function(data){
-                if(data!=null&&data.length>0){
-                    $.each(data,function(i,checkMenu){
+            success: function (data) {
+                if (data != null && data.length > 0) {
+                    $.each(data, function (i, checkMenu) {
                         var metricId_checked = checkMenu.src_metric_id;
                         console.log(metricId_checked);
-                        var hasCheckNode = zTreeObj.getNodesByParam("id",metricId_checked);
-                        if(hasCheckNode!=null&&hasCheckNode.length>0)
+                        var hasCheckNode = zTreeObj.getNodesByParam("id", metricId_checked);
+                        if (hasCheckNode != null && hasCheckNode.length > 0)
                             zTreeObj.checkNode(hasCheckNode[0], true, true);
                     });
                 }
@@ -155,29 +158,44 @@
         });
     }
 
-    function saveMetricAuth(){
+    function saveMetricAuth() {
         var realCheckNode = new Array();
         var allCheckedNodes = zTreeObj.getCheckedNodes(true);
-        if(allCheckedNodes!=null&&allCheckedNodes.length>0){
-             $.each(allCheckedNodes,function(i,checkNode){
-            	 realCheckNode.push(checkNode.id);
-            }); 
-        } 
+        if (allCheckedNodes != null && allCheckedNodes.length > 0) {
+            $.each(allCheckedNodes, function (i, checkNode) {
+                realCheckNode.push(checkNode.id);
+            });
+        }
         var role_id = $.request.queryString["role_id"];
         var IpageNum = $.request.queryString["IpageNum"];
         var IpageSize = $.request.queryString["IpageSize"];
-        var url = encodeURI("${G.host}/metricPrivilege/saveMetricPrivilege.do?roleId="+role_id+"&ids="+JSON.stringify(realCheckNode));
-        layer.msg('保存成功！', {icon:1,time: 1000,skin: 'layer-ext-moon'},function(){
-            window.location.href = url;
+        var url = encodeURI("${G.host}/metricPrivilege/saveMetricPrivilege.do?roleId=" + role_id + "&ids=" + JSON.stringify(realCheckNode));
+
+        $.ajax({
+            type: "get",
+            url: url,
+            success: function (data) {
+                if (data.code === 1) {
+                    layer.msg('保存成功', {icon: 1, time: 2000, skin: 'layer-ext-moon'});
+                    cancel();
+                }
+                else
+                    layer.msg(data.msg, {icon: 1, time: 2000, skin: 'layer-ext-moon'});
+
+            },
+            error: function (err) {
+                layer.msg("结果异常", {icon: 1, time: 2000, skin: 'layer-ext-moon'});
+            }
         });
     }
 
-    
-    function cancel(){
+
+    function cancel() {
         var IpageNum = $.request.queryString["IpageNum"];
         var IpageSize = $.request.queryString["IpageSize"];
-        var url = '${G.host}/roleDO/list?page='+IpageNum+'&pageSize='+IpageSize;
+        var url = '${G.host}/role/list?page=' + IpageNum + '&pageSize=' + IpageSize;
         window.location.href = url;
     }
 </script>
+</body>
 </html>

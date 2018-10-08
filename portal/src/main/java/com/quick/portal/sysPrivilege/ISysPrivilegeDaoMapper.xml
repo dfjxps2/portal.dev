@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quick.portal.sysPrivilege.ISysPrivilegeDao">
+
+	<!--查询条件-->
+	<sql id="where">
+		1=1
+		<if test="menu_id != null  and menu_id != '' and menu_id != 'null'"><![CDATA[
+	       and m.menu_id = #{menu_id}
+	    ]]></if>
+		<if test="super_menu_id != null and super_menu_id != ''  and super_menu_id != 'null'"><![CDATA[
+	       and super_menu_id = #{super_menu_id}
+	    ]]></if>
+		<if test="menu_cn_name != null and menu_cn_name != '' and menu_cn_name != 'null'"><![CDATA[
+	       and menu_cn_name= '#{menu_cn_name}'
+	    ]]></if>
+		<if test="menu_name != null and menu_name != '' and menu_name != 'null'"><![CDATA[
+	       and menu_name = '${menu_name}'
+	    ]]></if>
+		<if test="menu_level != null and menu_level != ''"><![CDATA[
+	       and menu_level = #{menu_level}
+	    ]]></if>
+		<if test="menu_state != null and menu_state != ''"><![CDATA[
+	       and menu_state = #{menu_state}
+	    ]]></if>
+		<if test="app_id != null and app_id != ''"><![CDATA[
+	       and app_id = #{app_id}
+	    ]]></if>
+		<if test="role_id != null and role_id != ''"><![CDATA[
+	       and role_id = #{role_id}
+	    ]]></if>
+		<if test="cre_time != null and cre_time != ''"><![CDATA[
+	       and cre_time >= #{cre_time}
+	    ]]></if>
+		<if test="upd_time != null and upd_time != ''"><![CDATA[
+	       and upd_time >= #{upd_time}
+	    ]]></if>
+		<if test="_sql_where != null and _sql_where != ''"> <![CDATA[
+            and ${_sql_where}
+        ]]> </if>
+	</sql>
+    
+    <!-- 新增menu_privilege -->
+	<insert id="insert" parameterType="com.quick.portal.sysPrivilege.SysPrivilegeDO">
+		insert into menu_privilege (
+    		  menu_id,
+    		  role_id,
+    		  cre_time,
+    		  upd_time
+		)values(
+			 #{menu_id},
+			 #{role_id},
+			 #{cre_time},
+			 #{upd_time}
+			)
+	</insert>
+		
+	<!-- 修改menu_privilege -->
+	<update id="update" parameterType="com.quick.portal.sysPrivilege.SysPrivilegeDO">
+		update menu_privilege 
+		   set pri_id=#{pri_id}
+			  ,menu_id=#{menu_id}
+			  ,role_id=#{role_id}
+			  ,cre_time=#{cre_time}
+			  ,upd_time=#{upd_time}
+		 where pri_id = #{pri_id}
+	</update>
+    
+	<!-- 删除 -->
+	<delete id="delete" parameterType="String">
+		delete from menu_privilege where pri_id = #{pri_id}
+	</delete>
+    
+    <!--查询-->
+	<select id="select" parameterType="map" resultType="map">
+		select * from (select * from sys_menu where menu_state = 1 or app_id is not null) m
+		<where>
+			<include refid="where" />
+		</where>
+        <if test="_sql_order != null and _sql_order != ''">
+            order by ${_sql_order}
+        </if>
+	</select>
+
+	<select id="getPrivilegeForRole" parameterType="map" resultType="map">
+		select m.*
+		,p.role_id
+		from (select * from sys_menu where menu_state = 1 or app_id is not null) m
+		join menu_privilege p on m.menu_id = p.menu_id
+		<where>
+			<include refid="where" />
+		</where>
+		<if test="_sql_order != null and _sql_order != ''">
+			order by ${_sql_order}
+		</if>
+	</select>
+
+    <insert id="savePrivilegeForRole" parameterType="Integer">
+        create table if not exists tmp_menu_privilege like menu_privilege;
+        truncate table tmp_menu_privilege;
+        <foreach collection="menuList" item="item" index="index" separator=";">
+          insert into tmp_menu_privilege (menu_id, role_id) values (#{item}, #{role_id})
+        </foreach>
+        ;
+        delete from menu_privilege
+        where role_id = #{role_id}
+        and menu_id not in (select menu_id from tmp_menu_privilege);
+        insert into menu_privilege (menu_id, role_id, cre_time, upd_time)
+        select menu_id, role_id, now(), now()
+        from tmp_menu_privilege
+        where menu_id not in (select menu_id from menu_privilege where role_id = #{role_id});
+	</insert>
+
+    <!-- 查询总记录数 -->
+	<select id="count" parameterType="map" resultType="int">
+		select count(*) from menu_privilege
+		<where>
+			<include refid="where" />
+		</where>
+	</select>
+	
+    
+</mapper>

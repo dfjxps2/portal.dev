@@ -19,9 +19,7 @@
 package com.quick.portal.userRole;
 
 import com.quick.core.base.ISysBaseService;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import com.quick.core.base.model.DataStore;
 
 import java.util.List;
 import java.util.Map;
@@ -30,28 +28,23 @@ import java.util.Map;
  * 服务接口
  * @author Administrator
  */
-public interface RoleService extends ISysBaseService<RoleDO> {
+public interface RoleService extends ISysBaseService<UserRoleDO> {
     //新增角色
-    int insert(RoleDO roleDO);
+    DataStore insert(UserRoleDO roleDO, String user_role_predicate);
     //更新角色
-    int update(RoleDO roleDO);
+    DataStore update(UserRoleDO roleDO, String user_role_predicate);
 
-    RoleDO selectObjByName(Map<String,Object> map);
+//    List<Map<String,Object>> listAllMenu(Map<String, Object> m);
+//
+//    void saveMenuPri(String role_id, List<String> menuList);
+//
+//    List<Map<String,Object>> listMenuPri(String role_id);
+//
+//    List<Map<String,Object>> listAllApp(Map<String, Object> m);
+//
+    List<Map<String,Object>> listAppTree(Map<String, Object> m);
 
-    List<Map<String,Object>> listAllMenu(Map<String, Object> m);
-
-    void saveMenuPri(String role_id, List<String> menuList);
-
-    List<Map<String,Object>> listMenuPri(String role_id);
-
-    List<Map<String,Object>> listAllApp(Map<String, Object> m);
-    
     List<Map<String,Object>> getRoleType();
 
-    void  delRoleUser(HttpServletResponse res, HttpServletRequest req);
-
-    void addRoleUser(HttpServletResponse res, HttpServletRequest req);
-    //该角色下是否有用户
-    String getRoleHasUser(String rid);
-
+    DataStore saveInitApp(Integer role_id, List<Map<String, Object>> menuList);
 }

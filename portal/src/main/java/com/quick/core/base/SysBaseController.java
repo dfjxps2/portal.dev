@@ -492,7 +492,7 @@ public abstract class SysBaseController<T> {
      * @return
      */
     public String getFilterCondition() {
-        return "";
+        return rstr("filter");
     }
 
     @RequestMapping(value = "/getObj", method = RequestMethod.POST)
@@ -565,7 +565,7 @@ public abstract class SysBaseController<T> {
         if (json.equals("page")) {
             dt = getBaseService().select(queryMap, pager);
             recordCount = pager.getTotal();
-        }else{
+        } else {
             dt = getBaseService().select(queryMap);
             recordCount = dt.size();
         }
@@ -652,27 +652,40 @@ public abstract class SysBaseController<T> {
     /// </summary>
     /// <param name="fieldName">字段名</param>
     /// <param name="fieldValue">字段值</param>
-    /// <param name="filters">过滤条件</param>
-    /// <returns>返回[1]表示存在，返回[0]表示不存在。</returns>
+    /// <param name="id">主键值</param>
+    /// <returns>返回[true]表示存在fieldValue相同记录，返回[false]表示不存在。</returns>
     @RequestMapping(value = "/VerifiedExists")
     @ResponseBody
-    public Object VerifiedExists(String fieldName, String fieldValue, String filters) {
+    public Object VerifiedExists(String fieldName, String fieldValue, String id) {
         // 验证结果
-        int nCount = 0;
-        Map<String, Object> map = new HashMap<String, Object>();
+        boolean result = false;
+
+        Map<String, Object> map = new HashMap<>();
         map.put(fieldName, fieldValue);
-        if (filters != null) {
-            Map<String, Object> filterMap = JsonUtil.fromJson(filters, Map.class, String.class, Object.class);
-            map.putAll(filterMap);
-        }
+
         List<Map<String, Object>> list = this.getBaseService().select(map);
-        nCount = list.size();
+
+        if (list.size() > 0) {
+            if (id == null)
+                result = true;
+            else {
+                String pKeyName = getPrimaryKey();
+                for (Map<String, Object> r : list) {
+                    if (!r.get(pKeyName).toString().equals(id)) {
+                        result = true;
+                        break;
+                    }
+                }
+            }
+        }
+
         try {
             response.setContentType("text/html");
-            response.getWriter().print(nCount);
+            response.getWriter().print(String.valueOf(result));
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return null;
     }
 

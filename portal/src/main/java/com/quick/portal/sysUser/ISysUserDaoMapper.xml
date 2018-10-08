@@ -20,6 +20,9 @@
 		<if test="dep_id != null and dep_id != '' and !'null'.equals(dep_id)"><![CDATA[
 	       and d.dep_id = #{dep_id}
 	    ]]></if>
+		<if test="role_id != null and role_id != '' and !'null'.equals(role_id)"><![CDATA[
+	       and r.role_id = #{role_id}
+	    ]]></if>
 		<if test="job_id != null and job_id != '' and !'null'.equals(job_id)"><![CDATA[
 	       and u.job_id = #{job_id}
 	    ]]></if>
@@ -153,11 +156,11 @@
 		,group_concat(distinct d.dep_id) as dep_id
 		,j.job_name, j.job_level
 		from sys_user u
-		join user_role_rela ur_rel on u.user_id = ur_rel.user_id
+		left join user_role_rela ur_rel on u.user_id = ur_rel.user_id
 		join user_role r on r.role_id = ur_rel.role_id
 		join user_dep_rela ud_rel on u.user_id = ud_rel.user_id
 		join user_department d on d.dep_id = ud_rel.dep_id
-		join user_job j on u.job_id = j.job_id
+		left join user_job j on u.job_id = j.job_id
 		<where>
 		<include refid="where" />
 		</where>

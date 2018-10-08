@@ -23,7 +23,7 @@
 	</sql>
     
     <!-- 新增menu_privilege -->
-	<insert id="insert" parameterType="com.quick.portal.menuPrivilege.MenuPrivilegeDO">
+	<insert id="insert" parameterType="com.quick.portal.sysPrivilege.SysPrivilegeDO">
 		insert into menu_privilege (
     		  menu_id,
     		  role_id,
@@ -38,7 +38,7 @@
 	</insert>
 		
 	<!-- 修改menu_privilege -->
-	<update id="update" parameterType="com.quick.portal.menuPrivilege.MenuPrivilegeDO">
+	<update id="update" parameterType="com.quick.portal.sysPrivilege.SysPrivilegeDO">
 		update menu_privilege 
 		   set pri_id=#{pri_id}
 			  ,menu_id=#{menu_id}

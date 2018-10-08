@@ -3,7 +3,7 @@
 <head>
     <#include "/WEB-INF/include/reslist.html" />
     <style>
-        select::-ms-expand{
+        select::-ms-expand {
             display: none;
         }
     </style>
@@ -11,26 +11,32 @@
 </head>
 <body class="gray-bg">
 <div class="wrapper wrapper-content wrapper-content-x animated fadeInRight">
-    <div  class="row">
+    <div class="row">
         <div class="col-sm-12">
             <div class="col-sm-10">
                 <div class="col-sm-12">
-                    <label id="pagename" class="col-xs-8" style="text-align:center;font-size: 22px;color:blue;margin-left: 180px">添加角色成员</label>
+                    <label id="pagename" class="col-xs-8"
+                           style="text-align:center;font-size: 22px;color:blue;margin-left: 180px">选择角色成员</label>
                 </div>
             </div>
             <div class="ibox ibox-x">
                 <div class="ibox-content ibox-content-x">
-                    <div  class="panel-mar">
+                    <div class="panel-mar">
                         <form id="formSearch" class="form-inline pull-right">
-                            <div class="form-group" style="left: auto;width:90px;">
-                                <span class="input-group-btn" style="display:inline-block;"><button class="btn btn-primary " type="button" onclick="addUsers();"> 提交</button> </span>
+                            <div class="form-group" style="left: auto;width:90px; display:none">
+                                <span class="input-group-btn" style="display:inline-block;"><button
+                                        class="btn btn-primary " type="button"
+                                        onclick="addUsers();"> 提交</button> </span>
                             </div>
                             <div class="form-group" style="left: auto;width:90px;">
-                                <span class="input-group-btn" style="display:inline-block;"><input type="button" class="btn btn-primary " value="返回" onclick="returnRoleUser();"></span>
+                                <span class="input-group-btn" style="display:inline-block;"><input type="button"
+                                                                                                   class="btn btn-primary "
+                                                                                                   value="返回"
+                                                                                                   onclick="returnToRoleEdit();"></span>
                             </div>
                         </form>
                     </div>
-                    <div style ="margin:5px;">
+                    <div style="margin:5px;">
                         <table id="list" class="table-striped" style="table-layout:fixed"></table>
                     </div>
                 </div>
@@ -38,102 +44,139 @@
         </div>
     </div>
 </div>
-</body>
 <script>
-    var pageNum=1;
-    var pageSize=10;
+    var pageNum = 1;
+    var pageSize = 10;
     var queryParm = '';
-    var flag=true;
-    var pageFlag=0;
-    var roleid = $.request.queryString["role_id"];
+    var flag = true;
+    var pageFlag = 0;
+
+
+    var markForAdd = {};
+    var markForDelete = {};
+
+    if (window.localStorage['mark_for_add']) {
+        var usersToAdd = window.localStorage['mark_for_add'].split(',');
+        usersToAdd.forEach(function (value) {
+            markForAdd[value] = value;
+        })
+    }
+
+    if (window.localStorage['mark_for_delete']) {
+        var usersToDel = window.localStorage['mark_for_delete'].split(',');
+        usersToDel.forEach(function (value) {
+            markForDelete[value] = value;
+        })
+    }
+
+    var role_id = $.request.queryString["role_id"];
+    var role_name = $.request.queryString["role_name"] || '';
+    var role_type_id = $.request.queryString["role_type_id"] || '';
+    var role_state = $.request.queryString["role_state"] || 1;
+
+    var filter = getUserFilter(role_id);
+
+
+
+    function getUserFilter(role_id) {
+        var filter = "1=1";
+
+        if (role_id != null && role_id >= 0)
+            filter = "u.user_id not in (select user_id from user_role_rela where role_id = " + role_id + ")";
+
+        if (window.localStorage['mark_for_delete'])
+            filter ='(' + filter + " or u.user_id in (" + window.localStorage['mark_for_delete'] + "))";
+
+        return filter;
+    }
+
     //初始化表格
-    function  config(){
-        var RFlag=$.request.queryString["RFlag"];
+    function config() {
+        var RFlag = $.request.queryString["RFlag"];
         quick.serverUrl = "${G.serverUrl}";  // /sysUser
         quick.editUrl = "${G.editUrl}";       // sysUser/edit
         quick.objName = "${G.objName}";
         quick.idField = "${G.idField}";
         $("#list").bootstrapTable("destroy");
-        _gridPool["list"]=new BGrid("#list");
+        _gridPool["list"] = new BGrid("#list");
         _gridPool["list"].config({
-            url:quick.serverUrl+"/getUserData?role_id="+roleid+"&i=" + Math.random(),
+            url: "${G.host}/sysUser/getList?filter=" + filter + "&i=" + Math.random(),
             idField: quick.idField,
             sortName: quick.idField,
-            cache:false,
-            height: $(document.body).height()-50,
-            toolbar:"#formSearch",
+            cache: false,
+            height: $(document.body).height() - 50,
+            toolbar: "#formSearch",
+            clickToSelect: true,
+            singleSelect: false,
             columns: [
-                {  field: 'TAGSELECT', title: '选择',width: '5%', align: 'center',
-                    formatter:function(value,rec){
-                        return "<input id=\"msgs"+rec.user_id+"\" title=\"msgs\" class=\"ck_qx\" type=\"checkbox\" name=\"msg\" value=\"" + rec.user_id+ "\" >";
-                    }  },
-                { field: 'user_id', title: '用户ID', width: 70,align: 'center' },
-                { field: 'user_name', title: '用户名称', width: 90 ,align: 'center' },
-                { field: 'user_real_name', title: '用户真实名称', width: 90,align: 'center'  },
-                { field: 'dep_name', title: '部门名称', width: 110 ,align: 'center' },
-                { field: 'job_name', title: '岗位名称', width: 100 ,align: 'center' },
-                { field: 'user_state', title: '激活状态', width:80 ,align: 'center' }
-            ],onPageChange:function(number, size){
-                pageNum=number;
-                pageSize=size;
-            },onPostBody:function(data){
-                if(queryParm=='' &&　(data == null || data.length == 0)){
+                {
+                    field: 'check', width: '5%', align: 'center', checkbox: true,
+                    formatter: function (value, row, index) {
+                        if (markForAdd[row.user_id])
+                            return {checked: true};
+                        else return value;
+                    }
+                },
+                {field: 'user_id', title: '用户ID', width: 70, align: 'center'},
+                {field: 'user_name', title: '用户名称', width: 90, align: 'center'},
+                {field: 'user_real_name', title: '用户真实名称', width: 90, align: 'center'},
+                {field: 'dep_name', title: '部门名称', width: 110, align: 'center'},
+                {field: 'job_name', title: '岗位名称', width: 100, align: 'center'},
+                {field: 'user_state', title: '激活状态', width: 80, align: 'center'}
+            ], onPageChange: function (number, size) {
+                pageNum = number;
+                pageSize = size;
+            }, onPostBody: function (data) {
+
+                $('#list').find("input:checkbox").each(function (i) {
+                    var $check = $(this);
+
+                    if ($check.attr("id") && $check.next("label"))
+                        return;
+
+                    var name = $check.attr('name');
+                    var text = (name === "btSelectAll") ? "全选" : "";
+                    var id = name + "-" + i;
+                    var $label = $("<label for='" + id + "'>" + text + "</label>");
+
+                    $check.attr("id", id).parent().append($label);
+                });
+
+                if (queryParm == '' && (data == null || data.length == 0)) {
                     $(".no-records-found td").html('您还没有添加相关信息，请到用户管理模块进行添加</a>');
                 }
+
+            }, onCheck: function (row, $element) {
+                markForAdd[row.user_id] = row.user_id;
+            }, onUncheck: function (row, $element) {
+                delete markForAdd[row.user_id];
+            }, onCheckAll: function (rows) {
+                rows.forEach(function (r) {
+                    markForAdd[r.user_id] = r.user_id;
+                })
+            }, onUncheckAll: function (rows) {
+                rows.forEach(function (r) {
+                    delete markForAdd[r.user_id];
+                })
             }
         });
 
-        if(RFlag==1){
+        if (RFlag == 1) {
             requery();
-        }else{
+        } else {
             _gd["list"].init();
         }
     }
-    //提交
-    function addUsers(){
-        var json = document.getElementsByName("msg");
-        var check_val = [];
-        for (var i = 0; i < json.length; i++) {
-            if (json[i].checked) {
-                check_val.push(json[i].value);
-            }
-        }
-        if(check_val.length<=0){
-            layer.msg("请选择要添加的用户对象！",{icon:1,time: 1000,skin: 'layer-ext-moon'});
-            return;
-        };
-        layer.confirm(
-            "确认添加选中对象吗？<br/>",
-            {icon: 3, title: "新增角色用户",skin: 'layer-ext-moon'},
-            function(){
-                $.ajax({
-                    type: "post",
-                    url: quick.serverUrl + '/addRoleUsers',
-                    dataType: "json",
-                    data:{
-                        ROLE_USER_ID_LIST:check_val.join(","),
-                        role_id:roleid
-                    },
-                    success: function (data) {
-                        if (data == 1) {
-                            layer.msg('添加用户已经完成！', {icon: 1, time: 1000});
-                            window.location.href= "roleUsers?role_id="+roleid;
-                        }else {
-                            layer.msg('添加用户失败！', {icon: 1, time: 1000, skin: 'layer-ext-moon'});
 
-                        }
-                    },
-                    error: function (err) {
-                        layer.msg("结果异常", {icon: 1, time: 1000, skin: 'layer-ext-moon'});
-                    }
-                });
-            });
-    }
-
-    function returnRoleUser() {
-        window.location.href= "roleUsers?role_id="+roleid;
+    function returnToRoleEdit() {
+        window.localStorage['mark_for_add'] = Object.getOwnPropertyNames(markForAdd).join(',');
+        window.location.href = quick.editUrl + '?role_id=' + role_id
+            + "&userData=1"
+            + "&role_name=" + role_name
+            + "&role_type_id=" + role_type_id
+            + "&role_state=" + role_state;
     }
 
 </script>
-
+</body>
 </html>

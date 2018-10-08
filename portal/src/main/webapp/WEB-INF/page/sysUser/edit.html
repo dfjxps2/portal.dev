@@ -239,19 +239,12 @@
 
         // 保存
         $("#submit-form").click(function () {
-            var roles;
-            if ($("#role_id").val()) {
-                roles = $("#role_id").val().join(",");
-            } else {
-                roles = null;
-            }
-
             if (!($("#form").valid())) {
                 return false;
             }
 
             quick.submit(function(data) {
-                if(data.code != "1"){
+                if(data.code !== 1){
                     layer.msg('保存失败,'+ data.msg,{icon:1,time: 3000,skin: 'layer-ext-moon'});
                     isdone=true;
                     return;
