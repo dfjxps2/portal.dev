@@ -55,11 +55,6 @@ public class HomeController extends SysWebController {
 
     @Resource(name = "homeService")
     private IHomeService homeService;
-/*
-
-    @Resource(name = "menuPrivilegeService")
-    private ISysPrivilegeService menuPrivilegeService;
-*/
 
     @Resource(name = "infoMngService")
     private IInfoMngService infoMngService;
@@ -70,7 +65,7 @@ public class HomeController extends SysWebController {
      * @param model
      * @return
      */
-    @RequestMapping(value = "/main")
+    @RequestMapping
     public String main(Model model) {
         //查找管理员按钮权限
         Map<String, Object> parm = new HashMap<>();
