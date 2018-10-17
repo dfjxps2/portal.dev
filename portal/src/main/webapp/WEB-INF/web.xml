@@ -12,13 +12,9 @@
 
     <!-- 配置日志信息 -->
     <context-param>
-        <param-name>log4jConfigLocation</param-name>
+        <param-name>log4jConfiguration</param-name>
         <param-value>classpath:/log4j/log4j2.xml</param-value>
     </context-param>
-
-    <listener>
-        <listener-class>com.seaboxdata.portal.Log4j2ConfigListener</listener-class>
-    </listener>
 
     <!-- 配置Web应用启动时候加载Spring容器 -->
     <listener>
