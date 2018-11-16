@@ -30,7 +30,7 @@ public class DataSynchronizedServiceImpl implements IDataSynchronizedService {
 	 * operateType:此参数仅用于区分个人用户和单位用户（此参数基本不用管）,个人用户 1，单位用户 2，其它内容（角色、部门，用户角色关系） 0
 	 */
 	@Override
-	public boolean sendData(int operateID, String operateCode, String operateType) {
+	public boolean synchronizedDataInfo(int operateID, String operateCode, String operateType) {
 		// TODO Auto-generated method stub
 		boolean bool = false;
 		try {

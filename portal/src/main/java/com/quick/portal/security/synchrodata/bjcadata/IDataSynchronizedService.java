@@ -8,7 +8,7 @@ import javax.jws.WebService;
  */
 @WebService
 public interface IDataSynchronizedService {
-	public boolean sendData(@WebParam(name = "operateID") int operateID,
+	public boolean synchronizedDataInfo(@WebParam(name = "operateID") int operateID,
 			@WebParam(name = "operateCode") String operateCode,
 			@WebParam(name = "operateType") String operateType);
 }

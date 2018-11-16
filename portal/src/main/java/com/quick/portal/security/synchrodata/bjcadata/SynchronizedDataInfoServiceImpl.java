@@ -182,7 +182,7 @@ public class SynchronizedDataInfoServiceImpl implements ISynchronizedDataInfoSer
 	 * (non-Javadoc)
 	 * @see com.quick.portal.security.synchrodata.bjcadata.ISynchronizedDataInfoService#synchronizedDataInfo2(int, java.lang.String, java.lang.String)
 	 */
-	@Override
+/*	@Override
 	public boolean synchronizedDataInfo2(int operateID, String operateCode,
 			String operateType) throws Exception {
 		boolean bol = false;
@@ -201,18 +201,18 @@ public class SynchronizedDataInfoServiceImpl implements ISynchronizedDataInfoSer
 			throw new Exception ("解析部门信息报文异常："+e.getMessage());
 		}
 		return bol;
-	}
+	}*/
 	
 	/* 测试用户信息
 	 * (non-Javadoc)
 	 * @see com.quick.portal.security.synchrodata.bjcadata.ISynchronizedDataInfoService#synchronizedDataInfo2(int, java.lang.String, java.lang.String)
 	 */
-	/*@Override
+	@Override
 	public boolean synchronizedDataInfo2(int operateID, String operateCode,
 			String operateType) throws Exception {
 		boolean bol = false;
 		PersonInformation person = new PersonInformation();
-		person.setUniqueid("test10");
+		person.setUniqueid("test11");
 		person.setUserAddress("北京1");
 		person.setUserPhone("01010001000");
 		person.setUserDuty("处长");
@@ -243,7 +243,7 @@ public class SynchronizedDataInfoServiceImpl implements ISynchronizedDataInfoSer
 		loginInformation.setLoginName("test");
 		loginInformation.setLoginNickName("张三1");
 		loginInformation.setLoginPwd("111111");
-		operateID = 41;
+		operateID = 11;
 		//11 新增用户 、12 修改用户、 13 删除用户
 		//41 新增机构、 42 修改机构、 43 删除机构
 		try {
@@ -253,7 +253,7 @@ public class SynchronizedDataInfoServiceImpl implements ISynchronizedDataInfoSer
 			throw new Exception ("解析角色信息报文异常："+e.getMessage());
 		}
 		return bol;
-	}*/
+	}
 
 
 /*	public static void main(String[] args) {

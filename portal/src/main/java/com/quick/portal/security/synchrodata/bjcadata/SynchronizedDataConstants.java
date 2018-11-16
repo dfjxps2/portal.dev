@@ -23,5 +23,8 @@ public class SynchronizedDataConstants {
 	 public static final String DATA_ISNULL_FAIL_MSG = "查询无数据，请核对输入条件";
 	 
 	 public static final String USERID_PARAM_ISNULL_FAIL_MSG = "用户帐号参数为空，请核对输入条件";
-	
+
+
+	 //默认角色
+	 public static final int DEFAULT_ROLE_ID = 2;
 }

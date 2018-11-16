@@ -257,6 +257,8 @@ public class SynchronizedDataServiceImpl implements ISynchronizedDataService {
 				mergePersonDeptRelaDataInfo(person);
 				//用户岗位
 				mergePersonJobDataInfo(person);
+				//用户与角色关系
+				mergePersonRoleDataInfo(person);
 			}else if(count > 0 && operateID == 13){
 				String globalID = person.getUniqueid();
 				//通过用户编号删除用户与部门关系
@@ -342,16 +344,45 @@ public class SynchronizedDataServiceImpl implements ISynchronizedDataService {
 	 */
 	@Transactional(rollbackFor = Exception.class)
 	public void mergePersonJobDataInfo(PersonInformation person){
-		String globalID = person.getUniqueid();
 		//通过用户编号查询用户岗位是否存在
 		boolean bool  = isExistPersonJobDataInfoByUserID(person.getUserDuty());
 		if(! bool){
 			dao.insertPersonJobData(person.getUserDuty());
 		}
-
-
 	}
 
+	/**
+	 *用户与角色关系
+	 */
+
+	@Transactional(rollbackFor = Exception.class)
+	public void mergePersonRoleDataInfo(PersonInformation person){
+		Map<String,Object> paramMap = new HashMap();
+		String globalID = person.getUniqueid();
+		paramMap.put("userGlobalID",globalID);
+		paramMap.put("defaultRoleID",SynchronizedDataConstants.DEFAULT_ROLE_ID);
+		//通过用户编号查询用户岗位是否存在
+		boolean bool  = isExistPersonRoleDataInfoByUserID(globalID);
+		if(! bool){
+			dao.insertPersonRoleData(paramMap);
+		}
+	}
+
+
+	/*
+	 * 判断重复
+	 * 通过用户编号查询用户与角色关系数据是否重复
+	 */
+	public boolean isExistPersonRoleDataInfoByUserID(String globalID) {
+		boolean bool = false;
+		int count = dao.isExistPersonRoleDataInfoByUserID(globalID);
+		if(count >0){
+			bool = true;
+		}else{
+			bool = false;
+		}
+		return bool ;
+	}
 
 	/*
 	 * 判断重复

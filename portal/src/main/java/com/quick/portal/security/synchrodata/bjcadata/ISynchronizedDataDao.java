@@ -119,7 +119,7 @@ public interface ISynchronizedDataDao<DepartmentInformation> extends ISysBaseDao
 	/*
 	 * 通过应用编号获取该应用系统下所有的用户应用权限数据接口，返回报文数据
 	 */
-	public List<Map<String, Object>> getUserBatchByAppID(Map<String, Object> paramMap);
+	public List<Map<String, Object>> getUserBatchDataByAppName(Map<String, Object> paramMap);
 
 
 	/**
@@ -143,4 +143,22 @@ public interface ISynchronizedDataDao<DepartmentInformation> extends ISysBaseDao
      * @return
      */
     public int isExistUserDeptByParm(Map<String, Object> paramMap);
+
+
+    /**
+     * 通过用户编号查询用户岗位数据是否重复
+     * @param userGlobalID
+     * @return
+     */
+    public int isExistPersonRoleDataInfoByUserID(String userGlobalID);
+
+
+
+
+    /**
+     * 新增用户角色关系
+     * @param paramMap
+     * @return
+     */
+    public void insertPersonRoleData(Map<String, Object> paramMap);
 }

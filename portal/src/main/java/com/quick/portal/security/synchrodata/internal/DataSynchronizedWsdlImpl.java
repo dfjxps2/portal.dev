@@ -15,25 +15,25 @@ public class DataSynchronizedWsdlImpl implements IDataSynchronizedWsdl {
 
 	
 	/*
-	 * 通过应用编号、用户帐号获取单个用户数据接口，返回报文数据
+	 * 通过应用名称、用户帐号获取单个用户数据接口，返回报文数据
 	 */
 	@Override
-	public String getUsersDataByUserID(String appID, String userID) {
+	public String getUsersDataByUserID(String appName, String userID) {
 		// TODO Auto-generated method stub
-		String str = userDataSyncService.getUsersDataByUserID(appID,userID);
+		String str = userDataSyncService.getUsersDataByUserID(appName,userID);
 		return str;
 	}
 	
 
 	/*
-	 * 通过应用编号获取该应用系统下所有的用户应用权限数据接口，返回报文数据
+	 * 通过应用名称获取该应用系统下所有的用户应用权限数据接口，返回报文数据
 	 */
 
 	@Override
-	public String getUserBatchDataByAppName(String appID,
+	public String getUserBatchDataByAppName(String appName,
 			String startdt, String enddt) {
 		// TODO Auto-generated method stub
-		String str = userDataSyncService.getUserApplicationPrivilegeByAppID(appID,startdt,enddt);
+		String str = userDataSyncService.getUserBatchDataByAppName(appName,startdt,enddt);
 		return str;
 	}
 
