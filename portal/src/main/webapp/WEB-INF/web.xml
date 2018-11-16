@@ -27,6 +27,10 @@
         <location>/WEB-INF/error.html</location>
     </error-page>
     <error-page>
+        <error-code>401</error-code>
+        <location>/ErrorHandler</location>
+    </error-page>
+    <error-page>
         <exception-type>java.lang.Exception</exception-type>
         <location>/WEB-INF/error.html</location>
     </error-page>
@@ -81,6 +85,15 @@
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>ErrorHandler</servlet-name>
+        <servlet-class>com.seaboxdata.portal.ErrorHandler</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ErrorHandler</servlet-name>
+        <url-pattern>/ErrorHandler</url-pattern>
+    </servlet-mapping>
 
     <!--字符编码-->
     <filter>
