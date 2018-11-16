@@ -127,11 +127,11 @@ public class SynchronizedDataServiceImpl implements ISynchronizedDataService {
 		String supDepGlobalID  = null;
 		String deptID = null;
 		//公服标识查询部门上级编号数据
-		List<Map<String, Object>> depList = this.searchFullDeptInfo();
+		List<Map<String, Object>> depList = this.searchFullDeptInfo(department);
 		for (Map<String, Object> m : depList){
 		    	//通过上级部门编号查询部门ID
 		    	  supDepGlobalID = m.get("SUP_DEP_GLOBAL_ID").toString();
-		    	  deptID = m.get("menu_id").toString();
+		    	  deptID = m.get("DEP_ID").toString();
 		    	  System.out.println("deptID="+deptID+"supDepGlobalID="+supDepGlobalID);
 		    	  paramMap.put("supDepGlobalID", supDepGlobalID);
 		    	  paramMap.put("deptID", deptID);
@@ -142,8 +142,8 @@ public class SynchronizedDataServiceImpl implements ISynchronizedDataService {
 	/*
 	 * 公服标识查询部门上级编号数据
 	 */
-	public List<Map<String, Object>> searchFullDeptInfo(){
-		return dao.searchFullDeptInfo();
+	public List<Map<String, Object>> searchFullDeptInfo(DepartmentInformation department){
+		return dao.searchFullDeptInfo(department.getDepartCode());
 	}
 	
 
@@ -238,7 +238,7 @@ public class SynchronizedDataServiceImpl implements ISynchronizedDataService {
 			//新增用户
 			if(operateID == 11){
 				boolean isFlag = isExistUserGlobalID(person);
-				if(! isFlag){
+				if(!isFlag){
 					count = insertPersonData(person);
 				}else{
 					count = updatePersonData(person);
@@ -251,10 +251,17 @@ public class SynchronizedDataServiceImpl implements ISynchronizedDataService {
 			}else if(operateID == 13){
 				count = removePersonData(person);
 			}
-			if (count > 0) {
+			if (count > 0 && (operateID == 11 ||operateID == 12)) {
+				//用户与部门关系
+				//部门数据
 				mergePersonDeptRelaDataInfo(person);
-				bool = true;
-			} else {
+				//用户岗位
+				mergePersonJobDataInfo(person);
+			}else if(count > 0 && operateID == 13){
+				String globalID = person.getUniqueid();
+				//通过用户编号删除用户与部门关系
+				removePersonDeptRelaDataByUserID(globalID);
+			}else {
 				System.out.println("操作用户表0条数据被处理，请查询！");
 				bool = false;
 			}
@@ -327,7 +334,43 @@ public class SynchronizedDataServiceImpl implements ISynchronizedDataService {
 		removePersonDeptRelaDataByUserID(globalID);
 		insertPersonDeptRelaData(person);
 	}
-	
+
+
+	/**
+	 * 用户岗位
+	 * @param person
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	public void mergePersonJobDataInfo(PersonInformation person){
+		String globalID = person.getUniqueid();
+		//通过用户编号查询用户岗位是否存在
+		boolean bool  = isExistPersonJobDataInfoByUserID(person.getUserDuty());
+		if(! bool){
+			dao.insertPersonJobData(person.getUserDuty());
+		}
+
+
+	}
+
+
+	/*
+	 * 判断重复
+	 * 通过用户编号查询用户岗位数据是否重复
+	 */
+	public boolean isExistPersonJobDataInfoByUserID(String globalID) {
+		boolean bool = false;
+		int count = dao.isExistPersonJobDataInfoByUserID(globalID);
+		if(count >0){
+			bool = true;
+		}else{
+			bool = false;
+		}
+		return bool ;
+	}
+
+
+
+
 	
 	/*
 	 * 通过用户编号查询用户ID
@@ -386,12 +429,55 @@ public class SynchronizedDataServiceImpl implements ISynchronizedDataService {
 			System.out.println("DepartCode=" + depart.getDepartCode());
 			System.out.println("Default=" + depart.getDepartDefault());
 			System.out.println("DepartUpcode=" + depart.getDepartUpcode());
-			depID = searchDeptByGlobalID(depart.getDepartCode());
-			paramMap.put("depID", depID);
-			dao.insertPersonDeptRelaData(paramMap);
+//			depID = searchDeptByGlobalID(depart.getDepartCode());
+			paramMap.put("departCode", depart.getDepartCode());
+			//判断重复
+			boolean flag = isExistDeptGlobalID(depart);
+			if(! flag){
+				//新增部门
+				insertDeptData(depart);
+			}
+			boolean bool = isExistUserDeptByParm(userID,depart);
+			if(! bool) {
+				//新增用户与部门表
+				insertPersonDeptRelaData(userID,depart);
+			}
 		}
+
 	}
-	
+
+	/**
+	 * 新增用户与部门表
+	 * @param userID
+	 * @return
+	 */
+	public void insertPersonDeptRelaData(String userID,DepartmentInformation depart) {
+		Map<String,Object> paramMap = new HashMap();
+		paramMap.put("userID",userID);
+		paramMap.put("departCode",depart.getDepartCode());
+		dao.insertPersonDeptRelaData(paramMap);
+	}
+
+
+
+    /**
+     * 通过用户编号查询数据是否重复
+     * @param userID
+     * @return
+     */
+    public boolean isExistUserDeptByParm(String userID,DepartmentInformation depart) {
+		Map<String,Object> paramMap = new HashMap();
+		paramMap.put("userID",userID);
+		paramMap.put("departCode",depart.getDepartCode());
+        boolean bool = false;
+        int count = dao.isExistUserDeptByParm(paramMap);
+        if(count >0){
+            bool = true;
+        }else{
+            bool = false;
+        }
+        return bool ;
+    }
 	
 	/*public static void main(String[] args) {
 		SynchronizedDataServiceImpl testService = new SynchronizedDataServiceImpl();

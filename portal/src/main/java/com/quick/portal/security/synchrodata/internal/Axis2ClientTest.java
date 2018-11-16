@@ -21,7 +21,9 @@ public class Axis2ClientTest {
     public static void main(String[] args) throws RemoteException {  
     	Axis2ClientTest test = new Axis2ClientTest();  
 //        System.out.println("2    " + test.testAxis2ClientByRpc());  
-        System.out.println("3    " + test.testAxis2ClientByDoc());  
+//        System.out.println("3    " + test.testAxis2ClientByDoc());  
+        
+        System.out.println("4    " + test.testAxis2ClientByDocCond());  
         
 //        Endpoint.publish("http://127.0.0.1:18001/portal/intlDataSynchronizedService", new HelloService());
         System.out.println("server ready...");
@@ -94,6 +96,36 @@ public class Axis2ClientTest {
         System.out.println("rpc="+result);  
         return result;  
     }  
+    
+    
+    public String testAxis2ClientByDocCond() {  
+        OMElement result = null; 
+        String retStr = null;
+        try {  
+            Options options = new Options();  
+            // 指定调用WebService的URL    
+            EndpointReference targetEPR = new EndpointReference(SOAP_WSDL_ADDRESS);  
+            options.setTo(targetEPR);  
+            ServiceClient sender = new ServiceClient();  
+            sender.setOptions(options);  
+            OMFactory fac = OMAbstractFactory.getOMFactory();  
+            // 命名空间，有时命名空间不增加没事，不过最好加上，因为有时有事，你懂的    
+            OMNamespace omNs = fac.createOMNamespace(SOAP_TARGET_NAMESPACE,"");  
+            OMElement method = fac.createOMElement(WSDL_OPERATION_NAME, omNs);
+            OMElement symbol = fac.createOMElement(new QName("arg0"));  
+//            symbol.addChild(fac.createOMText(symbol, "")); 
+            symbol.addChild(fac.createOMText(symbol, "admin"));  
+            method.addChild(symbol);  
+            method.build();  
+            result = sender.sendReceive(method);  
+            retStr = result.getFirstElement().getText();
+            System.out.println("*************** " + retStr);  
+  
+        } catch (AxisFault axisFault) {  
+            axisFault.printStackTrace();  
+        }  
+        return retStr + "";  
+    }  
   
     /**  
      * 方法三： 应用document方式调用  
@@ -131,7 +163,7 @@ public class Axis2ClientTest {
 
  
   
-    private final static String SOAP_WSDL_ADDRESS = "http://127.0.0.1:18001/portal/intlDataSynchronizedService?wsdl";
+    private final static String SOAP_WSDL_ADDRESS = "http://10.10.10.42:18001/portal/intlDataSynchronizedService?wsdl";
 
 	private final static String SOAP_TARGET_NAMESPACE = "http://internal.synchrodata.security.portal.quick.com/";
 	

@@ -1,6 +1,7 @@
 package com.quick.portal.security.synchrodata.internal;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +26,7 @@ public class DataSynchronzedServiceImpl implements IDataSynchronizedService {
 
 	/*
 	 * 同步单个用户数据
-	 */
+	 
 	public String getUsersDataByUserID(String userID){
 		String xml = null;
 		List<Map<String, Object>> retList = userDataSyncDao.getUsersDataByUserID(userID);
@@ -46,9 +47,9 @@ public class DataSynchronzedServiceImpl implements IDataSynchronizedService {
 		
 	}
 	
-	/*
+	
 	 * 同步批量用户数据
-	 */
+	 
 	public String getAllUserData(){
 		String xml = null;
 		List dataMap = userDataSyncDao.getAllUsersData();
@@ -65,16 +66,89 @@ public class DataSynchronzedServiceImpl implements IDataSynchronizedService {
 		}
 		return xml;
 	}
+	*/
 	
-	/*
-	 *  同步菜单权限数据
+	 /*  同步菜单权限数据
 	 * (non-Javadoc)
 	 * @see com.quick.portal.security.synchrodata.internal.IDataSynchronizedService#getMenuPrivilegeByUserID(java.lang.String)
-	 */
-	@Override
+	 /
 	public String getFunPrivilegeByUserID(String userID) {
 		String xml = null;
 		List<Map<String, Object>> retList = userDataSyncDao.getFunPrivilegeByUserID(userID);
+		if(retList.isEmpty() || retList.size()==0){
+			xml = Dom4jUtil.creatErrXmlFile(SynchronizedDataConstants.FAIL_STATUS,SynchronizedDataConstants.DATA_ISNULL_FAIL_MSG);
+		}else{
+			try {
+				xml = Dom4jUtil.writeFormatXML(retList);
+			} catch (IOException e) {
+				xml = Dom4jUtil.creatErrXmlFile(SynchronizedDataConstants.FAIL_STATUS,e.getLocalizedMessage());
+				// TODO Auto-generated catch block
+			} catch (DocumentException e) {
+				// TODO Auto-generated catch block
+				xml = Dom4jUtil.creatErrXmlFile(SynchronizedDataConstants.FAIL_STATUS,e.getLocalizedMessage());
+			}
+		}
+		return xml;
+	}
+	
+	/*
+	 * 通过应用编号、用户帐号获取单个用户数据接口，返回报文数据。
+	 */
+	@Override
+	public String getUsersDataByUserID(String appID, String userID) {
+		Map<String,Object> paramMap = new HashMap<>();
+		paramMap.put("appID", appID);
+		paramMap.put("userID", userID);
+		List<Map<String, Object>> retList = userDataSyncDao.getUsersDataByUserID(paramMap);
+		String xml = getXmlInstall(retList) ;
+		/*if(retList.isEmpty() || retList.size()==0){
+			xml = Dom4jUtil.creatErrXmlFile(SynchronizedDataConstants.FAIL_STATUS,SynchronizedDataConstants.DATA_ISNULL_FAIL_MSG);
+		}else{
+			try {
+				xml = Dom4jUtil.writeFormatXML(retList);
+			} catch (IOException e) {
+				xml = Dom4jUtil.creatErrXmlFile(SynchronizedDataConstants.FAIL_STATUS,e.getLocalizedMessage());
+				// TODO Auto-generated catch block
+			} catch (DocumentException e) {
+				// TODO Auto-generated catch block
+				xml = Dom4jUtil.creatErrXmlFile(SynchronizedDataConstants.FAIL_STATUS,e.getLocalizedMessage());
+			}
+		}*/
+		return xml;
+	}
+	
+	/*
+	 * 通过应用编号获取该应用系统下所有的用户应用权限数据接口，返回报文数据
+	 */
+	@Override
+	public String getUserApplicationPrivilegeByAppID(String appID,
+			String startdt, String enddt) {
+		Map<String,Object> paramMap = new HashMap<>();
+		paramMap.put("appID", appID);
+		paramMap.put("startdt", startdt);
+		paramMap.put("enddt", enddt);
+		List<Map<String, Object>> retList = userDataSyncDao.getUserBatchByAppID(paramMap);
+		String xml = getXmlInstall(retList) ;
+
+/*		if(retList.isEmpty() || retList.size()==0){
+			xml = Dom4jUtil.creatErrXmlFile(SynchronizedDataConstants.FAIL_STATUS,SynchronizedDataConstants.DATA_ISNULL_FAIL_MSG);
+		}else{
+			try {
+				xml = Dom4jUtil.writeFormatXML(retList);
+			} catch (IOException e) {
+				xml = Dom4jUtil.creatErrXmlFile(SynchronizedDataConstants.FAIL_STATUS,e.getLocalizedMessage());
+				// TODO Auto-generated catch block
+			} catch (DocumentException e) {
+				// TODO Auto-generated catch block
+				xml = Dom4jUtil.creatErrXmlFile(SynchronizedDataConstants.FAIL_STATUS,e.getLocalizedMessage());
+			}
+		}*/
+		return xml;
+	}
+
+
+	public static String getXmlInstall (List<Map<String, Object>> retList ){
+		String xml = "";
 		if(retList.isEmpty() || retList.size()==0){
 			xml = Dom4jUtil.creatErrXmlFile(SynchronizedDataConstants.FAIL_STATUS,SynchronizedDataConstants.DATA_ISNULL_FAIL_MSG);
 		}else{

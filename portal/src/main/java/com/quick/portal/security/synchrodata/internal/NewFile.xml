@@ -3,272 +3,240 @@
 	<body>
 		<status>1</status>
 		<msg></msg>
-		<total>12</total>
+		<total>13</total>
 		<items>
 			<fieldinfo>
-				<fieldname>FUN_CN_NAME</fieldname>
-				<fieldvale>城市交通</fieldvale>
+				<fieldname>USER_ID</fieldname>
+				<fieldvale>1</fieldvale>
 			</fieldinfo>
 			<fieldinfo>
-				<fieldname>APP_ID</fieldname>
+				<fieldname>USER_STATE</fieldname>
+				<fieldvale>1</fieldvale>
+			</fieldinfo>
+			<fieldinfo>
+				<fieldname>USER_NAME</fieldname>
+				<fieldvale>admin</fieldvale>
+			</fieldinfo>
+			<fieldinfo>
+				<fieldname>USER_REAL_NAME</fieldname>
+				<fieldvale>管理员</fieldvale>
+			</fieldinfo>
+		</items>
+		<items>
+			<fieldinfo>
+				<fieldname>USER_ID</fieldname>
 				<fieldvale>2</fieldvale>
 			</fieldinfo>
 			<fieldinfo>
-				<fieldname>FUN_NAME</fieldname>
-				<fieldvale>csjt</fieldvale>
+				<fieldname>USER_STATE</fieldname>
+				<fieldvale>1</fieldvale>
 			</fieldinfo>
 			<fieldinfo>
 				<fieldname>USER_NAME</fieldname>
-				<fieldvale>admin</fieldvale>
+				<fieldvale>liuxiaojie</fieldvale>
 			</fieldinfo>
 			<fieldinfo>
 				<fieldname>USER_REAL_NAME</fieldname>
-				<fieldvale>管理员</fieldvale>
+				<fieldvale>刘晓洁</fieldvale>
 			</fieldinfo>
 		</items>
 		<items>
 			<fieldinfo>
-				<fieldname>FUN_CN_NAME</fieldname>
-				<fieldvale>经济运行</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>APP_ID</fieldname>
+				<fieldname>USER_ID</fieldname>
 				<fieldvale>3</fieldvale>
 			</fieldinfo>
 			<fieldinfo>
-				<fieldname>FUN_NAME</fieldname>
-				<fieldvale>jjyx</fieldvale>
+				<fieldname>USER_STATE</fieldname>
+				<fieldvale>1</fieldvale>
 			</fieldinfo>
 			<fieldinfo>
 				<fieldname>USER_NAME</fieldname>
-				<fieldvale>admin</fieldvale>
+				<fieldvale>user2</fieldvale>
 			</fieldinfo>
 			<fieldinfo>
 				<fieldname>USER_REAL_NAME</fieldname>
-				<fieldvale>管理员</fieldvale>
+				<fieldvale>用户2</fieldvale>
 			</fieldinfo>
 		</items>
 		<items>
 			<fieldinfo>
-				<fieldname>FUN_CN_NAME</fieldname>
-				<fieldvale>城市生命线</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>APP_ID</fieldname>
+				<fieldname>USER_ID</fieldname>
 				<fieldvale>4</fieldvale>
 			</fieldinfo>
 			<fieldinfo>
-				<fieldname>FUN_NAME</fieldname>
-				<fieldvale>smx</fieldvale>
+				<fieldname>USER_STATE</fieldname>
+				<fieldvale>1</fieldvale>
 			</fieldinfo>
 			<fieldinfo>
 				<fieldname>USER_NAME</fieldname>
-				<fieldvale>admin</fieldvale>
+				<fieldvale>zhangyishui</fieldvale>
 			</fieldinfo>
 			<fieldinfo>
 				<fieldname>USER_REAL_NAME</fieldname>
-				<fieldvale>管理员</fieldvale>
+				<fieldvale>张义水</fieldvale>
 			</fieldinfo>
 		</items>
 		<items>
 			<fieldinfo>
-				<fieldname>FUN_CN_NAME</fieldname>
-				<fieldvale>环境气象</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>APP_ID</fieldname>
-				<fieldvale>6</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>FUN_NAME</fieldname>
-				<fieldvale>yjqx</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>USER_NAME</fieldname>
-				<fieldvale>admin</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>USER_REAL_NAME</fieldname>
-				<fieldvale>管理员</fieldvale>
-			</fieldinfo>
-		</items>
-		<items>
-			<fieldinfo>
-				<fieldname>FUN_CN_NAME</fieldname>
-				<fieldvale>政务服务</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>APP_ID</fieldname>
-				<fieldvale>7</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>FUN_NAME</fieldname>
-				<fieldvale>zyfw</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>USER_NAME</fieldname>
-				<fieldvale>admin</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>USER_REAL_NAME</fieldname>
-				<fieldvale>管理员</fieldvale>
-			</fieldinfo>
-		</items>
-		<items>
-			<fieldinfo>
-				<fieldname>FUN_CN_NAME</fieldname>
-				<fieldvale>一带一路</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>APP_ID</fieldname>
-				<fieldvale>8</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>FUN_NAME</fieldname>
-				<fieldvale>ydyl</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>USER_NAME</fieldname>
-				<fieldvale>admin</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>USER_REAL_NAME</fieldname>
-				<fieldvale>管理员</fieldvale>
-			</fieldinfo>
-		</items>
-		<items>
-			<fieldinfo>
-				<fieldname>FUN_CN_NAME</fieldname>
-				<fieldvale>办公辅助</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>APP_ID</fieldname>
-				<fieldvale>9</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>FUN_NAME</fieldname>
-				<fieldvale>bgfz</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>USER_NAME</fieldname>
-				<fieldvale>admin</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>USER_REAL_NAME</fieldname>
-				<fieldvale>管理员</fieldvale>
-			</fieldinfo>
-		</items>
-		<items>
-			<fieldinfo>
-				<fieldname>FUN_CN_NAME</fieldname>
-				<fieldvale>重要信息</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>APP_ID</fieldname>
+				<fieldname>USER_ID</fieldname>
 				<fieldvale>10</fieldvale>
 			</fieldinfo>
 			<fieldinfo>
-				<fieldname>FUN_NAME</fieldname>
-				<fieldvale>zyxx</fieldvale>
+				<fieldname>USER_STATE</fieldname>
+				<fieldvale>1</fieldvale>
 			</fieldinfo>
 			<fieldinfo>
 				<fieldname>USER_NAME</fieldname>
-				<fieldvale>admin</fieldvale>
+				<fieldvale>develop</fieldvale>
 			</fieldinfo>
 			<fieldinfo>
 				<fieldname>USER_REAL_NAME</fieldname>
-				<fieldvale>管理员</fieldvale>
+				<fieldvale>开发用户</fieldvale>
 			</fieldinfo>
 		</items>
 		<items>
 			<fieldinfo>
-				<fieldname>FUN_CN_NAME</fieldname>
-				<fieldvale>态势感知</fieldvale>
+				<fieldname>USER_ID</fieldname>
+				<fieldvale>15</fieldvale>
 			</fieldinfo>
 			<fieldinfo>
-				<fieldname>APP_ID</fieldname>
-				<fieldvale>13</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>FUN_NAME</fieldname>
-				<fieldvale>csjt</fieldvale>
+				<fieldname>USER_STATE</fieldname>
+				<fieldvale>1</fieldvale>
 			</fieldinfo>
 			<fieldinfo>
 				<fieldname>USER_NAME</fieldname>
-				<fieldvale>admin</fieldvale>
+				<fieldvale>huangyangguang</fieldvale>
 			</fieldinfo>
 			<fieldinfo>
 				<fieldname>USER_REAL_NAME</fieldname>
-				<fieldvale>管理员</fieldvale>
+				<fieldvale>黄杨广</fieldvale>
 			</fieldinfo>
 		</items>
 		<items>
 			<fieldinfo>
-				<fieldname>FUN_CN_NAME</fieldname>
-				<fieldvale>民生幸福指数</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>APP_ID</fieldname>
-				<fieldvale>14</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>FUN_NAME</fieldname>
-				<fieldvale>xfzs</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>USER_NAME</fieldname>
-				<fieldvale>admin</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>USER_REAL_NAME</fieldname>
-				<fieldvale>管理员</fieldvale>
-			</fieldinfo>
-		</items>
-		<items>
-			<fieldinfo>
-				<fieldname>FUN_CN_NAME</fieldname>
-				<fieldvale>经济指标</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>APP_ID</fieldname>
+				<fieldname>USER_ID</fieldname>
 				<fieldvale>16</fieldvale>
 			</fieldinfo>
 			<fieldinfo>
-				<fieldname>FUN_NAME</fieldname>
-				<fieldvale>jjzb</fieldvale>
+				<fieldname>USER_STATE</fieldname>
+				<fieldvale>1</fieldvale>
 			</fieldinfo>
 			<fieldinfo>
 				<fieldname>USER_NAME</fieldname>
-				<fieldvale>admin</fieldvale>
+				<fieldvale>luxuebao</fieldvale>
 			</fieldinfo>
 			<fieldinfo>
 				<fieldname>USER_REAL_NAME</fieldname>
-				<fieldvale>管理员</fieldvale>
+				<fieldvale>卢学宝</fieldvale>
 			</fieldinfo>
 		</items>
 		<items>
 			<fieldinfo>
-				<fieldname>FUN_CN_NAME</fieldname>
-				<fieldvale>应急大数据</fieldvale>
+				<fieldname>USER_ID</fieldname>
+				<fieldvale>17</fieldvale>
 			</fieldinfo>
 			<fieldinfo>
-				<fieldname>APP_ID</fieldname>
-				<fieldvale>11</fieldvale>
-			</fieldinfo>
-			<fieldinfo>
-				<fieldname>FUN_NAME</fieldname>
-				<fieldvale>yjdsj</fieldvale>
+				<fieldname>USER_STATE</fieldname>
+				<fieldvale>1</fieldvale>
 			</fieldinfo>
 			<fieldinfo>
 				<fieldname>USER_NAME</fieldname>
-				<fieldvale>admin</fieldvale>
+				<fieldvale>hezhong</fieldvale>
 			</fieldinfo>
 			<fieldinfo>
 				<fieldname>USER_REAL_NAME</fieldname>
-				<fieldvale>管理员</fieldvale>
+				<fieldvale>何忠</fieldvale>
+			</fieldinfo>
+		</items>
+		<items>
+			<fieldinfo>
+				<fieldname>USER_ID</fieldname>
+				<fieldvale>18</fieldvale>
+			</fieldinfo>
+			<fieldinfo>
+				<fieldname>USER_STATE</fieldname>
+				<fieldvale>1</fieldvale>
+			</fieldinfo>
+			<fieldinfo>
+				<fieldname>USER_NAME</fieldname>
+				<fieldvale>niewei</fieldvale>
+			</fieldinfo>
+			<fieldinfo>
+				<fieldname>USER_REAL_NAME</fieldname>
+				<fieldvale>聂巍</fieldvale>
+			</fieldinfo>
+		</items>
+		<items>
+			<fieldinfo>
+				<fieldname>USER_ID</fieldname>
+				<fieldvale>19</fieldvale>
+			</fieldinfo>
+			<fieldinfo>
+				<fieldname>USER_STATE</fieldname>
+				<fieldvale>1</fieldvale>
+			</fieldinfo>
+			<fieldinfo>
+				<fieldname>USER_NAME</fieldname>
+				<fieldvale>user1</fieldvale>
+			</fieldinfo>
+			<fieldinfo>
+				<fieldname>USER_REAL_NAME</fieldname>
+				<fieldvale>用户1</fieldvale>
+			</fieldinfo>
+		</items>
+		<items>
+			<fieldinfo>
+				<fieldname>USER_ID</fieldname>
+				<fieldvale>20</fieldvale>
+			</fieldinfo>
+			<fieldinfo>
+				<fieldname>USER_STATE</fieldname>
+				<fieldvale>1</fieldvale>
+			</fieldinfo>
+			<fieldinfo>
+				<fieldname>USER_NAME</fieldname>
+				<fieldvale>keyadmin</fieldvale>
+			</fieldinfo>
+			<fieldinfo>
+				<fieldname>USER_REAL_NAME</fieldname>
+				<fieldvale>keyadmin</fieldvale>
+			</fieldinfo>
+		</items>
+		<items>
+			<fieldinfo>
+				<fieldname>USER_ID</fieldname>
+				<fieldvale>22</fieldvale>
+			</fieldinfo>
+			<fieldinfo>
+				<fieldname>USER_STATE</fieldname>
+				<fieldvale>1</fieldvale>
+			</fieldinfo>
+			<fieldinfo>
+				<fieldname>USER_NAME</fieldname>
+				<fieldvale>wanglei</fieldvale>
+			</fieldinfo>
+			<fieldinfo>
+				<fieldname>USER_REAL_NAME</fieldname>
+				<fieldvale>王磊</fieldvale>
+			</fieldinfo>
+		</items>
+		<items>
+			<fieldinfo>
+				<fieldname>USER_ID</fieldname>
+				<fieldvale>26</fieldvale>
+			</fieldinfo>
+			<fieldinfo>
+				<fieldname>USER_STATE</fieldname>
+				<fieldvale>1</fieldvale>
+			</fieldinfo>
+			<fieldinfo>
+				<fieldname>USER_NAME</fieldname>
+				<fieldvale>dladmin</fieldvale>
+			</fieldinfo>
+			<fieldinfo>
+				<fieldname>USER_REAL_NAME</fieldname>
+				<fieldvale>dladmin</fieldvale>
 			</fieldinfo>
 		</items>
 	</body>
 </response>
-
-      

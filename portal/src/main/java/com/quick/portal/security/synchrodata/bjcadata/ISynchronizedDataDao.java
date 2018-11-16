@@ -52,7 +52,7 @@ public interface ISynchronizedDataDao<DepartmentInformation> extends ISysBaseDao
 	//删除公服系统所有机构数据
 	public void removeAllDeptData();
 	//公服标识查询部门上级编号数据
-	public List<Map<String, Object>> searchFullDeptInfo();
+	public List<Map<String, Object>> searchFullDeptInfo(String depID);
 	
 	//修改部门上级编号
 	public void updateSuperDepId(Map<String,Object> paramMap);
@@ -99,15 +99,48 @@ public interface ISynchronizedDataDao<DepartmentInformation> extends ISysBaseDao
 	 */
 	public List<Map<String, Object>> searchDeptByGlobalID(String deptGlobalID);
 	
-	/*
+/*	
 	 * 下发单个用户数据
-	 */
+	 
 	public List<Map<String, Object>> getUsersDataByUserID(String userID);
 	
-	/*
+	
 	 * 下发批量用户数据
-	 */
+	 
 	public List<Map<String, Object>> getAllUsersData();
 	//下发CAS用户到集成系统,下发菜单权限数据
 	public List<Map<String, Object>> getFunPrivilegeByUserID(String userID);
+	*/
+	/*
+	 * 通过应用编号获取该应用系统下所有的用户应用权限数据接口，返回报文数据
+	 */
+	public List<Map<String, Object>> getUsersDataByUserID(Map<String, Object> paramMap);
+	
+	/*
+	 * 通过应用编号获取该应用系统下所有的用户应用权限数据接口，返回报文数据
+	 */
+	public List<Map<String, Object>> getUserBatchByAppID(Map<String, Object> paramMap);
+
+
+	/**
+	 * 通过用户编号查询用户岗位数据是否重复
+	 * @param userDuty
+	 * @return
+	 */
+	public int isExistPersonJobDataInfoByUserID(String userDuty);
+
+	/**
+	 * 新增用户岗位
+	 * @param userDuty
+	 * @return
+	 */
+	public void insertPersonJobData(String userDuty);
+
+
+    /**
+     * 通过用户编号查询数据是否重复
+     * @param
+     * @return
+     */
+    public int isExistUserDeptByParm(Map<String, Object> paramMap);
 }

@@ -158,6 +158,15 @@ public class SynchronizedDataInfoServiceImpl implements ISynchronizedDataInfoSer
 			System.out.println("部门上级编码====" + departupcode);
 			System.out.println("部门编码为=====" + departcode);
 			System.out.println("部门名称=====" + departname);
+
+			Iterator it = collection.iterator();
+			while (it.hasNext()) {
+				DepartmentInformation depart = (DepartmentInformation) it
+						.next();
+				System.out.println("DepartCode=" + depart.getDepartCode());
+				System.out.println("Default=" + depart.getDepartDefault());
+				System.out.println("DepartUpcode=" + depart.getDepartUpcode());
+			}
 			try {
 				bol = syncDataService.synchronizedDeptData(department,operateID);
 			//	bol = syncDataService.synchronizedBatchDeptData(collection);
@@ -173,17 +182,17 @@ public class SynchronizedDataInfoServiceImpl implements ISynchronizedDataInfoSer
 	 * (non-Javadoc)
 	 * @see com.quick.portal.security.synchrodata.bjcadata.ISynchronizedDataInfoService#synchronizedDataInfo2(int, java.lang.String, java.lang.String)
 	 */
-	/*@Override
+	@Override
 	public boolean synchronizedDataInfo2(int operateID, String operateCode,
 			String operateType) throws Exception {
 		boolean bol = false;
 		DepartmentInformation department = new DepartmentInformation();
 		String uuid = UUID.randomUUID().toString().replace("-", "");
 		department.setDepartDefault(uuid);
-		department.setDepartCode("dept_2");
-		department.setDepartDescript("detp_desc");;
-		department.setDepartName("dept_name");
-		department.setDepartUpcode("dept_0");
+		department.setDepartCode("dept_6");
+		department.setDepartDescript("detp_desc1");;
+		department.setDepartName("dept_name111");
+		department.setDepartUpcode("dept_1");
 		operateID = 41;
 		try {
 			bol = syncDataService.synchronizedDeptData(department,operateID);
@@ -192,36 +201,51 @@ public class SynchronizedDataInfoServiceImpl implements ISynchronizedDataInfoSer
 			throw new Exception ("解析部门信息报文异常："+e.getMessage());
 		}
 		return bol;
-	}*/
+	}
 	
 	/* 测试用户信息
 	 * (non-Javadoc)
 	 * @see com.quick.portal.security.synchrodata.bjcadata.ISynchronizedDataInfoService#synchronizedDataInfo2(int, java.lang.String, java.lang.String)
 	 */
-	@Override
+	/*@Override
 	public boolean synchronizedDataInfo2(int operateID, String operateCode,
 			String operateType) throws Exception {
 		boolean bol = false;
 		PersonInformation person = new PersonInformation();
-		person.setUniqueid("test1");
-		person.setUserAddress("北京");
-		person.setUserPhone("1361111111");
-		Collection collection = new ArrayList();
+		person.setUniqueid("test10");
+		person.setUserAddress("北京1");
+		person.setUserPhone("01010001000");
+		person.setUserDuty("处长");
+		person.setUserType("01");
+        person.setUserIdcardNum("1101011990121103X");
+        person.setUserNation("");
+        person.setUserDegree("硕士");
+        person.setUserTitle("经理2");
+        person.setUserPostcode("110101");
+        person.setUserMobile("12300008888");
+        person.setUserEmail("chenxh@163.com");
+        person.setDefault1("1");
+        person.setUserDefault2("1");
+
+        Collection collection = new ArrayList();
 		DepartmentInformation departs = new DepartmentInformation();
 		departs.setDepartCode("dept_2");
 		departs.setDepartUpcode("dept_0");
+		departs.setDepartName("dept_desc2");
 		collection.add(departs);
 		DepartmentInformation depart = new DepartmentInformation();
 		depart.setDepartCode("dept_1");
 		depart.setDepartUpcode("dept_0");
+		departs.setDepartName("dept_desc1");
 		collection.add(depart);
 		person.setDeparts(collection);
 		LoginInformation loginInformation = new LoginInformation();
 		loginInformation.setLoginName("test");
 		loginInformation.setLoginNickName("张三1");
 		loginInformation.setLoginPwd("111111");
-		operateID = 12;
+		operateID = 41;
 		//11 新增用户 、12 修改用户、 13 删除用户
+		//41 新增机构、 42 修改机构、 43 删除机构
 		try {
 			bol = syncDataService.synchronizedPersonData(person,loginInformation,operateID);
 		} catch (Exception e) {
@@ -229,7 +253,7 @@ public class SynchronizedDataInfoServiceImpl implements ISynchronizedDataInfoSer
 			throw new Exception ("解析角色信息报文异常："+e.getMessage());
 		}
 		return bol;
-	}
+	}*/
 
 
 /*	public static void main(String[] args) {

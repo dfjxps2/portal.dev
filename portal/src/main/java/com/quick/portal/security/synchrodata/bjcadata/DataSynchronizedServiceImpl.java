@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 /*
  * 提供公服系统WS服务实现类
  */
-@Service("dataSynchronizedService")
-@WebService(serviceName = "dataSynchronizedService")
+//@Service("dataSynchronizedService")
+@WebService(serviceName = "extDataSynchronizedService")
 public class DataSynchronizedServiceImpl implements IDataSynchronizedService {
 	
 	@Resource(name = "syncDataInfoService")
@@ -35,6 +35,7 @@ public class DataSynchronizedServiceImpl implements IDataSynchronizedService {
 		boolean bool = false;
 		try {
 			bool = syncDataInfoService.synchronizedDataInfo2(operateID, operateCode, operateType);
+//			bool = syncDataInfoService.synchronizedDataInfo(operateID, operateCode, operateType);
 		} catch (Exception e) {
 			bool = false;
 			e.printStackTrace();
