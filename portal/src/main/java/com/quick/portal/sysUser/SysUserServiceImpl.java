@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 
+
 /**
  * sys_user服务实现类
  */
@@ -55,9 +56,7 @@ public class SysUserServiceImpl extends SysBaseService<SysUserDO> implements ISy
     public DataStore save(SysUserDO sysUserDO) {
         if (sysUserDO.getUser_password() == null || sysUserDO.getUser_password().equals(""))
             sysUserDO.setUser_password("21232f297a57a5a743894a0e4a801fc3");
-
         sysUserDO.setRoles(String.join(",", sysUserDO.getRole_ids()));
-
         return super.save(sysUserDO);
     }
 
@@ -71,7 +70,6 @@ public class SysUserServiceImpl extends SysBaseService<SysUserDO> implements ISy
         SysUserDO sysUserDO = new SysUserDO();
 
         sysUserDO.setUser_id(Integer.valueOf(user_id));
-
         dao.delete(sysUserDO);
         if (sysUserDO.getError_no() == 1)
             return ActionMsg.setOk("操作成功");
@@ -133,4 +131,5 @@ public class SysUserServiceImpl extends SysBaseService<SysUserDO> implements ISy
         else
             return ActionMsg.setError("密码修改失败");
     }
+
 }

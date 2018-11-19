@@ -4,8 +4,11 @@ package com.quick.portal.userRole;
 import com.quick.core.base.ISysBaseService;
 import com.quick.core.base.SysBaseController;
 import com.quick.core.base.model.DataStore;
+import com.quick.core.util.common.CommonUtils;
+import com.quick.core.util.common.QCookie;
 import com.quick.portal.security.authority.metric.MetricPrivilegeConstants;
 import com.quick.portal.security.authority.metric.PropertiesUtil;
+import com.quick.portal.userAccessLog.UserAccessLogServiceUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
@@ -30,6 +34,7 @@ import java.util.stream.Collectors;
 @Scope("prototype")
 @RequestMapping(value = "/role")
 public class RoleController extends SysBaseController<UserRoleDO> {
+
     //角色服务
     @Resource(name = "roleService")
     private RoleService roleService;
@@ -68,11 +73,14 @@ public class RoleController extends SysBaseController<UserRoleDO> {
      */
     @RequestMapping(value = "/saveRole")
     @ResponseBody
-    public DataStore save(UserRoleDO model) {
-        if (model.getRole_id() != null && model.getRole_id() >= 0)
+    public DataStore save(UserRoleDO model,HttpServletRequest request) {
+        if (model.getRole_id() != null && model.getRole_id() >= 0) {
+            loggerInfoUpdateRoleInfo(model);
             return roleService.update(model, rstr("user_role_predicate"));
-        else
+        } else {
+            loggerInfoInsertRoleInfo(model);
             return roleService.insert(model, rstr("user_role_predicate"));
+        }
     }
 
     @RequestMapping
@@ -135,6 +143,50 @@ public class RoleController extends SysBaseController<UserRoleDO> {
             json.put(jo);
         }
         return json.toString();
+    }
+
+
+    @RequestMapping(value = "/deleteRole")
+    @ResponseBody
+    public DataStore deleteRole(String role_id) {
+        loggerInfoDeleteRoleInfo(role_id);
+        return super.deleteAction();
+    }
+
+
+    private void loggerInfoDeleteRoleInfo(String id){
+        String userName = QCookie.getValue(request, "sbd.user_name");
+        String ip = CommonUtils.getIpAddrAdvanced(request);
+        String requestResult = "系统操作员:"+userName+"删除角色信息->角色编号:"+id;
+        String operateType = "统一门户->角色管理服务->删除角色";
+        String operatedUser = "被操作角色编号:"+id;
+        String operLog = "角色管理服务日志->删除角色";
+        String serviceName = "服务名称:角色管理服务;服务方法名:";
+        UserAccessLogServiceUtils.loggerLogInfo(userName,operatedUser,operateType,requestResult,operLog,serviceName,ip);
+    }
+
+    private void loggerInfoUpdateRoleInfo(UserRoleDO model){
+        String userName = QCookie.getValue(request, "sbd.user_name");
+        String ip = CommonUtils.getIpAddrAdvanced(request);
+        String requestResult = "系统操作员:"+userName+"修改角色信息->把角色编号:"+model.getRole_id()+"的角色名称修改为"+model.getRole_name();
+        String operateType = "统一门户->角色管理服务->修改角色";
+        String id = model.getRole_id().toString();
+        String operatedUser = "被操作角色编号:"+id+":角色名称:"+model.getRole_name();
+        String operLog = "角色管理服务日志->修改角色";
+        String serviceName = "服务名称:角色管理服务;服务方法名:";
+        UserAccessLogServiceUtils.loggerLogInfo(userName,operatedUser,operateType,requestResult,operLog,serviceName,ip);
+    }
+
+
+    public void loggerInfoInsertRoleInfo(UserRoleDO model){
+        String userName = QCookie.getValue(request, "sbd.user_name");
+        String ip = CommonUtils.getIpAddrAdvanced(request);
+        String requestResult = "系统操作员:"+userName+"新增角色信息->新增角色名称:"+model.getRole_name();
+        String operateType = "统一门户->角色管理服务->新增角色";
+        String operatedUser = "被操作角色名称:"+model.getRole_name();
+        String operLog = "角色管理服务日志->新增角色";
+        String serviceName = "服务名称:角色管理服务;服务方法名:";
+        UserAccessLogServiceUtils.loggerLogInfo(userName,operatedUser,operateType,requestResult,operLog,serviceName,ip);
     }
 
 }
