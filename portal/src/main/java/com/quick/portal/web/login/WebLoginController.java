@@ -160,7 +160,8 @@ public class WebLoginController {
         String operatedUser = "系统操作员编号:"+loginer.getUser_id()+"系统操作员名称:"+loginer.getUser_name();
         String operLog = "用户登录统一门户服务日志->登录日志";
         String serviceName = "服务名称:登录日志;服务方法名:";
-        UserAccessLogServiceUtils.loggerLogInfo(userName,operatedUser,operateType,requestResult,operLog,serviceName,ip);
+        UserAccessLogServiceUtils.loggerLogInfo(logger,
+                userName,operatedUser,operateType,requestResult,operLog,serviceName,ip);
     }
 
 }

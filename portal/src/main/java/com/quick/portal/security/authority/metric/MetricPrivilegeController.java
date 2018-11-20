@@ -147,6 +147,7 @@ public class MetricPrivilegeController extends SysBaseController<MetricPrivilege
         String operatedUser = "被操作角色编号:"+id;
         String operLog = "角色管理服务日志->角色管理服务->指标授权";
         String serviceName = "服务名称:指标授权管理服务;服务方法名:";
-        UserAccessLogServiceUtils.loggerLogInfo(userName,operatedUser,operateType,requestResult,operLog,serviceName,ip);
+        UserAccessLogServiceUtils.loggerLogInfo(logger,
+                userName,operatedUser,operateType,requestResult,operLog,serviceName,ip);
     }
 }

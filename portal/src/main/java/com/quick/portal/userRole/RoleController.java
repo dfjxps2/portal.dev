@@ -9,6 +9,8 @@ import com.quick.core.util.common.QCookie;
 import com.quick.portal.security.authority.metric.MetricPrivilegeConstants;
 import com.quick.portal.security.authority.metric.PropertiesUtil;
 import com.quick.portal.userAccessLog.UserAccessLogServiceUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -34,6 +36,8 @@ import java.util.stream.Collectors;
 @Scope("prototype")
 @RequestMapping(value = "/role")
 public class RoleController extends SysBaseController<UserRoleDO> {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     //角色服务
     @Resource(name = "roleService")
@@ -162,7 +166,8 @@ public class RoleController extends SysBaseController<UserRoleDO> {
         String operatedUser = "被操作角色编号:"+id;
         String operLog = "角色管理服务日志->删除角色";
         String serviceName = "服务名称:角色管理服务;服务方法名:";
-        UserAccessLogServiceUtils.loggerLogInfo(userName,operatedUser,operateType,requestResult,operLog,serviceName,ip);
+        UserAccessLogServiceUtils.loggerLogInfo(logger,
+                userName,operatedUser,operateType,requestResult,operLog,serviceName,ip);
     }
 
     private void loggerInfoUpdateRoleInfo(UserRoleDO model){
@@ -174,7 +179,8 @@ public class RoleController extends SysBaseController<UserRoleDO> {
         String operatedUser = "被操作角色编号:"+id+":角色名称:"+model.getRole_name();
         String operLog = "角色管理服务日志->修改角色";
         String serviceName = "服务名称:角色管理服务;服务方法名:";
-        UserAccessLogServiceUtils.loggerLogInfo(userName,operatedUser,operateType,requestResult,operLog,serviceName,ip);
+        UserAccessLogServiceUtils.loggerLogInfo(logger,
+                userName,operatedUser,operateType,requestResult,operLog,serviceName,ip);
     }
 
 
@@ -186,7 +192,8 @@ public class RoleController extends SysBaseController<UserRoleDO> {
         String operatedUser = "被操作角色名称:"+model.getRole_name();
         String operLog = "角色管理服务日志->新增角色";
         String serviceName = "服务名称:角色管理服务;服务方法名:";
-        UserAccessLogServiceUtils.loggerLogInfo(userName,operatedUser,operateType,requestResult,operLog,serviceName,ip);
+        UserAccessLogServiceUtils.loggerLogInfo(logger,
+                userName,operatedUser,operateType,requestResult,operLog,serviceName,ip);
     }
 
 }

@@ -25,6 +25,8 @@ import com.quick.core.base.model.DataStore;
 import com.quick.core.util.common.CommonUtils;
 import com.quick.core.util.common.QCookie;
 import com.quick.portal.userAccessLog.UserAccessLogServiceUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -48,6 +50,7 @@ import java.util.Map;
 @RequestMapping(value = "/sysUser")
 public class SysUserController extends SysBaseController<SysUserDO> {
 
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Resource(name = "sysUserService")
     private ISysUserService sysUserService;
@@ -166,11 +169,12 @@ public class SysUserController extends SysBaseController<SysUserDO> {
         String userName = QCookie.getValue(request, "sbd.user_name");
         String ip = CommonUtils.getIpAddrAdvanced(request);
         String requestResult = "系统操作员:"+userName+"删除用户信息->用户编号:"+id;
-        String operateType = "统一门户->用户管理服务->用户删除";;
+        String operateType = "统一门户->用户管理服务->用户删除";
         String operatedUser = "被操作用户编号:"+id;
         String operLog = "用户管理服务日志->删除用户";
         String serviceName = "服务名称:用户管理服务;服务方法名:";
-        UserAccessLogServiceUtils.loggerLogInfo(userName,operatedUser,operateType,requestResult,operLog,serviceName,ip);
+        UserAccessLogServiceUtils.loggerLogInfo(logger,
+                userName,operatedUser,operateType,requestResult,operLog,serviceName,ip);
     }
 
     public void loggerInfoInsertUserInfo(SysUserDO model){
@@ -181,7 +185,8 @@ public class SysUserController extends SysBaseController<SysUserDO> {
         String operatedUser = "被操作用户名称:"+model.getUser_name();
         String operLog = "用户管理服务日志->新增角用户";
         String serviceName = "服务名称:用户管理服务;服务方法名:";
-        UserAccessLogServiceUtils.loggerLogInfo(userName,operatedUser,operateType,requestResult,operLog,serviceName,ip);
+        UserAccessLogServiceUtils.loggerLogInfo(logger,
+                userName,operatedUser,operateType,requestResult,operLog,serviceName,ip);
 
     }
 
@@ -193,7 +198,8 @@ public class SysUserController extends SysBaseController<SysUserDO> {
         String operatedUser = "被操作用户编号:"+model.getUser_id()+":用户名称:"+model.getUser_name();
         String operLog = "用户管理服务日志->修改用户";
         String serviceName = "服务名称:用户管理服务;服务方法名:";
-        UserAccessLogServiceUtils.loggerLogInfo(userName,operatedUser,operateType,requestResult,operLog,serviceName,ip);
+        UserAccessLogServiceUtils.loggerLogInfo(logger,
+                userName,operatedUser,operateType,requestResult,operLog,serviceName,ip);
     }
 
 }

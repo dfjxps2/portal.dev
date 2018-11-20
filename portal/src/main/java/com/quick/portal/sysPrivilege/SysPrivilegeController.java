@@ -24,6 +24,8 @@ import com.quick.core.base.model.DataStore;
 import com.quick.core.util.common.CommonUtils;
 import com.quick.core.util.common.QCookie;
 import com.quick.portal.userAccessLog.UserAccessLogServiceUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -44,6 +46,8 @@ import java.util.Map;
 @Scope("prototype")
 @RequestMapping(value = "/sysPrivilege")
 public class SysPrivilegeController extends SysBaseController<SysPrivilegeDO> {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Resource(name = "sysPrivilegeService")
     private ISysPrivilegeService sysPrivilegeService;
@@ -114,6 +118,7 @@ public class SysPrivilegeController extends SysBaseController<SysPrivilegeDO> {
         String operatedUser = "被操作角色编号:"+id;
         String operLog = "角色管理服务日志->角色管理服务->功能授权";
         String serviceName = "服务名称:功能授权管理服务;服务方法名:";
-        UserAccessLogServiceUtils.loggerLogInfo(userName,operatedUser,operateType,requestResult,operLog,serviceName,ip);
+        UserAccessLogServiceUtils.loggerLogInfo(logger,
+                userName,operatedUser,operateType,requestResult,operLog,serviceName,ip);
     }
 }
