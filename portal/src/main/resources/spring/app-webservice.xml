@@ -16,20 +16,8 @@
 					address="${portal.webservice}/portal/intlDataSynchronizedService" />
 
 
-<!--
-	<bean id="dataSynchronizedService"
-		class="com.quick.portal.security.synchrodata.bjcadata.DataSynchronizedServiceImpl">
-		<property name="syncDataInfoService" ref="syncDataInfoService"></property>
-	</bean>-->
+
 	<bean id="syncDataService"
-		class="com.quick.portal.security.synchrodata.bjcadata.SynchronizedDataServiceImpl" />
-
-
-	<bean id="syncDataInfoService"
-		  class="com.quick.portal.security.synchrodata.bjcadata.SynchronizedDataInfoServiceImpl" />
-
-	<jaxws:endpoint id="extDataSynchronizedService"
-		implementor="com.quick.portal.security.synchrodata.bjcadata.DataSynchronizedServiceImpl"
-		address="${portal.webservice}/portal/extDataSynchronizedService" />
+		  class="com.quick.portal.security.synchrodata.bjcadata.SynchronizedDataServiceImpl" />
 
 </beans>
