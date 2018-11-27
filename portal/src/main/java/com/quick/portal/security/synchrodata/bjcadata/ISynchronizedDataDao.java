@@ -21,9 +21,9 @@ package com.quick.portal.security.synchrodata.bjcadata;
 import java.util.List;
 import java.util.Map;
 
-import com.bjca.uums.client.bean.DepartmentInformation;
-import com.bjca.uums.client.bean.PersonInformation;
-import com.bjca.uums.client.bean.RoleInformation;
+import com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.DepartmentInformation;
+import com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.PersonInformation;
+import com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.RoleInformation;
 import com.quick.core.base.ISysBaseDao;
 
 /**
@@ -127,7 +127,7 @@ public interface ISynchronizedDataDao<DepartmentInformation> extends ISysBaseDao
 	 * @param userDuty
 	 * @return
 	 */
-	public int isExistPersonJobDataInfoByUserID(String userDuty);
+	public int isExistPersonJobDataInfoByUserID(int userDuty);
 
 	/**
 	 * 新增用户岗位
@@ -161,4 +161,12 @@ public interface ISynchronizedDataDao<DepartmentInformation> extends ISysBaseDao
      * @return
      */
     public void insertPersonRoleData(Map<String, Object> paramMap);
+
+
+
+	public int isExistRolePrivilegeDataInfo(int globalID);
+
+
+
+	public void insertRolePrivilegeDataInfo(Map<String, Object> paramMap);
 }

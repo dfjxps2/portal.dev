@@ -4,7 +4,7 @@ package com.quick.portal.security.synchrodata.internal;
 
 import java.rmi.RemoteException;
 
-import javax.xml.namespace.QName;
+/*import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
@@ -15,10 +15,10 @@ import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.rpc.client.RPCServiceClient;
-  
+  */
 public class Axis2ClientTest {  
   
-    public static void main(String[] args) throws RemoteException {  
+   /* public static void main(String[] args) throws RemoteException {
     	Axis2ClientTest test = new Axis2ClientTest();  
 //        System.out.println("2    " + test.testAxis2ClientByRpc());  
 //        System.out.println("3    " + test.testAxis2ClientByDoc());  
@@ -29,12 +29,12 @@ public class Axis2ClientTest {
         System.out.println("server ready...");
     }  
   
-    /** 
+    *//**
      * 方法一：通过 wsdl2java反向生成的类 调用 
      * @return 
      * @throws RemoteException 
-     */  
-/*    public String method1() throws RemoteException {  
+     *//*
+*//*    public String method1() throws RemoteException {
   
         TestWeb web = new TestWebStub();  
   
@@ -45,9 +45,9 @@ public class Axis2ClientTest {
         System.out.println(res.get_return());  
   
         return res.get_return();  
-    } */ 
+    } *//*
   
-    /**  
+    *//**
      * 方法二：  
      * 应用rpc的方式调用 这种方式就等于远程调用，  
      * 即通过url定位告诉远程服务器，告知方法名称，参数等， 调用远程服务，得到结果。  
@@ -68,7 +68,7 @@ public class Axis2ClientTest {
             在创建QName对象时，QName类的构造方法的第一个参数表示WSDL文件的命名空间名，  
             也就是 <wsdl:definitions>元素的targetNamespace属性值。  
      *  
-     */  
+     *//*
     public String testAxis2ClientByRpc() throws AxisFault {  
         // 使用RPC方式调用WebService    
         RPCServiceClient serviceClient = new RPCServiceClient();  
@@ -77,12 +77,12 @@ public class Axis2ClientTest {
         Options options = serviceClient.getOptions();  
         //确定目标服务地址    
         options.setTo(targetEPR);  
-        /**  
+        *//**
          * 指定要调用的getPrice方法及WSDL文件的命名空间  
          * 如果 webservice 服务端由axis2编写  
          * 命名空间 不一致导致的问题  
          * org.apache.axis2.AxisFault: java.lang.RuntimeException: Unexpected subelement arg0  
-         */  
+         *//*
         QName qname = new QName(SOAP_TARGET_NAMESPACE, WSDL_OPERATION_NAME);  
         // 指定getPrice方法的参数值    
         Object[] parameters = new Object[] { "admin" };  
@@ -127,10 +127,10 @@ public class Axis2ClientTest {
         return retStr + "";  
     }  
   
-    /**  
+    *//**
      * 方法三： 应用document方式调用  
      * 用ducument方式应用现对繁琐而灵活。现在用的比较多。因为真正摆脱了我们不想要的耦合  
-     */  
+     *//*
     public String testAxis2ClientByDoc() {  
         OMElement result = null; 
         String retStr = null;
@@ -160,7 +160,7 @@ public class Axis2ClientTest {
         return retStr + "";  
     }  
 
-
+*/
  
   
     private final static String SOAP_WSDL_ADDRESS = "http://10.10.10.42:18001/portal/intlDataSynchronizedService?wsdl";

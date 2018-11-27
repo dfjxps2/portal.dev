@@ -1,27 +1,20 @@
 package com.quick.portal.security.synchrodata.bjcadata;
-import java.net.MalformedURLException;
-import javax.xml.rpc.ServiceException;
-import javax.xml.rpc.ServiceException;
+
+import com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.DepartmentInformation;
+import com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.LoginInformation;
+import com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.PersonInformation;
+import com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.RoleInformation;
 import org.springframework.context.ApplicationContext;
 import org.springframework.remoting.jaxrpc.ServletEndpointSupport;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.xml.rpc.ServiceException;
+import java.net.MalformedURLException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.UUID;
 
-import javax.annotation.Resource;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.bjca.uums.client.bean.DepartmentInformation;
-import com.bjca.uums.client.bean.LoginInformation;
-import com.bjca.uums.client.bean.PersonInformation;
-import com.bjca.uums.client.bean.RoleInformation;
-import com.quick.core.base.ISysBaseDao;
-import com.quick.portal.security.synchrodata.bjcadata.ISynchronizedDataService;
 
 /*
  * 接收公服系统数据实现类
@@ -31,14 +24,7 @@ import com.quick.portal.security.synchrodata.bjcadata.ISynchronizedDataService;
 
 public class SynchronizedDataInfoServiceImpl extends ServletEndpointSupport implements ISynchronizedDataInfoService {
 	
-//	private final java.lang.String USER_WSDL = "http://172.26.64.109:7001/uumsinterface/services/User?wsdl"; //测试地址
-	private final java.lang.String USER_WSDL = "http://192.168.161.192:7001/uumsinterface/services/User?wsdl";
-	
-//	private final java.lang.String DEPARTMENT_WSDL = "http://172.26.64.109:7001/uumsinterface/services/Department?wsdl";//测试地址
-	
-	
-	private final java.lang.String DEPARTMENT_WSDL = "http://192.168.161.192:7001/uumsinterface/services/Department?wsdl";
-	
+
 
 	private ISynchronizedDataService syncDataService;
 	
@@ -74,29 +60,27 @@ public class SynchronizedDataInfoServiceImpl extends ServletEndpointSupport impl
 		PersonInformation person = null;
 		LoginInformation loginInformation = null;
 		DepartmentInformation depart = null;
-		synchronizedDataInfo2(OperateID,OperateCode,OperateType);
-		bol = syncDataService.synchronizedPersonData(person,loginInformation,11);
-		com.bjca.uumsinterface.services.User.UserSoapBindingStub binding = null;
-		com.bjca.uumsinterface.services.Department.DepartmentSoapBindingStub binding1 = null;
+		com.quick.portal.security.synchrodata.bjcadata.uumsinterface.services.User.UserSoapBindingStub binding = null;
+		com.quick.portal.security.synchrodata.bjcadata.uumsinterface.services.Department.DepartmentSoapBindingStub binding1 = null;
 		java.net.URL endpoint_User = null;
 		java.net.URL endpoint_Department = null;
 		try {
-			endpoint_User = new java.net.URL(USER_WSDL);
-			endpoint_Department = new java.net.URL(DEPARTMENT_WSDL);
+			endpoint_User = new java.net.URL(SynchronizedDataConstants.USER_WSDL);
+			endpoint_Department = new java.net.URL(SynchronizedDataConstants.DEPARTMENT_WSDL);
 		} catch (MalformedURLException e1) {
 			// TODO Auto-generated catch block
 			throw new Exception ("访问公服WSDL异常："+e1.getMessage());
 		}
 		try {
-			binding = (com.bjca.uumsinterface.services.User.UserSoapBindingStub) new com.bjca.uumsinterface.services.User.UserServiceLocator()
+			binding = (com.quick.portal.security.synchrodata.bjcadata.uumsinterface.services.User.UserSoapBindingStub) new com.quick.portal.security.synchrodata.bjcadata.uumsinterface.services.User.UserServiceLocator()
 					.getUser(endpoint_User);
-			binding1 = (com.bjca.uumsinterface.services.Department.DepartmentSoapBindingStub) new com.bjca.uumsinterface.services.Department.DepartmentServiceLocator()
+			binding1 = (com.quick.portal.security.synchrodata.bjcadata.uumsinterface.services.Department.DepartmentSoapBindingStub) new com.quick.portal.security.synchrodata.bjcadata.uumsinterface.services.Department.DepartmentServiceLocator()
 					.getDepartment(endpoint_Department);
 		} catch (javax.xml.rpc.ServiceException jre) {
-		/*	if (jre.getLinkedCause() != null)
+			if (jre.getLinkedCause() != null)
 				jre.getLinkedCause().printStackTrace();
-			throw new junit.framework.AssertionFailedError(
-					"JAX-RPC ServiceException caught: " + jre);*/
+			throw new Exception(
+					"JAX-RPC ServiceException caught: " + jre);
 		}
 		binding.setTimeout(60000);
 		binding1.setTimeout(60000);
@@ -109,8 +93,6 @@ public class SynchronizedDataInfoServiceImpl extends ServletEndpointSupport impl
 		 
 		//同步个人用户信息
 		if (OperateID == 11 || OperateID == 12 || OperateID == 13) {
-//			PersonInformation person = null;
-//			LoginInformation loginInformation = null;//（单独证书用户没有此对象）
 			try {	
 				person = binding.findPersonInfosByUserIDForDC(OperateCode);
 				//需要用户的登录信息(口令用户)
@@ -120,19 +102,24 @@ public class SynchronizedDataInfoServiceImpl extends ServletEndpointSupport impl
 			} catch (RemoteException e) {
 				bol = false;
 				throw new Exception ("调用个人用户信息远程接口异常："+e.getMessage());
-			}		
-			Collection collection = person.getDeparts();
-			Iterator it = collection.iterator();
-			while (it.hasNext()) {
-				 depart = (DepartmentInformation) it
-						.next(); 
-				System.out.println("DepartCode=" + depart.getDepartCode());
-				System.out.println("Default=" + depart.getDepartDefault());
-				System.out.println("DepartUpcode=" + depart.getDepartUpcode());
 			}
 			System.out.println("用户32位码===" + person.getUserIdcode());
 			System.out.println("用户姓名===" + person.getUserName());
 			System.out.println("用户身份证号码===" + person.getUserIdcardNum());
+			Object[] obj = person.getDeparts();
+			DepartmentInformation departInfo = (DepartmentInformation) obj[0];
+
+			System.out.println("DepartCode=" + departInfo.getDepartCode());
+			System.out.println("Default=" + departInfo.getDepartDefault());
+			System.out.println("DepartUpcode=" + departInfo.getDepartUpcode());
+
+			System.out.println("用户32位码===" + person.getUserIdcode());
+			System.out.println("用户姓名===" + person.getUserName());
+			System.out.println("用户身份证号码===" + person.getUserIdcardNum());
+			System.out.println(loginInformation.getLoginName());
+			System.out.println(loginInformation.getLoginPwd());
+			System.out.println(loginInformation.getLoginNickName());
+			System.out.println(loginInformation.getLoginType());
 			try {
 				bol = syncDataService.synchronizedPersonData(person,loginInformation,OperateID);
 			} catch (Exception e) {
@@ -163,18 +150,18 @@ public class SynchronizedDataInfoServiceImpl extends ServletEndpointSupport impl
 			}
 			bol = true;
 		}
-		
+		//批量部门信息
+		Object[] allDeparts = null;
 		//41 新增机构、 42 修改机构、 43 删除机构
 		//同步部门信息
 		if (OperateID == 41 || OperateID == 42 || OperateID == 43) {
 			DepartmentInformation department = null;
 			boolean isFlag = true;
-			Collection collection = null;
 			try {
 				//个人部门信息
 				department = binding1.findDepartByDepartCodeForDC(OperateCode);
 				//批量部门信息
-				collection = binding1.getAllDepart();
+				allDeparts = binding1.getAllDepart();
 			} catch (RemoteException e) {
 				bol = false;
 				throw new Exception ("调用部门信息远程接口异常："+e.getMessage());
@@ -186,17 +173,8 @@ public class SynchronizedDataInfoServiceImpl extends ServletEndpointSupport impl
 			System.out.println("部门编码为=====" + departcode);
 			System.out.println("部门名称=====" + departname);
 
-			Iterator it = collection.iterator();
-			while (it.hasNext()) {
-				 depart = (DepartmentInformation) it
-						.next();
-				System.out.println("DepartCode=" + depart.getDepartCode());
-				System.out.println("Default=" + depart.getDepartDefault());
-				System.out.println("DepartUpcode=" + depart.getDepartUpcode());
-			}
 			try {
 				bol = syncDataService.synchronizedDeptData(department,OperateID);
-			//	bol = syncDataService.synchronizedBatchDeptData(collection);
 			} catch (Exception e) {
 				bol = false;
 				throw new Exception ("解析部门信息报文异常："+e.getMessage());
@@ -236,11 +214,11 @@ public class SynchronizedDataInfoServiceImpl extends ServletEndpointSupport impl
 	 */
 	/*@Override
 	 */
-	public boolean synchronizedDataInfo2(int OperateID, String OperateCode,
+/*	public boolean synchronizedDataInfo2(int OperateID, String OperateCode,
 			String OperateType) throws Exception {
 		boolean bol = false;
 		PersonInformation person = new PersonInformation();
-		person.setUniqueid("test11");
+		person.setUniqueid("test110");
 		person.setUserAddress("北京1");
 		person.setUserPhone("01010001000");
 		person.setUserDuty("处长");
@@ -260,15 +238,17 @@ public class SynchronizedDataInfoServiceImpl extends ServletEndpointSupport impl
 		departs.setDepartCode("dept_2");
 		departs.setDepartUpcode("dept_0");
 		departs.setDepartName("dept_desc2");
+
 		collection.add(departs);
+		person.setDeparts(collection.toArray());
 		DepartmentInformation depart = new DepartmentInformation();
 		depart.setDepartCode("dept_1");
 		depart.setDepartUpcode("dept_0");
 		departs.setDepartName("dept_desc1");
-		collection.add(depart);
-		person.setDeparts(collection);
+//		collection.add(depart);
+//		person.setDeparts(collection);
 		LoginInformation loginInformation = new LoginInformation();
-		loginInformation.setLoginName("test");
+		loginInformation.setLoginName("test125");
 		loginInformation.setLoginNickName("张三1");
 		loginInformation.setLoginPwd("111111");
 		OperateID = 11;
@@ -281,20 +261,7 @@ public class SynchronizedDataInfoServiceImpl extends ServletEndpointSupport impl
 			throw new Exception ("解析角色信息报文异常："+e.getMessage());
 		}
 		return bol;
-	}
-
-
-/*	public static void main(String[] args) {
-		synchronizedDataInfo demoWebService = new synchronizedDataInfo();
-		try {
-			demoWebService.SynchronizedUserInfo(11, "270ac0884f4459c702139d77bec93e2a", "1");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}*/
-	
-	
 
 
 }

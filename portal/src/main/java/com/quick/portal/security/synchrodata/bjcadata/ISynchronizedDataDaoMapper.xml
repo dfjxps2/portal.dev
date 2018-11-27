@@ -5,7 +5,7 @@
 
     <!-- 同步角色信息开始 -->
     <!-- 新增  user_role_tmp-->
-	<insert id="insertTmpRoleData" parameterType="com.bjca.uums.client.bean.RoleInformation">
+	<insert id="insertTmpRoleData" parameterType="com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.RoleInformation">
 		<![CDATA[ 
 		INSERT INTO USER_ROLE_TMP (
     		  ROLE_NO,
@@ -25,7 +25,7 @@
 			]]> 
 	</insert>
 	<!--merge user_role -->
-	<update id="mergeRoleData" parameterType="com.bjca.uums.client.bean.RoleInformation">
+	<update id="mergeRoleData" parameterType="com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.RoleInformation">
 		 <![CDATA[ 
 		   INSERT INTO USER_ROLE(ROLE_NO,ROLE_CODE,ROLE_DESC,ROLE_NAME,ROLE_STATE,ROLE_TYPE,CRE_TIME,UPD_TIME ) 
 		   SELECT ROLE_NO,ROLE_CODE,ROLE_DESC,ROLE_NAME,ROLE_STATE,1,CURRENT_TIMESTAMP(),CURRENT_TIMESTAMP() FROM USER_ROLE_TMP P ON DUPLICATE KEY 
@@ -41,7 +41,7 @@
 	
 	<!-- 同步部门信息开始 -->
     <!-- 新增  user_dept-->
-	<insert id="insertDeptData" parameterType="com.bjca.uums.client.bean.DepartmentInformation">
+	<insert id="insertDeptData" parameterType="com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.DepartmentInformation">
 		 <![CDATA[INSERT INTO USER_DEPARTMENT (
     		  DEP_GLOBAL_ID,
     		  SUP_DEP_GLOBAL_ID,
@@ -67,7 +67,7 @@
 	</select>
 	
 	<!-- 修改 -->
-	<update id="updateDeptDataByDeptCode" parameterType="com.bjca.uums.client.bean.DepartmentInformation">
+	<update id="updateDeptDataByDeptCode" parameterType="com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.DepartmentInformation">
 		<![CDATA[ UPDATE USER_DEPARTMENT 
 		   SET DEP_NAME = #{departName},
 		   	   SUP_DEP_GLOBAL_ID = #{departUpcode},
@@ -122,7 +122,7 @@
 	</update>
 	
 	<!--merge user_department -->
-	<insert id="mergeDeptData" parameterType="com.bjca.uums.client.bean.DepartmentInformation">
+	<insert id="mergeDeptData" parameterType="com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.DepartmentInformation">
 		<![CDATA[ 
 		   INSERT INTO USER_DEPARTMENT
 		   (dep_global_id,sup_dep_global_id,DEP_NAME,DEP_STATE,CRE_TIME,UPD_TIME ) 
@@ -137,30 +137,7 @@
 	
 	<!-- 同步个人信息开始 -->
     <!-- 新增  sys_user-->
-	<insert id="insertPersonData" parameterType="com.bjca.uums.client.bean.PersonInformation">
-<!--		<![CDATA[
-		INSERT INTO SYS_USER (
-    		  USER_NAME,
-    		  USER_PASSWORD,
-    		  USER_REAL_NAME,
-    		  USER_STATE,
-    		  USER_ADDR,
-    		  USER_TEL,
-    		  USER_GLOBAL_ID,
-    		  CRE_TIME,
-    		  UPD_TIME
-		)VALUES(
-			 #{userDefault5},
-			 #{userDefault3},
-			 #{userDefault4},
-			 1,
-			 #{userAddress},
-			 #{userPhone},
-			 #{uniqueid},
-			 CURRENT_TIMESTAMP(),
-			 CURRENT_TIMESTAMP()
-			)
-		]]>-->
+	<insert id="insertPersonData" parameterType="com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.PersonInformation">
 		<![CDATA[
 		INSERT INTO SYS_USER (
 				USER_NAME,
@@ -168,45 +145,26 @@
 				USER_REAL_NAME,
 				USER_STATE,
 				JOB_ID,
-
-				USER_ADDR,
-				USER_TEL,
 				USER_GLOBAL_ID,
 				USER_CERT_TYPE,
-				IDCARD_NUM,
-
-				USER_NATION,
-				USER_DEGREE,
-				USER_TITLE,
-				POST_CODE,
-				USER_MOBILE,
-
+				IDCARD_NUM,			
+				USER_TEL,
 				USER_EMAIL,
-				USER_GENDER,
-				POL_STAT,
+				USER_ADDR,
 				CRE_TIME,
 				UPD_TIME
 			  )VALUES(
 			  	 #{userDefault5},
 			 	 #{userDefault3},
 			 	 #{userDefault4},
-			 	 1,
-			 	 5,
-			 	 #{userAddress},
-			 	 #{userPhone},
+			 	 #{userStat},
+			 	 #{userJob},
 			 	 #{uniqueid},
 				 #{userCertType},
-				 #{userIdcardNum},
-
-				 #{userNation},
-				 #{userDegree},
-				 #{userTitle},
-				 #{userPostcode},
+				 #{userIdcardNum},				
 				 #{userMobile},
-
 				 #{userEmail},
-				 #{userDefault1},
-				 #{userDefault2},
+				 #{userAddress},
 				 CURRENT_TIMESTAMP(),
 			 	 CURRENT_TIMESTAMP()
 			  )
@@ -219,39 +177,19 @@
 		]]> 
 	</select>
 	<!-- 修改 -->
-	<update id="updatePersonData" parameterType="com.bjca.uums.client.bean.PersonInformation">
-<!--		<![CDATA[ UPDATE SYS_USER
-		   SET USER_NAME = #{userDefault5},
-		   	   USER_PASSWORD =#{userDefault3},
-		   	   USER_REAL_NAME =#{userDefault4},
-		   	   USER_ADDR=#{userAddress},
-		   	   USER_TEL =#{userPhone},
-		   	   USER_STATE = 1,
-		   	   CRE_TIME = CURRENT_TIMESTAMP(),
-    		   UPD_TIME = CURRENT_TIMESTAMP()
-		 WHERE USER_GLOBAL_ID = #{uniqueid}
-		 ]]> -->
-
+	<update id="updatePersonData" parameterType="com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.PersonInformation">
 		<![CDATA[
 		  UPDATE  SYS_USER
 	      SET
 				USER_NAME = #{userDefault5},
 				USER_PASSWORD = #{userDefault3},
-				USER_REAL_NAME =  #{userDefault4},
-				USER_STATE = 1,
-				USER_DUTY = #{userDuty},
-				USER_ADDR = #{userAddress},
-				USER_TEL  = #{userPhone},
-				USER_CERT_TYPE =  #{userCertType},
+				USER_REAL_NAME = #{userDefault4},
+				USER_STATE = #{userStat},
+				USER_CERT_TYPE = #{userCertType},
 				IDCARD_NUM = #{userIdcardNum},
-				USER_NATION = #{userNation},
-				USER_DEGREE = #{userDegree},
-				USER_TITLE = #{userTitle},
-				POST_CODE  = #{userPostcode},
-				USER_MOBILE = #{userMobile},
-				USER_EMAIL =  #{userEmail},
-				USER_GENDER = #{userDefault1},
-				POL_STAT = #{userDefault2},
+				USER_TEL = #{userMobile},
+				USER_EMAIL = #{userEmail},
+				USER_ADDR = #{userAddress},
 				UPD_TIME = CURRENT_TIMESTAMP()
 		   WHERE USER_GLOBAL_ID = #{uniqueid}
 		   ]]>
@@ -266,7 +204,7 @@
 
 	
 	<!--merge user_department -->
-	<update id="mergePersonData" parameterType="com.bjca.uums.client.bean.PersonInformation">
+	<update id="mergePersonData" parameterType="com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.PersonInformation">
 		<![CDATA[ 
 		   INSERT INTO SYS_USER
 		   (USER_ID,USER_NAME,USER_PASSWORD,USER_REAL_NAME,USER_ADDR,USER_TEL,USER_GLOBAL_ID,USER_TYPE,USER_STATE,CRE_TIME,UPD_TIME ) 
@@ -316,7 +254,7 @@
 	</select>
 	
 	<!--merge user_department -->
-	<update id="mergePersonDeptRelaData" parameterType="com.bjca.uums.client.bean.PersonInformation">
+	<update id="mergePersonDeptRelaData" parameterType="com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.PersonInformation">
 		<![CDATA[ 
 		   INSERT INTO USER_DEP_RELA(RELA_ID,USER_ID,DEP_ID) 
 		   SELECT RELA_ID,USER_ID,DEP_ID 
@@ -411,9 +349,9 @@
 
 
 	<!-- 通过部门编号查询数据是否重复 userDuty:描述-->
-	<select id="isExistPersonJobDataInfoByUserID" parameterType="String" resultType="int">
+	<select id="isExistPersonJobDataInfoByUserID" parameterType="Integer" resultType="int">
 		<![CDATA[
- 		SELECT COUNT(*) FROM USER_JOB WHERE JOB_NAME =#{userDuty}
+ 		SELECT COUNT(*) FROM USER_JOB WHERE JOB_ID =#{userDuty}
 		]]>
 	</select>
 
@@ -466,6 +404,28 @@
 		FROM (
 		    SELECT USER_ID FROM SYS_USER WHERE USER_GLOBAL_ID=#{userGlobalID}
 		) A
+    ]]>
+	</insert>
+
+
+
+	<select id="isExistRolePrivilegeDataInfo" parameterType="Integer" resultType="int">
+		<![CDATA[
+ 		SELECT COUNT(*) FROM ROLE_PRIVILEGE WHERE ROLE_ID =#{globalID}
+
+		]]>
+	</select>
+
+
+	<insert id="insertRolePrivilegeDataInfo" parameterType="map">
+		<![CDATA[INSERT INTO ROLE_PRIVILEGE (
+    		  SYS_PRIV_ID,
+    		  ROLE_ID
+		)
+		VALUES(
+			 #{defaultSysID},
+			 #{defaultRoleID}
+			)
     ]]>
 	</insert>
 

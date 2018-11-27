@@ -12,7 +12,7 @@ import org.apache.axis.client.Service;
 import org.apache.axis.description.OperationDesc;
 import org.apache.axis.description.ParameterDesc;
 import org.apache.axis.encoding.XMLType;
-import org.apache.axis2.rpc.client.RPCServiceClient;
+//import org.apache.axis2.rpc.client.RPCServiceClient;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -43,7 +43,7 @@ public class WebServiceUtils {
     public static final String WEBSERVICES_PROPERTIES_FILENAME = "config/webServices";
      
     /** Axis2 RPCServiceClient */
-    private static RPCServiceClient serviceClient;
+//    private static RPCServiceClient serviceClient;
      
      
     /**
@@ -235,9 +235,9 @@ public class WebServiceUtils {
     /**
      * 通过Xfire动态调用WebService并取得结果.
      * 
-     * @param webServiceAddr Web Service的URL地址（需要加?wsdl）
-     * @param webServiceMethod WebService所操作的方法名称
-     * @param inputValues 对所操作方法所需要输入的参数值，如果些操作方法无参则 使用 new Object[] {}，不允许输入 null
+     * @param   Service的URL地址（需要加?wsdl）
+     * @param
+     * @param  ，如果些操作方法无参则 使用 new Object[] {}，不允许输入 null
      * @return 成功返回<code>Object[]</code>, 失败或异常返回null.
      */
   /*  public static Object[] getObjectByXfireClient(String webServiceAddr, String webServiceMethod, Object[] inputValues) {
