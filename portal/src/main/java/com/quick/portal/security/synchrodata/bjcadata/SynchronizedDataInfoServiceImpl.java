@@ -1,5 +1,6 @@
 package com.quick.portal.security.synchrodata.bjcadata;
 
+import com.quick.portal.security.authority.metric.PropertiesUtil;
 import com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.DepartmentInformation;
 import com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.LoginInformation;
 import com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.PersonInformation;
@@ -11,9 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.xml.rpc.ServiceException;
 import java.net.MalformedURLException;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Collection;
-
 
 
 /*
@@ -64,9 +62,12 @@ public class SynchronizedDataInfoServiceImpl extends ServletEndpointSupport impl
 		com.quick.portal.security.synchrodata.bjcadata.uumsinterface.services.Department.DepartmentSoapBindingStub binding1 = null;
 		java.net.URL endpoint_User = null;
 		java.net.URL endpoint_Department = null;
+
+		String userWsdl = PropertiesUtil.getPropery("ca.user.wsdl");
+		String deptWsdl = PropertiesUtil.getPropery("ca.dept.wsdl");
 		try {
-			endpoint_User = new java.net.URL(SynchronizedDataConstants.USER_WSDL);
-			endpoint_Department = new java.net.URL(SynchronizedDataConstants.DEPARTMENT_WSDL);
+			endpoint_User = new java.net.URL(userWsdl);
+			endpoint_Department = new java.net.URL(deptWsdl);
 		} catch (MalformedURLException e1) {
 			// TODO Auto-generated catch block
 			throw new Exception ("访问公服WSDL异常："+e1.getMessage());

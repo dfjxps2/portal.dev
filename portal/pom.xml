@@ -44,6 +44,12 @@
         <cas.server.ip>${env.CAS_SERVER_IP}</cas.server.ip>
         <portal.db.password>${env.PORTAL_DB_PASSWORD}</portal.db.password>
         -->
+        <portal.server.ip>127.0.0.1</portal.server.ip>
+        <index.service.ip>10.1.3.193</index.service.ip>
+        <solr.service.ip>10.1.3.193</solr.service.ip>
+        <portal.file.dir>/home/portal/files</portal.file.dir>
+        <cas.server.ip>127.0.0.1</cas.server.ip>
+        <portal.db.password>mysql</portal.db.password>
     </properties>
 
     <dependencies>
@@ -270,18 +276,17 @@
             <artifactId>mail</artifactId>
             <version>1.4.7</version>
         </dependency>
-
-
-       <dependency>
-            <groupId>axis</groupId>
-            <artifactId>axis-jaxrpc</artifactId>
-            <version>1.4</version>
-        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-remoting</artifactId>
             <version>2.0.8</version>
         </dependency>
+       <dependency>
+            <groupId>axis</groupId>
+            <artifactId>axis-jaxrpc</artifactId>
+            <version>1.4</version>
+        </dependency>
+
 
     <dependency>
             <groupId>org.apache.axis2</groupId>
@@ -455,6 +460,7 @@
                 <portal.file.dir>/home/portal/files</portal.file.dir>
                 <portal.log.dir>/home/portal/logs</portal.log.dir>
                 <cas.server.ip>10.1.3.193</cas.server.ip>
+                <ca.server.ip>192.168.161.192</ca.server.ip>
                 <portal.db.password>root</portal.db.password>
             </properties>
         </profile>
@@ -472,6 +478,7 @@
                 <portal.file.dir>/home/portal/files</portal.file.dir>
                 <portal.log.dir>/home/portal/logs</portal.log.dir>
                 <cas.server.ip>10.1.3.62</cas.server.ip>
+                <ca.server.ip>172.26.64.109</ca.server.ip>
                 <portal.db.password>123456</portal.db.password>
             </properties>
         </profile>
@@ -489,6 +496,7 @@
                 <portal.file.dir>/home/portal/files</portal.file.dir>
                 <portal.log.dir>/home/portal/logs</portal.log.dir>
                 <cas.server.ip>10.1.3.195</cas.server.ip>
+                <ca.server.ip>172.26.64.109</ca.server.ip>
                 <portal.db.password>root</portal.db.password>
             </properties>
         </profile>
@@ -506,6 +514,7 @@
                 <portal.file.dir>/home/portal/files</portal.file.dir>
                 <portal.log.dir>/home/portal/logs</portal.log.dir>
                 <cas.server.ip>10.10.10.42</cas.server.ip>
+                <ca.server.ip>172.26.64.109</ca.server.ip>
                 <portal.db.password>123456</portal.db.password>
             </properties>
         </profile>
@@ -523,6 +532,7 @@
                 <portal.file.dir>/home/portal/files</portal.file.dir>
                 <portal.log.dir>/home/portal/logs</portal.log.dir>
                 <cas.server.ip>10.10.10.42</cas.server.ip>
+                <ca.server.ip>172.26.64.109</ca.server.ip>
                 <portal.db.password>123456</portal.db.password>
             </properties>
         </profile>

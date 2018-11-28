@@ -20,7 +20,7 @@ import javax.xml.namespace.QName;
  //调用WebService 适用于车源，货源的删除
 public class WebClient {
 	 
- 	private final static String SOAP_WSDL_ADDRESS = "http://10.10.10.42:18001/portal/intlDataSynchronizedService?wsdl";
+ 	private final static String SOAP_WSDL_ADDRESS = "/portal/intlDataSynchronizedService?wsdl";
 
 	private final static String SOAP_TARGET_NAMESPACE = "http://internal.synchrodata.security.portal.quick.com/";
 	
@@ -30,7 +30,7 @@ public class WebClient {
 	
 	private final static String GET_ALLUSER_WSDL_OPERATION_NAME = "getAllUserData";
  
- private static EndpointReference targetAirline = new EndpointReference(
+ 	private static EndpointReference targetAirline = new EndpointReference(
 		 SOAP_WSDL_ADDRESS);         //这里是要调用的targetUrl
  
  

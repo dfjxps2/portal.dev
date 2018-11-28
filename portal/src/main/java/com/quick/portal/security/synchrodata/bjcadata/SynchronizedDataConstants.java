@@ -37,12 +37,5 @@ public class SynchronizedDataConstants {
 	 //默认用户启用状态
 	 public static final int DEFAULT_USER_ENABLE_STAT = 1;
 
-//	private final java.lang.String USER_WSDL = "http://172.26.64.109:7001/uumsinterface/services/User?wsdl"; //测试地址
-	public static final java.lang.String USER_WSDL = "http://192.168.161.192:7001/uumsinterface/services/User?wsdl";
-
-//	private final java.lang.String DEPARTMENT_WSDL = "http://172.26.64.109:7001/uumsinterface/services/Department?wsdl";//测试地址
-
-
-	public static final java.lang.String DEPARTMENT_WSDL = "http://192.168.161.192:7001/uumsinterface/services/Department?wsdl";
 
 }
