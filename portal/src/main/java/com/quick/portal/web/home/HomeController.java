@@ -56,9 +56,6 @@ public class HomeController extends SysWebController {
     @Resource(name = "homeService")
     private IHomeService homeService;
 
-    @Resource(name = "menuPrivilegeService")
-    private ISysPrivilegeService menuPrivilegeService;
-
     @Resource(name = "infoMngService")
     private IInfoMngService infoMngService;
 

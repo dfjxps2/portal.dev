@@ -1,14 +1,15 @@
 package com.quick.portal.web.login;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.quick.core.base.exception.ExceptionEnumServiceImpl;
+import com.quick.core.util.common.CommonUtils;
+import com.quick.core.util.common.QCommon;
+import com.quick.core.util.common.QCookie;
+import com.quick.portal.security.authority.metric.PropertiesUtil;
+import com.quick.portal.sysUser.ISysUserService;
 import com.quick.portal.sysUser.SysUserDO;
+import com.quick.portal.userAccessLog.IUserAccessLogService;
+import com.quick.portal.userAccessLog.UserAccessLogConstants;
+import com.quick.portal.userAccessLog.UserAccessLogServiceUtils;
 import org.pac4j.core.profile.CommonProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,15 +18,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.quick.core.base.AppResource;
-import com.quick.core.base.exception.ExceptionEnumServiceImpl;
-import com.quick.core.util.common.QCommon;
-import com.quick.core.util.common.QCookie;
-import com.quick.portal.security.authority.metric.PropertiesUtil;
-import com.quick.portal.sysUser.ISysUserService;
-import com.quick.portal.userAccessLog.IUserAccessLogService;
-import com.quick.portal.userAccessLog.UserAccessLogConstants;
-import com.quick.portal.userRoleRela.IUserRoleRelaService;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 身份验证
@@ -68,6 +66,12 @@ public class WebLoginController {
             loginer.setRequestSerial(1);
             loginer.saveSession(request, response);
             userAccessLogService.saveLog(request, UserAccessLogConstants.SYS_LOG_TYPE_ID, UserAccessLogConstants.LOGIN_USER_OP_TYPE, 1, loginer.getUser_real_name() + "登录成功", loginer.getUser_id().toString(), loginer.getUser_name());
+            /**
+             *  在系统中记录门户系统用户登录的情况包括如下字段：
+             *  （1）用户名称；（2）用户IP；（3）服务名称；（4）开始处理时间；（5）处理结果；（6）请求服务的URL。这些字段有（4）开始处理时间；（5）处理结果；（6）请求服务的URL不支持
+             */
+
+            loggerInfoLoginSystemLogInfo(request,loginer);
             //平台用户:1:app;2:sys;公服用户:1:app
             String flag = WebLoginUitls.getUserHomePage(loginer);
             if (WebLoginConstants.SYS_MENU_FLAG.equals(flag)) {
@@ -142,5 +146,22 @@ public class WebLoginController {
         return null;
     }
 
+
+    /**
+     *  在系统中记录门户系统用户登录的情况包括如下字段：
+     *  （1）用户名称；（2）用户IP；（3）服务名称；（4）开始处理时间；（5）处理结果；
+     *  （6）请求服务的URL。这些字段有（4）开始处理时间；（5）处理结果；（6）请求服务的URL不支持
+     */
+    public void loggerInfoLoginSystemLogInfo(HttpServletRequest request,WebLoginUser loginer){
+        String ip = CommonUtils.getIpAddrAdvanced(request);
+        String userName = loginer.getUser_name();
+        String requestResult = "系统操作员:"+userName+"登录统一门户服务日志";
+        String operateType = "统一门户->登录日志";
+        String operatedUser = "系统操作员编号:"+loginer.getUser_id()+"系统操作员名称:"+loginer.getUser_name();
+        String operLog = "用户登录统一门户服务日志->登录日志";
+        String serviceName = "服务名称:登录日志;服务方法名:";
+        UserAccessLogServiceUtils.loggerLogInfo(logger,
+                userName,operatedUser,operateType,requestResult,operLog,serviceName,ip);
+    }
 
 }

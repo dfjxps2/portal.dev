@@ -12,13 +12,9 @@
 
     <!-- 配置日志信息 -->
     <context-param>
-        <param-name>log4jConfigLocation</param-name>
+        <param-name>log4jConfiguration</param-name>
         <param-value>classpath:/log4j/log4j2.xml</param-value>
     </context-param>
-
-    <listener>
-        <listener-class>com.seaboxdata.portal.Log4j2ConfigListener</listener-class>
-    </listener>
 
     <!-- 配置Web应用启动时候加载Spring容器 -->
     <listener>
@@ -29,6 +25,10 @@
     <error-page>
         <error-code>404</error-code>
         <location>/WEB-INF/error.html</location>
+    </error-page>
+    <error-page>
+        <error-code>401</error-code>
+        <location>/ErrorHandler</location>
     </error-page>
     <error-page>
         <exception-type>java.lang.Exception</exception-type>
@@ -85,6 +85,15 @@
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>ErrorHandler</servlet-name>
+        <servlet-class>com.seaboxdata.portal.ErrorHandler</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ErrorHandler</servlet-name>
+        <url-pattern>/ErrorHandler</url-pattern>
+    </servlet-mapping>
 
     <!--字符编码-->
     <filter>

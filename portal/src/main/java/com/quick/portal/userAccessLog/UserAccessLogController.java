@@ -3,41 +3,35 @@
  * <h3>描述 : user_access_log请求类</h3>
  * <h3>日期 : 2018-04-13</h3>
  * <h3>版权 : Copyright (C) 北京东方金信科技有限公司</h3>
- * 
+ *
  * <p>
  * @author 你自己的姓名 mazong@seaboxdata.com
  * @version <b>v1.0.0</b>
- *          
+ *
  * <b>修改历史:</b>
  * -------------------------------------------
  * 修改人 修改日期 修改描述
  * -------------------------------------------
- *          
- *          
+ *
+ *
  * </p>
  */
 package com.quick.portal.userAccessLog;
 
 import com.quick.core.base.ISysBaseService;
 import com.quick.core.base.SysBaseController;
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.quick.core.base.model.JsonDataGrid;
 import com.quick.core.base.model.PageBounds;
 import com.quick.core.util.common.QRequest;
 import org.apache.commons.collections.map.HashedMap;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.IOException;
+import javax.annotation.Resource;
 import java.text.MessageFormat;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,10 +43,11 @@ import java.util.Map;
 @Scope("prototype")
 @RequestMapping(value = "/userAccessLog")
 public class UserAccessLogController extends SysBaseController<UserAccessLogDO> {
-    
+
+
     @Resource(name = "userAccessLogService")
     private IUserAccessLogService userAccessLogService;
-    
+
     @Override
     public ISysBaseService getBaseService(){
         return userAccessLogService;
@@ -94,12 +89,12 @@ public class UserAccessLogController extends SysBaseController<UserAccessLogDO> 
     @RequestMapping(value = "/logTableUser")
     @ResponseBody
     public List<Map<String, Object>> logTableUser( ) {
-         Map<String, Object> queryMap = getQueryMap(request);
+        Map<String, Object> queryMap = getQueryMap(request);
         // 日期格式
         String dateTimeFormat = QRequest.getString(request, "dateTimeFormat",
                 "yyyy-MM-dd ");
-       // response.setContentType(QRequest.getResponseType("json")); // 输出JS文件
-       // int count = getBaseService().count( queryMap );
+        // response.setContentType(QRequest.getResponseType("json")); // 输出JS文件
+        // int count = getBaseService().count( queryMap );
         //时间范围内登录最多用户前10
         List<Map<String, Object>> topUser= userAccessLogService.selectTopUser(queryMap);
         //时间范围访问最多标签数前10
@@ -117,7 +112,7 @@ public class UserAccessLogController extends SysBaseController<UserAccessLogDO> 
         // response.setContentType(QRequest.getResponseType("json")); // 输出JS文件
         int count = getBaseService().count( queryMap );
         //时间范围内登录最多用户前10
-       // List<Map<String, Object>> topUser= userAccessLogService.selectTopUser(queryMap);
+        // List<Map<String, Object>> topUser= userAccessLogService.selectTopUser(queryMap);
         //时间范围访问最多标签数前10
         List<Map<String, Object>> topTag=userAccessLogService.selectTopTag(queryMap);
         return topTag;
@@ -133,7 +128,7 @@ public class UserAccessLogController extends SysBaseController<UserAccessLogDO> 
     public Object getData(String json) {
         String str = "[]";
         if (json == null)
-        json = "data";
+            json = "data";
         int pageSize = QRequest.getInteger(request, "pageSize", 99999); // 获取datagrid传来的行数
         // //每页显示条数
         int pageNo = QRequest.getInteger(request, "page", 1); // 获取datagrid传来的页码
@@ -211,4 +206,5 @@ public class UserAccessLogController extends SysBaseController<UserAccessLogDO> 
         }
         return null;
     }
+
 }

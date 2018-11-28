@@ -201,7 +201,7 @@
             function () {
                 $.ajax({
                     type: "post",
-                    url: quick.serverUrl + '/delete?user_id=' + node,
+                    url: quick.serverUrl + '/deleteUser?user_id=' + node,
                     dataType: "json",
                     success: function (data) {
                         if (data.code === 1) {
