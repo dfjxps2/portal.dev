@@ -20,13 +20,18 @@
 	<div id="wrapper">
 		<div class="row border-bottom nav-top">
 			<div style="z-index: 2034; left: 0px;" class="nav-close">
-				<p style="color:#fff;font-family:'Microsoft YaHei';font-size:20px;padding-left:32px;line-height: 100%;">统一管理平台</p>
+				<p style="color:#fff;font-family:'Microsoft YaHei';font-size:16px;line-height: 100%;">
+					<a href="#"><img align ="left" style="margin-left: 20px;margin-right: 14px;height:26px;width:26px;"
+									 src="${G.host}/res/script/home/images/log.png" title="统一管理平台">
+					</a>
+					统一管理平台
+				</p>
 				<!-- <a class="navbar-minimalize minimalize-styl-2  btn-primary"
                        href="#"><img  src="${G.host}/res/script/home/images/hanbao.png"> </a> -->
 			</div>
 
 			<nav class="navbar navbar-static-top" roleDO="navigation"
-				 style="margin-bottom: 0; background-color: #2b5ca9;height: 60px;">
+				 style="margin-bottom: 0; background-color: #2b5ca9;height: 60px;background-image:url(res/script/home/images/bg.png);width:16000px;">
 				<div class="navbar-header"></div>
 				<ul class="nav navbar-top-links navbar-right"
 					style="background-color: #2b5ca9">
@@ -44,11 +49,12 @@
 							class="fa fa-user"></i><strong class="font-bold">${L.user_real_name}</strong></a>
 
 					</li>
-					<li class="hidden-xs" style="margin-right:36px;"><a href="javascript:void(0);"
+					<li class="hidden-xs" style="margin-right:66px;"><a href="javascript:void(0);"
 											 style="background-color: #2b5ca9"
 											 onclick="javascript:logout();return false;"
 											 class="roll-nav roll-right J_tabExit"><i
-							class="fa fa fa-sign-out"></i>&nbsp;</a></li>
+							class="fa fa fa-sign-out"></i>退出</a>
+					</li>
 
 
 				</ul>
@@ -61,7 +67,7 @@
 					src="${G.host}/res/script/home/images/logo4.png" title="系统首页"></a>
 			</div> -->
 			<div class="sidebar-collapse"
-				style="position: relative; width: auto; height: 100%; margin-top: 11px;font-size:14px;">
+				style="position: relative; width: auto; height: 100%; margin-top: 1px;font-size:14px;">
 				<ul class="nav" id="side-menu">
 					<li class="nav-header" id="mynode"></li>
 				</ul>
@@ -101,9 +107,9 @@
 					width="100%" height="100%" src="${G.host}/goIframe" frameborder="0"
 					data-id="i2" seamless></iframe>
 			</div>
-			<div class="footer" style="height:30px;line-height: 30px;">
-				<div
-					style="text-align: center; font-size: 14px; color: #333333; font-family: Microsoft YaHei;"> 北京泰豪智能工程有限公司</div>
+			<div class="footer" style="height:1px;line-height: 1px;">
+				<!--<div
+					style="text-align: center; font-size: 14px; color: #333333; font-family: Microsoft YaHei;"> 北京泰豪智能工程有限公司</div>-->
 			</div>
 		</div>
 		<!--右侧部分结束-->
@@ -144,15 +150,15 @@
 				if (dt[i].depth == 1) {
 					arr.push(' <li>');
 					if (dt[i].children == null || dt[i].children.length == 0) {
-						arr.push('	<a class="J_menuItem" tabindex='+dt[i].menuId+' href="'+dt[i].menuUrl+'" ><i class="'+dt[i].menuIconUrl+'" style="color:#ffffff"></i> <span class="nav-label" style="font-size:16px;color:#ffffff;">',
+						arr.push('	<a class="J_menuItem" tabindex='+dt[i].menuId+' href="'+dt[i].menuUrl+'" ><i class="'+dt[i].menuIconUrl+'" style="color:#ffffff"></i> <span class="nav-label" style="font-size:14px;height:38px;color:#ffffff;">',
 									dt[i].menuCnName, '</span>',
 									'</a> </li>');
 					}else{
-						arr.push('	<a href="#"><i class="'+dt[i].menuIconUrl+'" style="color:#ffffff"></i> <span class="nav-label" style="font-size:16px;color:#ffffff;" >',
+						arr.push('	<a href="#"><i class="'+dt[i].menuIconUrl+'" style="color:#ffffff"></i> <span class="nav-label" style="font-size:14px;height:38px;color:#ffffff;" >',
 							dt[i].menuCnName, '</span>',
 							' <span class="fa arrow" style="color:#ffffff"></span></a>');
 						
-						arr.push('<ul class="nav nav-second-level" style="font-size:14px;color:#ffffff;">');
+						arr.push('<ul class="nav nav-second-level" style="font-size:12px;color:#ffffff;">');
 						drawLi(arr, dt[i].children);
 						arr.push('</ul></li>');
 					}
@@ -161,12 +167,12 @@
 				} else if (dt[i].depth > 1 && dt[i].children.length > 0) {
 					arr.push(' <li><a href="#"> ', dt[i].menuCnName,
 							'<span class="fa arrow"></span></a>',
-							'	<ul class="nav nav-third-level" style="font-size:14px;color:#ffffff">');
+							'	<ul class="nav nav-third-level" style="font-size:12px;color:#ffffff">');
 					drawLi(arr, dt[i].children);
 					arr.push('	</ul>', '</li>');
 
 				} else if (dt[i].depth > 1 && dt[i].children.length == 0) {
-					arr.push('<li><a class="J_menuItem" tabindex='+dt[i].menuId+' href="'+dt[i].menuUrl+'">',
+					arr.push('<li><a class="J_menuItem" tabindex='+dt[i].menuId+' href="'+dt[i].menuUrl+'" style="font-size:12px;color:#ffffff">',
 									dt[i].menuCnName, '</a></li>');
 
 				}
