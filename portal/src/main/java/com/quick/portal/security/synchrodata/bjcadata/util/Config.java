@@ -11,7 +11,7 @@ public class Config {
         String configValue = null;
         if(configValue == null)
             try {
-                ResourceBundle resBundle = ResourceBundle.getBundle("com.bjca.util.Config");
+                ResourceBundle resBundle = ResourceBundle.getBundle("com.quick.portal.security.synchrodata.bjcadata.util.Config");
                 configValue = resBundle.getString(keyName);
                 if(configValue != null) {
                     configValue = new String(configValue.getBytes("ISO-8859-1"),

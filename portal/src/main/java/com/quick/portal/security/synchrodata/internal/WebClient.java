@@ -18,7 +18,7 @@ import org.dom4j.Element;
 import javax.xml.namespace.QName;
  
  //调用WebService 适用于车源，货源的删除
-public class WebTest{
+public class WebClient {
 	 
  	private final static String SOAP_WSDL_ADDRESS = "http://10.10.10.42:18001/portal/intlDataSynchronizedService?wsdl";
 
@@ -116,7 +116,7 @@ public class WebTest{
  
  @SuppressWarnings("static-access")
  public static void main(String[] args) throws Exception {
-  WebTest web=new WebTest();
+  WebClient web=new WebClient();
   web.getResultByDom("arg0","admin", WSDL_OPERATION_NAME); //传入参数名，参数值，方法名
   
  }
