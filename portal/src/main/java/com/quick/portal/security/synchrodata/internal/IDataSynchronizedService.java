@@ -2,15 +2,7 @@ package com.quick.portal.security.synchrodata.internal;
 
 
 public interface IDataSynchronizedService {
-/*	//同步单个用户数据
-	public String getUsersDataByUserID(String userName);
-	//同步批量用户数据
-	public String getAllUserData();
-		
-	//同步菜单权限数据
-	public String getFunPrivilegeByUserID(String userID);*/
-	
-	
+
 	/*
 	 * 通过应用名称、用户帐号获取单个用户数据接口，返回报文数据
 	 */
@@ -21,6 +13,19 @@ public interface IDataSynchronizedService {
 	 */
 	public String getUserBatchDataByAppName(String appName,
 			String startdt, String enddt);
+
+
+
+	/*
+	 * 通过用户帐号获取机构数据接口，返回报文数据
+	 */
+	public String  getOrgDataByUserID(String userID);
+
+	/*
+	 * 批量获取机构数据接口，返回报文数据
+	 */
+	public String getOrgBatchData();
+
 
 		
    

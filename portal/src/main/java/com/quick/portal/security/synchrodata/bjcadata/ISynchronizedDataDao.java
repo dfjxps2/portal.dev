@@ -57,12 +57,7 @@ public interface ISynchronizedDataDao<DepartmentInformation> extends ISysBaseDao
 	//修改部门上级编号
 	public void updateSuperDepId(Map<String,Object> paramMap);
 	
-	 /*
-     * 部门数据同步结果
-     */
-	
-	
-    //用户数据同步开始
+
 	//删除用户表数据
 	public int removePersonDataByID(String uid);
 	//通过用户编号查询数据是否重复
@@ -73,10 +68,7 @@ public interface ISynchronizedDataDao<DepartmentInformation> extends ISysBaseDao
 	public int insertPersonData(PersonInformation person);
 	//MERGE用户表数据
 	public void mergePersonData();
-	//用户数据同步结果
 
-	
-	
 	//删除用户与部门关系临时表数据
 	public void removeTmpPersonDeptRelaData();
 	//新增用户与部门关系临时表数据
@@ -99,18 +91,7 @@ public interface ISynchronizedDataDao<DepartmentInformation> extends ISysBaseDao
 	 */
 	public List<Map<String, Object>> searchDeptByGlobalID(String deptGlobalID);
 	
-/*	
-	 * 下发单个用户数据
-	 
-	public List<Map<String, Object>> getUsersDataByUserID(String userID);
-	
-	
-	 * 下发批量用户数据
-	 
-	public List<Map<String, Object>> getAllUsersData();
-	//下发CAS用户到集成系统,下发菜单权限数据
-	public List<Map<String, Object>> getFunPrivilegeByUserID(String userID);
-	*/
+
 	/*
 	 * 通过应用编号获取该应用系统下所有的用户应用权限数据接口，返回报文数据
 	 */
@@ -169,4 +150,16 @@ public interface ISynchronizedDataDao<DepartmentInformation> extends ISysBaseDao
 
 
 	public void insertRolePrivilegeDataInfo(Map<String, Object> paramMap);
+
+
+
+	/*
+	 * 通过用户帐号获取机构数据接口，返回报文数据
+	 */
+	 public List<Map<String, Object>>  getOrgDataByUserID(String userID);
+
+	/*
+	 * 批量获取机构数据接口，返回报文数据
+	 */
+	public List<Map<String, Object>> getOrgBatchData();
 }

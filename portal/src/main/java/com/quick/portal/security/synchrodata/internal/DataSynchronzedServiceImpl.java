@@ -22,75 +22,7 @@ public class DataSynchronzedServiceImpl implements IDataSynchronizedService {
 	@Autowired
 	private ISynchronizedDataDao userDataSyncDao;
 
-	
 
-	/*
-	 * 同步单个用户数据
-	 
-	public String getUsersDataByUserID(String userID){
-		String xml = null;
-		List<Map<String, Object>> retList = userDataSyncDao.getUsersDataByUserID(userID);
-		if(retList.isEmpty() || retList.size()==0){
-			xml = Dom4jUtil.creatErrXmlFile(SynchronizedDataConstants.FAIL_STATUS,SynchronizedDataConstants.DATA_ISNULL_FAIL_MSG);
-		}else{
-			try {
-				xml = Dom4jUtil.writeFormatXML(retList);
-			} catch (IOException e) {
-				xml = Dom4jUtil.creatErrXmlFile(SynchronizedDataConstants.FAIL_STATUS,e.getLocalizedMessage());
-				// TODO Auto-generated catch block
-			} catch (DocumentException e) {
-				// TODO Auto-generated catch block
-				xml = Dom4jUtil.creatErrXmlFile(SynchronizedDataConstants.FAIL_STATUS,e.getLocalizedMessage());
-			}
-		}
-		return xml;
-		
-	}
-	
-	
-	 * 同步批量用户数据
-	 
-	public String getAllUserData(){
-		String xml = null;
-		List dataMap = userDataSyncDao.getAllUsersData();
-		if(dataMap.isEmpty() || dataMap.size()==0){
-			xml = Dom4jUtil.creatErrXmlFile(SynchronizedDataConstants.SUCCESS_STATUS,SynchronizedDataConstants.DATA_ISNULL_FAIL_MSG);
-		}else{
-			try {
-				xml = Dom4jUtil.writeFormatXML(dataMap);
-			} catch (IOException e) {
-				xml = Dom4jUtil.creatErrXmlFile(SynchronizedDataConstants.FAIL_STATUS,e.getLocalizedMessage());
-			} catch (DocumentException e) {
-				xml = Dom4jUtil.creatErrXmlFile(SynchronizedDataConstants.FAIL_STATUS,e.getLocalizedMessage());
-			}
-		}
-		return xml;
-	}
-	*/
-	
-	 /*  同步菜单权限数据
-	 * (non-Javadoc)
-	 * @see com.quick.portal.security.synchrodata.internal.IDataSynchronizedService#getMenuPrivilegeByUserID(java.lang.String)
-	 /
-	public String getFunPrivilegeByUserID(String userID) {
-		String xml = null;
-		List<Map<String, Object>> retList = userDataSyncDao.getFunPrivilegeByUserID(userID);
-		if(retList.isEmpty() || retList.size()==0){
-			xml = Dom4jUtil.creatErrXmlFile(SynchronizedDataConstants.FAIL_STATUS,SynchronizedDataConstants.DATA_ISNULL_FAIL_MSG);
-		}else{
-			try {
-				xml = Dom4jUtil.writeFormatXML(retList);
-			} catch (IOException e) {
-				xml = Dom4jUtil.creatErrXmlFile(SynchronizedDataConstants.FAIL_STATUS,e.getLocalizedMessage());
-				// TODO Auto-generated catch block
-			} catch (DocumentException e) {
-				// TODO Auto-generated catch block
-				xml = Dom4jUtil.creatErrXmlFile(SynchronizedDataConstants.FAIL_STATUS,e.getLocalizedMessage());
-			}
-		}
-		return xml;
-	}
-	
 	/*
 	 * 通过应用名称、用户帐号获取单个用户数据接口，返回报文数据。
 	 */
@@ -115,6 +47,26 @@ public class DataSynchronzedServiceImpl implements IDataSynchronizedService {
 		paramMap.put("startdt", startdt);
 		paramMap.put("enddt", enddt);
 		List<Map<String, Object>> retList = userDataSyncDao.getUserBatchDataByAppName(paramMap);
+		String xml = getXmlInstall(retList) ;
+		return xml;
+	}
+
+	/*
+	 * 通过用户帐号获取机构数据接口，返回报文数据
+	 */
+	@Override
+	public String getOrgDataByUserID(String userID) {
+		List<Map<String, Object>> retList = userDataSyncDao.getOrgDataByUserID(userID);
+		String xml = getXmlInstall(retList) ;
+		return xml;
+	}
+
+	/*
+	 * 批量获取机构数据接口，返回报文数据
+	 */
+	@Override
+	public String getOrgBatchData() {
+		List<Map<String, Object>> retList = userDataSyncDao.getOrgBatchData();
 		String xml = getXmlInstall(retList) ;
 		return xml;
 	}

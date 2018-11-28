@@ -218,11 +218,7 @@
 		
 	</update>
 	
-	
-	<!-- 同步个人用户信息结束 -->
-    
-    
-    
+
     
     <!-- 同步用户与部门关系信息开始 -->
     <!-- 新增  user_dept_tmp-->
@@ -267,47 +263,13 @@
 	<delete id="removeTmpPersonDeptRelaData" parameterType="String">
 		<![CDATA[ DELETE FROM USER_DEP_RELA_TMP ]]> 
 	</delete>
-	
-	<!-- 同步用户与部门关系信息结束 -->
-    
-    
-    
-    
-    
-    
-    
-	<!-- 下发CAS用户到集成系统,下发菜单权限数据
-	<select id="getFunPrivilegeByUserID" parameterType="String" resultType="map">
-		<![CDATA[ 
-				SELECT S.USER_REAL_NAME,S.USER_NAME,U.MENU_CN_NAME AS FUN_CN_NAME,IFNULL(U.MENU_NAME,'') AS FUN_NAME,U.APP_ID
-				FROM USER_ROLE R
-				INNER JOIN USER_ROLE_RELA A 
-				ON R.ROLE_ID= A.ROLE_ID
-				INNER JOIN  SYS_USER S
-				ON S.USER_ID = A.USER_ID
-				AND S.USER_STATE=1
-				INNER JOIN MENU_PRIVILEGE E
-				ON R.ROLE_ID =E.ROLE_ID
-				INNER JOIN SYS_MENU U
-				ON E.MENU_ID =U.MENU_ID
-				AND U.APP_ID IS NOT NULL
-				AND U.MENU_STATE=1
-				WHERE  R.ROLE_STATE =1  
-		]]> 
-		
-		<if test="_parameter != null and _parameter != ''">
-			<![CDATA[ 
-	       		 AND  USER_NAME = #{_parameter}
-	    	]]>
-	    </if>  
-	</select>
-	 -->
+
 	
 	   <!-- 通过应用编号、用户帐号获取单个用户数据接口，返回报文数据 -->
 		<select id="getUsersDataByUserID" parameterType="map" resultType="map">
 		<![CDATA[ 
 				SELECT 
-    		 	IFNULL(U.USER_ADDR,'') AS USER_ADDR,IFNULL(U.USER_TEL,'') AS  USER_TEL,U.USER_STATE,U.USER_NAME, U.USER_REAL_NAME FROM SYS_USER U
+    		 		IFNULL(U.USER_ADDR,'') AS USER_ADDR,IFNULL(U.USER_TEL,'') AS  USER_TEL,U.USER_STATE,U.USER_NAME, U.USER_REAL_NAME FROM SYS_USER U
 				INNER JOIN USER_ROLE_RELA A
 				ON U.USER_ID=A.USER_ID
 				INNER JOIN MENU_PRIVILEGE E
@@ -354,8 +316,6 @@
  		SELECT COUNT(*) FROM USER_JOB WHERE JOB_ID =#{userDuty}
 		]]>
 	</select>
-
-
 
 
 	<insert id="insertPersonJobData" parameterType="String">
@@ -428,5 +388,29 @@
 			)
     ]]>
 	</insert>
+
+
+
+	<select id="getOrgDataByUserID" parameterType="String" resultType="map">
+		<![CDATA[
+ 		SELECT T.DEP_GLOBAL_ID,T.SUP_DEP_GLOBAL_ID,T.DEP_NAME FROM USER_DEPARTMENT T INNER JOIN USER_DEP_RELA A
+		ON T.DEP_ID =A.DEP_ID
+		WHERE T.DEP_GLOBAL_ID IS NOT NULL
+		AND T.DEP_STATE=1
+		AND A.USER_ID IN (
+		SELECT USER_ID FROM SYS_USER WHERE USER_NAME=#{userID}
+		)
+		]]>
+	</select>
+
+
+	<select id="getOrgBatchData" resultType="map">
+		<![CDATA[
+			SELECT DEP_GLOBAL_ID,SUP_DEP_GLOBAL_ID,DEP_NAME
+			FROM USER_DEPARTMENT
+			WHERE DEP_GLOBAL_ID IS NOT NULL
+
+		]]>
+	</select>
 
 </mapper>
