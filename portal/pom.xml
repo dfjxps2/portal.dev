@@ -513,7 +513,7 @@
                 <audit.log.port>6699</audit.log.port>
                 <portal.file.dir>/home/portal/files</portal.file.dir>
                 <portal.log.dir>/home/portal/logs</portal.log.dir>
-                <cas.server.ip>10.10.10.42</cas.server.ip>
+                <cas.server.ip>10.10.10.41</cas.server.ip>
                 <ca.server.ip>172.26.64.109</ca.server.ip>
                 <portal.db.password>123456</portal.db.password>
             </properties>
@@ -531,7 +531,7 @@
                 <audit.log.port>6699</audit.log.port>
                 <portal.file.dir>/home/portal/files</portal.file.dir>
                 <portal.log.dir>/home/portal/logs</portal.log.dir>
-                <cas.server.ip>10.10.10.42</cas.server.ip>
+                <cas.server.ip>10.10.10.41</cas.server.ip>
                 <ca.server.ip>172.26.64.109</ca.server.ip>
                 <portal.db.password>123456</portal.db.password>
             </properties>
