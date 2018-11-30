@@ -3723,13 +3723,6 @@ nav.page-tabs .page-tabs-content {
     width: 70px;
 }
 
-.roll-right.J_tabExit {
-    background: #fff;
-    height: 40px;
-    width: 80px;
-    outline: none;
-}
-
 .dropdown-menu-right {
     left: auto;
 }

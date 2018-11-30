@@ -11,728 +11,586 @@
     <link href="${G.host}/res/css/chosen.css" rel="stylesheet">
     <link href="${G.host}/res/css/plugins/ionRangeSlider/ion.rangeSlider.css" rel="stylesheet">
     <link href="${G.host}/res/css/plugins/ionRangeSlider/ion.rangeSlider.skinFlat.css" rel="stylesheet">
+    <style type="text/css">
+        .gray-bg{background:#f5f4f9;}
+        .wrapper-content{padding:0 30px 0 32px;height: 150px;}
+        .iboxx{background:#fff;margin:6px 0;padding:0;}
+        .ibox-title{color:#333;padding:10px 15px}
+        .ibox-title
+        .widget{margin:2px 0 14px 0;}
+        .clearfix{clear:both;}
+        .panelx{padding:0 24px;height:150px;}
+        .font1{font-size:12px;color:#fff;}
+        .widget.style1 h2{font-size:28px;}
+        .panelx .up{height:60px;line-height:60px;margin-bottom:4px;}
+        .panelx .down{height:25px;line-height:25px;margin-top:14px;}
+        .widget .col-xs-5{padding:0 10px 0 0;}
+        .ring{height:110px;}
+        .ring-title{text-align:center;color:#2d3238;}
+        .theme{height:75px;}
+        .theme h2{text-align:center;font-size:20px;color:#30373d;}
+        .theme-title{text-align:center;color:#999da6;}
+        .more{margin:0 auto;text-align: center;height:90px;line-height:90px;cursor:pointer;}
+        .more span{border-radius: 50%;background-color:#999da6;width:9px;height:9px;font-size:9px;}
+        .label{color:#595959;border-radius:50%;}
+        .label-success{color:#f1536e;background-color:rgba(241, 83, 110, 0.25);}
+        .label-warning{color:#4aaaf5;background-color:rgba(74, 170, 245, 0.25);}
+        .label-info{color:#716dc7;background-color:rgba(113, 109, 199, 0.25);}
+        .table > tbody > tr > td{border-top:none;padding:20px 8px;}
+        .irs-diapason{background:#3da5f4;}
+        .irs-slider{background:none;}
+        .irs-slider.to{border: 4px solid #3da5f4;background: #fff;border-radius: 50%;}
+        .irs-line{left:8px;}
+        .progress-bar{background:#3da5f4;}
+        .fa-bolt,.fa-sitemap{margin-left:10px;color:#fff;padding:2px 5px;}
+        .fa-sitemap:before{color:#fff;}
+        .fa-bolt{background:#f01a12;}
+        .fa-sitemap{background:#1ab394;}
+    </style>
 </head>
 <body class="gray-bg" style="margin-left: 5px;">
-    <div class="wrapper wrapper-content" style="padding:0px;height: 150px;">
-        <div class="row" style="margin-right: -12px;">
-           <div class="ibox-title">
-               <h5>数据接入</h5>
-	       </div>
-            <div class="col-sm-3">
-                <div class="widget style1 blue-bg">
-                    <div class="row">
-                        <div class="col-xs-4 text-center">
-                            <i class="fa fa-trophy fa-5x" >
-                            <img  src="${G.host}/res/images/d.png"></i>
-                        </div>
-                        <div class="col-xs-8 text-right">
-                            <span>接入部门数量 </span>
-                            <h2 class="font-bold">2/51</h2>
+    <div class="wrapper wrapper-content">
+        <div class="row">
+            <div class="iboxx" style="margin-top:12px;">
+                <div class="ibox-title">
+                    <h5>数据接入</h5>
+                </div>
+                <div class="clearfix">
+                    <div class="col-sm-3 panelx">
+                        <div class="widget style1 blue-bg" style="background:#716dc7;">
+                            <div class="row">
+                                <div class="col-xs-7 text-left">
+                                    <div class="up">
+                                        <h2 class="font-bold">2/51</h2>
+                                        <h4>接入部门数量 </h4>
+                                    </div>
+                                    <div class="down">
+                                        <h4 class="font1">部门数量 </h4>
+                                    </div>
+                                </div>
+                                <div class="col-xs-5 text-center">
+                                    <div class="up text-right">
+                                        <h2><img  src="${G.host}/res/images/d.png"></h2>
+                                    </div>
+                                    <div class="down text-right">
+                                        <h4 class="font1">本周总计：12</h4>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="widget style1 navy-bg">
-                    <div class="row">
-                        <div class="col-xs-4">
-                            <i class="fa fa-cloud fa-5x">
-                              <img  src="${G.host}/res/images/s.png">
-                            </i>
-                        </div>
-                        <div class="col-xs-8 text-right">
-                            <span> 接入系统数量 </span>
-                            <h2 class="font-bold">6/300</h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="widget style1 lazur-bg">
-                    <div class="row">
-                        <div class="col-xs-4">
-                            <i class="fa fa-envelope-o fa-5x">
-                            <img  src="${G.host}/res/images/t.png">
-                            </i>
-                        </div>
-                        <div class="col-xs-8 text-right">
-                            <span> 接入数据表数量 </span>
-                            <h2 class="font-bold">22</h2>
+                    <div class="col-sm-3 panelx">
+                        <div class="widget style1 navy-bg" style="background:#3da54f;">
+                            <div class="row">
+                                <div class="col-xs-7 text-left">
+                                    <div class="up">
+                                        <h2 class="font-bold">6/300</h2>
+                                        <h4> 接入系统数量 </h4>
+                                    </div>
+                                    <div class="down">
+                                        <h4 class="font1">系统数量 </h4>
+                                    </div>
+                                </div>
+                                <div class="col-xs-5 text-center">
+                                    <div class="up text-right">
+                                        <h2><img  src="${G.host}/res/images/s.png"></h2>
+                                    </div>
+                                    <div class="down text-right">
+                                        <h4 class="font1">本周总计：2</h4>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="widget style1 yellow-bg">
-                    <div class="row">
-                        <div class="col-xs-4">
-                            <i class="fa fa-music fa-5x">
-                              <img  src="${G.host}/res/images/i.png">
-                            </i>
+                    <div class="col-sm-3 panelx">
+                        <div class="widget style1 lazur-bg" style="background:#f1536e;">
+                            <div class="row">
+                                <div class="col-xs-7 text-left">
+                                    <div class="up">
+                                        <h2 class="font-bold">22</h2>
+                                        <h4> 接入数据表数量 </h4>
+                                    </div>
+                                    <div class="down">
+                                        <h4 class="font1">数据表数量 </h4>
+                                    </div>
+                                </div>
+                                <div class="col-xs-5 text-center">
+                                    <div class="up text-right">
+                                        <h2><img  src="${G.host}/res/images/t.png"></h2>
+                                    </div>
+                                    <div class="down text-right">
+                                        <h4 class="font1">本周总计：10</h4>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-xs-8 text-right">
-                            <span> 接入信息项数量 </span>
-                            <h2 class="font-bold">201</h2>
+                    </div>
+                    <div class="col-sm-3 panelx">
+                        <div class="widget style1 yellow-bg" style="background:#3dbea3;">
+                            <div class="row">
+                                <div class="col-xs-7 text-left">
+                                    <div class="up">
+                                        <h2 class="font-bold">201</h2>
+                                        <h4> 接入信息项数量  </h4>
+                                    </div>
+                                    <div class="down">
+                                        <h4 class="font1">信息项数量 </h4>
+                                    </div>
+                                </div>
+                                <div class="col-xs-5 text-center">
+                                    <div class="up text-right">
+                                        <h2><img  src="${G.host}/res/images/i.png"></h2>
+                                    </div>
+                                    <div class="down text-right">
+                                        <h4 class="font1">本周总计：6</h4>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        
+        <div class="row">
+            <div class="iboxx col-xs-6">
+                <div class="ibox-title">
+                    <h5>基础建设信息</h5>
+                </div>
+                <div class="clearfix" style="height:150px">
+                    <div class="col-sm-2">
+                        <div class="iibox">
+                            <div class="ring">
+                            </div>
+                            <div class="ring-title">
+                                <h4>人口库</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="iibox">
+                            <div class="ring">
+                            </div>
+                            <div class="ring-title">
+                                <h4>法人库</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="iibox">
+                            <div class="ring">
+                            </div>
+                            <div class="ring-title">
+                                <h4>空间地理库</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="iibox">
+                            <div class="ring">
+                            </div>
+                            <div class="ring-title">
+                                <h4>宏观经济库</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="iibox">
+                            <div class="ring">
+                            </div>
+                            <div class="ring-title">
+                                <h4>社会信用库</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="iibox">
+                            <div class="ring">
+                            </div>
+                            <div class="ring-title">
+                                <h4>电子证照库</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="iboxx col-xs-6" style="margin-left:10px;width:49%;">
+                <div class="ibox-title">
+                    <h5 >主题库建设情况</h5>
+                </div>
+                <div class="clearfix">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-3 theme">
+                                <div class=""><h2>12</h2></div>
+                                <div class="theme-title"><h4>经济运行</h4></div>
+                            </div>
+                            <div class="col-sm-3 theme">
+                                <div class=""><h2>10</h2></div>
+                                <div class="theme-title"><h4>公共服务</h4></div>
+                            </div>
+                            <div class="col-sm-3 theme">
+                                <div class=""><h2>20</h2></div>
+                                <div class="theme-title"><h4>健康保障</h4></div>
+                            </div>
+                            <div class="col-sm-3 theme">
+                                <div class=""><h2>14</h2></div>
+                                <div class="theme-title"><h4>社会服务</h4></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3 theme">
+                                <div class=""><h2>11</h2></div>
+                                <div class="theme-title"><h4>能源安全</h4></div>
+                            </div>
+                            <div class="col-sm-3 theme">
+                                <div class=""><h2>13</h2></div>
+                                <div class="theme-title"><h4>安全生产</h4></div>
+                            </div>
+                            <div class="col-sm-3 theme">
+                                <div class=""><h2>18</h2></div>
+                                <div class="theme-title"><h4>价格监管</h4></div>
+                            </div>
+                            <div class="col-sm-3 theme">
+                                <div class="more" onclick="$('#themes').slideToggle('fast');">
+                                    <span>&emsp;</span><span>&emsp;</span><span>&emsp;</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="themes" class="col-sm-12" style="display: none;">
+                        <div class="row">
+                            <div class="col-sm-3 theme">
+                                <div class=""><h2>0</h2></div>
+                                <div class="theme-title"><h4>社会保障</h4></div>
+                            </div>
+                            <div class="col-sm-3 theme">
+                                <div class=""><h2>0</h2></div>
+                                <div class="theme-title"><h4>食品药品安全</h4></div>
+                            </div>
+                            <div class="col-sm-3 theme">
+                                <div class=""><h2>0</h2></div>
+                                <div class="theme-title"><h4>安全生产</h4></div>
+                            </div>
+                            <div class="col-sm-3 theme">
+                                <div class=""><h2>0</h2></div>
+                                <div class="theme-title"><h4>城乡建设</h4></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3 theme">
+                                <div class=""><h2>0</h2></div>
+                                <div class="theme-title"><h4>社区治理</h4></div>
+                            </div>
+                            <div class="col-sm-3 theme">
+                                <div class=""><h2>0</h2></div>
+                                <div class="theme-title"><h4>生态环保</h4></div>
+                            </div>
+                            <div class="col-sm-3 theme">
+                                <div class=""><h2>0</h2></div>
+                                <div class="theme-title"><h4>应急维稳</h4></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="row" style="height: 155px;margin-right: -12px;">
-            <div class="ibox-title">
-                <h5>基础建设信息</h5>
-            </div>
-            
-            <div class="col-sm-2" style="height: 125px;">
+        <div class="row clearfix">
+            <div class="iboxx col-xs-4" style="margin-right:10px;width:34%;">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                       <!-- <span class="label label-success pull-right">月</span>-->
-                        <h5>人口库</h5>
+                        <h5>应用情况</h5>
                     </div>
-                    <div class="ibox-content">
-                        <h1 class="no-margins">0</h1>
-                        <div class="stat-percent font-bold text-success">0% <i class="fa fa-level-up"></i>
-                        </div>
-                        <small>人口库表数量</small>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-2" style="height: 125px;">
-                <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <!--<span class="label label-info pull-right">全年</span>-->
-                        <h5>法人库</h5>
-                    </div>
-                    <div class="ibox-content">
-                        <h1 class="no-margins">0</h1>
-                        <div class="stat-percent font-bold text-info">0% <i class="fa fa-level-up"></i>
-                        </div>
-                        <small>法人库表数量</small>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-2" style="height: 125px;">
-                <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <!--<span class="label label-primary pull-right">月</span>-->
-                        <h5>空间地理库</h5>
-                    </div>
-                    <div class="ibox-content" style="padding: 15px 10px 20px 15px;">
-                        <h1 class="no-margins">0</h1>
-                        <div class="stat-percent font-bold text-navy">0% <i class="fa fa-level-up"></i>
-                        </div>
-                        <small>空间地理库表数量</small>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-2" style="height: 125px;">
-                <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                      <!--  <span class="label label-danger pull-right">月</span>-->
-                        <h5>宏观经济库</h5>
-                    </div>
-                    <div class="ibox-content" style="padding: 15px 5px 20px 10px;">
-                        <h1 class="no-margins">22</h1>
-                        <div class="stat-percent font-bold text-danger">100% <i class="fa fa-level-up"></i>
-                        </div>
-                        <small style="white-space: nowrap;">宏观经济库表数量</small>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-2" style="height: 125px;">
-                <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <!--  <span class="label label-danger pull-right">月</span>-->
-                        <h5>社会信用库</h5>
-                    </div>
-                    <div class="ibox-content" style="padding: 15px 10px 20px 15px;">
-                        <h1 class="no-margins">0</h1>
-                        <div class="stat-percent font-bold text-danger" style="color: #edc655;">0% <i class="fa fa-level-up"></i>
-                        </div>
-                        <small style="white-space: nowrap;">社会信用库表数量</small>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-2" style="height: 125px;">
-                <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <!--  <span class="label label-danger pull-right">月</span>-->
-                        <h5>电子证照库</h5>
-                    </div>
-                    <div class="ibox-content" style="padding: 15px 10px 20px 15px;">
-                        <h1 class="no-margins">0</h1>
-                        <div class="stat-percent font-bold text-danger" style="color: #df55ed;">0% <i class="fa fa-level-up"></i>
-                        </div>
-                        <small>电子证照库表数量</small>
-                    </div>
-                </div>
-            </div>
-        </div>	
-       
-       <div class="row" style="margin-right: -12px;">
-          <div class="ibox-title">
-               <h5 >主题库建设情况</h5>
-	       </div>
-          <div class="col-sm-6">
-              <div class="ibox float-e-margins">
-
-                  <div class="row">
-                      <div class="col-sm-4" style="height: 125px;">
-                          <div class="ibox float-e-margins">
-                              <div class="ibox-title">
-                                  <!--  <span class="label label-danger pull-right">月</span>-->
-                                  <h5>经济运行</h5>
-                              </div>
-                              <div class="ibox-content">
-                                  <h1 class="no-margins">21</h1>
-                                  <div class="stat-percent font-bold text-danger">100% <i class="fa fa-level-up"></i>
-                                  </div>
-                                  <small>经济运行数量</small>
-                              </div>
-                          </div>
-                      </div>
-                      <div class="col-sm-4" style="height: 125px;">
-                          <div class="ibox float-e-margins">
-                              <div class="ibox-title">
-                                  <!--  <span class="label label-danger pull-right">月</span>-->
-                                  <h5>公共服务</h5>
-                              </div>
-                              <div class="ibox-content">
-                                  <h1 class="no-margins">0</h1>
-                                  <div class="stat-percent font-bold text-danger" style="color: #d9ed55;">0% <i class="fa fa-level-up"></i>
-                                  </div>
-                                  <small>公共服务数量</small>
-                              </div>
-                          </div>
-                      </div>
-                      <div class="col-sm-4" style="height: 125px;">
-                          <div class="ibox float-e-margins">
-                              <div class="ibox-title">
-                                  <!--  <span class="label label-danger pull-right">月</span>-->
-                                  <h5>健康保障</h5>
-                              </div>
-                              <div class="ibox-content">
-                                  <h1 class="no-margins">0</h1>
-                                  <div class="stat-percent font-bold text-danger" style="color: #a9ed55;">0% <i class="fa fa-level-up"></i>
-                                  </div>
-                                  <small>健康保障数量</small>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-
-
-                  <div class="row">
-                      <div class="col-sm-4" style="height: 125px;">
-                          <div class="ibox float-e-margins">
-                              <div class="ibox-title">
-                                  <!--  <span class="label label-danger pull-right">月</span>-->
-                                  <h5>价格监管</h5>
-                              </div>
-                              <div class="ibox-content" style="padding: 23px 20px 20px 20px;">
-                                  <h1 class="no-margins">0</h1>
-                                  <div class="stat-percent font-bold text-danger" style="color: #EDCFDE;">0% <i class="fa fa-level-up"></i>
-                                  </div>
-                                  <small>价格监管数量</small>
-                              </div>
-                          </div>
-                      </div>
-
-
-                      <div class="col-sm-4" style="height: 125px;">
-                          <div class="ibox float-e-margins">
-                              <div class="ibox-title">
-                                  <!--  <span class="label label-danger pull-right">月</span>-->
-                                  <h5>能源安全</h5>
-                              </div>
-                              <div class="ibox-content" style="padding: 23px 20px 20px 20px;">
-                                  <h1 class="no-margins">0</h1>
-                                  <div class="stat-percent font-bold text-danger" style="color: #70EDD5;">0% <i class="fa fa-level-up"></i>
-                                  </div>
-                                  <small>能源安全数量</small>
-                              </div>
-                          </div>
-                      </div>
-
-                      <div class="col-sm-4" style="height: 125px;">
-                          <div class="ibox float-e-margins">
-                              <div class="ibox-title">
-                                  <!--  <span class="label label-danger pull-right">月</span>-->
-                                  <h5>信用体系</h5>
-                              </div>
-                              <div class="ibox-content" style="padding: 23px 20px 20px 20px;">
-                                  <h1 class="no-margins">0</h1>
-                                  <div class="stat-percent font-bold text-danger" style="color: #35A0ED;">0% <i class="fa fa-level-up"></i>
-                                  </div>
-                                  <small>信用体系数量</small>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-            <div class="col-sm-6">
-              <div class="ibox float-e-margins">
-                  <div class="row">
-                      <div class="col-sm-4" style="height: 125px;">
-                          <div class="ibox float-e-margins">
-                              <div class="ibox-title">
-                                  <!--  <span class="label label-danger pull-right">月</span>-->
-                                  <h5>社会保障</h5>
-                              </div>
-                              <div class="ibox-content">
-                                  <h1 class="no-margins">0</h1>
-                                  <div class="stat-percent font-bold text-danger" style="color: #ECED13;">0% <i class="fa fa-level-up"></i>
-                                  </div>
-                                  <small>社会保障数量</small>
-                              </div>
-                          </div>
-                      </div>
-
-                      <div class="col-sm-4" style="height: 125px;">
-                          <div class="ibox float-e-margins">
-                              <div class="ibox-title">
-                                  <!--  <span class="label label-danger pull-right">月</span>-->
-                                  <h5>食品药品安全</h5>
-                              </div>
-                              <div class="ibox-content" style="padding: 15px 20px 20px 12px;">
-                                  <h1 class="no-margins">0</h1>
-                                  <div class="stat-percent font-bold text-danger" style="color: #52ED2B;">0% <i class="fa fa-level-up"></i>
-                                  </div>
-                                  <small>食品药品安全数量</small>
-                              </div>
-                          </div>
-                      </div>
-
-                      <div class="col-sm-4" style="height: 125px;">
-                          <div class="ibox float-e-margins">
-                              <div class="ibox-title">
-                                  <!--  <span class="label label-danger pull-right">月</span>-->
-                                  <h5>安全生产</h5>
-                              </div>
-                              <div class="ibox-content">
-                                  <h1 class="no-margins">0</h1>
-                                  <div class="stat-percent font-bold text-danger"  style="color: #11EDAF;">0% <i class="fa fa-level-up"></i>
-                                  </div>
-                                  <small>安全生产数量</small>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-
-                    <div class="row">
-                        <div class="col-sm-3" style="height: 125px;">
-                            <div class="ibox float-e-margins">
-                                <div class="ibox-title">
-                                    <!--  <span class="label label-danger pull-right">月</span>-->
-                                    <h5 style="white-space: nowrap;">城乡建设</h5>
-                                </div>
-                                <div class="ibox-content" style="padding: 5px 20px 20px 15px;">
-                                    <h1 class="no-margins">0</h1>
-                                    <div class="stat-percent font-bold text-danger" style="color: #55eddd;">0% <i class="fa fa-level-up"></i>
-                                    </div>
-                                    <small style="white-space: nowrap;">城乡建设数量</small>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-3" style="height: 125px;">
-                            <div class="ibox float-e-margins">
-                                <div class="ibox-title">
-                                    <!--  <span class="label label-danger pull-right">月</span>-->
-                                    <h5 style="white-space: nowrap;">社区治理</h5>
-                                </div>
-                                <div class="ibox-content" style="padding: 5px 20px 20px 15px;">
-                                    <h1 class="no-margins">0</h1>
-                                    <div class="stat-percent font-bold text-danger" style="color: #EDB914;">0% <i class="fa fa-level-up"></i>
-                                    </div>
-                                    <small style="white-space: nowrap;">社区治理数量</small>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-3" style="height: 125px;">
-                            <div class="ibox float-e-margins">
-                                <div class="ibox-title">
-                                    <!--  <span class="label label-danger pull-right">月</span>-->
-                                    <h5>生态环保</h5>
-                                </div>
-                                <div class="ibox-content" style="padding: 5px 20px 20px 15px;">
-                                    <h1 class="no-margins">0</h1>
-                                    <div class="stat-percent font-bold text-danger" style="color: #55c8ed;">0% <i class="fa fa-level-up"></i>
-                                    </div>
-                                    <small style="white-space: nowrap;">生态环保数量</small>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-3" style="height: 125px;">
-                            <div class="ibox float-e-margins">
-                                <div class="ibox-title">
-                                    <!--  <span class="label label-danger pull-right">月</span>-->
-                                    <h5>应急维稳</h5>
-                                </div>
-                                <div class="ibox-content" style="padding: 5px 20px 20px 15px;">
-                                    <h1 class="no-margins">0</h1>
-                                    <div class="stat-percent font-bold text-danger" style="color: #cf55ed;">0% <i class="fa fa-level-up"></i>
-                                    </div>
-                                    <small style="white-space: nowrap;">应急维稳数量</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-              </div>
-          </div>
-
-           <div class="row" style="margin-right: 1px;">
-         	<div class="col-sm-4" style="margin-top: -20px;">
-                 <div class="ibox float-e-margins">
-                     <div class="ibox-title">
-                         <h5>应用情况</h5>
-                         <div class="ibox-tools">
-                             <a class="collapse-link">
-                                 <i class="fa fa-chevron-up"></i>
-                             </a>
-                             <a class="close-link">
-                                 <i class="fa fa-times"></i>
-                             </a>
-                         </div>
-                     </div>
-                     <div class="ibox-content" style="height: 426px;">
-                         <div class="m-b-sm m-t" style="margin-top: -10px;">
+                    <div class="ibox-content" style="height: 384px;">
+                        <div class="m-b-sm m-t" style="margin-top: -10px;">
                             <small><strong>应用用户数</strong> </small>
                         </div>
-                        <div id="ionrange_1"></div> 
-                
-                     
-                     <div class="m-b-sm m-t">
+                        <div id="ionrange_1"></div>
+                        <div class="m-b-sm m-t">
                             <small><strong>用户访问量</strong> </small>
-                     </div>
+                        </div>
                         <div id="ionrange_2"></div>
-                     
-                       <div class="m-b-sm m-t">
+
+                        <div class="m-b-sm m-t">
                             <small><strong>指标数量</strong> </small>
                         </div>
                         <div id="ionrange_3"></div>
-                     
-                     
-                       <div class="m-b-sm m-t">
+
+
+                        <div class="m-b-sm m-t">
                             <small><strong>应用系统数量</strong></small>
                         </div>
                         <div id="ionrange_4"></div>
-                   </div>
-                 </div>
-             </div>
-             <div class="col-sm-4" style="margin-top: -20px;">
-                 <div class="ibox float-e-margins">
-                     <div class="ibox-title">
-                         <h5>综合评价最佳TOP10</h5>
-                         <div class="ibox-tools">
-                             <a class="collapse-link">
-                                 <i class="fa fa-chevron-up"></i>
-                             </a>
-                             <a class="close-link">
-                                 <i class="fa fa-times"></i>
-                             </a>
-                         </div>
-                     </div>
-                     <div class="ibox-content">
-                         <table class="table table-hover no-margins">
-                             <thead>
-                                 <tr>
-                                     <th>排名</th>
-                                     <th>部门名称</th>
-                                     <th>评价指数</th>
-                                 </tr>
-                             </thead>
-                             <tbody>
-                            
-                                 <tr>
-                                     <td><span class="label label-success">1</span>
-                                     </td>
-                                     <td>部门1</td>
-                                     <td> 
-                                      	<div class="stat-percent"> 98<i class="fa fa-bolt text-navy"></i>
-                                        </div>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 98%;" class="progress-bar"></div>
-                                        </div>
-                                     </td>
-                                 </tr>
-                                 <tr>
-                                     <td><span class="label label-warning">2</span>
-                                     </td>
-                                     <td>部门2</td>
-                                     <td> 
-                                      	<div class="stat-percent">96 <i class="fa fa-bolt text-navy"></i>
-                                        </div>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 96%;" class="progress-bar"></div>
-                                        </div>
-                                     </td>
-                                 </tr>
-                                 <tr>
-                                     <td><span class="label label-info">3</span>
-                                     </td>
-                                     <td>部门3</td>
-                                     <td> 
-                                      	<div class="stat-percent">95 <i class="fa fa-sitemap text-navy"></i>
-                                        </div>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 95%;" class="progress-bar"></div>
-                                        </div>
-                                     </td>
-                                 </tr>
-                                 <tr>
-                                     <td><span class="label ">4</span>
-                                     </td>
-                                     <td>部门4</td>
-                                     <td> 
-                                      	<div class="stat-percent">93 <i class="fa fa-bolt text-navy"></i>
-                                        </div>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 93%;" class="progress-bar"></div>
-                                        </div>
-                                     </td>
-                                 </tr>
-                                 <tr>
-                                     <td><span class="label ">5</span>
-                                     </td>
-                                     <td>部门5</td>
-                                     <td> 
-                                      	<div class="stat-percent">90 <i class="fa fa-bolt text-navy"></i>
-                                        </div>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 90%;" class="progress-bar"></div>
-                                        </div>
-                                     </td>
-                                 </tr>
-                                 <tr>
-                                     <td><span class="label ">6</span>
-                                     </td>
-                                     <td>部门6</td>
-                                     <td> 
-                                      	<div class="stat-percent">89 <i class="fa fa-sitemap text-navy"></i>
-                                        </div>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 89%;" class="progress-bar"></div>
-                                        </div>
-                                     </td>
-                                 </tr>
-                                 <tr>
-                                     <td><span class="label ">7</span>
-                                     </td>
-                                     <td>部门7</td>
-                                     <td> 
-                                      	<div class="stat-percent">88 <i class="fa fa-bolt text-navy"></i>
-                                        </div>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 88%;" class="progress-bar"></div>
-                                        </div>
-                                     </td>
-                                 </tr>
-                                 <tr>
-                                     <td><span class="label ">8</span>
-                                     </td>
-                                     <td>部门8</td>
-                                     <td> 
-                                      	<div class="stat-percent">80 <i class="fa fa-bolt text-navy"></i>
-                                        </div>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 80%;" class="progress-bar"></div>
-                                        </div>
-                                     </td>
-                                 </tr>
-                                 <tr>
-                                     <td><span class="label ">9</span>
-                                     </td>
-                                     <td>部门9</td>
-                                     <td> 
-                                      	<div class="stat-percent">70 <i class="fa fa-sitemap text-navy"></i>
-                                        </div>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 70%;" class="progress-bar"></div>
-                                        </div>
-                                     </td>
-                                 </tr>
-                                 <tr>
-                                     <td><span class="label ">10</span>
-                                     </td>
-                                     <td>部门10</td>
-                                     <td> 
-                                      	<div class="stat-percent">65 <i class="fa fa-sitemap text-navy"></i>
-                                        </div>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 65%;" class="progress-bar"></div>
-                                        </div>
-                                     </td>
-                                 </tr>
-                             </tbody>
-                         </table>
-                     </div>
-                 </div>
-             </div>
-             
-             
-              <div class="col-sm-4" style="margin-top: -20px;margin-right: -12px;">
-                 <div class="ibox float-e-margins">
-                     <div class="ibox-title">
-                         <h5>综合评价最差TOP10</h5>
-                         <div class="ibox-tools">
-                             <a class="collapse-link">
-                                 <i class="fa fa-chevron-up"></i>
-                             </a>
-                             <a class="close-link">
-                                 <i class="fa fa-times"></i>
-                             </a>
-                         </div>
-                     </div>
-                     <div class="ibox-content">
-                         <table class="table table-hover no-margins">
-                             <thead>
-                                 <tr>
-                                     <th>排名</th>
-                                     <th>部门名称</th>
-                                     <th>评价指数</th>
-                                 </tr>
-                             </thead>
-                             <tbody>
-                            
-                                 <tr>
-                                     <td><span class="label label-success" style="background-color: #f84022;">1</span>
-                                     </td>
-                                     <td>部门A</td>
-                                     <td> 
-                                      	<div class="stat-percent">30 <i class="fa fa-bolt text-navy"></i>
-                                        </div>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 30%;" class="progress-bar"></div>
-                                        </div>
-                                     </td>
-                                 </tr>
-                                 <tr>
-                                     <td><span class="label label-warning" style="background-color: #cc2851;">2</span>
-                                     </td>
-                                     <td>部门B</td>
-                                     <td> 
-                                      	<div class="stat-percent">32 <i class="fa fa-bolt text-navy"></i>
-                                        </div>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 32%;" class="progress-bar"></div>
-                                        </div>
-                                     </td>
-                                 </tr>
-                                 <tr>
-                                     <td><span class="label label-info" style="background-color: #d1288d;">3</span>
-                                     </td>
-                                     <td>部门C</td>
-                                     <td> 
-                                      	<div class="stat-percent">34 <i class="fa fa-sitemap text-navy"></i>
-                                        </div>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 34%;" class="progress-bar"></div>
-                                        </div>
-                                     </td>
-                                 </tr>
-                                 <tr>
-                                     <td><span class="label ">4</span>
-                                     </td>
-                                     <td>部门D</td>
-                                     <td> 
-                                      	<div class="stat-percent">36 <i class="fa fa-bolt text-navy"></i>
-                                        </div>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 36%;" class="progress-bar"></div>
-                                        </div>
-                                     </td>
-                                 </tr>
-                                 <tr>
-                                     <td><span class="label ">5</span>
-                                     </td>
-                                     <td>部门E</td>
-                                     <td> 
-                                      	<div class="stat-percent">38 <i class="fa fa-bolt text-navy"></i>
-                                        </div>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 38%;" class="progress-bar"></div>
-                                        </div>
-                                     </td>
-                                 </tr>
-                                 <tr>
-                                     <td><span class="label ">6</span>
-                                     </td>
-                                     <td>部门F</td>
-                                     <td> 
-                                      	<div class="stat-percent">40 <i class="fa fa-sitemap text-navy"></i>
-                                        </div>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 40%;" class="progress-bar"></div>
-                                        </div>
-                                     </td>
-                                 </tr>
-                                 <tr>
-                                     <td><span class="label ">7</span>
-                                     </td>
-                                     <td>部门G</td>
-                                     <td> 
-                                      	<div class="stat-percent">41 <i class="fa fa-bolt text-navy"></i>
-                                        </div>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 41%;" class="progress-bar"></div>
-                                        </div>
-                                     </td>
-                                 </tr>
-                                 <tr>
-                                     <td><span class="label ">8</span>
-                                     </td>
-                                     <td>部门H</td>
-                                     <td> 
-                                      	<div class="stat-percent">42 <i class="fa fa-bolt text-navy"></i>
-                                        </div>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 42%;" class="progress-bar"></div>
-                                        </div>
-                                     </td>
-                                 </tr>
-                                 <tr>
-                                     <td><span class="label ">9</span>
-                                     </td>
-                                     <td>部门I</td>
-                                     <td> 
-                                      	<div class="stat-percent">43 <i class="fa fa-sitemap text-navy"></i>
-                                        </div>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 43%;" class="progress-bar"></div>
-                                        </div>
-                                     </td>
-                                 </tr>
-                                 <tr>
-                                     <td><span class="label ">10</span>
-                                     </td>
-                                     <td>部门J</td>
-                                     <td> 
-                                      	<div class="stat-percent">45 <i class="fa fa-sitemap text-navy"></i>
-                                        </div>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 45%;" class="progress-bar"></div>
-                                        </div>
-                                     </td>
-                                 </tr>
-                             </tbody>
-                         </table>
-                     </div>
-                 </div>
-             </div>
-         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="iboxx col-xs-4" style="margin-right:10px;width:32%;">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>综合评价最佳排行榜</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <table class="table table-hover no-margins">
+                            <!--<thead>-->
+                            <!--<tr>-->
+                                <!--<th>排名</th>-->
+                                <!--<th>部门名称</th>-->
+                                <!--<th>评价指数</th>-->
+                            <!--</tr>-->
+                            <!--</thead>-->
+                            <tbody>
+                            <tr>
+                                <td><span class="label label-success">1</span>
+                                </td>
+                                <td>部门1</td>
+                                <td>
+                                    <div class="stat-percent"> 98<i class="fa fa-bolt text-navy">2</i>
+                                    </div>
+                                    <div class="progress progress-mini">
+                                        <div style="width: 98%;" class="progress-bar"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="label label-warning">2</span>
+                                </td>
+                                <td>部门2</td>
+                                <td>
+                                    <div class="stat-percent">96 <i class="fa fa-bolt text-navy"></i>
+                                    </div>
+                                    <div class="progress progress-mini">
+                                        <div style="width: 96%;" class="progress-bar"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="label label-info">3</span>
+                                </td>
+                                <td>部门3</td>
+                                <td>
+                                    <div class="stat-percent">95 <i class="fa fa-sitemap text-navy"></i>
+                                    </div>
+                                    <div class="progress progress-mini">
+                                        <div style="width: 95%;" class="progress-bar"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="label">4</span>
+                                </td>
+                                <td>部门4</td>
+                                <td>
+                                    <div class="stat-percent">93 <i class="fa fa-bolt text-navy"></i>
+                                    </div>
+                                    <div class="progress progress-mini">
+                                        <div style="width: 93%;" class="progress-bar"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="label ">5</span>
+                                </td>
+                                <td>部门5</td>
+                                <td>
+                                    <div class="stat-percent">90 <i class="fa fa-bolt text-navy"></i>
+                                    </div>
+                                    <div class="progress progress-mini">
+                                        <div style="width: 90%;" class="progress-bar"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="label ">6</span>
+                                </td>
+                                <td>部门6</td>
+                                <td>
+                                    <div class="stat-percent">89 <i class="fa fa-sitemap text-navy"></i>
+                                    </div>
+                                    <div class="progress progress-mini">
+                                        <div style="width: 89%;" class="progress-bar"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!--<tr>
+                                <td><span class="label ">7</span>
+                                </td>
+                                <td>部门7</td>
+                                <td>
+                                    <div class="stat-percent">88 <i class="fa fa-bolt text-navy"></i>
+                                    </div>
+                                    <div class="progress progress-mini">
+                                        <div style="width: 88%;" class="progress-bar"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="label ">8</span>
+                                </td>
+                                <td>部门8</td>
+                                <td>
+                                    <div class="stat-percent">80 <i class="fa fa-bolt text-navy"></i>
+                                    </div>
+                                    <div class="progress progress-mini">
+                                        <div style="width: 80%;" class="progress-bar"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="label ">9</span>
+                                </td>
+                                <td>部门9</td>
+                                <td>
+                                    <div class="stat-percent">70 <i class="fa fa-sitemap text-navy"></i>
+                                    </div>
+                                    <div class="progress progress-mini">
+                                        <div style="width: 70%;" class="progress-bar"></div>
+                                    </div>
+                                </td>
+                            </tr>-->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="iboxx col-xs-4" style="width:32%;">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>综合评价最差排行榜</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <table class="table table-hover no-margins">
+                            <!--<thead>-->
+                            <!--<tr>-->
+                                <!--<th>排名</th>-->
+                                <!--<th>部门名称</th>-->
+                                <!--<th>评价指数</th>-->
+                            <!--</tr>-->
+                            <!--</thead>-->
+                            <tbody>
+
+                            <tr>
+                                <td><span class="label label-success">1</span>
+                                </td>
+                                <td>部门A</td>
+                                <td>
+                                    <div class="stat-percent">30 <i class="fa fa-bolt text-navy"></i>
+                                    </div>
+                                    <div class="progress progress-mini">
+                                        <div style="width: 30%;" class="progress-bar"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="label label-warning">2</span>
+                                </td>
+                                <td>部门B</td>
+                                <td>
+                                    <div class="stat-percent">32 <i class="fa fa-bolt text-navy"></i>
+                                    </div>
+                                    <div class="progress progress-mini">
+                                        <div style="width: 32%;" class="progress-bar"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="label label-info">3</span>
+                                </td>
+                                <td>部门C</td>
+                                <td>
+                                    <div class="stat-percent">34 <i class="fa fa-sitemap text-navy"></i>
+                                    </div>
+                                    <div class="progress progress-mini">
+                                        <div style="width: 34%;" class="progress-bar"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="label ">4</span>
+                                </td>
+                                <td>部门D</td>
+                                <td>
+                                    <div class="stat-percent">36 <i class="fa fa-bolt text-navy"></i>
+                                    </div>
+                                    <div class="progress progress-mini">
+                                        <div style="width: 36%;" class="progress-bar"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="label ">5</span>
+                                </td>
+                                <td>部门E</td>
+                                <td>
+                                    <div class="stat-percent">38 <i class="fa fa-bolt text-navy"></i>
+                                    </div>
+                                    <div class="progress progress-mini">
+                                        <div style="width: 38%;" class="progress-bar"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="label ">6</span>
+                                </td>
+                                <td>部门F</td>
+                                <td>
+                                    <div class="stat-percent">40 <i class="fa fa-sitemap text-navy"></i>
+                                    </div>
+                                    <div class="progress progress-mini">
+                                        <div style="width: 40%;" class="progress-bar"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!--<tr>
+                                <td><span class="label ">7</span>
+                                </td>
+                                <td>部门G</td>
+                                <td>
+                                    <div class="stat-percent">41 <i class="fa fa-bolt text-navy"></i>
+                                    </div>
+                                    <div class="progress progress-mini">
+                                        <div style="width: 41%;" class="progress-bar"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="label ">8</span>
+                                </td>
+                                <td>部门H</td>
+                                <td>
+                                    <div class="stat-percent">42 <i class="fa fa-bolt text-navy"></i>
+                                    </div>
+                                    <div class="progress progress-mini">
+                                        <div style="width: 42%;" class="progress-bar"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="label ">9</span>
+                                </td>
+                                <td>部门I</td>
+                                <td>
+                                    <div class="stat-percent">43 <i class="fa fa-sitemap text-navy"></i>
+                                    </div>
+                                    <div class="progress progress-mini">
+                                        <div style="width: 43%;" class="progress-bar"></div>
+                                    </div>
+                                </td>
+                            </tr>-->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+       
+
     <!-- 全局js -->
     <script src="${G.host}/res/js/jquery.min.js?v=2.1.4"></script>
     <script src="${G.host}/res/js/bootstrap.min.js?v=3.3.6"></script>
     <!-- 自定义js -->
     <script src="${G.host}/res/js/content.js?v=1.0.0"></script>
+    <script src="${G.host}/res/js/echarts.js?v=3.5.4"></script>
     <!-- jQuery UI -->
     <script src="${G.host}/res/js/jquery-ui.min.js"></script>
  	<!-- IonRangeSlider -->
@@ -754,3 +612,58 @@
     <script src="${G.host}/res/js/form-advanced-demo.js"></script>
 </body>
 </html>
+<script type="text/javascript">
+    var ringData = [24,5,33,8,16,8], ringColor = ['#3da5f4','#f1536e'];
+    $(document).ready(function(){
+        $(".ring").each(function(i){
+            ring(this, ringData[i], ringColor[i%2]);
+        });
+    });
+    function ring(dom, v, c){
+        var opt = {
+            series:[{
+                type: 'pie',
+                center: ['50%', '50%'],
+                radius: [25, 30],
+                data: [{
+                    name: '',
+                    value: 100 - v,
+                    itemStyle: {
+                        normal: {
+                            color: '#ccc',
+                            label: {
+                                show: true,
+                                position: 'center'
+                            },
+                            labelLine: {
+                                show: false
+                            }
+                        },
+                        emphasis: {
+                            color: 'rgba(0,0,0,0)'
+                        }
+                    }
+                }, {
+                    name: v,
+                    value: v,
+                    itemStyle: {
+                        normal: {
+                            color:c,
+                            label: {
+                                show: true,
+                                position: 'center',
+                                verticalAlign:'middle',
+                                formatter: '{b}',
+                                textStyle:{
+                                    fontSize: 24,
+                                }
+                            }
+                        }
+                    }
+                }]
+            }]
+        };
+        var myChart = echarts.init(dom);
+        myChart.setOption(opt);
+    }
+</script>
