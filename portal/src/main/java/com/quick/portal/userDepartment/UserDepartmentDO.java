@@ -56,7 +56,10 @@ public class UserDepartmentDO implements java.io.Serializable {
     /**
      *更新时间
      */
-    private Date  upd_time;     	
+    private Date  upd_time;
+
+    private String dep_global_id ;
+    private String sup_dep_global_id;
 	// </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc="成员Get/Set">
@@ -157,6 +160,23 @@ public class UserDepartmentDO implements java.io.Serializable {
      */
     public void setUpd_time(Date upd_time) {
         this.upd_time = upd_time;
+    }
+
+    public String getDep_global_id() {
+        return dep_global_id;
+    }
+
+    public void setDep_global_id(String dep_global_id) {
+        this.dep_global_id = dep_global_id;
+    }
+
+
+    public String getSup_dep_global_id() {
+        return sup_dep_global_id;
+    }
+
+    public void setSup_dep_global_id(String sup_dep_global_id) {
+        this.sup_dep_global_id = sup_dep_global_id;
     }
     // </editor-fold>
 }
