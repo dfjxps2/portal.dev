@@ -32,7 +32,6 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
-        <!-- 本地调试所用的环境参数
         <portal.server.ip>${env.PORTAL_SERVER_IP}</portal.server.ip>
         <index.service.ip>${env.INDEX_SERVICE_IP}</index.service.ip>
         <solr.service.ip>${env.SOLR_SERVICE_IP}</solr.service.ip>
@@ -42,14 +41,9 @@
         <portal.file.dir>${env.PORTAL_FILE_DIR}</portal.file.dir>
         <portal.log.dir>${env.PORTAL_LOG_DIR}</portal.log.dir>
         <cas.server.ip>${env.CAS_SERVER_IP}</cas.server.ip>
+        <cas.server.protocol>https</cas.server.protocol>
+        <cas.server.port>8443</cas.server.port>
         <portal.db.password>${env.PORTAL_DB_PASSWORD}</portal.db.password>
-        -->
-        <portal.server.ip>127.0.0.1</portal.server.ip>
-        <index.service.ip>10.1.3.193</index.service.ip>
-        <solr.service.ip>10.1.3.193</solr.service.ip>
-        <portal.file.dir>/home/portal/files</portal.file.dir>
-        <cas.server.ip>127.0.0.1</cas.server.ip>
-        <portal.db.password>mysql</portal.db.password>
     </properties>
 
     <dependencies>
@@ -462,6 +456,8 @@
                 <cas.server.ip>10.1.3.193</cas.server.ip>
                 <ca.server.ip>192.168.161.192</ca.server.ip>
                 <portal.db.password>root</portal.db.password>
+                <cas.server.protocol>https</cas.server.protocol>
+                <cas.server.port>8443</cas.server.port>
             </properties>
         </profile>
         <!--演示环境-->
@@ -480,6 +476,8 @@
                 <cas.server.ip>10.1.3.62</cas.server.ip>
                 <ca.server.ip>172.26.64.109</ca.server.ip>
                 <portal.db.password>123456</portal.db.password>
+                <cas.server.protocol>https</cas.server.protocol>
+                <cas.server.port>8443</cas.server.port>
             </properties>
         </profile>
         <!--演示环境-->
@@ -498,6 +496,8 @@
                 <cas.server.ip>10.1.3.195</cas.server.ip>
                 <ca.server.ip>172.26.64.109</ca.server.ip>
                 <portal.db.password>root</portal.db.password>
+                <cas.server.protocol>https</cas.server.protocol>
+                <cas.server.port>8443</cas.server.port>
             </properties>
         </profile>
         <!--泰豪演示环境-->
@@ -516,6 +516,8 @@
                 <cas.server.ip>10.10.10.41</cas.server.ip>
                 <ca.server.ip>172.26.64.109</ca.server.ip>
                 <portal.db.password>123456</portal.db.password>
+                <cas.server.protocol>http</cas.server.protocol>
+                <cas.server.port>17001</cas.server.port>
             </properties>
         </profile>
         <!--生产环境-->
@@ -534,6 +536,8 @@
                 <cas.server.ip>10.10.10.41</cas.server.ip>
                 <ca.server.ip>172.26.64.109</ca.server.ip>
                 <portal.db.password>123456</portal.db.password>
+                <cas.server.protocol>http</cas.server.protocol>
+                <cas.server.port>17001</cas.server.port>
             </properties>
         </profile>
     </profiles>
