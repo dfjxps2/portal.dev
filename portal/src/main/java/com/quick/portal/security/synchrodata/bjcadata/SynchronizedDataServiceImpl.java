@@ -18,34 +18,29 @@
  */
 package com.quick.portal.security.synchrodata.bjcadata;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.bjca.uums.client.bean.DepartmentInformation;
-import com.bjca.uums.client.bean.LoginInformation;
-import com.bjca.uums.client.bean.PersonInformation;
-import com.bjca.uums.client.bean.RoleInformation;
+import com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.DepartmentInformation;
+import com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.LoginInformation;
+import com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.PersonInformation;
+import com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.RoleInformation;
 
 /**
  * syncDataService服务实现类
  */
 @Transactional
 
-@Service("syncDataService")
+//@Service("syncDataService")
+@Component("syncDataService")
+@Scope("prototype")
 public class SynchronizedDataServiceImpl implements ISynchronizedDataService {
-
-	/**
-	 * 构造函数
-	 */
-	public SynchronizedDataServiceImpl() {
-	}
+	
 
 	@Autowired
 	private ISynchronizedDataDao dao;
@@ -127,11 +122,11 @@ public class SynchronizedDataServiceImpl implements ISynchronizedDataService {
 		String supDepGlobalID  = null;
 		String deptID = null;
 		//公服标识查询部门上级编号数据
-		List<Map<String, Object>> depList = this.searchFullDeptInfo();
+		List<Map<String, Object>> depList = this.searchFullDeptInfo(department);
 		for (Map<String, Object> m : depList){
 		    	//通过上级部门编号查询部门ID
 		    	  supDepGlobalID = m.get("SUP_DEP_GLOBAL_ID").toString();
-		    	  deptID = m.get("menu_id").toString();
+		    	  deptID = m.get("DEP_ID").toString();
 		    	  System.out.println("deptID="+deptID+"supDepGlobalID="+supDepGlobalID);
 		    	  paramMap.put("supDepGlobalID", supDepGlobalID);
 		    	  paramMap.put("deptID", deptID);
@@ -142,8 +137,8 @@ public class SynchronizedDataServiceImpl implements ISynchronizedDataService {
 	/*
 	 * 公服标识查询部门上级编号数据
 	 */
-	public List<Map<String, Object>> searchFullDeptInfo(){
-		return dao.searchFullDeptInfo();
+	public List<Map<String, Object>> searchFullDeptInfo(DepartmentInformation department){
+		return dao.searchFullDeptInfo(department.getDepartCode());
 	}
 	
 
@@ -229,16 +224,17 @@ public class SynchronizedDataServiceImpl implements ISynchronizedDataService {
 		//用户登录名
 		person.setUserDefault5(loginInfo.getLoginName());
 		//用户昵称
-		person.setUserDefault4(loginInfo.getLoginNickName());
+		person.setUserDefault4(person.getUserName());
 		//用户密码
 		person.setUserDefault3(loginInfo.getLoginPwd());
-		
+		person.setUserStat(SynchronizedDataConstants.DEFAULT_USER_ENABLE_STAT);
+		person.setUserJob(SynchronizedDataConstants.DEFAULT_JOB_ID);
 		//11 新增用户 、12 修改用户、 13 删除用户
 		try {
 			//新增用户
 			if(operateID == 11){
 				boolean isFlag = isExistUserGlobalID(person);
-				if(! isFlag){
+				if(!isFlag){
 					count = insertPersonData(person);
 				}else{
 					count = updatePersonData(person);
@@ -251,10 +247,21 @@ public class SynchronizedDataServiceImpl implements ISynchronizedDataService {
 			}else if(operateID == 13){
 				count = removePersonData(person);
 			}
-			if (count > 0) {
+			if (count > 0 && (operateID == 11 ||operateID == 12)) {
+				//用户与部门关系
+				//部门数据
 				mergePersonDeptRelaDataInfo(person);
-				bool = true;
-			} else {
+				//用户岗位
+				mergePersonJobDataInfo(person);
+				//用户与角色关系
+				mergePersonRoleDataInfo(person);
+				//
+				mergeRolePrivilegeDataInfo();
+			}else if(count > 0 && operateID == 13){
+				String globalID = person.getUniqueid();
+				//通过用户编号删除用户与部门关系
+				removePersonDeptRelaDataByUserID(globalID);
+			}else {
 				System.out.println("操作用户表0条数据被处理，请查询！");
 				bool = false;
 			}
@@ -327,7 +334,102 @@ public class SynchronizedDataServiceImpl implements ISynchronizedDataService {
 		removePersonDeptRelaDataByUserID(globalID);
 		insertPersonDeptRelaData(person);
 	}
-	
+
+
+	/**
+	 * 用户岗位
+	 * @param person
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	public void mergePersonJobDataInfo(PersonInformation person){
+		//通过用户编号查询用户岗位是否存在
+		boolean bool  = isExistPersonJobDataInfoByUserID(SynchronizedDataConstants.DEFAULT_JOB_ID);
+		if(! bool){
+			dao.insertPersonJobData(person.getUserDuty());
+		}
+	}
+
+
+	/**
+	 *
+	 * @param
+	 */
+	public void mergeRolePrivilegeDataInfo(){
+		Map<String,Object> paramMap = new HashMap();
+		paramMap.put("defaultSysID",SynchronizedDataConstants.DEFAULT_SYS_PRIV_ID);
+		paramMap.put("defaultRoleID",SynchronizedDataConstants.DEFAULT_ROLE_ID);
+		//通过用户编号查询用户岗位是否存在
+		boolean bool  = isExistRolePrivilegeDataInfo(SynchronizedDataConstants.DEFAULT_ROLE_ID);
+		if(! bool){
+			dao.insertRolePrivilegeDataInfo(paramMap);
+		}
+	}
+
+	/**
+	 *用户与角色关系
+	 */
+
+	@Transactional(rollbackFor = Exception.class)
+	public void mergePersonRoleDataInfo(PersonInformation person){
+		Map<String,Object> paramMap = new HashMap();
+		String globalID = person.getUniqueid();
+		paramMap.put("userGlobalID",globalID);
+		paramMap.put("defaultRoleID",SynchronizedDataConstants.DEFAULT_ROLE_ID);
+		//通过用户编号查询用户岗位是否存在
+		boolean bool  = isExistPersonRoleDataInfoByUserID(globalID);
+		if(! bool){
+			dao.insertPersonRoleData(paramMap);
+		}
+	}
+
+
+
+
+
+	public boolean isExistRolePrivilegeDataInfo(int globalID) {
+		boolean bool = false;
+		int count = dao.isExistRolePrivilegeDataInfo(globalID);
+		if(count >0){
+			bool = true;
+		}else{
+			bool = false;
+		}
+		return bool ;
+	}
+
+	/*
+	 * 判断重复
+	 * 通过用户编号查询用户与角色关系数据是否重复
+	 */
+	public boolean isExistPersonRoleDataInfoByUserID(String globalID) {
+		boolean bool = false;
+		int count = dao.isExistPersonRoleDataInfoByUserID(globalID);
+		if(count >0){
+			bool = true;
+		}else{
+			bool = false;
+		}
+		return bool ;
+	}
+
+	/*
+	 * 判断重复
+	 * 通过用户编号查询用户岗位数据是否重复
+	 */
+	public boolean isExistPersonJobDataInfoByUserID(int globalID) {
+		boolean bool = false;
+		int count = dao.isExistPersonJobDataInfoByUserID(globalID);
+		if(count >0){
+			bool = true;
+		}else{
+			bool = false;
+		}
+		return bool ;
+	}
+
+
+
+
 	
 	/*
 	 * 通过用户编号查询用户ID
@@ -378,7 +480,31 @@ public class SynchronizedDataServiceImpl implements ISynchronizedDataService {
 		String userID = searchPersonByGlobalID(userGlobalID);
         paramMap.put("userID",userID);
         String depID = "";
-		Collection collection = person.getDeparts();
+		Object[] obj = person.getDeparts();
+		DepartmentInformation departInfo = (DepartmentInformation) obj[0];
+
+		System.out.println("DepartCode=" + departInfo.getDepartCode());
+		System.out.println("Default=" + departInfo.getDepartDefault());
+		System.out.println("DepartUpcode=" + departInfo.getDepartUpcode());
+		DepartmentInformation depart = null;
+		Collection collection = new ArrayList();
+		for(int k=0;k<obj.length;++k){
+			depart = (DepartmentInformation) obj[k];
+			//判断重复
+			boolean flag = isExistDeptGlobalID(depart);
+			if(! flag){
+				//新增部门
+				insertDeptData(depart);
+			}
+			boolean bool = isExistUserDeptByParm(userID,depart);
+			if(! bool) {
+				//新增用户与部门表
+				insertPersonDeptRelaData(userID,depart);
+			}
+		}
+
+
+		/*Collection collection = person.getDeparts();
 		Iterator it = collection.iterator();
 		while (it.hasNext()) {
 			DepartmentInformation depart = (DepartmentInformation) it
@@ -386,12 +512,55 @@ public class SynchronizedDataServiceImpl implements ISynchronizedDataService {
 			System.out.println("DepartCode=" + depart.getDepartCode());
 			System.out.println("Default=" + depart.getDepartDefault());
 			System.out.println("DepartUpcode=" + depart.getDepartUpcode());
-			depID = searchDeptByGlobalID(depart.getDepartCode());
-			paramMap.put("depID", depID);
-			dao.insertPersonDeptRelaData(paramMap);
-		}
+//			depID = searchDeptByGlobalID(depart.getDepartCode());
+			paramMap.put("departCode", depart.getDepartCode());
+			//判断重复
+			boolean flag = isExistDeptGlobalID(depart);
+			if(! flag){
+				//新增部门
+				insertDeptData(depart);
+			}
+			boolean bool = isExistUserDeptByParm(userID,depart);
+			if(! bool) {
+				//新增用户与部门表
+				insertPersonDeptRelaData(userID,depart);
+			}
+		}*/
+
 	}
-	
+
+	/**
+	 * 新增用户与部门表
+	 * @param userID
+	 * @return
+	 */
+	public void insertPersonDeptRelaData(String userID,DepartmentInformation depart) {
+		Map<String,Object> paramMap = new HashMap();
+		paramMap.put("userID",userID);
+		paramMap.put("departCode",depart.getDepartCode());
+		dao.insertPersonDeptRelaData(paramMap);
+	}
+
+
+
+    /**
+     * 通过用户编号查询数据是否重复
+     * @param userID
+     * @return
+     */
+    public boolean isExistUserDeptByParm(String userID,DepartmentInformation depart) {
+		Map<String,Object> paramMap = new HashMap();
+		paramMap.put("userID",userID);
+		paramMap.put("departCode",depart.getDepartCode());
+        boolean bool = false;
+        int count = dao.isExistUserDeptByParm(paramMap);
+        if(count >0){
+            bool = true;
+        }else{
+            bool = false;
+        }
+        return bool ;
+    }
 	
 	/*public static void main(String[] args) {
 		SynchronizedDataServiceImpl testService = new SynchronizedDataServiceImpl();
@@ -417,14 +586,14 @@ public class SynchronizedDataServiceImpl implements ISynchronizedDataService {
 	 */
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public boolean synchronizedBatchDeptData(Collection collection)
+	public boolean synchronizedBatchDeptData(Object[] departs)
 			throws Exception {
 		boolean bool = true;
 		int count = 0;
 		//删除公服系统所有机构数据
 		removeAllDeptData();
 		Map<String,Object> paramMap = new HashMap();
-		Iterator it = collection.iterator();
+/*		Iterator it = collection.iterator();
 		while (it.hasNext()) {
 			DepartmentInformation department = (DepartmentInformation) it
 					.next(); 
@@ -440,9 +609,27 @@ public class SynchronizedDataServiceImpl implements ISynchronizedDataService {
 			paramMap.put("departUpcode",department.getDepartUpcode());
 			paramMap.put("departName",department.getDepartName());
 			dao.saveDeptData(paramMap);
+		}*/
+
+		DepartmentInformation department = null;
+		for(int k=0;k<departs.length;++k) {
+			department = (DepartmentInformation) departs[k];
+			String departupcode = department.getDepartUpcode();
+			String departcode = department.getDepartCode();
+			String departname = department.getDepartName();
+			String departDesc = department.getDepartDescript();
+			String departDeflt = department.getDepartDefault();
+			System.out.println("部门上级编码====" + departupcode);
+			System.out.println("部门编码为=====" + departcode);
+			System.out.println("部门名称=====" + departname);
+			paramMap.put("departCode", department.getDepartCode());
+			paramMap.put("departUpcode",department.getDepartUpcode());
+			paramMap.put("departName",department.getDepartName());
+			dao.saveDeptData(paramMap);
 		}
+
 		try {
-			if (! collection.isEmpty()) {
+			if (departs.length >0) {
 				bool = true;
 			} else {
 				System.out.println("插入部门临时表0条数据，请查询！");

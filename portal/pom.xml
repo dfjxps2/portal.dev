@@ -32,7 +32,6 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
-        <!-- 本地调试所用的环境参数 -->
         <portal.server.ip>${env.PORTAL_SERVER_IP}</portal.server.ip>
         <index.service.ip>${env.INDEX_SERVICE_IP}</index.service.ip>
         <solr.service.ip>${env.SOLR_SERVICE_IP}</solr.service.ip>
@@ -42,6 +41,8 @@
         <portal.file.dir>${env.PORTAL_FILE_DIR}</portal.file.dir>
         <portal.log.dir>${env.PORTAL_LOG_DIR}</portal.log.dir>
         <cas.server.ip>${env.CAS_SERVER_IP}</cas.server.ip>
+        <cas.server.protocol>https</cas.server.protocol>
+        <cas.server.port>8443</cas.server.port>
         <portal.db.password>${env.PORTAL_DB_PASSWORD}</portal.db.password>
     </properties>
 
@@ -255,36 +256,58 @@
         </dependency>
 
         <dependency>
+            <groupId>axis</groupId>
+            <artifactId>axis</artifactId>
+            <version>1.4</version>
+        </dependency>
+        <dependency>
+            <groupId>axis</groupId>
+            <artifactId>axis-wsdl4j</artifactId>
+            <version>1.5.1</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-remoting</artifactId>
+            <version>2.0.8</version>
+        </dependency>
+       <dependency>
+            <groupId>axis</groupId>
+            <artifactId>axis-jaxrpc</artifactId>
+            <version>1.4</version>
+        </dependency>
+
+
+    <dependency>
             <groupId>org.apache.axis2</groupId>
             <artifactId>axis2-spring</artifactId>
             <version>${axis2.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.axis2</groupId>
-            <artifactId>axis2-transport-http</artifactId>
-            <version>${axis2.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.axis2</groupId>
-            <artifactId>axis2-transport-local</artifactId>
-            <version>${axis2.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.axis2</groupId>
-            <artifactId>axis2-xmlbeans</artifactId>
-            <version>${axis2.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.axis2</groupId>
-            <artifactId>axis2-json</artifactId>
-            <version>${axis2.version}</version>
-        </dependency>
-        <!-- axis 1.4 jar start -->
-        <dependency>
-            <groupId>org.apache.axis</groupId>
-            <artifactId>axis</artifactId>
-            <version>1.4</version>
-        </dependency>
+           <dependency>
+           <groupId>org.apache.axis2</groupId>
+           <artifactId>axis2-transport-http</artifactId>
+           <version>${axis2.version}</version>
+       </dependency>
+      <dependency>
+           <groupId>org.apache.axis2</groupId>
+           <artifactId>axis2-transport-local</artifactId>
+           <version>${axis2.version}</version>
+       </dependency>
+      <dependency>
+           <groupId>org.apache.axis2</groupId>
+           <artifactId>axis2-xmlbeans</artifactId>
+           <version>${axis2.version}</version>
+       </dependency>
+      <dependency>
+           <groupId>org.apache.axis2</groupId>
+           <artifactId>axis2-json</artifactId>
+           <version>${axis2.version}</version>
+       </dependency>
+
         <dependency>
             <groupId>commons-discovery</groupId>
             <artifactId>commons-discovery</artifactId>
@@ -301,7 +324,7 @@
             <artifactId>axis-jaxrpc</artifactId>
             <version>1.4</version>
         </dependency>
-        <dependency>
+       <dependency>
             <groupId>org.apache.axis</groupId>
             <artifactId>axis-saaj</artifactId>
             <version>1.4</version>
@@ -310,14 +333,6 @@
             <groupId>org.apache.solr</groupId>
             <artifactId>solr-solrj</artifactId>
             <version>7.3.0</version>
-        </dependency>
-        <!--添加公服认证本地私有包-->
-        <dependency>
-            <groupId>uumsinterface</groupId>
-            <artifactId>uumsinterface</artifactId>
-            <scope>system</scope>
-            <version>1.0</version>
-            <systemPath>${basedir}\src\main\webapp\WEB-INF\lib\uumsinterface_JDK1.4.jar</systemPath>
         </dependency>
 
         <!--Tika-->
@@ -439,7 +454,10 @@
                 <portal.file.dir>/home/portal/files</portal.file.dir>
                 <portal.log.dir>/home/portal/logs</portal.log.dir>
                 <cas.server.ip>10.1.3.193</cas.server.ip>
+                <ca.server.ip>192.168.161.192</ca.server.ip>
                 <portal.db.password>root</portal.db.password>
+                <cas.server.protocol>https</cas.server.protocol>
+                <cas.server.port>8443</cas.server.port>
             </properties>
         </profile>
         <!--演示环境-->
@@ -456,7 +474,10 @@
                 <portal.file.dir>/home/portal/files</portal.file.dir>
                 <portal.log.dir>/home/portal/logs</portal.log.dir>
                 <cas.server.ip>10.1.3.62</cas.server.ip>
+                <ca.server.ip>172.26.64.109</ca.server.ip>
                 <portal.db.password>123456</portal.db.password>
+                <cas.server.protocol>https</cas.server.protocol>
+                <cas.server.port>8443</cas.server.port>
             </properties>
         </profile>
         <!--演示环境-->
@@ -473,7 +494,10 @@
                 <portal.file.dir>/home/portal/files</portal.file.dir>
                 <portal.log.dir>/home/portal/logs</portal.log.dir>
                 <cas.server.ip>10.1.3.195</cas.server.ip>
+                <ca.server.ip>172.26.64.109</ca.server.ip>
                 <portal.db.password>root</portal.db.password>
+                <cas.server.protocol>https</cas.server.protocol>
+                <cas.server.port>8443</cas.server.port>
             </properties>
         </profile>
         <!--泰豪演示环境-->
@@ -489,8 +513,11 @@
                 <audit.log.port>6699</audit.log.port>
                 <portal.file.dir>/home/portal/files</portal.file.dir>
                 <portal.log.dir>/home/portal/logs</portal.log.dir>
-                <cas.server.ip>10.10.10.42</cas.server.ip>
+                <cas.server.ip>10.10.10.41</cas.server.ip>
+                <ca.server.ip>172.26.64.109</ca.server.ip>
                 <portal.db.password>123456</portal.db.password>
+                <cas.server.protocol>http</cas.server.protocol>
+                <cas.server.port>17001</cas.server.port>
             </properties>
         </profile>
         <!--生产环境-->
@@ -506,8 +533,11 @@
                 <audit.log.port>6699</audit.log.port>
                 <portal.file.dir>/home/portal/files</portal.file.dir>
                 <portal.log.dir>/home/portal/logs</portal.log.dir>
-                <cas.server.ip>10.10.10.42</cas.server.ip>
+                <cas.server.ip>10.10.10.41</cas.server.ip>
+                <ca.server.ip>172.26.64.109</ca.server.ip>
                 <portal.db.password>123456</portal.db.password>
+                <cas.server.protocol>http</cas.server.protocol>
+                <cas.server.port>17001</cas.server.port>
             </properties>
         </profile>
     </profiles>

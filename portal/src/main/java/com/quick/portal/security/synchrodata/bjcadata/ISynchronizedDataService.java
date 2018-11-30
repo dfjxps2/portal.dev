@@ -20,10 +20,10 @@ package com.quick.portal.security.synchrodata.bjcadata;
 
 import java.util.Collection;
 
-import com.bjca.uums.client.bean.DepartmentInformation;
-import com.bjca.uums.client.bean.LoginInformation;
-import com.bjca.uums.client.bean.PersonInformation;
-import com.bjca.uums.client.bean.RoleInformation;
+import com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.DepartmentInformation;
+import com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.LoginInformation;
+import com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.PersonInformation;
+import com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.RoleInformation;
 
 /**
  * SynchronizedDataService服务接口
@@ -45,7 +45,7 @@ public interface ISynchronizedDataService {
 	/*
      * 机构数据批量同步
      */
-	public boolean synchronizedBatchDeptData(Collection collection)throws Exception;
+	public boolean synchronizedBatchDeptData(Object[] departs)throws Exception;
 	
 
 	

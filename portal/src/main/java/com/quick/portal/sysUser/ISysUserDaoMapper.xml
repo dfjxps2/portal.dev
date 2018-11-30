@@ -148,6 +148,8 @@
 		, u.user_addr
 		, u.user_tel
 		, u.user_global_id
+		, u.idcard_num
+		, u.user_email
 		, u.cre_time
 		, u.upd_time
 		,group_concat(distinct r.role_name) as role_name

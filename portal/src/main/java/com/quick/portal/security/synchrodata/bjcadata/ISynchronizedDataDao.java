@@ -21,9 +21,9 @@ package com.quick.portal.security.synchrodata.bjcadata;
 import java.util.List;
 import java.util.Map;
 
-import com.bjca.uums.client.bean.DepartmentInformation;
-import com.bjca.uums.client.bean.PersonInformation;
-import com.bjca.uums.client.bean.RoleInformation;
+import com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.DepartmentInformation;
+import com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.PersonInformation;
+import com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.RoleInformation;
 import com.quick.core.base.ISysBaseDao;
 
 /**
@@ -52,17 +52,12 @@ public interface ISynchronizedDataDao<DepartmentInformation> extends ISysBaseDao
 	//删除公服系统所有机构数据
 	public void removeAllDeptData();
 	//公服标识查询部门上级编号数据
-	public List<Map<String, Object>> searchFullDeptInfo();
+	public List<Map<String, Object>> searchFullDeptInfo(String depID);
 	
 	//修改部门上级编号
 	public void updateSuperDepId(Map<String,Object> paramMap);
 	
-	 /*
-     * 部门数据同步结果
-     */
-	
-	
-    //用户数据同步开始
+
 	//删除用户表数据
 	public int removePersonDataByID(String uid);
 	//通过用户编号查询数据是否重复
@@ -73,10 +68,7 @@ public interface ISynchronizedDataDao<DepartmentInformation> extends ISysBaseDao
 	public int insertPersonData(PersonInformation person);
 	//MERGE用户表数据
 	public void mergePersonData();
-	//用户数据同步结果
 
-	
-	
 	//删除用户与部门关系临时表数据
 	public void removeTmpPersonDeptRelaData();
 	//新增用户与部门关系临时表数据
@@ -99,15 +91,75 @@ public interface ISynchronizedDataDao<DepartmentInformation> extends ISysBaseDao
 	 */
 	public List<Map<String, Object>> searchDeptByGlobalID(String deptGlobalID);
 	
+
 	/*
-	 * 下发单个用户数据
+	 * 通过应用编号获取该应用系统下所有的用户应用权限数据接口，返回报文数据
 	 */
-	public List<Map<String, Object>> getUsersDataByUserID(String userID);
+	public List<Map<String, Object>> getUsersDataByUserID(Map<String, Object> paramMap);
 	
 	/*
-	 * 下发批量用户数据
+	 * 通过应用编号获取该应用系统下所有的用户应用权限数据接口，返回报文数据
 	 */
-	public List<Map<String, Object>> getAllUsersData();
-	//下发CAS用户到集成系统,下发菜单权限数据
-	public List<Map<String, Object>> getFunPrivilegeByUserID(String userID);
+	public List<Map<String, Object>> getUserBatchDataByAppName(Map<String, Object> paramMap);
+
+
+	/**
+	 * 通过用户编号查询用户岗位数据是否重复
+	 * @param userDuty
+	 * @return
+	 */
+	public int isExistPersonJobDataInfoByUserID(int userDuty);
+
+	/**
+	 * 新增用户岗位
+	 * @param userDuty
+	 * @return
+	 */
+	public void insertPersonJobData(String userDuty);
+
+
+    /**
+     * 通过用户编号查询数据是否重复
+     * @param
+     * @return
+     */
+    public int isExistUserDeptByParm(Map<String, Object> paramMap);
+
+
+    /**
+     * 通过用户编号查询用户岗位数据是否重复
+     * @param userGlobalID
+     * @return
+     */
+    public int isExistPersonRoleDataInfoByUserID(String userGlobalID);
+
+
+
+
+    /**
+     * 新增用户角色关系
+     * @param paramMap
+     * @return
+     */
+    public void insertPersonRoleData(Map<String, Object> paramMap);
+
+
+
+	public int isExistRolePrivilegeDataInfo(int globalID);
+
+
+
+	public void insertRolePrivilegeDataInfo(Map<String, Object> paramMap);
+
+
+
+	/*
+	 * 通过用户帐号获取机构数据接口，返回报文数据
+	 */
+	 public List<Map<String, Object>>  getOrgDataByUserID(String userID);
+
+	/*
+	 * 批量获取机构数据接口，返回报文数据
+	 */
+	public List<Map<String, Object>> getOrgBatchData();
 }

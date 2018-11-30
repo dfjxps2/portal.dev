@@ -49,6 +49,10 @@ public class SysUserDO  implements java.io.Serializable {
         setUpd_time(u.getUpd_time());
         setRoleList(u.getRoleList());
         setDepList(u.getDepList());
+        setDep_global_id(u.getDep_global_id());
+        setSup_dep_global_id(u.getSup_dep_global_id());
+
+
     }
     // <editor-fold defaultstate="collapsed" desc="私有成员">
     /**
@@ -109,6 +113,10 @@ public class SysUserDO  implements java.io.Serializable {
 
     private List<UserRoleDO> roleList;
     private List<UserDepartmentDO> depList;
+
+
+    private String dep_global_id ;
+    private String sup_dep_global_id;
 
     public List<UserRoleDO> getRoleList() {
         return roleList;
@@ -354,5 +362,21 @@ public class SysUserDO  implements java.io.Serializable {
 
     public void setJob_level(int job_level) {
         this.job_level = job_level;
+    }
+
+    public String getDep_global_id() {
+        return dep_global_id;
+    }
+
+    public void setDep_global_id(String dep_global_id) {
+        this.dep_global_id = dep_global_id;
+    }
+
+    public String getSup_dep_global_id() {
+        return sup_dep_global_id;
+    }
+
+    public void setSup_dep_global_id(String sup_dep_global_id) {
+        this.sup_dep_global_id = sup_dep_global_id;
     }
 }
