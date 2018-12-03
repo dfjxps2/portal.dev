@@ -212,8 +212,8 @@ $(document).ready(function () {
         $("#ionrange_2").ionRangeSlider({
         	 min: 0,
              max: 500,
-             from: 301,
-//             to: 2000,
+//             from: 301,
+             to: 301,
             type: 'double',
             prettify: true,
             hasGrid: false
@@ -225,8 +225,8 @@ $(document).ready(function () {
         $("#ionrange_3").ionRangeSlider({
         	 min: 0,
              max: 500,
-             from: 201,
-//             to: 300,
+//             from: 201,
+             to: 201,
             type: 'double',
             prettify: true,
             hasGrid: false
@@ -235,8 +235,8 @@ $(document).ready(function () {
         $("#ionrange_4").ionRangeSlider({
         	min: 0,
             max: 10,
-            from: 2,
-            to: 30,
+//            from: 2,
+            to: 2,
             type: 'double',
             prettify: true,
             hasGrid: false

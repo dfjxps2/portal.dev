@@ -51,7 +51,7 @@ a:focus {
 .nav > li > a {
     /*color: #a7b1c2;*/
     color:#ffffff;
-    font-weight: 600;
+/*    font-weight: 600;*/
     padding: 14px 20px 14px 25px;
     font-family: Microsoft YaHei;
 }
@@ -110,8 +110,8 @@ body.body-small .navbar-top-links li:last-child {
 
 .navbar-top-links li a {
     padding: 0px 10px;
-    min-height: 60px;
-    line-height: 55px;
+    min-height: 53px;
+    line-height: 53px;
 }
 .hidden-xs > a i{
     font-size:18px;
