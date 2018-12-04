@@ -112,8 +112,10 @@ public class MainFrameController extends SysBaseController<MainFrameBean> {
     //添加用户
     @RequestMapping(value = "/sendLog")
     @ResponseBody
-    public void sendLog(HttpServletRequest request, int menuId, String menuNm) throws Exception {
+    public void sendLog(HttpServletRequest request,  HttpServletResponse res,int menuId, String menuNm) throws Exception {
         //记录日志
+        res.setContentType("application/json; charset=utf-8");
+        res.setCharacterEncoding("UTF-8");
         try {
             userAccessLogService.saveLog(request,
                     UserAccessLogConstants.SYS_LOG_TYPE_ID,
@@ -131,6 +133,8 @@ public class MainFrameController extends SysBaseController<MainFrameBean> {
     @RequestMapping(value = "/getIsAppMenuByID")
     @ResponseBody
     public void getIsAppMenuByID(HttpServletRequest req, HttpServletResponse res, int menuId) throws Exception {
+        res.setContentType("application/json; charset=utf-8");
+        res.setCharacterEncoding("UTF-8");
         String flag = sysMenuService.getIsAppMenuByID(menuId);
         res.getWriter().write(flag);
     }

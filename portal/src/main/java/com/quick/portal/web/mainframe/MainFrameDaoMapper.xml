@@ -17,7 +17,7 @@
     <select id="searchMainFrame" parameterType="int" resultMap="mainFrameResult">
 	<![CDATA[		        
 			SELECT
-					U.MENU_ID,
+					DISTINCT U.MENU_ID,
 					U.MENU_CN_NAME,
 					U.MENU_ICON_URL,
 					U.SUPER_MENU_ID,

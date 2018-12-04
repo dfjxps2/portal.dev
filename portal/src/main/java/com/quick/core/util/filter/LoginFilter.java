@@ -123,6 +123,7 @@ public class LoginFilter extends HttpServlet implements Filter {
 
     private void writeJs(String msg, HttpServletResponse response) {
         response.setContentType("application/json; charset=utf-8"); // 输出JS文件
+        response.setCharacterEncoding("UTF-8");
         try {
             OutputStream out = response.getOutputStream();
             out.write(msg.getBytes("UTF-8"));
@@ -133,6 +134,7 @@ public class LoginFilter extends HttpServlet implements Filter {
 
     private void writeMsg(String msg, String host, String url, HttpServletRequest request, HttpServletResponse response) {
         response.setHeader("content-type", "text/html;charset=UTF-8");
+        response.setCharacterEncoding("UTF-8");
         String outString = "<html><body><script src=\"" + host + "res/plugin/jQuery/jquery-1.11.3.min.js\" type=\"text/javascript\"></script>";
         outString += "<link href=\"" + host + "res/layer/skin/default/layer.css\" rel=\"stylesheet\">";
         outString += "<script src=\"" + host + "res/layer/layer.js\"></script>";
