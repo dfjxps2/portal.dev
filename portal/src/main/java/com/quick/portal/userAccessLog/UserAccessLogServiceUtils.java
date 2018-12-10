@@ -35,7 +35,7 @@ public class UserAccessLogServiceUtils {
                     userName, operatedUser, operateType, loginTime, serviceName);
         else
             logger.info("[{}]:[{}]:[{}]:[{}]:[{}]:[{}]:[{}]:[{}]:[{}]:[{}]",
-                    userName, ip, serName, "", operateType, loginTime, loginTime, 1, "成功", requestResult);
+                    userName, ip, serName, "统一门户系统", operateType, loginTime, loginTime, 1, "成功", requestResult);
 
 //        logger.info(""+operLog+": add Backlog ->userName={}, operatedUser={},operateType={}, " +
 //                        "loginTime={}, requestResult={}, serviceName={}, ipAdd={}"
