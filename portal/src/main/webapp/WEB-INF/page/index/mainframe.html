@@ -14,9 +14,10 @@
 <link href="${G.host}/res/css/style.css?v=4.1.0" rel="stylesheet">
 <style type="text/css">
 	.nav-top{height: 54px;}
-	.nav-close{background:url(res/images/logo.png) no-repeat 35px;padding:12px 10px 12px 10px}
-	.navbar-static-top{margin-bottom: 0; background:url(res/images/nav.png) 100% 100%;height: 54px;}
-	.roll-right.J_tabExit {
+	.nav-close{background:url(res/images/logo.png) no-repeat 35px;padding:12px 10px 17px 10px}
+/*	.navbar-static-top{margin-bottom: 0; background:url(res/images/nav.png) 100% 100%;height: 54px;}*/
+    .navbar-static-top{margin-bottom: 0; background:url(res/images/nav.png);height: 54px;}
+    .roll-right.J_tabExit {
 		height: 40px;
 		padding:0px 0px 0px 22px;
 		outline: none;
@@ -28,7 +29,7 @@
 	#side-menu>li>a{padding:17px 10px 17px 10px;color:#d4d6dc;font-size:14px;}
 	#side-menu>li>a>.fa{width:18px;height:18px;font-size:18px;margin-right:10px;}
 	#side-menu>li.active>a, #side-menu .nav > li > a:hover, #side-menu .nav > li > a:focus{color:#fff;}
-	.nav.navbar-right > li > a:hover{color:#10597c;}
+	/*.nav.navbar-right > li > a:hover{background:#10597c;color:#10597c;}*/
 	.navbar-top-links li a{padding:0 22px;}
 	.hidden-xs > a i{width:20px;height:20px;font-size:20px;}
 	.navbar-static-side{background:#292d37;}
@@ -58,19 +59,19 @@
 								class="right-sidebar-toggle" href="javascript:void(0);"
 								onclick="javascript:location.href='home/main';"
 								aria-expanded="false" > <i
-								class="fa fa-tasks"></i> 返回领导驾驶舱
+								class="fa fa-tasks" style="font-weight: normal;"></i> 返回领导驾驶舱
 						</a>
 					</li>
 
 
 					<li class="hidden-xs"><a><!--<i class="fa fa-user"></i>-->
-							<strong class="font-bold">${L.user_real_name}</strong></a>
+							<strong class="font-bold" style="font-weight: normal;">${L.user_real_name}</strong></a>
 
 					</li>
 					<li class="hidden-xs" style="margin-right:62px;"><a href="javascript:void(0);"
 											 onclick="javascript:logout();return false;"
 											 class="roll-nav roll-right J_tabExit"><i
-							class="fa fa fa-sign-out"></i>退出</a></li>
+							class="fa fa fa-sign-out" style="font-weight: normal;"></i>退出</a></li>
 
 
 				</ul>
