@@ -178,7 +178,7 @@
     function selectDep() {
         $.ajax({
             type: "get",
-            url: quick.baseUrl + "/userDepartment/getData",
+            url: quick.baseUrl + "/userDepartment/getData?dep_state=1",
             async: false,
             dataType: "json",
             success: function (data) {

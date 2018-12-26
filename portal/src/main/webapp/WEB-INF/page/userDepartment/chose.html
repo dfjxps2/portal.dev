@@ -15,7 +15,7 @@
        $("#list").bootstrapTable("destroy");
        _gd["list"]=new BGrid("#list");
        _gd["list"].config({
-    	   url:quick.serverUrl+"/getList?i=" + Math.random(),
+    	   url:quick.serverUrl+"/getList?dep_state=1&i=" + Math.random(),
     	   idField: quick.idField,
     	   sortName: quick.idField,
            cache:false,
@@ -23,17 +23,17 @@
     	   toolbar:"#formSearch",
     	   columns: [
                    {  checkbox: true },
-                   { field: 'super_dep_name', title: '上级部门', width: 100  },
                    { field: 'dep_name', title: '部门名称', width: 120  },
+                   { field: 'super_dep_name', title: '上级部门', width: 100  },
                    { field: 'dep_level', title: '部门级别', width: 80  },
                    { field: 'cre_time', title: '创建时间', width: 100  }
     	   ],onClickRow:function(row,e){
                _chosen = row;
-               _chosenId = row.dep_id;
+               _chosenId = row.dep_global_id;
                _chosenName = row.dep_name;
     	   },onCheck:function(row){
                _chosen = row;
-               _chosenId = row.dep_id;
+               _chosenId = row.dep_global_id;
                _chosenName = row.dep_name;
            }
        });

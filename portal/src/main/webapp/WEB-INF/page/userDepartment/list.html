@@ -62,7 +62,6 @@
             toolbar: "#formSearch",
             columns: [
                 {checkbox: true},
-                {field: 'super_dep_name', title: '上级部门', width: 100, align: 'center'},
                 {
                     field: 'dep_name',
                     title: '部门名称',
@@ -72,6 +71,7 @@
                         return "<a href='javascript:void(0)' onclick=\"goDetail(this);\" id='" + row.dep_id + "'>" + row.dep_name + "</a>";
                     }
                 },
+                {field: 'super_dep_name', title: '上级部门名称', width: 100, align: 'center'},
                 {field: 'dep_level', title: '部门级别', width: 100, align: 'center'},
                 {
                     field: 'dep_state',

@@ -9,11 +9,17 @@
 	       and dep_id = #{dep_id}
 	    ]]></if>
 		<if test="dep_name != null and dep_name != '' and dep_name != 'null'"><![CDATA[
-	       and instr(dep_name,#{dep_name})>0
+	       and dep_name like CONCAT('%',#{dep_name},'%')
 	    ]]></if>
-		<if test="super_dep_id != null"><![CDATA[
-	       and super_dep_id = #{super_dep_id}
+
+		<if test="dep_global_id != null"><![CDATA[
+	       and dep_global_id = #{dep_global_id}
 	    ]]></if>
+
+		<if test="sup_dep_global_id != null"><![CDATA[
+	       and sup_dep_global_id = #{sup_dep_global_id}
+	    ]]></if>
+
 		<if test="dep_level != null"><![CDATA[
 	       and dep_level = #{dep_level}
 	    ]]></if>
@@ -28,32 +34,34 @@
     <!-- 新增user_department -->
 	<insert id="insert" parameterType="com.quick.portal.userDepartment.UserDepartmentDO">
 		insert into user_department (
-    		  super_dep_id,
+    		  dep_global_id,
+    		  sup_dep_global_id,
     		  dep_name,
     		  dep_level,
     		  dep_state,
     		  cre_time,
     		  upd_time
 		)values(
-			 #{super_dep_id},
+			 #{dep_global_id},
+			 #{sup_dep_global_id},
 			 #{dep_name},
 			 #{dep_level},
 			 #{dep_state},
-			 #{cre_time},
-			 #{upd_time}
+			 now(),
+			 now()
 			)
 	</insert>
 		
 	<!-- 修改user_department -->
 	<update id="update" parameterType="com.quick.portal.userDepartment.UserDepartmentDO">
 		update user_department 
-		   set dep_id=#{dep_id}
-			  ,super_dep_id=#{super_dep_id}
+		   set dep_global_id=#{dep_global_id}
+			  ,sup_dep_global_id=#{sup_dep_global_id}
 			  ,dep_name=#{dep_name}
 			  ,dep_level=#{dep_level}
 			  ,dep_state=#{dep_state}
-			  ,cre_time=#{cre_time}
-			  ,upd_time=#{upd_time}
+			  ,cre_time=now()
+			  ,upd_time=now()
 		 where dep_id = #{dep_id}
 	</update>
     
@@ -65,13 +73,18 @@
     <!--查询-->
 	<select id="select" parameterType="map" resultType="map">
 		select d.*,s.super_dep_name from user_department d
-		  left join (select dep_id id, dep_name super_dep_name from user_department) s on d.super_dep_id=s.id
+		  left join (select dep_global_id id, dep_name super_dep_name from user_department) s on d.sup_dep_global_id=s.id
 		<where>
 			<include refid="where" />
 		</where>
-        <if test="_sql_order != null and _sql_order != ''">
-            order by ${_sql_order}
-        </if>
+		<choose>
+			<when test="_sql_order != null and _sql_order != ''">
+				order by d.dep_global_id,d.dep_state desc,${_sql_order}
+			</when>
+			<otherwise>
+				order by d.dep_global_id, d.dep_state desc
+			</otherwise>
+		</choose>
 	</select>
 	
 	<!-- 查询总记录数 -->

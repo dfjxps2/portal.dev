@@ -64,8 +64,8 @@ public class UserDepartmentServiceImpl extends SysBaseService<UserDepartmentDO> 
         int c = 0;
         Date now = DateTime.Now().getTime();
         //名称不能重复
-        if(exist("dep_name", entity.getDep_name(), val))
-            return ActionMsg.setError("名称已存在，请换一个");
+      /*  if(exist("dep_name", entity.getDep_name(), val))
+            return ActionMsg.setError("名称已存在，请换一个");*/
         if(val == null || val == 0) {
             entity.setCre_time( now );  //新增时间
 			entity.setUpd_time( now );  //修改时间

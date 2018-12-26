@@ -195,7 +195,7 @@
                 user_name: {
                     required: true,
                     usernameFuc: true,
-                    //判断 菜单名是否重复
+                    //判断 用户名是否重复
                     remote: {
                         url: "${G.host}/sysUser/checkUser",     //后台处理程序
                         type: "post",               //数据发送方式
@@ -240,6 +240,7 @@
                 setForm(data);
 
                 $('.selectpicker').selectpicker('val', data.role_ids.split(","));
+ //               $('.selectpicker').selectpicker('val', data.dep_id);
 
                 document.getElementsByName("user_state").checked = false;
                 if (data.user_state == 1) {
@@ -293,7 +294,7 @@
     function selectDep() {
         $.ajax({
             type: "get",
-            url: quick.baseUrl + "/userDepartment/getData",
+            url: quick.baseUrl + "/userDepartment/getData?dep_state=1",
             async: false,
             dataType: "json",
             success: function (data) {
