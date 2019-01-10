@@ -51,7 +51,10 @@
         <property name="removeAbandoned" value="true" />
         <property name="removeAbandonedTimeout" value="1800" />
         <property name="logAbandoned" value="true" />
+        <!-- 开启Druid的监控统计功能 -->
+        <property name="filters" value="stat" />
     </bean>
+    
     
     
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">

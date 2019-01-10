@@ -32,6 +32,17 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
+        <env.PORTAL_SERVER_IP>localhost</env.PORTAL_SERVER_IP>
+        <env.INDEX_SERVICE_IP>localhost</env.INDEX_SERVICE_IP>
+        <env.SOLR_SERVICE_IP>localhost</env.SOLR_SERVICE_IP>
+        <env.LOG_SERVER_IP>localhost</env.LOG_SERVER_IP>
+        <env.SERVICE_LOG_PORT>6666</env.SERVICE_LOG_PORT>
+        <env.AUDIT_LOG_PORT>6666</env.AUDIT_LOG_PORT>
+        <env.PORTAL_FILE_DIR>/home/portal/files</env.PORTAL_FILE_DIR>
+        <env.PORTAL_LOG_DIR>/home/portal/logs</env.PORTAL_LOG_DIR>
+        <env.CAS_SERVER_IP>localhost</env.CAS_SERVER_IP>
+        <env.PORTAL_DB_PASSWORD>root</env.PORTAL_DB_PASSWORD>
+
         <portal.server.ip>${env.PORTAL_SERVER_IP}</portal.server.ip>
         <index.service.ip>${env.INDEX_SERVICE_IP}</index.service.ip>
         <solr.service.ip>${env.SOLR_SERVICE_IP}</solr.service.ip>
