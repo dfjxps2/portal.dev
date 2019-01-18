@@ -32,7 +32,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
-        <!--<portal.server.ip>${env.PORTAL_SERVER_IP}</portal.server.ip>
+        <portal.server.ip>${env.PORTAL_SERVER_IP}</portal.server.ip>
         <index.service.ip>${env.INDEX_SERVICE_IP}</index.service.ip>
         <solr.service.ip>${env.SOLR_SERVICE_IP}</solr.service.ip>
         <log.server.ip>${env.LOG_SERVER_IP}</log.server.ip>
@@ -44,19 +44,7 @@
         <cas.server.protocol>https</cas.server.protocol>
         <cas.server.port>8443</cas.server.port>
         <portal.db.password>${env.PORTAL_DB_PASSWORD}</portal.db.password>
--->
-        <portal.server.ip>127.0.0.1</portal.server.ip>
-        <index.service.ip>127.0.0.1</index.service.ip>
-        <solr.service.ip>127.0.0.1</solr.service.ip>
-        <log.server.ip>127.0.0.1</log.server.ip>
-        <service.log.port>7001</service.log.port>
-        <audit.log.port>7002</audit.log.port>
-        <portal.file.dir>/home/files/portal</portal.file.dir>
-        <portal.log.dir>/home/files/portal</portal.log.dir>
-        <cas.server.ip>127.0.0.1</cas.server.ip>
-        <cas.server.protocol>https</cas.server.protocol>
-        <cas.server.port>8443</cas.server.port>
-        <portal.db.password>mysql</portal.db.password>
+
     </properties>
 
     <dependencies>
