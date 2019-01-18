@@ -51,6 +51,7 @@
 			#{user_addr, mode=IN},
 			#{user_tel, mode=IN},
 			#{user_global_id, mode=IN},
+			#{user_email, mode=IN},
 			#{roles, mode=IN},
 			#{dep_id, mode=IN},
 			#{error_no, jdbcType=INTEGER, mode=OUT}
@@ -97,6 +98,7 @@
 			#{user_addr, mode=IN},
 			#{user_tel, mode=IN},
 			#{user_global_id, mode=IN},
+			#{user_email, mode=IN},
 			#{roles, mode=IN},
 			#{dep_id, mode=IN},
 			#{error_no, jdbcType=INTEGER, mode=OUT}

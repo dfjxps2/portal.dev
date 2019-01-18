@@ -51,6 +51,7 @@ public class SysUserDO  implements java.io.Serializable {
         setDepList(u.getDepList());
         setDep_global_id(u.getDep_global_id());
         setSup_dep_global_id(u.getSup_dep_global_id());
+        setUser_email(u.getUser_email());
 
 
     }
@@ -99,6 +100,8 @@ public class SysUserDO  implements java.io.Serializable {
      *upd_time
      */
     private Date  upd_time;
+
+    private String user_email;
 
     private String user_global_id;
   
@@ -378,5 +381,13 @@ public class SysUserDO  implements java.io.Serializable {
 
     public void setSup_dep_global_id(String sup_dep_global_id) {
         this.sup_dep_global_id = sup_dep_global_id;
+    }
+
+    public String getUser_email() {
+        return user_email;
+    }
+
+    public void setUser_email(String user_email) {
+        this.user_email = user_email;
     }
 }
