@@ -76,7 +76,10 @@ public class ApplicationDO implements java.io.Serializable {
     /**
      *更新时间
      */
-    private Date  upd_time;        	
+    private Date  upd_time;
+
+    private String dep_global_id;
+
 	// </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc="成员Get/Set">
@@ -248,5 +251,19 @@ public class ApplicationDO implements java.io.Serializable {
     public void setUpd_time(Date upd_time) {
         this.upd_time = upd_time;
     }
+
+
+    public void setDep_global_id(String dep_global_id) {
+        this.dep_global_id = dep_global_id;
+    }
+    /**
+     * 应用系统预览URL  Get方法
+     * @return
+     */
+    public String GetDep_global_id() {
+        return this.dep_global_id;
+    }
+
+
     // </editor-fold>
 }
