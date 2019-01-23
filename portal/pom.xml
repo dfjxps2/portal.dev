@@ -469,6 +469,7 @@
                 <portal.log.dir>/home/portal/logs</portal.log.dir>
                 <cas.server.ip>10.1.3.193</cas.server.ip>
                 <ca.server.ip>192.168.161.192</ca.server.ip>
+                <portal.mysql.ip>127.0.0.1</portal.mysql.ip>
                 <portal.db.password>root</portal.db.password>
                 <cas.server.protocol>https</cas.server.protocol>
                 <cas.server.port>8443</cas.server.port>
@@ -489,6 +490,7 @@
                 <portal.log.dir>/home/portal/logs</portal.log.dir>
                 <cas.server.ip>10.1.3.62</cas.server.ip>
                 <ca.server.ip>172.26.64.109</ca.server.ip>
+                <portal.mysql.ip>127.0.0.1</portal.mysql.ip>
                 <portal.db.password>123456</portal.db.password>
                 <cas.server.protocol>https</cas.server.protocol>
                 <cas.server.port>8443</cas.server.port>
@@ -509,6 +511,7 @@
                 <portal.log.dir>/home/portal/logs</portal.log.dir>
                 <cas.server.ip>10.1.3.195</cas.server.ip>
                 <ca.server.ip>172.26.64.109</ca.server.ip>
+                <portal.mysql.ip>127.0.0.1</portal.mysql.ip>
                 <portal.db.password>root</portal.db.password>
                 <cas.server.protocol>https</cas.server.protocol>
                 <cas.server.port>8443</cas.server.port>
@@ -529,6 +532,7 @@
                 <portal.log.dir>/home/portal/logs</portal.log.dir>
                 <cas.server.ip>10.10.10.41</cas.server.ip>
                 <ca.server.ip>172.26.64.109</ca.server.ip>
+                <portal.mysql.ip>127.0.0.1</portal.mysql.ip>
                 <portal.db.password>123456</portal.db.password>
                 <cas.server.protocol>http</cas.server.protocol>
                 <cas.server.port>17001</cas.server.port>
@@ -549,6 +553,29 @@
                 <portal.log.dir>/home/portal/logs</portal.log.dir>
                 <cas.server.ip>10.10.10.41</cas.server.ip>
                 <ca.server.ip>172.26.64.109</ca.server.ip>
+                <portal.mysql.ip>127.0.0.1</portal.mysql.ip>
+                <portal.db.password>123456</portal.db.password>
+                <cas.server.protocol>http</cas.server.protocol>
+                <cas.server.port>17001</cas.server.port>
+            </properties>
+        </profile>
+
+        <!--资源中心环境-->
+        <profile>
+            <id>res</id>
+            <properties>
+                <profiles.active>res</profiles.active>
+                <portal.server.ip>192.166.162.148</portal.server.ip>
+                <index.service.ip>192.166.162.148</index.service.ip>
+                <solr.service.ip>192.166.162.148</solr.service.ip>
+                <log.server.ip>192.166.162.148</log.server.ip>
+                <service.log.port>6698</service.log.port>
+                <audit.log.port>6699</audit.log.port>
+                <portal.file.dir>/home/portal/files</portal.file.dir>
+                <portal.log.dir>/home/portal/logs</portal.log.dir>
+                <cas.server.ip>192.166.162.148</cas.server.ip>
+                <ca.server.ip>192.167.40.14</ca.server.ip>
+                <portal.mysql.ip>192.166.162.150</portal.mysql.ip>
                 <portal.db.password>123456</portal.db.password>
                 <cas.server.protocol>http</cas.server.protocol>
                 <cas.server.port>17001</cas.server.port>
