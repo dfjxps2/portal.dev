@@ -78,7 +78,7 @@
                 {
 
                     field: 'role_name',
-                    width: '10%',
+                    width: '12%',
                     title: '角色名称',
                     align: 'center',
                     formatter: function (value, row, index) {
@@ -89,7 +89,7 @@
                         }
                     }
                 },
-                {field: 'role_type_name', title: '角色类型', width: '10%', align: 'center'},
+                {field: 'role_type_name', title: '角色类型', width: '12%', align: 'center'},
                 {
 
                     field: 'role_state',
@@ -124,11 +124,11 @@
                     }
                 },
                 {
-                    field: 'CZ', width: '25%', title: '操作', align: 'center', formatter: function (value, row, index) {
+                    field: 'CZ', width: '20%', title: '操作', align: 'center', formatter: function (value, row, index) {
 
                         return "<button type='button' id='btn_auth' class='btn_el' onclick='edit(\"" + row.role_id + "\",\"" + row.role_name + "\")'>编辑</button>| " +
                             "<button type='button' id='btn_auth' class='btn_el' onclick='auth(\"" + row.role_id + "\",\"" + row.role_name + "\")'>功能权限</button>| " +
-                            "<button type='button' id='btn_auth' class='btn_el' onclick='metricAuth(\"" + row.role_id + "\",\"" + row.role_name + "\")'>指标权限</button>| " +
+//                            "<button type='button' id='btn_auth' class='btn_el' onclick='metricAuth(\"" + row.role_id + "\",\"" + row.role_name + "\")'>指标权限</button>| " +
                             "<button id='btn_delete' type='button' class='btn_el'  onclick='del(\"" + row.role_id + "\",\"" + row.role_name + "\")'>删除</button>";
                     }
                 }
