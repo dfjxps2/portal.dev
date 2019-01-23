@@ -48,10 +48,10 @@
     		  pub_date,
     		  cre_time,
     		  upd_time
-		)values(
+		)	select
 			 #{super_app_id},
 			 #{app_name},
-			 #{dep_id},
+			 tab.dep_id,
 			 #{app_level},
 			 #{app_state},
 			 #{app_url},
@@ -60,7 +60,11 @@
 			 #{pub_date},
 			 #{cre_time},
 			 #{upd_time}
-			);
+		from (
+			select dep_id from  user_department where dep_global_id =#{dep_global_id}
+		) tab
+
+
 		<selectKey resultType="int" order="AFTER" keyProperty="app_id">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
@@ -72,7 +76,7 @@
 		   set app_id=#{app_id}
 			  ,super_app_id=#{super_app_id}
 			  ,app_name=#{app_name}
-			  ,dep_id=#{dep_id}
+			  ,dep_id=(select dep_id from  user_department where dep_global_id =#{dep_global_id})
 			  ,app_level=#{app_level}
 			  ,app_state=#{app_state}
 			  ,app_url=#{app_url}
