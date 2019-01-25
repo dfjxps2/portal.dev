@@ -71,6 +71,14 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
+    <filter>
+        <filter-name>DemoFilter</filter-name>
+        <filter-class>com.quick.portal.sqlLog.DemoFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>DemoFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
     <!-- 添加Web应用等监控-->
     <filter>
         <filter-name>DruidWebStatFilter</filter-name>
@@ -85,12 +93,12 @@
         </init-param>
         <init-param>
             <param-name>principalCookieName</param-name>
-            <param-value>USER_COOKIE</param-value>
+            <param-value>sbd.user_name</param-value>
         </init-param>
-        <init-param>
+<!--        <init-param>
             <param-name>principalSessionName</param-name>
             <param-value>USER_SESSION</param-value>
-        </init-param>
+        </init-param>-->
     </filter>
     <filter-mapping>
         <filter-name>DruidWebStatFilter</filter-name>
