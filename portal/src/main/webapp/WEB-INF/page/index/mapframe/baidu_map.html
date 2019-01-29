@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<style type="text/css">
+  body, html,#map_demo, #tab, #mapfrm {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
+  #menu{height:100%;overflow-y:auto}
+  td{font-size:14px}
+  h4{margin:0;}
+  .BMap_cpyCtrl  
+    {  
+        display:none;   
+    }  
+    .anchorBL{  
+        display:none;   
+    } 
+    .BMap_stdMpCtrl{
+        display:none;
+    } 
+  </style>
+	<script type="text/javascript" src="baidumap_apiV2_offline/baidumapv2/baidumap_offline_v2_load.js"></script>
+	<script type="text/javascript" src="js/jquery/jquery-1.8.3.js"></script>
+    <link rel="stylesheet" type="text/css" href="baidumap_apiV2_offline/baidumapv2/css/baidu_map_v2.css"/>
+</head>
+<body>
+<div id="map_demo"></div>
+</body>
+<script type="text/javascript">  
+	
+	var map = new BMap.Map("map_demo",{minZoom:15,maxZoom:19}); // 创建地图实例
+	var point = new BMap.Point(116.832376,39.565863);
+	map.centerAndZoom(point, 16); // 初始化地图，设置中心点坐标和地图级别
+	var marker = new BMap.Marker(point);  // 创建标注
+	marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+
+
+	map.addOverlay(marker);               // 将标注添加到地图中
+
+	map.enableScrollWheelZoom(); // 允许滚轮缩放
+	map.addControl(new BMap.NavigationControl());   //缩放按钮
+	var cr = new BMap.CopyrightControl({anchor: BMAP_ANCHOR_TOP_RIGHT});   //设置版权控件位置
+	map.addControl(cr); //添加版权控件
+	
+	marker.enableDragging();  //设置点可以拖拽
+	//添加事件
+
+
+	map.addEventListener("click", function(e){   
+if(!e.overlay){  
+
+	    var pho ="baidumap_apiV2_offline/baidumapv2/images/markers.png";
+		var myIcon = new BMap.Icon(pho, new BMap.Size(23, 25), {  
+                        offset: new BMap.Size(10, 25), 
+                        imageOffset: new BMap.Size(0, 0 - 10 * 25) 
+                    });
+					
+        var marker1=new BMap.Marker(e.point,{icon:myIcon});  
+	/*
+		 map = new BMap.Map("map_demo",{minZoom:15,maxZoom:19}); // 创建地图实例
+	 point = new BMap.Point(e.point.lng,e.point.lat);
+    map.centerAndZoom(point, 16);
+ 	var marker1 = new BMap.Marker(point);  // 创建标注
+	marker1.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动
+		*/
+
+        map.removeOverlay(marker);  
+        map.addOverlay(marker1); 
+		map.enableScrollWheelZoom();
+        marker=marker1; 
+		marker.enableDragging();  //设置点可以拖拽
+    }  
+});
+	
+
+	//判断浏览区是否支持canvas
+	function isSupportCanvas() {
+	var elem = document.createElement('canvas');
+	return !!(elem.getContext && elem.getContext('2d'));
+	} 
+
+</script>
+</html>

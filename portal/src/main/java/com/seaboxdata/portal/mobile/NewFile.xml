@@ -1,0 +1,26 @@
+{"code":1,"msg":"OK","url":null,"version":"1.0",
+	"data":"[
+		{\"id\":151,\"x\":0,\"y\":0,\"no\":\"1\",\"width\":12,\"height\":4,
+			metric:[{\"metric_id\":\"C20007\",\"category_id\":\"C20000\",
+				\"dimension\":\"obj\",\"charts\":\"bar\",\"numb\":\"1\",
+				\"measure_name\":\"街道办事处占比\",\"time_dim\":\"year\",\"unit\":\"%\",
+					}]
+		},
+		{\"id\":152,\"x\":0,\"y\":4,\"no\":\"2\",\"width\":4,\"height\":2,
+			metric:[{\"metric_id\":\"C20008\",\"category_id\":\"C20000\",
+					\"dimension\":\"obj\",\"charts\":\"line\",\"numb\":\"2\",
+					\"measure_name\":\"建制镇占比\",\"time_dim\":\"year\",\"unit\":\"%\",
+					}]
+		},
+,"error":false,"ok":true}
+
+
+{"code":1,"msg":"OK","url":null,"version":"1.0",
+data:[
+{"id":151,"x":0,"y":0,"no":"1","width":12,"height":4,
+metric:[{"metric_id":"C20007","category_id":"C20000","dimension":"obj","charts":"bar","numb":"1",
+"measure_name":"街道办事处占比","time_dim":"year","unit":"%",}]}
+
+
+
+,{"id":152,"x":0,"y":4,"no":"2","width":4,"height":2,metric:[{"metric_id":"C20008","category_id":"C20000","dimension":"obj","charts":"line","numb":"2","measure_name":"建制镇占比","time_dim":"year","unit":"%",}]},{"id":153,"x":4,"y":4,"no":"3","width":4,"height":2,metric:[]},{"id":154,"x":8,"y":4,"no":"4","width":4,"height":2,metric:[{"metric_id":"C20010","category_id":"C20000","dimension":"obj","charts":"ringPie","numb":"4","measure_name":"社区居委会占比","time_dim":"year","unit":"%",}]}],"error":fa

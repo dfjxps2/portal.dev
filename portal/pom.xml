@@ -408,12 +408,12 @@
             <id>dev</id>
             <properties>
                 <profiles.active>dev</profiles.active>
-                <portal.server.ip>${env.PORTAL_SERVER_IP}</portal.server.ip>
+                <!--<portal.server.ip>${env.PORTAL_SERVER_IP}</portal.server.ip>
                 <index.service.ip>${env.INDEX_SERVICE_IP}</index.service.ip>
                 <solr.service.ip>${env.SOLR_SERVICE_IP}</solr.service.ip>
                 <portal.file.dir>${env.PORTAL_FILE_DIR}</portal.file.dir>
                 <cas.server.ip>${env.CAS_SERVER_IP}</cas.server.ip>
-                <portal.db.password>${env.PORTAL_DB_PASSWORD}</portal.db.password>
+                <portal.db.password>${env.PORTAL_DB_PASSWORD}</portal.db.password>-->
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
@@ -481,6 +481,19 @@
                 <solr.service.ip>10.10.10.42</solr.service.ip>
                 <portal.file.dir>/home/portal/files</portal.file.dir>
                 <cas.server.ip>10.10.10.42</cas.server.ip>
+                <portal.db.password>123456</portal.db.password>
+            </properties>
+        </profile>
+        <!--京滨工业园环境-->
+        <profile>
+            <id>pro</id>
+            <properties>
+                <profiles.active>pro</profiles.active>
+                <portal.server.ip>192.168.3.41</portal.server.ip>
+                <index.service.ip>192.168.3.41</index.service.ip>
+                <solr.service.ip>192.168.3.41</solr.service.ip>
+                <portal.file.dir>/home/portal/files</portal.file.dir>
+                <cas.server.ip>192.168.3.41</cas.server.ip>
                 <portal.db.password>123456</portal.db.password>
             </properties>
         </profile>
