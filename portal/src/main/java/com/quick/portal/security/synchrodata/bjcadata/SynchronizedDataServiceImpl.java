@@ -231,20 +231,16 @@ public class SynchronizedDataServiceImpl implements ISynchronizedDataService {
 		person.setUserJob(SynchronizedDataConstants.DEFAULT_JOB_ID);
 		//11 新增用户 、12 修改用户、 13 删除用户
 		try {
-			//新增用户
-			if(operateID == 11){
-				boolean isFlag = isExistUserGlobalID(person);
+			//判断用户是否存在
+			boolean isFlag = isExistUserGlobalID(person);
+			//执行新增或修改操作
+			if(operateID == 11 || operateID ==12){
 				if(!isFlag){
 					count = insertPersonData(person);
 				}else{
 					count = updatePersonData(person);
 				}
-				
-			}else if(operateID == 12){
-			// 修改用户
-				count = updatePersonData(person);
-			//删除用户
-			}else if(operateID == 13){
+			}else if(operateID == 13 && isFlag ){
 				count = removePersonData(person);
 			}
 			if (count > 0 && (operateID == 11 ||operateID == 12)) {
@@ -261,6 +257,8 @@ public class SynchronizedDataServiceImpl implements ISynchronizedDataService {
 				String globalID = person.getUniqueid();
 				//通过用户编号删除用户与部门关系
 				removePersonDeptRelaDataByUserID(globalID);
+			}else if(count == 0 && operateID == 13){
+				bool = true;
 			}else {
 				System.out.println("操作用户表0条数据被处理，请查询！");
 				bool = false;
