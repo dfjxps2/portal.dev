@@ -1,10 +1,7 @@
 package com.quick.portal.security.synchrodata.bjcadata;
 
 import com.quick.portal.security.authority.metric.PropertiesUtil;
-import com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.DepartmentInformation;
-import com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.LoginInformation;
-import com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.PersonInformation;
-import com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.RoleInformation;
+import com.quick.portal.security.synchrodata.bjcadata.uums.client.bean.*;
 import org.springframework.context.ApplicationContext;
 import org.springframework.remoting.jaxrpc.ServletEndpointSupport;
 import org.springframework.transaction.annotation.Transactional;
@@ -96,10 +93,29 @@ public class SynchronizedDataInfoServiceImpl extends ServletEndpointSupport impl
 		if (OperateID == 11 || OperateID == 12 || OperateID == 13) {
 			try {	
 				person = binding.findPersonInfosByUserIDForDC(OperateCode);
-				//需要用户的登录信息(口令用户)
-				loginInformation = binding
-						.getLoginInformationByUserID(OperateCode);
-	
+				//根据CredenceClass的返回值判断用户类型(CREDENCE_00002:口令用户；CREDENCE_00001:证书用户)
+				UserCredenceInformation useri = binding.findCredenceInfoByUserID(OperateCode);
+				String userType  = null;
+				if(null != useri){
+					userType =useri.getCredenceClass();
+				}else{
+					System.out.println("根据OperateCode："+OperateCode+"查询UserCredenceInformation数据为空");
+					throw new Exception ("根据OperateCode："+OperateCode+"查询UserCredenceInformation数据为空");
+				}
+				//口令用户
+				if(userType.equals(SynchronizedDataConstants.PWD_USER_TYPE)){
+					//需要用户的登录信息(口令用户)
+					loginInformation = binding.getLoginInformationByUserID(OperateCode);
+					//证书用户
+				}else if(userType.equals(SynchronizedDataConstants.CRED_USER_TYPE)){
+					loginInformation = new LoginInformation();
+					String loginName = person.getUserName();
+					String loginNickName = SynchronizedDataConstants.CRED_DEFAULT_LOGIN_NICK_NAME+(int)(Math.random()*100);
+					loginInformation.setLoginName(loginName);
+					loginInformation.setLoginPwd(SynchronizedDataConstants.CRED_DEFAULT_USER);
+					loginInformation.setLoginNickName(loginNickName);
+					loginInformation.setLoginType(userType);
+				}
 			} catch (RemoteException e) {
 				bol = false;
 				throw new Exception ("调用个人用户信息远程接口异常："+e.getMessage());
@@ -114,9 +130,6 @@ public class SynchronizedDataInfoServiceImpl extends ServletEndpointSupport impl
 			System.out.println("Default=" + departInfo.getDepartDefault());
 			System.out.println("DepartUpcode=" + departInfo.getDepartUpcode());
 
-			System.out.println("用户32位码===" + person.getUserIdcode());
-			System.out.println("用户姓名===" + person.getUserName());
-			System.out.println("用户身份证号码===" + person.getUserIdcardNum());
 			System.out.println(loginInformation.getLoginName());
 			System.out.println(loginInformation.getLoginPwd());
 			System.out.println(loginInformation.getLoginNickName());
