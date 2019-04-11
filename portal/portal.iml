@@ -239,8 +239,8 @@
     <orderEntry type="library" name="Maven: com.nimbusds:nimbus-jose-jwt:5.4" level="project" />
     <orderEntry type="library" name="Maven: com.github.stephenc.jcip:jcip-annotations:1.0-1" level="project" />
     <orderEntry type="library" name="Maven: net.minidev:json-smart:2.3" level="project" />
-    <orderEntry type="library" name="Maven: net.minidev:accessors-smart:1.2" level="project" />
     <orderEntry type="library" name="Maven: org.pac4j:pac4j-sql:3.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.jdbi:jdbi:2.78" level="project" />
+    <orderEntry type="library" name="Maven: net.minidev:accessors-smart:1.2" level="project" />
   </component>
 </module>
