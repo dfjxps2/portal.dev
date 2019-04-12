@@ -10,9 +10,17 @@ import com.quick.portal.sysUser.SysUserDO;
 import com.quick.portal.userAccessLog.IUserAccessLogService;
 import com.quick.portal.userAccessLog.UserAccessLogConstants;
 import com.quick.portal.userAccessLog.UserAccessLogServiceUtils;
+import org.pac4j.cas.client.rest.CasRestFormClient;
+import org.pac4j.cas.config.CasConfiguration;
+import org.pac4j.cas.profile.CasRestProfile;
+import org.pac4j.core.context.J2EContext;
+import org.pac4j.core.context.WebContext;
+import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.profile.CommonProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -42,6 +50,8 @@ public class WebLoginController {
     @Resource(name = "userAccessLogService")
     private IUserAccessLogService userAccessLogService;
 
+    @Autowired
+    private CasConfiguration casConfiguration;
 
     //登录页
     @RequestMapping(value = "/")
@@ -71,7 +81,7 @@ public class WebLoginController {
              *  （1）用户名称；（2）用户IP；（3）服务名称；（4）开始处理时间；（5）处理结果；（6）请求服务的URL。这些字段有（4）开始处理时间；（5）处理结果；（6）请求服务的URL不支持
              */
 
-            loggerInfoLoginSystemLogInfo(request,loginer);
+            loggerInfoLoginSystemLogInfo(request, loginer);
             //平台用户:1:app;2:sys;公服用户:1:app
             String flag = WebLoginUitls.getUserHomePage(loginer);
             if (WebLoginConstants.SYS_MENU_FLAG.equals(flag)) {
@@ -82,6 +92,36 @@ public class WebLoginController {
         }
     }
 
+    @RequestMapping(value = "/login")
+    public String formLogoin(HttpServletRequest request, HttpServletResponse response) {
+
+        return index(request, response);
+    }
+
+    @RequestMapping(value = "/gotoService")
+    public String getServiceURL(HttpServletRequest request, HttpServletResponse response) {
+        final WebContext context = new J2EContext(request, response);
+        List<CommonProfile> profiles = WebLoginUitls.getProfiles(request, response);
+        if (profiles.size() == 0){
+            logger.error("Can't get user profile.");
+            return WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_ERROR_CONTROLLER);
+        }
+
+        if (! (profiles.get(0) instanceof CasRestProfile)){
+            logger.error("Unexpected profile type of {}.", profiles.get(0).getClass().getName());
+            return WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_ERROR_CONTROLLER);
+
+        }
+
+        CasRestProfile profile = (CasRestProfile)profiles.get(0);
+
+        String serviceURL = request.getParameter("serviceURL");
+
+        CasRestFormClient casRestFormClient = new CasRestFormClient(casConfiguration, "", "");
+        TokenCredentials tokenCredentials = casRestFormClient.requestServiceTicket(serviceURL, profile, context);
+
+        return WebLoginConstants.REDIRECT_KEY.concat(serviceURL.concat("?ticket=" + tokenCredentials.getToken()));
+    }
 
     @RequestMapping(value = "/home/login")
     public String login(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
@@ -148,20 +188,20 @@ public class WebLoginController {
 
 
     /**
-     *  在系统中记录门户系统用户登录的情况包括如下字段：
-     *  （1）用户名称；（2）用户IP；（3）服务名称；（4）开始处理时间；（5）处理结果；
-     *  （6）请求服务的URL。这些字段有（4）开始处理时间；（5）处理结果；（6）请求服务的URL不支持
+     * 在系统中记录门户系统用户登录的情况包括如下字段：
+     * （1）用户名称；（2）用户IP；（3）服务名称；（4）开始处理时间；（5）处理结果；
+     * （6）请求服务的URL。这些字段有（4）开始处理时间；（5）处理结果；（6）请求服务的URL不支持
      */
-    public void loggerInfoLoginSystemLogInfo(HttpServletRequest request,WebLoginUser loginer){
+    public void loggerInfoLoginSystemLogInfo(HttpServletRequest request, WebLoginUser loginer) {
         String ip = CommonUtils.getIpAddrAdvanced(request);
         String userName = loginer.getUser_name();
-        String requestResult = "系统操作员:"+userName+"登录统一门户服务日志";
+        String requestResult = "系统操作员:" + userName + "登录统一门户服务日志";
         String operateType = "统一门户->登录日志";
-        String operatedUser = "系统操作员编号:"+loginer.getUser_id()+"系统操作员名称:"+loginer.getUser_name();
+        String operatedUser = "系统操作员编号:" + loginer.getUser_id() + "系统操作员名称:" + loginer.getUser_name();
         String operLog = "用户登录统一门户服务日志->登录日志";
         String serviceName = "服务名称:登录日志;服务方法名:";
         UserAccessLogServiceUtils.loggerLogInfo(logger,
-                userName,operatedUser,operateType,requestResult,operLog,serviceName,ip);
+                userName, operatedUser, operateType, requestResult, operLog, serviceName, ip);
     }
 
 }

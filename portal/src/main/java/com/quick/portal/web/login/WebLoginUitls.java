@@ -1,16 +1,15 @@
 package com.quick.portal.web.login;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.WebContext;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.ProfileManager;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 public class WebLoginUitls {
 	
@@ -29,10 +28,10 @@ public class WebLoginUitls {
 	
 	public static List<CommonProfile> getProfiles(HttpServletRequest request, HttpServletResponse response) {
     	final WebContext context = new J2EContext(request, response);  
-        final ProfileManager manager = new ProfileManager(context);
+        final ProfileManager<CommonProfile> manager = new ProfileManager<>(context);
         return manager.getAll(true);
     }
-	
+
 	
 	public static void writeFatal(HttpServletRequest request,HttpServletResponse response, String msg){
 		String url = request.getContextPath();
