@@ -140,6 +140,10 @@
         <property name="authorizationGenerator" ref="dbAuthGenerator"/>
     </bean>
 
+    <bean id="certUserAuthClient" class="com.seaboxdata.portal.auth.cert.CertUserAuthClient">
+        <property name="authorizationGenerator" ref="dbAuthGenerator"/>
+    </bean>
+
     <bean id="secretSignatureConfiguration" class="org.pac4j.jwt.config.signature.SecretSignatureConfiguration">
         <constructor-arg name="secret" value="${salt}"/>
     </bean>
@@ -170,6 +174,7 @@
                 <ref bean="casRestBasicAuthClient"/>
                 <ref bean="myCasRestBasicAuthClient"/>
                 <ref bean="casRestFormClient"/>
+                <ref bean="certUserAuthClient"/>
             </list>
         </constructor-arg>
     </bean>
@@ -201,6 +206,14 @@
             <bean class="org.pac4j.springframework.web.SecurityInterceptor">
                 <constructor-arg name="config" ref="config"/>
                 <constructor-arg name="clients" value="casRestFormClient"/>
+                <property name="securityLogic" ref="mySecurityLogic"/>
+            </bean>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/login2"/>
+            <bean class="org.pac4j.springframework.web.SecurityInterceptor">
+                <constructor-arg name="config" ref="config"/>
+                <constructor-arg name="clients" value="certUserAuthClient"/>
                 <property name="securityLogic" ref="mySecurityLogic"/>
             </bean>
         </mvc:interceptor>

@@ -20,7 +20,6 @@ import org.pac4j.core.profile.CommonProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -98,22 +97,28 @@ public class WebLoginController {
         return index(request, response);
     }
 
+    @RequestMapping(value = "/login2")
+    public String certUserLogoin(HttpServletRequest request, HttpServletResponse response) {
+
+        return index(request, response);
+    }
+
     @RequestMapping(value = "/gotoService")
     public String getServiceURL(HttpServletRequest request, HttpServletResponse response) {
         final WebContext context = new J2EContext(request, response);
         List<CommonProfile> profiles = WebLoginUitls.getProfiles(request, response);
-        if (profiles.size() == 0){
+        if (profiles.size() == 0) {
             logger.error("Can't get user profile.");
             return WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_ERROR_CONTROLLER);
         }
 
-        if (! (profiles.get(0) instanceof CasRestProfile)){
+        if (!(profiles.get(0) instanceof CasRestProfile)) {
             logger.error("Unexpected profile type of {}.", profiles.get(0).getClass().getName());
             return WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_ERROR_CONTROLLER);
 
         }
 
-        CasRestProfile profile = (CasRestProfile)profiles.get(0);
+        CasRestProfile profile = (CasRestProfile) profiles.get(0);
 
         String serviceURL = request.getParameter("serviceURL");
 
