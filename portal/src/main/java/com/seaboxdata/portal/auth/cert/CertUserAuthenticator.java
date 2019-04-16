@@ -15,6 +15,9 @@ public class CertUserAuthenticator implements Authenticator<CertUserCredentials>
 
     @Override
     public void validate(CertUserCredentials credentials, WebContext context) {
+        String uniqueIdStr = "";
+        String uniqueId = "";
+
         if (credentials == null || credentials.getClientCert() == null
                 || credentials.getContainerName() == null
                 || credentials.getUserSignedData() == null) {
@@ -49,8 +52,6 @@ public class CertUserAuthenticator implements Authenticator<CertUserCredentials>
                 retValue = sm2.validateCert(credentials.getClientCert());
 
             if (retValue == 1) {
-//                        session.setAttribute("ContainerName", ContainerName);
-                String uniqueIdStr = "";
                 try {
                     if (type.equals("RSA"))
                         uniqueIdStr = sed.getCertInfo(credentials.getClientCert(), 17);
@@ -60,9 +61,6 @@ public class CertUserAuthenticator implements Authenticator<CertUserCredentials>
                     throw new CredentialsException("Extract unique id str failed:", e);
                 }
 
-//                        session.setAttribute("UniqueID", uniqueIdStr);
-
-                String uniqueId = "";
                 try {
                     //获得登陆用户ID
                     if (type.equals("RSA"))
@@ -107,9 +105,9 @@ public class CertUserAuthenticator implements Authenticator<CertUserCredentials>
 
             if (ret) {
                 logger.info("验证客户端签名成功");
+                credentials.setUserProfile(new CertUserProfile(uniqueIdStr, uniqueId));
             } else {
                 logger.error("验证客户端签名错误！");
-                return;
             }
 
         } catch (Exception e) {

@@ -37,7 +37,7 @@ public class DBAuthGenerator implements AuthorizationGenerator<CommonProfile> {
             commonProfile.addPermissions(authorizeInfoMapper.getPermission(role));
         }
 
-        commonProfile.addAttribute("globalId", authorizeInfoMapper.getUniqueId(userName));
+        commonProfile.addAttribute("uniqueId", authorizeInfoMapper.getUniqueId(userName));
 
         return commonProfile;
     }
