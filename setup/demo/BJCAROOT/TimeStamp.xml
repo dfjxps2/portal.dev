@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="GBK" ?>
+<manager>
+  <TimeStamp>
+    <source>1</source>
+    <tsip>192.168.136.246</tsip>
+    <interval>1</interval>
+    <step>m</step>
+  </TimeStamp>
+  <staticinfo>
+    <appName>SVSDefault</appName>
+    <containerName>2167204</containerName>
+    <oid>2.16.840.1.113732.2</oid>
+    <certstate>2</certstate>
+  </staticinfo>
+</manager>

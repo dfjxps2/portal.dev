@@ -77,8 +77,4 @@ public class MobileController {
         return result;
     }
 
-    @RequestMapping(value = "/login2", produces = {"text/json;charset=UTF-8"})
-    public DataResult login2(HttpServletRequest request, HttpServletResponse response) {
-        return login(request, response);
-    }
 }

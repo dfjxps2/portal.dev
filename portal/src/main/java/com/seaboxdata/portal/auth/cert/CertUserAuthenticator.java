@@ -21,7 +21,8 @@ public class CertUserAuthenticator implements Authenticator<CertUserCredentials>
         if (credentials == null || credentials.getClientCert() == null
                 || credentials.getContainerName() == null
                 || credentials.getUserSignedData() == null) {
-            throw new TechnicalException("Credentials are required");
+            logger.error("Credentials are required");
+            return;
         }
 
         try {
@@ -111,7 +112,7 @@ public class CertUserAuthenticator implements Authenticator<CertUserCredentials>
             }
 
         } catch (Exception e) {
-            throw new CredentialsException("Cert validation failed", e);
+            logger.error("Cert validation failed, {}", e);
         }
     }
 }

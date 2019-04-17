@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="GBK" ?>
+<CrlDownLoad>
+    <crls>
+        <crl>
+            <crlName>CA0B01</crlName>
+            <addressType>1</addressType>
+            <address>http://crl.bjca.org.cn/crl/ca21crl1.crl</address>
+            <username />
+            <paswd />
+            <cdp />
+        </crl>
+        <crl>
+            <crlName>SM2</crlName>
+            <addressType>1</addressType>
+            <address>http://crl.bjca.org.cn/crl/ca21crl1.crl</address>
+            <username />
+            <paswd />
+            <cdp />
+        </crl>
+    </crls>
+    <configuration>
+        <minThreads />
+        <maxThreads />
+        <interval>1</interval>
+        <update>true</update>
+    </configuration>
+</CrlDownLoad>

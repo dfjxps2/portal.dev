@@ -12,6 +12,7 @@ import com.quick.portal.userAccessLog.UserAccessLogConstants;
 import com.quick.portal.userAccessLog.UserAccessLogServiceUtils;
 import org.pac4j.cas.client.rest.CasRestFormClient;
 import org.pac4j.cas.config.CasConfiguration;
+import org.pac4j.cas.profile.CasProfile;
 import org.pac4j.cas.profile.CasRestProfile;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.WebContext;
@@ -91,18 +92,6 @@ public class WebLoginController {
         }
     }
 
-    @RequestMapping(value = "/login")
-    public String formLogoin(HttpServletRequest request, HttpServletResponse response) {
-
-        return index(request, response);
-    }
-
-    @RequestMapping(value = "/login2")
-    public String certUserLogoin(HttpServletRequest request, HttpServletResponse response) {
-
-        return index(request, response);
-    }
-
     @RequestMapping(value = "/gotoService")
     public String getServiceURL(HttpServletRequest request, HttpServletResponse response) {
         final WebContext context = new J2EContext(request, response);
@@ -112,20 +101,21 @@ public class WebLoginController {
             return WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_ERROR_CONTROLLER);
         }
 
-        if (!(profiles.get(0) instanceof CasRestProfile)) {
-            logger.error("Unexpected profile type of {}.", profiles.get(0).getClass().getName());
-            return WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_ERROR_CONTROLLER);
-
-        }
-
-        CasRestProfile profile = (CasRestProfile) profiles.get(0);
-
         String serviceURL = request.getParameter("serviceURL");
 
-        CasRestFormClient casRestFormClient = new CasRestFormClient(casConfiguration, "", "");
-        TokenCredentials tokenCredentials = casRestFormClient.requestServiceTicket(serviceURL, profile, context);
+        if (profiles.get(0) instanceof CasRestProfile) {
+            CasRestProfile profile = (CasRestProfile) profiles.get(0);
 
-        return WebLoginConstants.REDIRECT_KEY.concat(serviceURL.concat("?ticket=" + tokenCredentials.getToken()));
+            CasRestFormClient casRestFormClient = new CasRestFormClient(casConfiguration, "", "");
+            TokenCredentials tokenCredentials = casRestFormClient.requestServiceTicket(serviceURL, profile, context);
+
+            return WebLoginConstants.REDIRECT_KEY.concat(serviceURL.concat("?ticket=" + tokenCredentials.getToken()));
+        } else if (profiles.get(0) instanceof CasProfile) {
+            return WebLoginConstants.REDIRECT_KEY.concat(serviceURL);
+        } else {
+            logger.error("Unexpected profile type of {}.", profiles.get(0).getClass().getName());
+            return WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_ERROR_CONTROLLER);
+        }
     }
 
     @RequestMapping(value = "/home/login")

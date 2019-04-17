@@ -202,22 +202,6 @@
     <!-- 拦截器 -->
     <mvc:interceptors>
         <mvc:interceptor>
-            <mvc:mapping path="/login"/>
-            <bean class="org.pac4j.springframework.web.SecurityInterceptor">
-                <constructor-arg name="config" ref="config"/>
-                <constructor-arg name="clients" value="casRestFormClient"/>
-                <property name="securityLogic" ref="mySecurityLogic"/>
-            </bean>
-        </mvc:interceptor>
-        <mvc:interceptor>
-            <mvc:mapping path="/login2"/>
-            <bean class="org.pac4j.springframework.web.SecurityInterceptor">
-                <constructor-arg name="config" ref="config"/>
-                <constructor-arg name="clients" value="certUserAuthClient"/>
-                <property name="securityLogic" ref="mySecurityLogic"/>
-            </bean>
-        </mvc:interceptor>
-        <mvc:interceptor>
             <mvc:mapping path="/**"/>
             <mvc:exclude-mapping path="/callback"/>
             <mvc:exclude-mapping path="/mobile/**"/>
@@ -226,22 +210,15 @@
             <mvc:exclude-mapping path="/services/**"/>
             <bean class="org.pac4j.springframework.web.SecurityInterceptor">
                 <constructor-arg name="config" ref="config"/>
-                <constructor-arg name="clients" value="CasClient"/>
+                <constructor-arg name="clients" value="CasClient,casRestFormClient,certUserAuthClient"/>
+                <property name="securityLogic" ref="mySecurityLogic"/>
             </bean>
         </mvc:interceptor>
         <mvc:interceptor>
             <mvc:mapping path="/mobile/login"/>
             <bean class="org.pac4j.springframework.web.SecurityInterceptor">
                 <constructor-arg name="config" ref="config"/>
-                <constructor-arg name="clients" value="MyCasRestBasicAuthClient"/>
-                <property name="securityLogic" ref="mySecurityLogic"/>
-            </bean>
-        </mvc:interceptor>
-        <mvc:interceptor>
-            <mvc:mapping path="/mobile/login2"/>
-            <bean class="org.pac4j.springframework.web.SecurityInterceptor">
-                <constructor-arg name="config" ref="config"/>
-                <constructor-arg name="clients" value="certUserAuthClient"/>
+                <constructor-arg name="clients" value="MyCasRestBasicAuthClient,certUserAuthClient"/>
                 <property name="securityLogic" ref="mySecurityLogic"/>
             </bean>
         </mvc:interceptor>
