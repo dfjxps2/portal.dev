@@ -154,6 +154,7 @@
 //            $('.J_mainContent').find('iframe.J_iframe').hide().parents('.J_mainContent').append(str1);
             var isFlag  = isApp(mId);
             if(isFlag=="1"){
+                var goService = "/portal/gotoService?serviceURL=";
                 var targetOrigin = goService+dataUrl;
                 window.open(targetOrigin,'_blank');
             }else{
@@ -372,5 +373,5 @@
         $('.page-tabs-content').css("margin-left", "0");
     });
 
-    const goService = "/portal/gotoService?serviceURL=";
+
 });
