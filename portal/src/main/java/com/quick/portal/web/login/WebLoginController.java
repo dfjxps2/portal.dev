@@ -1,5 +1,6 @@
 package com.quick.portal.web.login;
 
+import cn.org.bjca.security.SecurityEngineDeal;
 import com.quick.core.base.exception.ExceptionEnumServiceImpl;
 import com.quick.core.util.common.CommonUtils;
 import com.quick.core.util.common.QCommon;
@@ -10,6 +11,8 @@ import com.quick.portal.sysUser.SysUserDO;
 import com.quick.portal.userAccessLog.IUserAccessLogService;
 import com.quick.portal.userAccessLog.UserAccessLogConstants;
 import com.quick.portal.userAccessLog.UserAccessLogServiceUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.pac4j.cas.client.rest.CasRestFormClient;
 import org.pac4j.cas.config.CasConfiguration;
 import org.pac4j.cas.profile.CasProfile;
@@ -25,10 +28,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -126,6 +132,14 @@ public class WebLoginController {
         return "page/home/login";
     }
 
+    @RequestMapping(value = "/home/logon")
+    public String logon(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
+        String url = request.getScheme() + "://" + request.getServerName()
+                + ":" + request.getServerPort() + request.getContextPath();
+        model.addAttribute("host", url);
+        return "page/home/logon";
+    }
+
 
     @RequestMapping(value = "/home/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
@@ -197,6 +211,46 @@ public class WebLoginController {
         String serviceName = "服务名称:登录日志;服务方法名:";
         UserAccessLogServiceUtils.loggerLogInfo(logger,
                 userName, operatedUser, operateType, requestResult, operLog, serviceName, ip);
+    }
+
+    @RequestMapping(value = "/getCert")
+    @ResponseBody
+    public  void getCert(HttpServletRequest request,HttpServletResponse response)  {
+        response.setContentType("text/html;charset=UTF-8");
+        SecurityEngineDeal sed = null;
+        String msgC = null;
+        HttpSession session= request.getSession();
+        try {
+            Map map = new HashMap();
+            sed = SecurityEngineDeal.getInstance("SVSDefault");
+            String strServerCert = sed.getServerCertificate();
+            String strRandom = sed.genRandom(24);
+            session.setAttribute("Random", strRandom);
+            String strSignedData = sed.signData(strRandom.getBytes());
+            map.put("strServerCert",strServerCert);
+            map.put("strRandom",strRandom);
+            map.put("strSignedData",strSignedData);
+            msgC = getMsgCsJson(map);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        try {
+            response.getWriter().write(msgC);
+            response.getWriter().flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public String getMsgCsJson(Map<String,Object> maps){
+        JSONArray jsonArray = new JSONArray();
+        JSONObject jsonObject = null;
+        jsonObject = new JSONObject();
+        jsonObject.put("strServerCert",maps.get("strServerCert"));
+        jsonObject.put("strRandom",maps.get("strRandom"));
+        jsonObject.put("strSignedData",maps.get("strSignedData"));
+        jsonArray.put(jsonObject);
+        String jo = jsonArray.toString();
+        return  jo;
     }
 
 }

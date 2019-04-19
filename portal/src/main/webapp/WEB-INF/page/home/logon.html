@@ -1,0 +1,137 @@
+<!DOCTYPE html >
+<html >
+  <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>北京市市级大数据平台</title>
+  <link href="${host}/res/css/index2016.css" rel="stylesheet">
+</head>
+<body>
+<div class="pages-container" id="pages-container">
+  <div class="pages-item  animating">
+    <div class="header" id="header1">
+      <div id="loginbox" style="display:block">
+        <div class="loginbox-main">
+          <ul><li id="one1" style="text-align:center;line-height:80px" onclick="setTab('one',1,2)" class="hover">非证书登录</li>
+            <li id="one2" style="text-align:center;line-height:80px"  onclick="setTab('one',2,2)">证书登录</li>
+          </ul>
+          <div class="loginboxin">
+            <form action="/portal/" onsubmit="return fzsSubmit(this);" id="fzsyh" method="post">
+              <div class="loginboxin-one1" id="con_one_1">
+                <div style="height:38px;width:335px;padding-top:15px;padding-left:115px;"><label style="font-size:15px;">用户名</label> <input class="inputuser" type="text" name="username" id="username" style="float: left" placeholder="用户名"/></div>
+                <div style="height:38px;width:335px;padding-top:15px;padding-left:115px;"><label style="font-size:15px;">密码</label><input class="inputpsw" type="password" autocomplete="off" name="password" id="password" placeholder="密码"/></div>
+               <button type="button" class="loginbtn01" onclick="submitfzs();" >登录</button>
+               <button type="button" id="bt1"  class="loginbtn02" onclick="undosubmitfzs(this);">重置</button>
+              </div>
+            </form>
+            <form method="post" id="zsyh" name="zsyh" action="/portal/" onsubmit="return zsSubmit(this)">
+              <div class="loginboxin-one2" id="con_one_2" style="display:none">
+                <input type="hidden" id="UserSignedData" name="UserSignedData">
+                <input type="hidden" id="UserCert" name="UserCert">
+                <input type="hidden" id="ContainerName" name="ContainerName">
+                <input type="hidden" id="Random" name="Random">
+                <div style="height:38px;width:335px;padding-top:15px;padding-left:100px;"><label style="font-size:15px;">选择证书</label> <select id="UserList" name="UserList"></select></div>
+                <div style="height:38px;width:335px;padding-top:15px;padding-left:100px;"><label style="font-size:15px;">证书口令</label> <input type="password" name="pwd1" id="UserPwd" size="16" maxlength="16"></div>
+                <button type="button" class="loginbtn01"  onclick="submitzs();">登录</button>
+                <button type="button" id="bt2" class="loginbtn02" onclick="undosubmitfzs(this);">重置</button>
+              </div>
+            </form></div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer">
+    </div>
+
+
+  </div>
+</div>
+
+
+<script src="${host}/res/js/jquery.min.js?v=2.1.4" type="text/javascript"></script>
+<script src="${host}/res/js/tpl.base.js"></script>
+<script src="${host}/res/js/ZWXTXSAB.js"></script>
+<script>
+    $(function(){
+        zsLogin();
+        SetUserCertList("zsyh.UserList");
+    })
+
+    var strServerSignedData;
+    var strServerRan;
+    var strServerCert;
+    function zsLogin(){
+        $.ajax({
+            url:"${host}/getCert",
+            cache:false,
+            dataType:"json",
+            success:function(result)
+            {
+                var cert = result[0];
+                strServerRan = cert.strRandom;
+                strServerSignedData = cert.strSignedData;
+                strServerCert = cert.strServerCert;
+            }
+        });
+    }
+
+    function fzsSubmit(htmlEl)
+    {
+        var username=$("#username").val(); //用户名
+        var password=$("#password").val(); //密码
+        if(username==""||(password=="")){
+            alert("用户名或密码不能为空！");
+            return false;
+        }else{
+            htmlEl.submit();
+            return true;
+        }
+    }
+    function zsSubmit(form1)
+    {
+        var strContainerName =  form1.UserList.value;
+        var strPin = form1.UserPwd.value;
+        form1.Random.value = strServerRan;
+        if(form1.UserList.value == "") {
+            alert("请您输入证书名称！");
+            form1.UserList.focus();
+            return false;
+        }
+        if(form1.UserPwd.value == "") {
+            alert("请您输入证书口令！");
+            form1.UserPwd.focus();
+            return false;
+        }
+        var ret = Login("zsyh", strContainerName, strPin,"/portal/");
+        if (ret) {
+            form1.submit();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function submitfzs()
+    {
+        $("#fzsyh").submit();
+    }
+
+    function submitzs()
+    {
+        $("#zsyh").submit();
+    }
+
+    function undosubmitfzs(fm)
+    {
+        var eid = fm.id;
+        var fid= document.getElementById(eid).form.id
+        if(fid =="fzsyh"){
+            document.getElementById("fzsyh").reset()
+        }else if(fid =="zsyh"){
+            document.getElementById("zsyh").reset()
+        }else {
+            alert("请检查重置按钮的属性！")
+        }
+    }
+</script>
+</body></html>
