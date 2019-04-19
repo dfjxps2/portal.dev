@@ -208,6 +208,7 @@
             <mvc:exclude-mapping path="/upload/**"/>
             <mvc:exclude-mapping path="/lock/**"/>
             <mvc:exclude-mapping path="/services/**"/>
+            <mvc:exclude-mapping path="/getCert"/>
             <bean class="org.pac4j.springframework.web.SecurityInterceptor">
                 <constructor-arg name="config" ref="config"/>
                 <constructor-arg name="clients" value="CasClient,casRestFormClient,certUserAuthClient"/>
