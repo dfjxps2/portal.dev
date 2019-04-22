@@ -14,7 +14,7 @@
             <li id="one2" style="text-align:center;line-height:80px"  onclick="setTab('one',2,2)">证书登录</li>
           </ul>
           <div class="loginboxin">
-            <form action="/portal/" onsubmit="return fzsSubmit(this);" id="fzsyh" method="post">
+            <form action="/portal/login" onsubmit="return fzsSubmit(this);" id="fzsyh" method="post">
               <div class="loginboxin-one1" id="con_one_1">
                 <div style="height:38px;width:335px;padding-top:15px;padding-left:115px;"><label style="font-size:15px;">用户名</label> <input class="inputuser" type="text" name="username" id="username" style="float: left" placeholder="用户名"/></div>
                 <div style="height:38px;width:335px;padding-top:15px;padding-left:115px;"><label style="font-size:15px;">密码</label><input class="inputpsw" type="password" autocomplete="off" name="password" id="password" placeholder="密码"/></div>
@@ -22,7 +22,7 @@
                <button type="button" id="bt1"  class="loginbtn02" onclick="undosubmitfzs(this);">重置</button>
               </div>
             </form>
-            <form method="post" id="zsyh" name="zsyh" action="/portal/" onsubmit="return zsSubmit(this)">
+            <form method="post" id="zsyh" name="zsyh" action="/portal/login" onsubmit="return zsSubmit(this)">
               <div class="loginboxin-one2" id="con_one_2" style="display:none">
                 <input type="hidden" id="UserSignedData" name="UserSignedData">
                 <input type="hidden" id="UserCert" name="UserCert">

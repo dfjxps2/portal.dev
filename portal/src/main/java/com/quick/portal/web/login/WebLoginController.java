@@ -60,7 +60,7 @@ public class WebLoginController {
     private CasConfiguration casConfiguration;
 
     //登录页
-    @RequestMapping(value = "/")
+    @RequestMapping(value = "/login")
     public String index(HttpServletRequest request, HttpServletResponse response) {
         WebLoginUser loginer = new WebLoginUser().loadSession(request, response);
 
@@ -132,7 +132,7 @@ public class WebLoginController {
         return "page/home/login";
     }
 
-    @RequestMapping(value = "/home/logon")
+    @RequestMapping(value = "/")
     public String logon(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
         String url = request.getScheme() + "://" + request.getServerName()
                 + ":" + request.getServerPort() + request.getContextPath();

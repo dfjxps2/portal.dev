@@ -63,7 +63,7 @@
         <filter-class>com.quick.core.util.filter.LoginFilter</filter-class>
         <init-param>
             <param-name>prefixIgnore</param-name>
-            <param-value>/res,/callback,/mobile,/auth,/upload,/getCert,/lock,/services,/druid</param-value>
+            <param-value>/res,/callback,/mobile,/auth,/upload,/getCert,/lock,/services,/druid,/res,/login</param-value>
         </init-param>
     </filter>
     <filter-mapping>
