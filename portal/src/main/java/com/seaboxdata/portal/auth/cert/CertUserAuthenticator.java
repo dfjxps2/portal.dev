@@ -1,10 +1,13 @@
 package com.seaboxdata.portal.auth.cert;
 
 import cn.org.bjca.security.SecurityEngineDeal;
+import com.bjca.sso.services.beans.LoginTicket;
+import com.bjca.sso.services.beans.LoginTicketManager;
+import com.quick.portal.security.authority.metric.PropertiesUtil;
+import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.WebContext;
 import org.pac4j.core.credentials.authenticator.Authenticator;
 import org.pac4j.core.exception.CredentialsException;
-import org.pac4j.core.exception.TechnicalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -106,7 +109,28 @@ public class CertUserAuthenticator implements Authenticator<CertUserCredentials>
 
             if (ret) {
                 logger.info("验证客户端签名成功");
-                credentials.setUserProfile(new CertUserProfile(uniqueIdStr, uniqueId));
+
+                if (PropertiesUtil.getPropery("ca.skip.verification").equals("true")){
+                    credentials.setUserProfile(new CertUserProfile(uniqueIdStr, uniqueId, "00000000"));
+                    return;
+                }
+
+                if (!(context instanceof J2EContext)) {
+                    logger.error("Require J2EContext instance to get http request.");
+                    return;
+                }
+
+                J2EContext j2EContext = (J2EContext)context;
+                String infoCode = PropertiesUtil.getPropery("ca.http.login.infoCode");
+                String httpLoginURL = PropertiesUtil.getPropery("ca.http.login.url");
+
+                LoginTicketManager ltm = new LoginTicketManager();
+                LoginTicket lt = ltm.getLoginTicket(j2EContext.getRequest(), uniqueId, "qwewr232sd==", infoCode, httpLoginURL);
+
+                String uniqueIdCode = lt.getUserUniqueID();
+
+                credentials.setUserProfile(new CertUserProfile(uniqueIdStr, uniqueId, uniqueIdCode));
+
             } else {
                 logger.error("验证客户端签名错误！");
             }

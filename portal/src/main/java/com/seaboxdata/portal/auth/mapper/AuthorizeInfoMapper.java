@@ -20,5 +20,5 @@ public interface AuthorizeInfoMapper {
     List<String> getPermission(@Param("roleId") String roleId);
 
     @Select("select user_global_code from sys_user where user_name = #{userName}")
-    String getUniqueId(@Param("userName") String userName);
+    String getUniqueIdCode(@Param("userName") String userName);
 }

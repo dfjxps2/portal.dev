@@ -62,7 +62,7 @@ public class MobileController {
 
             Map<String, Object> userAttrs = certUserProfile.getAttributes();
 
-            if (certUserProfile.getUniqueId().equals(userAttrs.get("uniqueId"))) {
+            if (certUserProfile.getUniqueIdCode().equals(userAttrs.get("uniqueIdCode"))) {
                 SysUserDO sysUserDO = new SysUserDO();
                 sysUserDO.setUser_name(profile.getId());
                 result = new DataResult().setOk("OK");

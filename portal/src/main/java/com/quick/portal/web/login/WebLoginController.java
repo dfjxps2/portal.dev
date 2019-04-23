@@ -11,6 +11,7 @@ import com.quick.portal.sysUser.SysUserDO;
 import com.quick.portal.userAccessLog.IUserAccessLogService;
 import com.quick.portal.userAccessLog.UserAccessLogConstants;
 import com.quick.portal.userAccessLog.UserAccessLogServiceUtils;
+import com.seaboxdata.portal.auth.cert.CertUserProfile;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.pac4j.cas.client.rest.CasRestFormClient;
@@ -99,7 +100,7 @@ public class WebLoginController {
     }
 
     @RequestMapping(value = "/gotoService")
-    public String getServiceURL(HttpServletRequest request, HttpServletResponse response) {
+    public String gotoService(HttpServletRequest request, HttpServletResponse response) {
         final WebContext context = new J2EContext(request, response);
         List<CommonProfile> profiles = WebLoginUitls.getProfiles(request, response);
         if (profiles.size() == 0) {
@@ -175,24 +176,41 @@ public class WebLoginController {
     private WebLoginUser loadPortalUserInfo(HttpServletRequest request, HttpServletResponse response) {
         String account = null;
         List<CommonProfile> profiles = WebLoginUitls.getProfiles(request, response);
-        for (CommonProfile profile : profiles) {
-            account = profile.getId();
+
+        if (profiles.size() == 0)
+            return null;
+
+        CommonProfile profile = profiles.get(0);
+        account = profile.getId();
+
+        if (account == null || account.length() == 0) {
+            logger.error("Can't get user id from profile.");
+            return null;
         }
-        if (null != account && !"".equals(account)) {
-            Map<String, Object> parm = new HashMap<>();
-            parm.put("user_name", account);
-            List<SysUserDO> uList = sysUserService.getUserInfo(parm);
-            if (null == uList || uList.isEmpty()) {
+
+        if (profile instanceof CertUserProfile) {
+            CertUserProfile certUserProfile = (CertUserProfile) profile;
+
+            Map<String, Object> userAttrs = certUserProfile.getAttributes();
+
+            if (!certUserProfile.getUniqueIdCode().equals(userAttrs.get("uniqueIdCode"))) {
+                logger.error("User {} login failed, unique id code doesn't match.", account);
                 return null;
             }
-
-            SysUserDO u = uList.get(0);
-
-            WebLoginUser user = new WebLoginUser(u);
-            user.saveSession(request, response);//保存至本地
-            return user;
         }
-        return null;
+
+        Map<String, Object> parm = new HashMap<>();
+        parm.put("user_name", account);
+        List<SysUserDO> uList = sysUserService.getUserInfo(parm);
+        if (null == uList || uList.isEmpty()) {
+            return null;
+        }
+
+        SysUserDO u = uList.get(0);
+
+        WebLoginUser user = new WebLoginUser(u);
+        user.saveSession(request, response);//保存至本地
+        return user;
     }
 
 
@@ -215,11 +233,11 @@ public class WebLoginController {
 
     @RequestMapping(value = "/getCert")
     @ResponseBody
-    public  void getCert(HttpServletRequest request,HttpServletResponse response)  {
+    public void getCert(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html;charset=UTF-8");
         SecurityEngineDeal sed = null;
         String msgC = null;
-        HttpSession session= request.getSession();
+        HttpSession session = request.getSession();
         try {
             Map map = new HashMap();
             sed = SecurityEngineDeal.getInstance("SVSDefault");
@@ -227,11 +245,11 @@ public class WebLoginController {
             String strRandom = sed.genRandom(24);
             session.setAttribute("Random", strRandom);
             String strSignedData = sed.signData(strRandom.getBytes());
-            map.put("strServerCert",strServerCert);
-            map.put("strRandom",strRandom);
-            map.put("strSignedData",strSignedData);
+            map.put("strServerCert", strServerCert);
+            map.put("strRandom", strRandom);
+            map.put("strSignedData", strSignedData);
             msgC = getMsgCsJson(map);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try {
@@ -241,16 +259,17 @@ public class WebLoginController {
             e.printStackTrace();
         }
     }
-    public String getMsgCsJson(Map<String,Object> maps){
+
+    public String getMsgCsJson(Map<String, Object> maps) {
         JSONArray jsonArray = new JSONArray();
         JSONObject jsonObject = null;
         jsonObject = new JSONObject();
-        jsonObject.put("strServerCert",maps.get("strServerCert"));
-        jsonObject.put("strRandom",maps.get("strRandom"));
-        jsonObject.put("strSignedData",maps.get("strSignedData"));
+        jsonObject.put("strServerCert", maps.get("strServerCert"));
+        jsonObject.put("strRandom", maps.get("strRandom"));
+        jsonObject.put("strSignedData", maps.get("strSignedData"));
         jsonArray.put(jsonObject);
         String jo = jsonArray.toString();
-        return  jo;
+        return jo;
     }
 
 }
