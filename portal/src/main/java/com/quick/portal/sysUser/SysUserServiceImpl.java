@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -130,6 +131,17 @@ public class SysUserServiceImpl extends SysBaseService<SysUserDO> implements ISy
             return ActionMsg.setOk("密码修改成功");
         else
             return ActionMsg.setError("密码修改失败");
+    }
+
+    @Override
+    public void userAuthLog(String ipAddr, String userId, String authResult) {
+        Map<String, Object> params = new HashMap<>();
+
+        params.put("aud_action", authResult);
+        params.put("aud_client_ip", ipAddr);
+        params.put("aud_user", userId);
+
+        dao.userAuthLog(params);
     }
 
 }

@@ -209,10 +209,11 @@
             <mvc:exclude-mapping path="/lock/**"/>
             <mvc:exclude-mapping path="/services/**"/>
             <mvc:exclude-mapping path="/getCert"/>
+            <mvc:exclude-mapping path="/unAuthorized"/>
             <mvc:exclude-mapping path="/"/>
             <bean class="org.pac4j.springframework.web.SecurityInterceptor">
                 <constructor-arg name="config" ref="config"/>
-                <constructor-arg name="clients" value="CasClient,casRestFormClient,certUserAuthClient"/>
+                <constructor-arg name="clients" value="casRestFormClient,certUserAuthClient"/>
                 <property name="securityLogic" ref="mySecurityLogic"/>
             </bean>
         </mvc:interceptor>

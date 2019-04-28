@@ -52,4 +52,8 @@ public interface ISysUserService extends ISysBaseService<SysUserDO> {
 
     DataStore updatePassword(SysUserDO sysUserDO);
 
+    /*
+     * 记录用户登录日志
+     */
+    void userAuthLog(String ipAddr, String userId, String authResult);
 }
