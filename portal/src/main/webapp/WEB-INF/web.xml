@@ -24,15 +24,15 @@
     <!--错误页面处理 -->
     <error-page>
         <error-code>404</error-code>
-        <location>/WEB-INF/error.html</location>
+        <location>/</location>
     </error-page>
     <error-page>
         <error-code>401</error-code>
-        <location>/ErrorHandler</location>
+        <location>/unAuthorized</location>
     </error-page>
     <error-page>
         <exception-type>java.lang.Exception</exception-type>
-        <location>/WEB-INF/error.html</location>
+        <location>/</location>
     </error-page>
 
     <!-- 激活Tomcat的defaultServlet来处理静态文件 -->
@@ -63,7 +63,7 @@
         <filter-class>com.quick.core.util.filter.LoginFilter</filter-class>
         <init-param>
             <param-name>prefixIgnore</param-name>
-            <param-value>/res,/callback,/mobile,/auth,/upload,/getCert,/lock,/services,/druid,/res,/login</param-value>
+            <param-value>/res,/callback,/mobile,/auth,/upload,/getCert,/lock,/services,/druid,/login,/unAuthorized</param-value>
         </init-param>
     </filter>
     <filter-mapping>

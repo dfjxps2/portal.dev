@@ -227,6 +227,11 @@
 	<update id="updateUserStatueByUersId" parameterType="java.lang.String">
 		update sys_user  set user_state=0, upd_time =now()  where user_name = #{user_name}
 	</update>
+
+	<insert id="userAuthLog" parameterType="map">
+        insert into com_audit_trail (aud_action, aud_client_ip, aud_user)
+        values (#{aud_action}, #{aud_client_ip}, #{aud_user})
+    </insert>
 	
 	
 		<!--查询当前IP,密码错误次数-->

@@ -1,5 +1,6 @@
 package com.seaboxdata.portal.auth;
 
+import com.quick.core.util.common.CommonUtils;
 import org.pac4j.core.authorization.checker.AuthorizationChecker;
 import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
 import org.pac4j.core.client.Client;
@@ -8,6 +9,7 @@ import org.pac4j.core.client.DirectClient;
 import org.pac4j.core.client.finder.ClientFinder;
 import org.pac4j.core.client.finder.DefaultSecurityClientFinder;
 import org.pac4j.core.config.Config;
+import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.WebContext;
 import org.pac4j.core.credentials.Credentials;
 import org.pac4j.core.engine.DefaultSecurityLogic;
@@ -23,6 +25,7 @@ import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.ProfileManager;
 import org.pac4j.core.util.CommonHelper;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -77,8 +80,8 @@ public class MySecurityLogic<R, C extends WebContext> extends DefaultSecurityLog
                 boolean updated = false;
                 Iterator var18 = currentClients.iterator();
 
-                while(var18.hasNext()) {
-                    Client currentClient = (Client)var18.next();
+                while (var18.hasNext()) {
+                    Client currentClient = (Client) var18.next();
                     if (currentClient instanceof DirectClient) {
                         this.logger.debug("Performing authentication for direct client: {}", currentClient);
                         Credentials credentials = currentClient.getCredentials(context);
@@ -86,7 +89,7 @@ public class MySecurityLogic<R, C extends WebContext> extends DefaultSecurityLog
                         CommonProfile profile = currentClient.getUserProfile(credentials, context);
                         this.logger.debug("profile: {}", profile);
                         if (profile != null) {
-                            boolean saveProfileInSession = this.profileStorageDecision.mustSaveProfileInSession(context, currentClients, (DirectClient)currentClient, profile);
+                            boolean saveProfileInSession = this.profileStorageDecision.mustSaveProfileInSession(context, currentClients, (DirectClient) currentClient, profile);
                             this.logger.debug("saveProfileInSession: {} / multiProfile: {}", saveProfileInSession, multiProfile);
                             manager.save(saveProfileInSession, profile, multiProfile);
                             updated = true;

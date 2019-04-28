@@ -1,7 +1,9 @@
 package com.quick.portal.web.login;
 
 import cn.org.bjca.security.SecurityEngineDeal;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.quick.core.base.exception.ExceptionEnumServiceImpl;
+import com.quick.core.base.model.DataStore;
 import com.quick.core.util.common.CommonUtils;
 import com.quick.core.util.common.QCommon;
 import com.quick.core.util.common.QCookie;
@@ -36,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,6 +92,7 @@ public class WebLoginController {
              */
 
             loggerInfoLoginSystemLogInfo(request, loginer);
+
             //平台用户:1:app;2:sys;公服用户:1:app
             String flag = WebLoginUitls.getUserHomePage(loginer);
             if (WebLoginConstants.SYS_MENU_FLAG.equals(flag)) {
@@ -97,6 +101,17 @@ public class WebLoginController {
                 return WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.MAIN_URL);
             }
         }
+    }
+
+    @RequestMapping(value = "/unAuthorized")
+    public String unAuthorized(HttpServletRequest request, HttpServletResponse response) {
+        String clientAddress = CommonUtils.getIpAddrAdvanced(request);
+        String userId = request.getParameter("username");
+        if (userId == null)
+            userId = "Unknown";
+
+        sysUserService.userAuthLog(clientAddress, userId, "AUTHENTICATION_FAILED");
+        return WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.CHECK_AUTH_FAIL_CONTROLLER);
     }
 
     @RequestMapping(value = "/gotoService")
@@ -229,6 +244,9 @@ public class WebLoginController {
         String serviceName = "服务名称:登录日志;服务方法名:";
         UserAccessLogServiceUtils.loggerLogInfo(logger,
                 userName, operatedUser, operateType, requestResult, operLog, serviceName, ip);
+
+        sysUserService.userAuthLog(CommonUtils.getIpAddrAdvanced(request), userName, "AUTHENTICATION_SUCCESS");
+
     }
 
     @RequestMapping(value = "/getCert")
