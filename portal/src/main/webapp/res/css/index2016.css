@@ -83,23 +83,23 @@ span.counter { display: block;width:200px;heigth:80px; margin:0; font-size:29px;
 
 /* WebKit browsers */
 input::-webkit-input-placeholder {
-	color: #b1e4ff;
+	color: #ffffff;
 }
 /* Mozilla Firefox 4 to 18 */
 input:-moz-placeholder {
-	color: #b1e4ff;
+	color: #ffffff;
 	opacity: 1;
 }
 
 
 /* Mozilla Firefox 19+ */
 input::-moz-placeholder {
-	color: #b1e4ff;
+	color: #ffffff;
 	opacity: 1;
 }
 /* Internet Explorer 10+ */
 input:-ms-input-placeholder {
-	color: #b1e4ff;
+	color: #ffffff;
 }
 
 .grid figure {
@@ -256,6 +256,10 @@ input:-ms-input-placeholder {
 .loginbox-main li b{display:block;width:240px;height:90px;}
 .loginboxin{width:540px;height:200px;margin:0 auto; position:relative;}
 .loginbox-main .hover{ display:block;width:240px;height:90px;}
+.login-header ul li{float:left;list-style-type :none;width:50%;height:80px;text-align:left;line-height:80px;position:relative;cursor:pointer;}
+.login-header ul li:hover,.login-header ul li.active{color:#448aff;}
+.login-header ul li:after{content: "";width:0;height:3px;position: absolute;bottom:0;left:50%;background:#026aff;transition: all .2s;}
+.login-header ul li:hover:after,.login-header ul li.active:after{left: 0%;width: 100%;}
 
 .loginboxin-one2{ width:100%;height:200px;}
 .loginboxin-one2 input{ color:#485660;position:absolute;top:65px;left:170px;margin:0; height:34px;border:1px solid #3485b9;width:280px;padding:0 4px;}

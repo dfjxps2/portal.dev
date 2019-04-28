@@ -47,7 +47,7 @@ var CERT_OID_SUBJECT_L   = 18;
 var CERT_OID_SUBJECT_E   = 19; 
 var CERT_OID_PUBKEY      = 20; 
 var CERT_OID_SUBJECT_DN  = 33; 
-var CERT_OID_ISSUER_DN   = 34; 
+var CERT_OID_ISSUER_DN   = 34;
 
 
 // set auto logout parameters
@@ -117,7 +117,6 @@ function $popDropListBoxAll(strListID)
     for(i = 0; i < n; i++) {
         objListID.remove(0);
     }
-    
     objListID = null;
 }
 
@@ -152,7 +151,12 @@ function $pushAllDropListBox(certUserListObj)
     if ($_$allCertListID != "") {
         $popDropListBoxAll($_$allCertListID);
     }
-    
+
+    var item = new Option("请选择证书", null);
+    var objId = eval($_$hardCertListID);
+    if(objId){
+        objId.options.add(item);
+    }
     var strUserList = certUserListObj.retVal;
     var allListArray = []
     while (true) {
@@ -1072,11 +1076,9 @@ function CreateSecXObject() {
 
 //webSocket client class
 function CreateWebSocketObject() {
-    
     var o = new Object();
-
     o.ws_host = "ws://127.0.0.1:";
-    o.ws_port_array = ["21051/xtxapp","4044","5044", "6044", "7044", "8044"]; 
+    o.ws_port_array = ["21051/xtxapp","4044","5044", "6044", "7044", "8044"];
     o.ws_port_use = 0;
     o.ws_obj = null;
     o.ws_heartbeat_id = 0;
@@ -1084,7 +1086,6 @@ function CreateWebSocketObject() {
     o.ws_queue_list = {};  // call_cmd_id callback queue
     o.ws_queue_ctx = {};
     o.xtx_version = "";
-    
     o.load_websocket = function() {
         if (o.ws_port_use >= o.ws_port_array.length) {
             o.ws_port_use = 0;
@@ -1093,7 +1094,7 @@ function CreateWebSocketObject() {
 
         var ws_url = o.ws_host + o.ws_port_array[o.ws_port_use] + "/";
         try {
-            o.ws_obj = new WebSocket(ws_url); 
+            o.ws_obj = new WebSocket(ws_url);
         } catch (e) {
             console.log(e);
             return false;
@@ -1101,28 +1102,28 @@ function CreateWebSocketObject() {
 
         o.ws_queue_list["onUsbkeyChange"] = $OnUsbKeyChange;
 
-        o.ws_obj.onopen = function(evt) { 
+        o.ws_obj.onopen = function(evt) {
             clearInterval(o.ws_heartbeat_id);
             o.callMethod("SOF_GetVersion", function(str){o.xtx_version = str.retVal;});
             o.ws_heartbeat_id = setInterval(function () {
                 o.callMethod("SOF_GetVersion", function(str){});
             }, 10 * 1000);
             GetUserList($pushAllDropListBox);
-        }; 
+        };
 
-        o.ws_obj.onerror = function(evt) { 
+        o.ws_obj.onerror = function(evt) {
             o.ws_port_use++;
             o.load_websocket();
         };
 
-        o.ws_obj.onclose = function(evt) { 
+        o.ws_obj.onclose = function(evt) {
 
-        }; 
+        };
 
 
-        o.ws_obj.onmessage = function(evt) { 
+        o.ws_obj.onmessage = function(evt) {
 
-            var res = JSON.parse(evt.data);  
+            var res = JSON.parse(evt.data);
             if(res['set-cookie']){
                 document.cookie = res['set-cookie'];
             }
@@ -1151,13 +1152,13 @@ function CreateWebSocketObject() {
             var ret;
             if (ctx.returnType == "bool"){
                 ret = res.retVal == "true" ? true : false;
-            } 
+            }
             else if (ctx.returnType == "number"){
                 ret = Number(res.retVal);
-            } 
+            }
             else{
                 ret = res.retVal;
-            }     
+            }
             var retObj = {retVal:ret, ctx:ctx};
 
             execFunc(retObj);
@@ -1167,7 +1168,7 @@ function CreateWebSocketObject() {
             }
             delete o.ws_queue_ctx[res['call_cmd_id']];
 
-        }; 
+        };
 
         return true;
     };
@@ -1201,7 +1202,7 @@ function CreateWebSocketObject() {
         if (typeof(cb) == 'function'){
             o.ws_queue_list['i_' + o.ws_queue_id] = cb;
             ctx = ctx || {};
-            ctx.returnType = returnType;           
+            ctx.returnType = returnType;
             o.ws_queue_ctx['i_' + o.ws_queue_id] = ctx;
         }
 
@@ -1236,7 +1237,7 @@ function CreateWebSocketObject() {
         o.callMethod('SOF_SetSignMethod', cb, ctx, "number", paramArray);
     }
     //添加 end 20171205 by 研发
-    
+
     o.GetUserList = function(cb, ctx) {
         o.callMethod('SOF_GetUserList', cb, ctx, "string");
     };
@@ -1270,17 +1271,17 @@ function CreateWebSocketObject() {
     o.GetUserList_Soft = function(cb, ctx) {
         return o._GetUserListByType("SOFT", cb, ctx);
     };
-    
+
     o.ExportUserSignCert = function(strCertID, cb, ctx) {
         var paramArray = [strCertID];
         o.callMethod('SOF_ExportUserCert', cb, ctx, "string", paramArray);
     };
-    
+
     o.ExportUserExchangeCert = function(strCertID, cb, ctx) {
         var paramArray = [strCertID];
         o.callMethod('SOF_ExportExChangeUserCert', cb, ctx, "string", paramArray);
     };
-    
+
     o.VerifyUserPIN = function(strCertID, strUserPIN, cb, ctx) {
         var paramArray = [strCertID, strUserPIN];
         o.callMethod('SOF_Login', cb, ctx, "bool", paramArray);
@@ -1292,130 +1293,130 @@ function CreateWebSocketObject() {
         o.callMethod('SOF_Logout', cb, ctx, "bool", paramArray);
     };
     //添加 end 20171205 by 研发
-    
+
     o.ChangeUserPIN = function(strCertID, oldPwd, newPwd, cb, ctx) {
         var paramArray = [strCertID, oldPwd, newPwd];
         o.callMethod('SOF_ChangePassWd', cb, ctx, "bool", paramArray);
     };
-    
+
     o.GetUserPINRetryCount = function(strCertID, cb, ctx) {
         var paramArray = [strCertID];
         o.callMethod('SOF_GetPinRetryCount', cb, ctx, "number", paramArray);
     };
-    
+
     o.GetCertInfo = function(strCert, Type, cb, ctx) {
         var paramArray = [strCert, Type];
         o.callMethod('SOF_GetCertInfo', cb, ctx, "string", paramArray);
     };
-    
+
     o.GetCertInfoByOID = function(strCert, strOID, cb, ctx) {
         var paramArray = [strCert, strOID];
         o.callMethod('SOF_GetCertInfoByOid', cb, ctx, "string", paramArray);
     };
-    
+
     o.GetCertEntity = function(strCert, cb, ctx) {
         var paramArray = [strCert];
         o.callMethod('SOF_GetCertEntity', cb, ctx, "string", paramArray);
     };
-    
+
     o.GenRandom = function(RandomLen, cb, ctx) {
         var paramArray = [RandomLen];
         o.callMethod('SOF_GenRandom', cb, ctx, "string", paramArray);
     };
-    
+
     o.SignData = function(strCertID, strInData, cb, ctx) {
         var paramArray = [strCertID, strInData];
         o.callMethod('SOF_SignData', cb, ctx, "string", paramArray);
     };
-    
+
     o.VerifySignedData = function(strCert, strInData, strSignValue, cb, ctx) {
         var paramArray = [strCert, strInData, strSignValue];
         o.callMethod('SOF_VerifySignedData', cb, ctx, "bool", paramArray);
     };
-    
+
     o.PubKeyEncrypt = function(strCert, strInData, cb, ctx) {
         var paramArray = [strCert, strInData];
         o.callMethod('SOF_PubKeyEncrypt', cb, ctx, "string", paramArray);
     };
-    
+
     o.PriKeyDecrypt = function(strCertID, strInData, cb, ctx) {
         var paramArray = [strCertID, strInData];
         o.callMethod('SOF_PriKeyDecrypt', cb, ctx, "string", paramArray);
     };
-    
+
     o.SignDataByP7 = function(strCertID, strInData, bDetach, cb, ctx) {
         var paramArray = [strCertID, strInData];
         o.callMethod('SOF_SignMessage', cb, ctx, "string", paramArray);
     };
-    
+
     o.VerifyDataByP7 = function(strP7Data, strPlainMsg, cb, ctx) {
         var paramArray = [strP7Data, strPlainMsg];
         o.callMethod('SOF_VerifySignedMessage', cb, ctx, "bool", paramArray);
     };
-    
+
     o.EncyptMessage = function(strCert, strInData, cb, ctx) {
         var paramArray = [strCert, strInData];
-        o.callMethod('SOF_EncryptData', cb, ctx, "string", paramArray); 
+        o.callMethod('SOF_EncryptData', cb, ctx, "string", paramArray);
     };
-    
+
     o.DecryptMessage = function(strCertID, strP7Envlope, cb, ctx) {
         var paramArray = [strCertID, strP7Envlope];
-        o.callMethod('SOF_DecryptData', cb, ctx, "string", paramArray); 
+        o.callMethod('SOF_DecryptData', cb, ctx, "string", paramArray);
     };
-    
+
     o.SignFile = function(strCertID, strFilePath, cb, ctx) {
         var paramArray = [strCertID, strFilePath];
         o.callMethod('SOF_SignFile', cb, ctx, "string", paramArray);
     };
-    
+
     o.VerifySignFile = function(strCert, strFilePath, strSignValue, cb, ctx) {
         var paramArray = [strCert, strFilePath, strSignValue];
-        o.callMethod('SOF_VerifySignedFile', cb, ctx, "bool", paramArray);  
+        o.callMethod('SOF_VerifySignedFile', cb, ctx, "bool", paramArray);
     };
-    
+
     o.GetSymKeyLength = function(cb, ctx) {
         var ret = 24;
         return $myOKRtnFunc(ret, cb, ctx);
     };
-    
+
     o.SymEncryptData = function(strKey, strInData, cb, ctx) {
         var paramArray = [strKey, strInData];
-        o.callMethod('SOF_SymEncryptData', cb, ctx, "string", paramArray);  
+        o.callMethod('SOF_SymEncryptData', cb, ctx, "string", paramArray);
     };
-    
+
     o.SymDecryptData = function(strKey, strInData, cb, ctx) {
         var paramArray = [strKey, strInData];
         o.callMethod('SOF_SymDecryptData', cb, ctx, "string", paramArray);
     };
-    
+
     o.SymEncryptFile = function(strKey, strInFilePath, strOutFilePath, cb, ctx) {
         var paramArray = [strKey, strInFilePath, strOutFilePath];
-        o.callMethod('SOF_SymEncryptFile', cb, ctx, "bool", paramArray);    
+        o.callMethod('SOF_SymEncryptFile', cb, ctx, "bool", paramArray);
     };
-    
+
     o.SymDecryptFile = function(strKey, strInFilePath, strOutFilePath, cb, ctx) {
         var paramArray = [strKey, strInFilePath, strOutFilePath];
-        o.callMethod('SOF_SymDecryptFile', cb, ctx, "bool", paramArray);    
+        o.callMethod('SOF_SymDecryptFile', cb, ctx, "bool", paramArray);
     };
-    
+
     o.ValidateCert = function(strCert, cb, ctx) {
         var paramArray = [strCert];
-        o.callMethod('SOF_ValidateCert', cb, ctx, "bool", paramArray);  
+        o.callMethod('SOF_ValidateCert', cb, ctx, "bool", paramArray);
     };
-    
+
     o.HashFile = function(strFilePath, cb, ctx) {
         var paramArray = [2, strFilePath];
         o.callMethod('SOF_HashFile', cb, ctx, "string", paramArray);
     };
-    
+
     o.GetDateNotBefore = function(strCertValid) {
         return o._GetDateFormate(strCertValid);
     };
-    
+
     o.GetDateNotAfter = function(strCertValid) {
         return o._GetDateFormate(strCertValid);
     };
-    
+
     o._GetDateFormate = function(strCertValid) {
         var strYear = strCertValid.substring(0, 4);
         var strMonth = strCertValid.substring(4, 6);
@@ -1430,53 +1431,53 @@ function CreateWebSocketObject() {
         RtnDate.setSeconds(Number(strSecond));
         return RtnDate;
     };
-        
+
     o.GetDeviceType = function(strCertID, cb, ctx) {
         var paramArray = [strCertID, 7];
         o.callMethod('GetDeviceInfo', cb, ctx, "string", paramArray);
     }
-    
+
     o.SignHashData = function(strCertID, strHashData, ulHashAlg, cb, ctx) {
         var paramArray = [strCertID, strHashData, ulHashAlg];
         o.callMethod('SOF_SignHashData', cb, ctx, "string", paramArray);
     }
-    
+
     o.VerifySignedHashData = function(strCert, strHashData, ulHashAlg, strSignValue, cb, ctx) {
         var paramArray = [strCert, strHashData, ulHashAlg, strSignValue];
         o.callMethod('SOF_VerifySignedHashData', cb, ctx, "bool", paramArray);
     }
-    
+
 	// getpic begin
 	o.GetPic = function(strContainerName, cb, ctx) {
 		var paramArray = [strContainerName];
         o.callMethod('GetPic', cb, ctx, "string", paramArray);
 	};
-    
+
     o.Hash = function(strInData, cb, ctx) {
         var paramArray = [strInData];
         o.callMethod('Hash', cb, ctx, "string", paramArray);
     };
-	
+
     o.ConvertPicFormat = function(strInData, type, cb, ctx) {
         var paramArray = [strInData, type];
         o.callMethod('ConvertPicFormat', cb, ctx, "string", paramArray);
-    }; 
-	
+    };
+
 	o.ConvertGif2Jpg = function(strInData, cb, ctx) {
         var paramArray = [strInData];
         o.callMethod('ConvertGif2Jpg', cb, ctx, "string", paramArray);
-    }; 
-	
+    };
+
 	o.ConvertPicSize = function(strInData, w, h, cb, ctx) {
         var paramArray = [strInData, w, h];
         o.callMethod('ConvertPicSize', cb, ctx, "string", paramArray);
-    }; 
+    };
 	// getpic end
-    
+
     if (!o.load_websocket()) {
         return null;
     }
-    
+
     return o;
 }
 
