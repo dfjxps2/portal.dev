@@ -1,9 +1,7 @@
 package com.quick.portal.web.login;
 
 import cn.org.bjca.security.SecurityEngineDeal;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.quick.core.base.exception.ExceptionEnumServiceImpl;
-import com.quick.core.base.model.DataStore;
 import com.quick.core.util.common.CommonUtils;
 import com.quick.core.util.common.QCommon;
 import com.quick.core.util.common.QCookie;
@@ -20,10 +18,14 @@ import org.pac4j.cas.client.rest.CasRestFormClient;
 import org.pac4j.cas.config.CasConfiguration;
 import org.pac4j.cas.profile.CasProfile;
 import org.pac4j.cas.profile.CasRestProfile;
+import org.pac4j.core.context.HttpConstants;
 import org.pac4j.core.context.J2EContext;
+import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.context.WebContext;
 import org.pac4j.core.credentials.TokenCredentials;
+import org.pac4j.core.exception.TechnicalException;
 import org.pac4j.core.profile.CommonProfile;
+import org.pac4j.core.util.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +39,12 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -118,20 +124,37 @@ public class WebLoginController {
     public String gotoService(HttpServletRequest request, HttpServletResponse response) {
         final WebContext context = new J2EContext(request, response);
         List<CommonProfile> profiles = WebLoginUitls.getProfiles(request, response);
+
         if (profiles.size() == 0) {
             logger.error("Can't get user profile.");
             return WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_ERROR_CONTROLLER);
         }
 
         String serviceURL = request.getParameter("serviceURL");
+        String sep = null;
+        try {
+            sep = (new URL(serviceURL)).getQuery() == null ? "?" : "&";
+        } catch (Exception e) {
+            logger.error("Caught exception in parsing URL({}):{}", serviceURL, e);
+            return WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_ERROR_CONTROLLER);
+        }
+
+        CasRestFormClient
+                casRestFormClient = new CasRestFormClient(casConfiguration, "", "");
 
         if (profiles.get(0) instanceof CasRestProfile) {
             CasRestProfile profile = (CasRestProfile) profiles.get(0);
 
-            CasRestFormClient casRestFormClient = new CasRestFormClient(casConfiguration, "", "");
+            TokenCredentials tokenCredentials = casRestFormClient.requestServiceTicket(serviceURL, profile, context);
+            return WebLoginConstants.REDIRECT_KEY.concat(serviceURL.concat(sep + "ticket=" + tokenCredentials.getToken()));
+        } else if (profiles.get(0) instanceof CertUserProfile) {
+            String userId = profiles.get(0).getId();
+            String tgt = getTGT(request, response, userId);
+            CasRestProfile profile = new CasRestProfile(tgt, userId);
+
             TokenCredentials tokenCredentials = casRestFormClient.requestServiceTicket(serviceURL, profile, context);
 
-            return WebLoginConstants.REDIRECT_KEY.concat(serviceURL.concat("?ticket=" + tokenCredentials.getToken()));
+            return WebLoginConstants.REDIRECT_KEY.concat(serviceURL.concat(sep + "ticket=" + tokenCredentials.getToken()));
         } else if (profiles.get(0) instanceof CasProfile) {
             return WebLoginConstants.REDIRECT_KEY.concat(serviceURL);
         } else {
@@ -290,4 +313,33 @@ public class WebLoginController {
         return jo;
     }
 
+    private String getTGT(HttpServletRequest request, HttpServletResponse response, String userId) {
+        final WebContext context = new J2EContext(request, response);
+
+        HttpURLConnection connection = null;
+        try {
+            connection = HttpUtils.openPostConnection(new URL(casConfiguration.computeFinalRestUrl(context)));
+            final String payload = HttpUtils.encodeQueryParam(Pac4jConstants.USERNAME, userId)
+                    + "&" + HttpUtils.encodeQueryParam(Pac4jConstants.PASSWORD, "dummy-password");
+
+            final BufferedWriter out = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream(), StandardCharsets.UTF_8));
+            out.write(payload);
+            out.close();
+
+            final String locationHeader = connection.getHeaderField("location");
+            final int responseCode = connection.getResponseCode();
+            if (locationHeader != null && responseCode == HttpConstants.CREATED) {
+                return locationHeader.substring(locationHeader.lastIndexOf("/") + 1);
+            } else {
+                logger.debug("Ticket granting ticket request failed: " + locationHeader + " " + responseCode +
+                        HttpUtils.buildHttpErrorMessage(connection));
+                return null;
+            }
+        } catch (final IOException e) {
+            throw new TechnicalException(e);
+        } finally {
+            HttpUtils.closeConnection(connection);
+        }
+
+    }
 }
