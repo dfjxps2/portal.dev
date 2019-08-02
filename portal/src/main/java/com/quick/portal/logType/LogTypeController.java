@@ -28,6 +28,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -59,5 +60,11 @@ public class LogTypeController extends SysBaseController<LogTypeDO> {
     @RequestMapping
     public String chose(ModelMap model) {
         return view();
+    }
+    @RequestMapping(value = "/audit")
+    public String audit(@RequestParam("unum") String unum, ModelMap map) {
+        map.put("servicelog",unum);
+        String url= "page/logType/unifield";
+        return url;
     }
 }

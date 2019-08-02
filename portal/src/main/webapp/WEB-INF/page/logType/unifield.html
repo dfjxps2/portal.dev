@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <#include "/WEB-INF/include/reslist.html" />
+</head>
+<script>
+    var route = {
+        "osoperate":"http://172.26.52.230:5601/app/kibana#/discover/0c6ad8d0-7eda-11e9-b2ce-6b07215cad96?_g=()&_a=(columns:!(%E6%97%B6%E9%97%B4,%E6%9C%8D%E5%8A%A1%E5%99%A8,%E7%94%A8%E6%88%B7%E5%90%8D,%E4%BC%9A%E8%AF%9D,%E8%B7%AF%E5%BE%84,command),filters:!(),index:os_operate,interval:auto,query:(query_string:(analyze_wildcard:!t,query:'*')),sort:!(%E6%97%B6%E9%97%B4,desc))",
+        "ossecure":"http://172.26.52.230:5601/app/kibana#/discover/171dda60-7d32-11e9-8840-8dfbd294e7f3?_g=()&_a=(columns:!(%E6%97%B6%E9%97%B4,%E6%9C%8D%E5%8A%A1%E5%99%A8,%E7%BA%A7%E5%88%AB,'@log'),filters:!(),index:os_secure,interval:auto,query:(query_string:(analyze_wildcard:!t,query:'*')),sort:!(%E6%97%B6%E9%97%B4,desc))",
+        "mysqlaudit":"http://172.26.52.230:5601/app/kibana#/discover/c4786a70-7ebf-11e9-b2ce-6b07215cad96?_g=()&_a=(columns:!(%E6%97%B6%E9%97%B4,%E6%9C%8D%E5%8A%A1%E5%99%A8,%E8%BF%9E%E6%8E%A5%E5%9C%B0%E5%9D%80,%E8%BF%9E%E6%8E%A5%E7%BC%96%E5%8F%B7,%E6%9F%A5%E8%AF%A2%E7%BC%96%E5%8F%B7,%E6%93%8D%E4%BD%9C,%E6%95%B0%E6%8D%AE%E5%BA%93,%E8%BF%90%E8%A1%8C%E7%8A%B6%E6%80%81,sql),filters:!(),index:mysql_audit,interval:auto,query:(query_string:(analyze_wildcard:!t,query:'*')),sort:!(%E6%97%B6%E9%97%B4,desc))",
+        "redisaudit":"http://172.26.52.230:5601/app/kibana#/discover/7a284580-85c2-11e9-afd3-93baa1142b50?_g=()&_a=(columns:!(%E6%97%B6%E9%97%B4,%E6%9C%8D%E5%8A%A1%E5%99%A8,%E5%AE%A2%E6%88%B7%E7%AB%AF,command),filters:!(),index:redis_audit,interval:auto,query:(query_string:(analyze_wildcard:!t,query:'*')),sort:!(%E6%97%B6%E9%97%B4,desc))"
+    };
+
+    $(document).ready(function(){
+        var qt = $("#opath").val()
+        var p = $("#kb").parent();
+        $("#kb").height(p.height()*1.045).width(p.width()*0.983).attr("src", route[qt]);
+    });
+
+</script>
+<body class="gray-bg">
+<div class="wrapper wrapper-content wrapper-content-x animated fadeInRight" >
+  <div class="row">
+    <div class="col-sm-12" style="padding-right:0px;padding-left:0px">
+
+      <div class="ibox ibox-x" style="margin-top:-30px">
+        <div class="ibox-content ibox-content-x">
+          <section class="content container-fluid" style="padding-right:0px;padding-left:0px;height:100%">
+            <div style="overflow:auto;height:calc(100% - 1px);">
+              <iframe id="kb"  style="margin-top:9px;margin-left:11px;margin-right:7px;height:520px"  frameborder="0"></iframe>
+              <input type="hidden" id ="opath" value="${servicelog}">
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
