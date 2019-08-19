@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="GBK" ?>
+<SVS>
+  <whiteLists/>
+  <configuration>
+    <ip>192.168.136.12</ip>
+    <netmask>255.255.255.0</netmask>
+    <gateway>192.168.136.254</gateway>
+    <dns></dns>
+    <port>8000</port>
+    <minthread>101</minthread>
+    <maxthread>201</maxthread>
+    <timeout>2001</timeout>
+    <sysloghost>192.168.136.12</sysloghost>
+  </configuration>
+  <applications>
+    <application>SVSDefault</application>
+    <application>SM2</application>
+  </applications>
+  <svslog>
+    <systemsize>10000kb</systemsize>
+    <errorsize>10000kb</errorsize>
+    <debugsize>10000kb</debugsize>
+    <isdebug>false</isdebug>
+  </svslog>
+  <database>
+    <synchronous>true</synchronous>
+  </database>
+</SVS>

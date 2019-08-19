@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head><meta http-equiv="X-UA-Compatible" content="text/html; charset=UTF-8">
+  <title>北京市市级大数据平台</title>
+  <script type="text/javascript" src="${host}/res/js/jquery.min.js"></script>
+  <script type="text/javascript" src="${host}/res/js/jquery-ui.min.js"></script>
+  <script src="${host}/res/js/tpl.base.js"></script>
+  <link type="text/css" rel="stylesheet" href="${host}/res/css/bootstrap.min.css?v=3.3.6">
+  <script src="${host}/res/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="${host}/res/css/font-awesome.min.css?v=4.4.0">
+  <link rel="stylesheet" href="${host}/res/css/cas.css">
+  <link rel="stylesheet" href="${host}/res/css/seaboxdata_css.css">
+  <link href="${host}/res/css/index2016.css" rel="stylesheet">
+  <script type="text/javascript" src="${host}/res/js/particles.min.js"></script>
+  <script>
+    /*<![CDATA[*/
+
+    var trackGeoLocation = false;
+
+    var googleAnalyticsTrackingId = null;
+
+    if (googleAnalyticsTrackingId != null && googleAnalyticsTrackingId != '') {
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', googleAnalyticsTrackingId, 'auto');
+        ga('send', 'pageview');
+    }
+
+    /*]]>*/
+  </script>
+</head>
+<body id="cas" class="body_bg">
+<div id="container" class="seaboxdb_container"><div id="bgcontainer" style="position:absolute;top:0;width:100%;height:100%;"><canvas class="particles-js-canvas-el" width="1708" height="766" style="width: 100%; height: 100%;"></canvas></div>
+  <header>
+    <a id="seaboxdata_logo" href="http://localhost:8080/cas/login#">北京城市大数据平台</a>
+  </header>
+  <div id="content" style="">
+    <div class="row">
+      <div id="notices" class="col-sm-12 col-md-12 col-xs-12">
+        <div class="box seaboxdt_box" id="login">
+          <div class="login-header">
+            <ul><li id="one1" onclick="setTab('one',1,2)" class="hover">非证书登录</li>
+              <li id="one2" onclick="setTab('one',2,2)">证书登录</li>
+            </ul>
+          </div>
+
+          <div class="loginboxin1">
+            <form id="fzsyh" action="/portal/login" onsubmit="return fzsSubmit(this);"  method="post" htmlescape="true">
+              <div id="con_one_1">
+                <section class="row input_row">
+                  <div class="form-group has-success has-feedback">
+                    <input cssclass="form-control input_font text-effect" csserrorclass="error" name="username" id="username" size="25" tabindex="1" placeholder="请输入用户名" aria-describedby="sizing-addon1" type="text" accesskey="n" autocomplete="off" value=""><span class="glyphicon glyphicon-user form-control-feedback" aria-hidden="true"><span id="sizing-addon1" class="sr-only">(success)</span>
+		            </span></div>
+                </section>
+                <section class="row input_row">
+                  <div class="form-group has-success has-feedback">
+                    <input class="required text-effect" type="password"  name="password" id="password" size="25" placeholder="请输入密码" aria-describedby="sizing-addon2" tabindex="2" accesskey="p" autocomplete="off" value=""><span class="glyphicon glyphicon-lock form-control-feedback" aria-hidden="true"><span id="sizing-addon4" class="sr-only">(success)</span>
+		                </span></div>
+                </section>
+                <section class="row input_row checkrow">
+                  <div class="form-group">
+                    <div class="col-xs-8 " style="text-align:left;">
+                      <label><input id="rm" type="checkbox" class="glyphicon glyphicon-ok-sign"> <span class="checkbox-title">记住密码 </span></label>
+                    </div>
+                    <div class="col-xs-4 " style="text-align:right;padding-right:5px;">
+                      <label><input id="rs" type="checkbox" class="glyphicon glyphicon-question-sign" > <span class="checkbox-title">重置</span></label>
+                    </div>
+                  </div>
+                </section>
+                <section class="row check">
+                </section>
+                <section class="row btn-row input_row">
+                  <input type="hidden" name="geolocation"><input class="btn btn-submit" name="submit" accesskey="l" value="登录" tabindex="6" style="width:100%;margin:0;" type="submit">
+                </section>
+              </div>
+            </form>
+            <form method="post" id="zsyh" name="zsyh" action="/portal/login" onsubmit="return zsSubmit(this)">
+              <div id="con_one_2" style="display:none">
+                <section class="row input_row">
+                  <div class="form-group has-success has-feedback">
+                    <input type="hidden" id="UserSignedData" name="UserSignedData">
+                    <input type="hidden" id="UserCert" name="UserCert">
+                    <input type="hidden" id="ContainerName" name="ContainerName">
+                    <input type="hidden" id="Random" name="Random">
+                    <select id="UserList" name="UserList" placeholder="请选择证书" class="form-control"></select>
+                    <span class="glyphicon glyphicon-user form-control-feedback" aria-hidden="true"><span id="sizing-addon3" class="sr-only">(success)</span></span>
+                  </div>
+                </section>
+                <section class="row input_row">
+                  <div class="form-group has-success has-feedback">
+                    <input class="required " type="password" style="padding-left:44px;" id="UserPwd" name="pwd1" size="25"   maxlength="16" placeholder="请输入证书口令" aria-describedby="sizing-addon2" tabindex="2" accesskey="p" autocomplete="off"  value=""><span class="glyphicon glyphicon-lock form-control-feedback" aria-hidden="true"><span id="sizing-addon2" class="sr-only">(success)</span>
+		                </span></div>
+                </section>
+                <section class="row input_row checkrow">
+                  <div class="form-group">
+                    <div class="col-xs-8 " style="text-align:left;padding-left:">
+                      <label><input id="ck1" type="checkbox" class="glyphicon glyphicon-ok-sign"> <span class="checkbox-title">记住密码 </span></label>
+                    </div>
+                    <div class="col-xs-4 " style="text-align:right;padding-right:5px;">
+                      <label><input id="ck2" type="checkbox" class="glyphicon glyphicon-question-sign" > <span class="checkbox-title">重置</span></label>
+                    </div>
+                  </div>
+                </section>
+                <section class="row check">
+                </section>
+                <section class="row btn-row input_row">
+                  <input class="btn btn-submit" name="sk" accesskey="l" value="登录" tabindex="6" style="width:100%;margin:0;"type="submit">
+                </section>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer class="seaboxdt_footer">
+    <div class="footer_line"></div>
+  </footer>
+</div>
+<script src="${host}/res/js/ZWXTXSAB.js"></script>
+<script type="text/javascript" src="${host}/res/js/login.js"></script>
+<script>
+    $(function(){
+        zsLogin();
+        SetUserCertList("zsyh.UserList");
+        var item = new Option("请选择证书", null);
+        var objId = eval("zsyh.UserList");
+        if(objId){
+            objId.options.add(item);
+        }
+    })
+    var strServerSignedData;
+    var strServerRan;
+    var strServerCert;
+    function zsLogin(){
+        $.ajax({
+            type:"post",
+            url:"${host}/getCert",
+            dataType:"json",
+            success:function(result)
+            {
+                var cert = result[0];
+                strServerRan = cert.strRandom;
+                strServerSignedData = cert.strSignedData;
+                strServerCert = cert.strServerCert;
+            }
+        });
+    }
+
+    function fzsSubmit(htmlEl)
+    {
+        var username=$("#username").val(); //用户名
+        var password=$("#password").val(); //密码
+        if(username==""||(password=="")){
+            alert("用户名或密码不能为空！");
+            return false;
+        }else{
+            htmlEl.submit();
+            return true;
+        }
+    }
+    function zsSubmit(form1)
+    {
+        var strContainerName =  form1.UserList.value;
+        var strPin = form1.UserPwd.value;
+        form1.Random.value = strServerRan;
+        if(form1.UserList.value == "" || form1.UserList.value=="null") {
+            alert("请您输入证书名称！");
+            form1.UserList.focus();
+            return false;
+        }
+        if(form1.UserPwd.value == "") {
+            alert("请您输入证书口令！");
+            form1.UserPwd.focus();
+            return false;
+        }
+        var ret = Login("zsyh", strContainerName, strPin,"/portal/login");
+        if (ret) {
+            form1.submit();
+            return true;
+        } else {
+            return false;
+        }
+    }
+    function submitzs()
+    {
+        $("#zsyh").submit();
+    }
+
+    function undosubmitfzs(fm)
+    {
+        var eid = fm.id;
+        var fid= document.getElementById(eid).form.id
+        if(fid =="fzsyh"){
+            document.getElementById("fzsyh").reset()
+        }else if(fid =="zsyh"){
+            document.getElementById("zsyh").reset()
+        }else {
+            alert("请检查重置按钮的属性！")
+        }
+    }
+</script>
+</body>
+</html>

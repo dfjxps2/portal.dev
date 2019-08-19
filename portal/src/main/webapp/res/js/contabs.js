@@ -1,5 +1,6 @@
 
-$(function () {
+    $(function () {
+
     if (top != window){
         top.location.href = window.location.href;
     }
@@ -153,7 +154,8 @@ $(function () {
 //            $('.J_mainContent').find('iframe.J_iframe').hide().parents('.J_mainContent').append(str1);
             var isFlag  = isApp(mId);
             if(isFlag=="1"){
-                var targetOrigin = dataUrl;
+                var goService = "/portal/gotoService?serviceURL=";
+                var targetOrigin = goService+dataUrl;
                 window.open(targetOrigin,'_blank');
             }else{
                 $('.J_mainContent').find('iframe.J_iframe').hide().parents('.J_mainContent').append(str1);
@@ -370,5 +372,6 @@ $(function () {
         });
         $('.page-tabs-content').css("margin-left", "0");
     });
+
 
 });

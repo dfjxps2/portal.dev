@@ -3,6 +3,8 @@ package com.seaboxdata.portal.mobile;
 import com.quick.portal.sysUser.SysUserDO;
 import com.quick.portal.web.model.DataResult;
 
+import com.seaboxdata.portal.auth.cert.CertUserProfile;
+import org.pac4j.cas.profile.CasProfile;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.WebContext;
 import org.pac4j.core.profile.CommonProfile;
@@ -22,10 +24,10 @@ import java.util.Map;
 @RequestMapping("/mobile")
 public class MobileController {
     final private Logger logger = LoggerFactory.getLogger(getClass());
-    
+
     @RequestMapping(value = "/")
     public String index(HttpServletRequest request, HttpServletResponse response) {
-    	 return "page/home/login";
+        return "page/home/login";
     }
 
     @RequestMapping(value = "/login", produces = {"text/json;charset=UTF-8"})
@@ -40,17 +42,39 @@ public class MobileController {
 
         CommonProfile profile = profiles.get(0);
 
-        logger.debug("Received login request from user {}", profile.getId());
+        DataResult result = new DataResult(0, "Unknown error.");
 
-        Map<String, Object> userAttrs = profile.getAttributes();
-        SysUserDO sysUserDO = new SysUserDO();
-        sysUserDO.setUser_id(Integer.valueOf((String)userAttrs.get("user_id")));
-        sysUserDO.setUser_name(profile.getId());
-        sysUserDO.setUser_real_name((String)userAttrs.get("user_real_name"));
-        sysUserDO.setUser_global_id((String)userAttrs.getOrDefault("user_global_id", ""));
-        DataResult result = new DataResult().setOk("OK");
-        result.setData(sysUserDO);
+        if (profile instanceof CasProfile) {
+            logger.debug("Received user-password login request from user {}", profile.getId());
+
+            Map<String, Object> userAttrs = profile.getAttributes();
+            SysUserDO sysUserDO = new SysUserDO();
+            sysUserDO.setUser_id(Integer.valueOf((String) userAttrs.get("user_id")));
+            sysUserDO.setUser_name(profile.getId());
+            sysUserDO.setUser_real_name((String) userAttrs.get("user_real_name"));
+            sysUserDO.setUser_global_id((String) userAttrs.getOrDefault("user_global_id", ""));
+            result = new DataResult().setOk("OK");
+            result.setData(sysUserDO);
+        } else if (profile instanceof CertUserProfile) {
+            logger.info("Received cert user login request from user {}", profile.getId());
+
+            CertUserProfile certUserProfile = (CertUserProfile) profile;
+
+            Map<String, Object> userAttrs = certUserProfile.getAttributes();
+
+            if (certUserProfile.getUniqueIdCode().equals(userAttrs.get("uniqueIdCode"))) {
+                SysUserDO sysUserDO = new SysUserDO();
+                sysUserDO.setUser_name(profile.getId());
+                result = new DataResult().setOk("OK");
+                result.setData(sysUserDO);
+            } else {
+                logger.debug("User unique identifier verification failed.");
+                result = new DataResult(0, "Invalid user.");
+            }
+
+        }
 
         return result;
     }
+
 }

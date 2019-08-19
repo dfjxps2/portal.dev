@@ -17,5 +17,8 @@ public interface AuthorizeInfoMapper {
             "where r.role_id = rp.role_id " +
             "and rp.sys_priv_id = p.sys_priv_id " +
             "and r.role_id = #{roleId}")
-   List<String> getPermission(@Param("roleId") String roleId);
+    List<String> getPermission(@Param("roleId") String roleId);
+
+    @Select("select user_global_code from sys_user where user_name = #{userName}")
+    String getUniqueIdCode(@Param("userName") String userName);
 }

@@ -44,7 +44,7 @@ public class MyCasRestAuthenticator extends CasRestAuthenticator {
             }
 
         } else {
-            throw new TechnicalException("Credentials are required");
+            logger.error("Credentials are required");
         }
     }
 

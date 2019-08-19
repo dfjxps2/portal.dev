@@ -1,5 +1,6 @@
 package com.quick.portal.web.login;
 
+import cn.org.bjca.security.SecurityEngineDeal;
 import com.quick.core.base.exception.ExceptionEnumServiceImpl;
 import com.quick.core.util.common.CommonUtils;
 import com.quick.core.util.common.QCommon;
@@ -10,17 +11,40 @@ import com.quick.portal.sysUser.SysUserDO;
 import com.quick.portal.userAccessLog.IUserAccessLogService;
 import com.quick.portal.userAccessLog.UserAccessLogConstants;
 import com.quick.portal.userAccessLog.UserAccessLogServiceUtils;
+import com.seaboxdata.portal.auth.cert.CertUserProfile;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.pac4j.cas.client.rest.CasRestFormClient;
+import org.pac4j.cas.config.CasConfiguration;
+import org.pac4j.cas.profile.CasProfile;
+import org.pac4j.cas.profile.CasRestProfile;
+import org.pac4j.core.context.HttpConstants;
+import org.pac4j.core.context.J2EContext;
+import org.pac4j.core.context.Pac4jConstants;
+import org.pac4j.core.context.WebContext;
+import org.pac4j.core.credentials.TokenCredentials;
+import org.pac4j.core.exception.TechnicalException;
 import org.pac4j.core.profile.CommonProfile;
+import org.pac4j.core.util.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,9 +66,11 @@ public class WebLoginController {
     @Resource(name = "userAccessLogService")
     private IUserAccessLogService userAccessLogService;
 
+    @Autowired
+    private CasConfiguration casConfiguration;
 
     //登录页
-    @RequestMapping(value = "/")
+    @RequestMapping(value = "/login")
     public String index(HttpServletRequest request, HttpServletResponse response) {
         WebLoginUser loginer = new WebLoginUser().loadSession(request, response);
 
@@ -71,7 +97,8 @@ public class WebLoginController {
              *  （1）用户名称；（2）用户IP；（3）服务名称；（4）开始处理时间；（5）处理结果；（6）请求服务的URL。这些字段有（4）开始处理时间；（5）处理结果；（6）请求服务的URL不支持
              */
 
-            loggerInfoLoginSystemLogInfo(request,loginer);
+            loggerInfoLoginSystemLogInfo(request, loginer);
+
             //平台用户:1:app;2:sys;公服用户:1:app
             String flag = WebLoginUitls.getUserHomePage(loginer);
             if (WebLoginConstants.SYS_MENU_FLAG.equals(flag)) {
@@ -82,6 +109,59 @@ public class WebLoginController {
         }
     }
 
+    @RequestMapping(value = "/unAuthorized")
+    public String unAuthorized(HttpServletRequest request, HttpServletResponse response) {
+        String clientAddress = CommonUtils.getIpAddrAdvanced(request);
+        String userId = request.getParameter("username");
+        if (userId == null)
+            userId = "Unknown";
+
+        sysUserService.userAuthLog(clientAddress, userId, "AUTHENTICATION_FAILED");
+        return WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.CHECK_AUTH_FAIL_CONTROLLER);
+    }
+
+    @RequestMapping(value = "/gotoService")
+    public String gotoService(HttpServletRequest request, HttpServletResponse response) {
+        final WebContext context = new J2EContext(request, response);
+        List<CommonProfile> profiles = WebLoginUitls.getProfiles(request, response);
+
+        if (profiles.size() == 0) {
+            logger.error("Can't get user profile.");
+            return WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_ERROR_CONTROLLER);
+        }
+
+        String serviceURL = request.getParameter("serviceURL");
+        String sep = null;
+        try {
+            sep = (new URL(serviceURL)).getQuery() == null ? "?" : "&";
+        } catch (Exception e) {
+            logger.error("Caught exception in parsing URL({}):{}", serviceURL, e);
+            return WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_ERROR_CONTROLLER);
+        }
+
+        CasRestFormClient
+                casRestFormClient = new CasRestFormClient(casConfiguration, "", "");
+
+        if (profiles.get(0) instanceof CasRestProfile) {
+            CasRestProfile profile = (CasRestProfile) profiles.get(0);
+
+            TokenCredentials tokenCredentials = casRestFormClient.requestServiceTicket(serviceURL, profile, context);
+            return WebLoginConstants.REDIRECT_KEY.concat(serviceURL.concat(sep + "ticket=" + tokenCredentials.getToken()));
+        } else if (profiles.get(0) instanceof CertUserProfile) {
+            String userId = profiles.get(0).getId();
+            String tgt = getTGT(request, response, userId);
+            CasRestProfile profile = new CasRestProfile(tgt, userId);
+
+            TokenCredentials tokenCredentials = casRestFormClient.requestServiceTicket(serviceURL, profile, context);
+
+            return WebLoginConstants.REDIRECT_KEY.concat(serviceURL.concat(sep + "ticket=" + tokenCredentials.getToken()));
+        } else if (profiles.get(0) instanceof CasProfile) {
+            return WebLoginConstants.REDIRECT_KEY.concat(serviceURL);
+        } else {
+            logger.error("Unexpected profile type of {}.", profiles.get(0).getClass().getName());
+            return WebLoginConstants.REDIRECT_KEY.concat(WebLoginConstants.COMMON_ERROR_CONTROLLER);
+        }
+    }
 
     @RequestMapping(value = "/home/login")
     public String login(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
@@ -89,6 +169,14 @@ public class WebLoginController {
                 + ":" + request.getServerPort() + request.getContextPath();
         model.addAttribute("host", url);
         return "page/home/login";
+    }
+
+    @RequestMapping(value = "/")
+    public String logon(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
+        String url = request.getScheme() + "://" + request.getServerName()
+                + ":" + request.getServerPort() + request.getContextPath();
+        model.addAttribute("host", url);
+        return "page/home/logon";
     }
 
 
@@ -126,42 +214,132 @@ public class WebLoginController {
     private WebLoginUser loadPortalUserInfo(HttpServletRequest request, HttpServletResponse response) {
         String account = null;
         List<CommonProfile> profiles = WebLoginUitls.getProfiles(request, response);
-        for (CommonProfile profile : profiles) {
-            account = profile.getId();
+
+        if (profiles.size() == 0)
+            return null;
+
+        CommonProfile profile = profiles.get(0);
+        account = profile.getId();
+
+        if (account == null || account.length() == 0) {
+            logger.error("Can't get user id from profile.");
+            return null;
         }
-        if (null != account && !"".equals(account)) {
-            Map<String, Object> parm = new HashMap<>();
-            parm.put("user_name", account);
-            List<SysUserDO> uList = sysUserService.getUserInfo(parm);
-            if (null == uList || uList.isEmpty()) {
+
+        if (profile instanceof CertUserProfile) {
+            CertUserProfile certUserProfile = (CertUserProfile) profile;
+
+            Map<String, Object> userAttrs = certUserProfile.getAttributes();
+
+            if (!certUserProfile.getUniqueIdCode().equals(userAttrs.get("uniqueIdCode"))) {
+                logger.error("User {} login failed, unique id code doesn't match.", account);
                 return null;
             }
-
-            SysUserDO u = uList.get(0);
-
-            WebLoginUser user = new WebLoginUser(u);
-            user.saveSession(request, response);//保存至本地
-            return user;
         }
-        return null;
+
+        Map<String, Object> parm = new HashMap<>();
+        parm.put("user_name", account);
+        List<SysUserDO> uList = sysUserService.getUserInfo(parm);
+        if (null == uList || uList.isEmpty()) {
+            return null;
+        }
+
+        SysUserDO u = uList.get(0);
+
+        WebLoginUser user = new WebLoginUser(u);
+        user.saveSession(request, response);//保存至本地
+        return user;
     }
 
 
     /**
-     *  在系统中记录门户系统用户登录的情况包括如下字段：
-     *  （1）用户名称；（2）用户IP；（3）服务名称；（4）开始处理时间；（5）处理结果；
-     *  （6）请求服务的URL。这些字段有（4）开始处理时间；（5）处理结果；（6）请求服务的URL不支持
+     * 在系统中记录门户系统用户登录的情况包括如下字段：
+     * （1）用户名称；（2）用户IP；（3）服务名称；（4）开始处理时间；（5）处理结果；
+     * （6）请求服务的URL。这些字段有（4）开始处理时间；（5）处理结果；（6）请求服务的URL不支持
      */
-    public void loggerInfoLoginSystemLogInfo(HttpServletRequest request,WebLoginUser loginer){
+    public void loggerInfoLoginSystemLogInfo(HttpServletRequest request, WebLoginUser loginer) {
         String ip = CommonUtils.getIpAddrAdvanced(request);
         String userName = loginer.getUser_name();
-        String requestResult = "系统操作员:"+userName+"登录统一门户服务日志";
+        String requestResult = "系统操作员:" + userName + "登录统一门户服务日志";
         String operateType = "统一门户->登录日志";
-        String operatedUser = "系统操作员编号:"+loginer.getUser_id()+"系统操作员名称:"+loginer.getUser_name();
+        String operatedUser = "系统操作员编号:" + loginer.getUser_id() + "系统操作员名称:" + loginer.getUser_name();
         String operLog = "用户登录统一门户服务日志->登录日志";
         String serviceName = "服务名称:登录日志;服务方法名:";
         UserAccessLogServiceUtils.loggerLogInfo(logger,
-                userName,operatedUser,operateType,requestResult,operLog,serviceName,ip);
+                userName, operatedUser, operateType, requestResult, operLog, serviceName, ip);
+
+        sysUserService.userAuthLog(CommonUtils.getIpAddrAdvanced(request), userName, "AUTHENTICATION_SUCCESS");
+
     }
 
+    @RequestMapping(value = "/getCert")
+    @ResponseBody
+    public void getCert(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("text/html;charset=UTF-8");
+        SecurityEngineDeal sed = null;
+        String msgC = null;
+        HttpSession session = request.getSession();
+        try {
+            Map map = new HashMap();
+            sed = SecurityEngineDeal.getInstance("SVSDefault");
+            String strServerCert = sed.getServerCertificate();
+            String strRandom = sed.genRandom(24);
+            session.setAttribute("Random", strRandom);
+            String strSignedData = sed.signData(strRandom.getBytes());
+            map.put("strServerCert", strServerCert);
+            map.put("strRandom", strRandom);
+            map.put("strSignedData", strSignedData);
+            msgC = getMsgCsJson(map);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            response.getWriter().write(msgC);
+            response.getWriter().flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getMsgCsJson(Map<String, Object> maps) {
+        JSONArray jsonArray = new JSONArray();
+        JSONObject jsonObject = null;
+        jsonObject = new JSONObject();
+        jsonObject.put("strServerCert", maps.get("strServerCert"));
+        jsonObject.put("strRandom", maps.get("strRandom"));
+        jsonObject.put("strSignedData", maps.get("strSignedData"));
+        jsonArray.put(jsonObject);
+        String jo = jsonArray.toString();
+        return jo;
+    }
+
+    private String getTGT(HttpServletRequest request, HttpServletResponse response, String userId) {
+        final WebContext context = new J2EContext(request, response);
+
+        HttpURLConnection connection = null;
+        try {
+            connection = HttpUtils.openPostConnection(new URL(casConfiguration.computeFinalRestUrl(context)));
+            final String payload = HttpUtils.encodeQueryParam(Pac4jConstants.USERNAME, userId)
+                    + "&" + HttpUtils.encodeQueryParam(Pac4jConstants.PASSWORD, "dummy-password");
+
+            final BufferedWriter out = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream(), StandardCharsets.UTF_8));
+            out.write(payload);
+            out.close();
+
+            final String locationHeader = connection.getHeaderField("location");
+            final int responseCode = connection.getResponseCode();
+            if (locationHeader != null && responseCode == HttpConstants.CREATED) {
+                return locationHeader.substring(locationHeader.lastIndexOf("/") + 1);
+            } else {
+                logger.debug("Ticket granting ticket request failed: " + locationHeader + " " + responseCode +
+                        HttpUtils.buildHttpErrorMessage(connection));
+                return null;
+            }
+        } catch (final IOException e) {
+            throw new TechnicalException(e);
+        } finally {
+            HttpUtils.closeConnection(connection);
+        }
+
+    }
 }

@@ -59,6 +59,7 @@
         <cas.server.port>8443</cas.server.port>
         <portal.db.password>root</portal.db.password>
         <portal.db.ip>127.0.0.1</portal.db.ip>
+        <ca.server.ip>127.0.0.1</ca.server.ip>
     </properties>
 
     <dependencies>

@@ -5,7 +5,7 @@
        xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:mvc="http://www.springframework.org/schema/mvc" 
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
        xsi:schemaLocation="
             http://www.springframework.org/schema/beans
             http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
@@ -18,34 +18,34 @@
             http://www.springframework.org/schema/mvc
             http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd"
        default-lazy-init="true">
-       
-	   <bean id="configTool" class="com.quick.core.util.config.ConfigTool">
+
+    <bean id="configTool" class="com.quick.core.util.config.ConfigTool">
         <property name="locations">
             <list>
                 <value>classpath:/properties/config.properties</value>
             </list>
         </property>
     </bean>
-    
+
     <!--MVC-->
     <!-- COC通用映射 -->
     <!--<bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping" />-->
     <!--Spring3.1版本开始的注解 HandlerMapping -->
     <!--<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>-->
-    <bean name='handlerMapping' class='com.quick.core.base.spring.MethodRequestMappingHandlerMapping' />
+    <bean name='handlerMapping' class='com.quick.core.base.spring.MethodRequestMappingHandlerMapping'/>
     <!--Spring3.1版本开始的注解 HandlerAdapter -->
-     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
         <property name="messageConverters">
             <list>
-             	<bean class="org.springframework.http.converter.StringHttpMessageConverter" />
+                <bean class="org.springframework.http.converter.StringHttpMessageConverter"/>
                 <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
                     <property name="objectMapper">
                         <bean class="com.fasterxml.jackson.databind.ObjectMapper">
-                             <property name="dateFormat">
-                                  <bean class="java.text.SimpleDateFormat">
-                                      <constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss" />
-                                  </bean>
-                             </property>
+                            <property name="dateFormat">
+                                <bean class="java.text.SimpleDateFormat">
+                                    <constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss"/>
+                                </bean>
+                            </property>
                         </bean>
                     </property>
                     <property name="supportedMediaTypes">
@@ -64,13 +64,13 @@
     <bean class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver">
         <property name="messageConverters">
             <list>
-                <bean class="org.springframework.http.converter.StringHttpMessageConverter" />
+                <bean class="org.springframework.http.converter.StringHttpMessageConverter"/>
                 <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
                     <property name="objectMapper">
                         <bean class="com.fasterxml.jackson.databind.ObjectMapper">
                             <property name="dateFormat">
                                 <bean class="java.text.SimpleDateFormat">
-                                    <constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss" />
+                                    <constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss"/>
                                 </bean>
                             </property>
                         </bean>
@@ -87,10 +87,9 @@
             </list>
         </property>
     </bean>
-	  
-	  
-    
-    <!-- 默认的注解映射的支持(注册RequestMappingHandlerMapping和RequestMappingHandlerAdapter) --> 
+
+
+    <!-- 默认的注解映射的支持(注册RequestMappingHandlerMapping和RequestMappingHandlerAdapter) -->
     <!--<mvc:annotation-driven />-->
     <!-- 自动扫描且只扫描Controller -->
     <context:component-scan base-package="com.quick,com.seaboxdata" use-default-filters="false">
@@ -134,6 +133,17 @@
         <property name="authorizationGenerator" ref="dbAuthGenerator"/>
     </bean>
 
+    <bean id="casRestFormClient" class="org.pac4j.cas.client.rest.CasRestFormClient">
+        <constructor-arg name="usernameParameter" value="username"/>
+        <constructor-arg name="passwordParameter" value="password"/>
+        <constructor-arg name="configuration" ref="casConfiguration"/>
+        <property name="authorizationGenerator" ref="dbAuthGenerator"/>
+    </bean>
+
+    <bean id="certUserAuthClient" class="com.seaboxdata.portal.auth.cert.CertUserAuthClient">
+        <property name="authorizationGenerator" ref="dbAuthGenerator"/>
+    </bean>
+
     <bean id="secretSignatureConfiguration" class="org.pac4j.jwt.config.signature.SecretSignatureConfiguration">
         <constructor-arg name="secret" value="${salt}"/>
     </bean>
@@ -163,13 +173,15 @@
                 <ref bean="parameterClient"/>
                 <ref bean="casRestBasicAuthClient"/>
                 <ref bean="myCasRestBasicAuthClient"/>
+                <ref bean="casRestFormClient"/>
+                <ref bean="certUserAuthClient"/>
             </list>
         </constructor-arg>
     </bean>
 
     <bean id="authorizeInfoMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="com.seaboxdata.portal.auth.mapper.AuthorizeInfoMapper" />
-        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+        <property name="mapperInterface" value="com.seaboxdata.portal.auth.mapper.AuthorizeInfoMapper"/>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
     </bean>
 
     <bean id="dbAuthGenerator" class="com.seaboxdata.portal.auth.DBAuthGenerator">
@@ -190,52 +202,49 @@
     <!-- 拦截器 -->
     <mvc:interceptors>
         <mvc:interceptor>
-           <mvc:mapping path="/login"/>
-           <bean class="org.pac4j.springframework.web.SecurityInterceptor">
-                <constructor-arg name="config" ref="config"/>
-                <constructor-arg name="clients" value="FormClient"/>
-           </bean>
-        </mvc:interceptor>
-        <mvc:interceptor>
             <mvc:mapping path="/**"/>
             <mvc:exclude-mapping path="/callback"/>
             <mvc:exclude-mapping path="/mobile/**"/>
             <mvc:exclude-mapping path="/upload/**"/>
             <mvc:exclude-mapping path="/lock/**"/>
             <mvc:exclude-mapping path="/services/**"/>
+            <mvc:exclude-mapping path="/getCert"/>
+            <mvc:exclude-mapping path="/unAuthorized"/>
+            <mvc:exclude-mapping path="/"/>
             <bean class="org.pac4j.springframework.web.SecurityInterceptor">
                 <constructor-arg name="config" ref="config"/>
-                <constructor-arg name="clients" value="CasClient"/>
+                <constructor-arg name="clients" value="casRestFormClient,certUserAuthClient"/>
+                <property name="securityLogic" ref="mySecurityLogic"/>
             </bean>
         </mvc:interceptor>
         <mvc:interceptor>
             <mvc:mapping path="/mobile/login"/>
-		     <bean class="org.pac4j.springframework.web.SecurityInterceptor">
+            <bean class="org.pac4j.springframework.web.SecurityInterceptor">
                 <constructor-arg name="config" ref="config"/>
-                <constructor-arg name="clients" value="MyCasRestBasicAuthClient"/>
+                <constructor-arg name="clients" value="MyCasRestBasicAuthClient,certUserAuthClient"/>
                 <property name="securityLogic" ref="mySecurityLogic"/>
             </bean>
         </mvc:interceptor>
-        
-         <mvc:interceptor>
+
+        <mvc:interceptor>
             <mvc:mapping path="/mobile/**"/>
             <mvc:exclude-mapping path="/mobile/login"/>
-            <bean class="com.seaboxdata.portal.mobile.filter.MobileBaseInterceptor" />
+            <bean class="com.seaboxdata.portal.mobile.filter.MobileBaseInterceptor"/>
         </mvc:interceptor>
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
             <mvc:exclude-mapping path="/callback"/>
             <mvc:exclude-mapping path="/mobile/**"/>
-            <bean class="com.quick.core.util.filter.ControllerBaseInterceptor" />
+            <bean class="com.quick.core.util.filter.ControllerBaseInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
-    
+
 
     <!--样式资源目录-->
     <mvc:resources location="/res/" mapping="/res/**"/>
     <mvc:resources location="/upload/" mapping="/upload/**"/>
-    
-    <!-- 对模型视图名称的解析，即在模型视图名称添加前后缀 -->  
+
+    <!-- 对模型视图名称的解析，即在模型视图名称添加前后缀 -->
     <!-- 设置freeMarker的配置文件路径 -->
     <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
         <property name="templateLoaderPath" value=""/>
@@ -252,40 +261,40 @@
                 <prop key="time_format">HH:mm:ss</prop>
                 <prop key="number_format">0.######</prop>
                 <prop key="whitespace_stripping">true</prop>
-                <!--空值处理<prop key="classic_compatible">true</prop>-->				
+                <!--空值处理<prop key="classic_compatible">true</prop>-->
             </props>
         </property>
     </bean>
     <!-- 配置freeMarker视图解析器 -->
-    <!-- FreeMarker视图解析 如返回student。。在这里配置后缀名ftl和视图解析器。。-->  
-    <bean id="viewResolver"  class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">     
+    <!-- FreeMarker视图解析 如返回student。。在这里配置后缀名ftl和视图解析器。。-->
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.freemarker.FreeMarkerView"/>
-        <property name="prefix" value="/WEB-INF/"/>   
-        <property name="suffix" value=".html" />  
-        <property name="contentType" value="text/html;charset=utf-8" />  <!-- 模板输出内容编码，此处应与defaultEncoding保持一致 -->
-        <property name="exposeRequestAttributes" value="true" />  <!-- 允许访问请求属性，默认为false -->
+        <property name="prefix" value="/WEB-INF/"/>
+        <property name="suffix" value=".html"/>
+        <property name="contentType" value="text/html;charset=utf-8"/>  <!-- 模板输出内容编码，此处应与defaultEncoding保持一致 -->
+        <property name="exposeRequestAttributes" value="true"/>  <!-- 允许访问请求属性，默认为false -->
         <property name="allowSessionOverride" value="true"/>
-        <property name="exposeSessionAttributes" value="true" />  <!-- 允许访问会话属性，默认为false -->
-        <property name="exposeSpringMacroHelpers" value="true" />  
-        <property name="requestContextAttribute" value="rc" /> <!-- 页面上下文，类似于request.contextPath -->
+        <property name="exposeSessionAttributes" value="true"/>  <!-- 允许访问会话属性，默认为false -->
+        <property name="exposeSpringMacroHelpers" value="true"/>
+        <property name="requestContextAttribute" value="rc"/> <!-- 页面上下文，类似于request.contextPath -->
     </bean>
-    
+
     <!-- 配置multipart解析器（多文件上传） -->
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <!-- set the max upload size100MB -->
-        <property name="maxUploadSize" value="104857600" />
-        <property name="defaultEncoding" value="utf-8" />
-        <property name="maxInMemorySize" value="10240" />
+        <property name="maxUploadSize" value="104857600"/>
+        <property name="defaultEncoding" value="utf-8"/>
+        <property name="maxInMemorySize" value="10240"/>
     </bean>
-    
+
     <!--定义异常处理页面-->
     <!--<bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">-->
-        <!--&lt;!&ndash;<property name="exceptionMappings">-->
-            <!--<props>-->
-                <!--<prop key="java.sql.SQLException">outException</prop>-->
-                <!--<prop key="java.io.IOException">outException</prop>-->
-            <!--</props>-->
-        <!--</property>&ndash;&gt;-->
+    <!--&lt;!&ndash;<property name="exceptionMappings">-->
+    <!--<props>-->
+    <!--<prop key="java.sql.SQLException">outException</prop>-->
+    <!--<prop key="java.io.IOException">outException</prop>-->
+    <!--</props>-->
+    <!--</property>&ndash;&gt;-->
     <!--</bean>-->
 
     <!--<context:annotation-config/>   -->

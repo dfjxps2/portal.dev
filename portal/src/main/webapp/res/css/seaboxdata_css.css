@@ -1,0 +1,178 @@
+/*create by SongChaoqun*/
+
+.login_div{
+    width:40%;
+    margin-left:60%;
+}
+
+.login_style{
+    margin: 0px;
+    background: rgba(255, 255, 255, 0.2) url('../images/bg.png') no-repeat fixed center center;
+    background-size: cover;
+    position: static;
+    left: auto;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    text-align: left;
+}
+
+
+
+#seaboxdata_logo{
+    display: block;
+    background: url(../images/logo.png) no-repeat 100% 100%;
+    background-position: 20px;
+    float: left;
+    height: 100px;
+    line-height: 100px;
+    width: 80%;
+    margin-left: 50px;
+    border: 0px;
+    color: white;
+    color: white;
+    vertical-align: middle;
+    padding: 0 0 0 51px;
+    font-size: 22px;
+}
+
+.seaboxdb_container {
+    /*border: 1px solid black;*/
+    width: 100% !important;
+    padding: 0px;
+    height:100%;
+}
+
+.seaboxdt_box {
+    border: 2px solid #CBDAD9;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px  ;
+    background: transparent;
+    /*background: rgba(209,242,253);*/
+}
+#login.seaboxdt_box{
+    margin: 0 auto;
+    float:none;
+    border:none;
+}
+#login.seaboxdt_box .login-header{
+    color:#fff;font-size:20px;
+}
+
+.tel_css {
+    font-family: 'Arial Negreta cursiva', 'Arial Normal', 'Arial';
+    font-weight: 700;
+    font-style: italic;
+    font-size: 20px;
+}
+
+.seaboxdt_footer {
+    bottom: 10px;
+    position: absolute;
+    height: 60px;
+    width: 100%;
+    padding: 0px;
+}
+
+.seaboxdt_footer>div{
+    width:100%;
+    padding-left:10%;
+    padding-right:10%;
+    float:left;
+    border:0px solid blue;
+    text-align: center;
+    font-family: 'Arial Normal', 'Arial';
+    font-weight: 400;
+    font-style: normal;
+    font-size: 16px;
+    color: #333333;
+    line-height: normal;
+}
+
+.seaboxdt_footer>div>div{
+    width:25%;
+    float:left;
+    /*border:1px solid red;*/
+}
+
+.footer_line{
+    width:100%;
+    /*height:2px;
+    float:left;*/
+}
+
+.body_bg{
+    background:rgba(38, 42,58,1);
+    background-image:none;
+    overflow:hidden;
+}
+
+#login input:focus { outline:none;}
+#login input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+}
+#login .form-control-feedback{
+    left:0;
+    right:unset;
+}
+
+form .row .btn-submit{
+    background:#448aff;
+    border-radius:20px;
+}
+
+#login .btn-submit:focus, #login .btn-submit:hover,#login .btn-submit:active {
+    color: #fff;
+    background-color: rgba(68,138,255,0.4);
+    border-color: rgba(0, 0, 0, 0.2);
+}
+
+#login input[type=text], #login input[type=password], #login select{
+    border-radius:20px;
+    background-color:#404655;
+    color:#fff;
+    padding-left:40px;
+    border: none;
+}
+#login select{padding-right:0px;height:30px;}
+#login input[type=text]:focus, #login input[type=password]:focus{}
+.checkrow{color:#fff;cursor:pointer;position:relative;}
+.checkrow input[type=checkbox]:checked:before{color:#f80;}
+.checkrow input.reme[type=checkbox]:checked:before{content: "\e084";}
+.checkrow input.refo[type=checkbox]:checked:before{content: "\e085";}
+.checkrow input[type=checkbox]{position:absolute;top:0px;-webkit-appearance:none;width:10px;height:10px;}
+.checkrow input[type=checkbox]:checked{border-radius:50%;background:#fff;}
+.checkrow input[type=checkbox]:before{font-family: 'Glyphicons Halflings';border-radius:50%;position:absolute;top:-2px;left:-2px;}
+.checkrow .col-xs-8,.checkrow .col-xs-4{padding-left:11px;padding-right:0px;padding-bottom:0px;padding-top:0px;}
+.checkbox-title{padding-left:20px;}
+.text-effect{position: relative;}
+.text-effect ~ .focus-bg:before,
+.text-effect ~ .focus-bg:after{content: ""; position: absolute; left: 0; top: 0; width: 0; height: 100%; background-color: #ededed; transition: 0.3s; z-index: -1;}
+.text-effect:focus ~ .focus-bg:before{transition: 0.3s; width: 50%;}
+.text-effect ~ .focus-bg:after{left: auto; right: 0;}
+.text-effect:focus ~ .focus-bg:after{transition: 0.3s; width: 50%;}
+
+.input_row{
+    margin-left: 25px !important;
+    margin-right: 35px !important;
+    margin-top: 40px;
+}
+
+.btn-row{
+    margin-bottom:20px;
+    text-align:center;
+}
+
+.btn-row>input{
+    margin-left:10px;
+    margin-right:10px;
+    width:80px;
+}
+
+.input_font{
+    font-size:14px;
+    padding-left:15px;
+    padding-top:3px;
+    padding-bottom: 3px;
+}

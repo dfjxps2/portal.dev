@@ -186,7 +186,6 @@ public class QCommon {
      * 连接数组，转换成字符串
      * 
      * @param separator
-     * @param array
      * @return
      */
     public static String join(Collection collection, String separator) {
@@ -497,7 +496,6 @@ public class QCommon {
     /**
      * 获取文件HASH码
      * @param fileName
-     * @param hashType
      * @return
      * @throws Exception
      */

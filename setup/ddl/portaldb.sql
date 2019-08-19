@@ -3312,21 +3312,24 @@ INSERT INTO `sys_privilege` VALUES ('4', 'user:select', '2018-07-09', '2018-07-0
 -- Table structure for sys_user
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_user`;
-CREATE TABLE `sys_user` (
+CREATE TABLE `sys_user`  (
   `user_id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_name` varchar(128) DEFAULT NULL,
-  `user_password` varchar(128) DEFAULT NULL,
-  `user_real_name` varchar(128) DEFAULT NULL,
+  `user_name` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `user_password` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `user_real_name` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `user_state` int(11) NOT NULL,
   `job_id` int(11) DEFAULT NULL,
-  `user_addr` varchar(200) DEFAULT NULL,
-  `user_tel` varchar(20) DEFAULT NULL,
-  `user_global_id` varchar(60) DEFAULT NULL,
-  `cre_time` timestamp NULL DEFAULT NULL,
-  `upd_time` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
-
+  `user_addr` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `user_tel` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `user_global_id` varchar(60) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `user_cert_type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `Idcard_num` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '',
+  `user_email` varchar(80) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `cre_time` timestamp(0) DEFAULT NULL,
+  `upd_time` timestamp(0) DEFAULT NULL,
+  `user_global_code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户32位码',
+  PRIMARY KEY (`user_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 46 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
