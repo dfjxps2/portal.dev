@@ -601,6 +601,24 @@
         <finalName>portal</finalName>
         <plugins>
             <plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-dependency-plugin</artifactId>
+		<version>2.10</version>
+		<executions>
+			<execution>
+				<id>copy-dependencies</id>
+					<phase>compile</phase>
+					<goals>
+						<goal>copy-dependencies</goal>
+					</goals>
+					<configuration>
+						<outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/lib</outputDirectory>
+						<includeScope>system</includeScope>
+						</configuration>
+					</execution>
+				</executions>
+	    </plugin>
+            <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <configuration>
                     <includeEmptyDirs>true</includeEmptyDirs>
