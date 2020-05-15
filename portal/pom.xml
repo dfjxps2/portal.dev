@@ -20,7 +20,7 @@
         <slf4j.version>1.7.25</slf4j.version>
         <log4j.version>2.8.2</log4j.version>
         <!--jackson版本号-->
-        <jackson.version>2.9.5</jackson.version>
+        <jackson.version>2.11.0</jackson.version>
         <cxf.version>3.0.8</cxf.version>
         <junit.version>4.12</junit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
