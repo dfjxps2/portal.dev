@@ -22,7 +22,7 @@
         <!--jackson版本号-->
         <jackson.version>2.9.5</jackson.version>
         <cxf.version>3.0.8</cxf.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!--axis2版本指定-->
         <axis2.version>1.7.5</axis2.version>
